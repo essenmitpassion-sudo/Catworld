@@ -220,9 +220,9 @@ class App:
             label = self.font.render(name, True, BG if name == 'Run' else INK)
             self.canvas.blit(label, label.get_rect(center=rect.center))
         self.text('F5 Run  ·  F6 Step  ·  Esc Stop  ·  F2 Reset', (790, 594), MUTED, self.small)
-        statuses = {'idle': 'Bereit. Run startet deinen Code.', 'paused': 'Step: genau ein Befehl. Weiter mit Run.',
-                    'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Gestoppt. Dein Code bleibt erhalten.',
-                    'done': 'Fertig. Ändere den Code oder nutze Reset.', 'error': 'Kein Problem — korrigiere deinen Code.'}
+        statuses = {'idle': 'Startposition. Run startet; dein Code bleibt.', 'paused': 'Step: ein Befehl. Run setzt danach fort.',
+                    'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Stop: Position bleibt. Run startet Code neu.',
+                    'done': 'Fertig. Run wiederholt; Reset setzt die Welt zurück.', 'error': 'Kein Problem — korrigiere deinen Code.'}
         message = self.runner.error or statuses[self.runner.status]
         words, line, y = message.split(), '', 631
         for word in words:

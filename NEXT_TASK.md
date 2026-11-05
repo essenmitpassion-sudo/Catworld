@@ -1,10 +1,16 @@
-# Einzige nächste Aufgabe: G0-Abnahme
+# Aktive Aufgabe: G1-Minislice — Strom für die Gasse
 
-G0 ist implementiert; keine G1-Erweiterung beginnen.
+G0 technisch abgeschlossen (CURRENT und evidence/g0-closure-*), Human-Test offen.
+Owner und neue AGENTS autorisieren den nächsten kleinen Schritt.
 
-1. Aktuellen Branch/HEAD und CURRENT gegen Git prüfen; Tests mit `.venv/bin/python -m pytest -q` reproduzieren.
-2. Unabhängiger Review von `neonpaw/code/runner.py`, Welt und SDL-Steuerung; keine behauptete bereits erfolgte ChatGPT-Prüfung.
-3. Menschlicher Kurztest: Run bewegt Katze; zweiten Befehl eingeben, Step/Stop/Reset nutzen; absichtlich `bad()` eingeben und Fehler selbst beheben. Verständlichkeit und Lust auf Weiterspielen separat protokollieren, ohne Mikrofreigaben für technische Fixes.
-4. Nur reproduzierte G0-Blocker beheben. Windows-Start bei verfügbarer Plattform prüfen.
+Eine neue Aktion: `collect()` nimmt die Batterie auf dem markierten Feld auf und
+schaltet den angeschlossenen Neon-Automaten unmittelbar ein. Kein zusätzlicher
+use-/deliver-Befehl, keine Inventarengine. Batterie weg, Automat hell, klares Feedback.
+Falsches Feld und erneutes Aufnehmen melden Weltfehler ohne Zustandsänderung.
+Reset stellt Batterie, Automaten und Startposition wieder her; Code bleibt erhalten.
+Der erste move_right()-Einstieg bleibt; collect wird danach als nächstes Werkzeug erklärt,
+aber niemals automatisch in den Spielercode geschrieben.
 
-GitHub-Branch ist veröffentlicht. PR-Erstellung bleibt ohne bestätigten API-Zugriff und separaten Basisbranch offen; keine automatischen Merges oder Branchschutzänderungen.
+Tests zuerst: Zustand, Fehler, Parser-Negativfälle, Stop/Reset, Schritte/Budget,
+UI-Ereignisse und sichtbare Automatenreaktion. Danach gesamter Regressionstest und SDL-Smoke.
+Keine weiteren G1/G2-Systeme in diesem Inkrement.

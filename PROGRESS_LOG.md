@@ -38,3 +38,7 @@ Modelle/Agenten: ein Integrator, keine Subagenten, kein behaupteter Modellwechse
 Learning: L008 Governance, L009 Editor-Markierung.
 OPEN: NEEDS_HUMAN, Windows ungetestet, unabhängiger Audit offen, NO_CI.
 Nächste einzige Aufgabe: G0-Abnahme gemäss NEXT_TASK.
+
+## 2026-11-05 — G0-Abschluss vor G1
+M: Fast-forward 9315cdf -> e566cea bei sauberem Arbeitsverzeichnis. ChatGPT-Review vom Remote geprüft. AST-Grenzen, Weltimmutabilität, Stop/Reset und L009 stimmen mit Code überein; keine technische Blockade reproduziert. Statusmeldungen präzisiert, keine unnötige Architekturarbeit.
+M: 29 Tests grün und SDL-Offscreen-Smoke Exit 0; evidence/g0-closure-tests.txt und g0-closure-smoke.txt. Nur Textänderung, RED hierfür N/A. G0_TECH_CLOSED; Human-/Windows-Test bleiben offen. Gemäss Owner/AGENTS ist der kleine collect-Schritt nun aktiv. Dieser Abschluss wird separat vor G1 committed.
