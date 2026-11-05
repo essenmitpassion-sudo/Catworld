@@ -25,3 +25,6 @@
 G0: eine programmierbare schwarze Pixelkatze mit sichtbarer Bewegung, Run/Step/Stop/Reset und begrenztem Python-Runner ist als technischer Build laut Codex-Belegen vorhanden. Echten HEAD und Tests prüfen, relevante Fehler korrigieren. Danach folgt als kleines Spielinkrement **`collect()` → Batterie aufnehmen → Neon-Automat leuchtet**, nicht die gesamte Stadt. Der 90-Sekunden-Einstieg ist ein später zu validierendes UX-Ziel.
 
 **Grundsatz:** Wenn eine Regel zum zweiten Mal Entwicklung verhindert, behebe die Regel, statt einen weiteren Wartezustand zu schaffen. Wenn eine Lösung messbar besser ist, begründe sie knapp, implementiere, teste, sichere und lerne daraus.
+
+## Autonomer Betrieb
+Der kurze, nicht-blockierende Ablauf steht in `AUTONOMOUS_LOOP.md`. Bei neu begonnenen Entwicklungsrunden lesen; er erlaubt eigenständige kleine Inkremente und ersetzt keine Sicherheitsgrenzen. Eine zeitgesteuerte Codex-Ausführung muss separat aktiviert werden.
