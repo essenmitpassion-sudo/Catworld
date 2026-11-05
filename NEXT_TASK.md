@@ -1,16 +1,17 @@
-# Aktive Aufgabe: G1-Minislice — Strom für die Gasse
+# Nächster kleiner Schritt: Befehlsfolge übertragen
 
-G0 technisch abgeschlossen (CURRENT und evidence/g0-closure-*), Human-Test offen.
-Owner und neue AGENTS autorisieren den nächsten kleinen Schritt.
+G0 technisch abgeschlossen in 442cddc; G1-Batterie-Loop implementiert in 24d644e,
+45 Tests grün. Keine weitere G0-Audit-Schleife. Menschliche Lern-/Spassprüfung bleibt offen.
 
-Eine neue Aktion: `collect()` nimmt die Batterie auf dem markierten Feld auf und
-schaltet den angeschlossenen Neon-Automaten unmittelbar ein. Kein zusätzlicher
-use-/deliver-Befehl, keine Inventarengine. Batterie weg, Automat hell, klares Feedback.
-Falsches Feld und erneutes Aufnehmen melden Weltfehler ohne Zustandsänderung.
-Reset stellt Batterie, Automaten und Startposition wieder her; Code bleibt erhalten.
-Der erste move_right()-Einstieg bleibt; collect wird danach als nächstes Werkzeug erklärt,
-aber niemals automatisch in den Spielercode geschrieben.
+Kleinste sinnvolle Fortsetzung: Nach dem ersten Erfolg eine überschaubare Variante,
+in der die Batterie genau ein Feld weiter liegt. Spieler passt die Befehlsfolge
+selbst an; keine automatische Lösung, noch keine Schleifen oder neuen Aktionen.
+Zuerst echten HEAD und vorhandene Tests prüfen. Vor Umsetzung die feste Zielmarkierung
+und Weltkonfiguration gemeinsam betrachten, damit Anzeige und Regel dieselbe Position
+verwenden. Relevante Fehler zuerst reproduzieren; vorhandenes Level bleibt spielbar.
 
-Tests zuerst: Zustand, Fehler, Parser-Negativfälle, Stop/Reset, Schritte/Budget,
-UI-Ereignisse und sichtbare Automatenreaktion. Danach gesamter Regressionstest und SDL-Smoke.
-Keine weiteren G1/G2-Systeme in diesem Inkrement.
+Abnahme: Transferziel erreichbar, collect nur am tatsächlichen Batteriefeld,
+Reset reproduzierbar, Run/Step/Stop unverändert, sichtbare Reaktion und SDL-Smoke.
+Ein kurzer Menschentest kann Aha-Moment, Verwirrung und Wunsch nach nächster Handlung
+festhalten; fehlende Tester blockieren gemäss AGENTS nicht die technische Entwicklung.
+Kein weiterer Scope in dieser Etappe.

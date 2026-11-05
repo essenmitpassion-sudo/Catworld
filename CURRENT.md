@@ -1,11 +1,14 @@
-# CURRENT — 2026-11-05 — G0 technisch abgeschlossen
+# CURRENT — 2026-11-05 — G0 abgeschlossen, erster G1-Loop spielbar
 
-M: Sauberen Stand 9315cdf per Fast-forward auf e566cea aktualisiert. ChatGPT-Review gelesen und gegen Code und Tests geprüft. Keine reproduzierbaren technischen G0-Blocker. Run/Step/Stop/Reset-Statusmeldungen erläutern Wiederholen, Fortsetzen und Positionserhalt direkt in der App.
-
-M: `.venv/bin/python -m pytest -q`: 29 passed, Exit 0 (`evidence/g0-closure-tests.txt`). SDL-Offscreen-Smoke Exit 0 (`evidence/g0-closure-smoke.txt`). Regression L009 erhalten. Keine Verhaltenskorrektur ohne Repro; hier nur Textpräzisierung.
-
-G0_TECH_CLOSED. HUMAN_NEEDS_TEST bleibt offen, ebenso Windows-Lauf und unabhängige Ausführungsprüfung. Dies blockiert gemäss neuer AGENTS.md den autorisierten kleinen G1-Schritt nicht.
-
-Nächste Aufgabe: G1-Minislice collect → Batterie aufnehmen → Automat leuchtet. Genau eine neue Aktion, dieselbe Welt/Runner/UI; keine Frameworks, keine Subagenten.
-
-Branch `g0/first-cat-action`; dieser G0-Abschluss wird vor G1 in eigenem Commit gesichert. Aktuelle SHA mit `git log -1 --oneline` prüfen. GitHub-Push folgt nach geprüftem Inkrement.
+- M: Branch `g0/first-cat-action`. G0-Abschluss `442cddcfc0b0e746fbe4e206ac61f6b28dcedf18`; G1-Implementierung `24d644e5f138f8816fb3d769e6c3ae49de329a74`. Dieser Bericht wird separat committed; HEAD mit git prüfen.
+- G/M: ChatGPT-Review vom Remote e566cea gelesen und verifiziert. Keine reproduzierten G0-Blocker. Bedienmeldungen erläutern Stop/Reset und Run-Wiederholung. G0_TECH_CLOSED; keine behauptete menschliche Freigabe.
+- M: Neuer spielbarer Loop: move_right() zum Batteriefeld, collect() setzt die Batterie ein; Automat und Kabel leuchten. Falscher Ort/erneutes Collect geben deutsche Weltfehler ohne Mutation. Reset stellt den Ausgangszustand her und behält den Code.
+- M: `.venv/bin/python -m pytest -q`: 45 passed, Exit 0 (evidence/g1-final-tests.txt). Auch in der zuvor separat frisch installierten /tmp/catworld-clean-venv: 45 passed, Exit 0. Keine neuen Abhängigkeiten; pip check erfolgreich.
+- M: G1-RED 6 failed / 7 passed (fehlende Aktion); UI-RED 1 failed / 3 passed (unverändertes Automatenbild). GREEN 42 bzw. 43 Tests; Refactor 43 grün. Zwei zusätzliche Charakterisierungstests belegen die vorhandene 64/65-Befehlsgrenze und waren sofort grün. Keine falsche RED-Behauptung dafür.
+- M: SDL-Offscreen-Smoke über Eventqueue, Editor, Run/Step/Stop/Reset, Collect, Rendering, Fehler und Quit Exit 0 (evidence/g1-smoke.txt). Screenshots Batterie/Automat/Fehler visuell geprüft. Kein physischer Desktop- oder Human-Test.
+- M: GitHub-API gh pr list weiterhin GraphQL Forbidden; offene PRs UNKNOWN, kein PR erstellt. Git-Push wird am Abschluss separat geprüft, nicht aus API-Status abgeleitet.
+- OPEN: HUMAN_NEEDS_TEST (Verständlichkeit, Lernen, Spass); Windows/DPI real ungetestet; NO_CI; kein unabhängiger Security-Ausführungsaudit. Schmale AST-Teilmenge, keine allgemeine Python-Sandbox.
+- Start: `.venv/bin/python -m neonpaw`; Windows: start_windows.bat (Python 3.12+, erste Installation braucht Netz). README enthält Erklärung für Reset + Run nach Codeerweiterung.
+- Artefakte ausserhalb Repo: /workspace/Catworld-G0-stable.zip am G0-Abschluss; /workspace/Catworld-G1.zip und /workspace/Catworld-G1.bundle am finalen Checkpoint.
+- Nächste einzelne Aufgabe: kleine Transferaufgabe mit Batterie ein Feld weiter; zuerst prüfen, ob Spieler die Befehlsfolge selbst anpassen. Kein Schleifen-/Inventarframework.
+- Wiederaufnahme: `git status -sb`, `git log -3 --oneline`, `.venv/bin/python -m pytest -q`; danach NEXT_TASK.

@@ -42,3 +42,11 @@ Nächste einzige Aufgabe: G0-Abnahme gemäss NEXT_TASK.
 ## 2026-11-05 — G0-Abschluss vor G1
 M: Fast-forward 9315cdf -> e566cea bei sauberem Arbeitsverzeichnis. ChatGPT-Review vom Remote geprüft. AST-Grenzen, Weltimmutabilität, Stop/Reset und L009 stimmen mit Code überein; keine technische Blockade reproduziert. Statusmeldungen präzisiert, keine unnötige Architekturarbeit.
 M: 29 Tests grün und SDL-Offscreen-Smoke Exit 0; evidence/g0-closure-tests.txt und g0-closure-smoke.txt. Nur Textänderung, RED hierfür N/A. G0_TECH_CLOSED; Human-/Windows-Test bleiben offen. Gemäss Owner/AGENTS ist der kleine collect-Schritt nun aktiv. Dieser Abschluss wird separat vor G1 committed.
+
+## 2026-11-05 — G1-Minislice: Batterie -> Neon-Automat
+M: G0 vor Implementierung separat abgeschlossen in 442cddc. G1-Code 24d644e auf demselben autorisierten Branch. Genau eine neue Aktion; kein Framework/Agent hinzugefügt.
+RED: tests/test_collect.py 6 failed / 7 passed, Exit 1 (g1-red.txt); Negativfälle bereits durch G0-Abweisung grün. GREEN Gesamtsuite 42 passed. UI-RED 1 failed / 3 passed, Exit 1 wegen unverändertem Automatenbild; GREEN 43 passed. Refactor: Parserlokale von lines auf commands umbenannt, weiterhin 43 grün. Interne Parserausgabe jetzt (Zeile, Aktionsname), bestehender Sequenztest entsprechend angepasst; Endnutzerverhalten unverändert.
+Zusätzliche Grenzcharakterisierung 64 akzeptiert / 65 abgewiesen war sofort grün; kein Produktfix dafür. Final: 45 passed, Exit 0, g1-final-tests.txt. Bestehende G0-Tests bleiben enthalten. Separat installierte venv ebenfalls 45 grün, pip check ohne gebrochene Anforderungen.
+UI: echte SDL-Events und offscreen-Renderer: Bewegung, Codeänderung, Step, Stop, Reset, collect, Automatenbeleuchtung, Welt-/Syntaxfehler, Quit. Exit 0 (g1-smoke.txt). Screenshots visuell geprüft; kein Human-Pass. Windows-Start weiterhin nicht auf Windows ausgeführt.
+Review-Befunde umgesetzt: nur schmale neue Aktion mit Negativtests; Statussemantik klarer; L009-Test erhalten; alte aktive Statusangaben ersetzt. Learning L010 ergänzt. GitHub PR-API Forbidden; kein PR behauptet. Push nach Checkpoint separat prüfen.
+Nächste einzige Aufgabe: Befehlsfolge auf Batterie ein Feld weiter übertragen.
