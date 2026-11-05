@@ -1,14 +1,15 @@
-# CURRENT — 2026-11-05 — G0 abgeschlossen, erster G1-Loop spielbar
+# CURRENT — 2026-11-05 — Transferaufgabe implementiert
 
-- M: Branch `g0/first-cat-action`. G0-Abschluss `442cddcfc0b0e746fbe4e206ac61f6b28dcedf18`; G1-Implementierung `24d644e5f138f8816fb3d769e6c3ae49de329a74`. Dieser Bericht wird separat committed; HEAD mit git prüfen.
-- G/M: ChatGPT-Review vom Remote e566cea gelesen und verifiziert. Keine reproduzierten G0-Blocker. Bedienmeldungen erläutern Stop/Reset und Run-Wiederholung. G0_TECH_CLOSED; keine behauptete menschliche Freigabe.
-- M: Neuer spielbarer Loop: move_right() zum Batteriefeld, collect() setzt die Batterie ein; Automat und Kabel leuchten. Falscher Ort/erneutes Collect geben deutsche Weltfehler ohne Mutation. Reset stellt den Ausgangszustand her und behält den Code.
-- M: `.venv/bin/python -m pytest -q`: 45 passed, Exit 0 (evidence/g1-final-tests.txt). Auch in der zuvor separat frisch installierten /tmp/catworld-clean-venv: 45 passed, Exit 0. Keine neuen Abhängigkeiten; pip check erfolgreich.
-- M: G1-RED 6 failed / 7 passed (fehlende Aktion); UI-RED 1 failed / 3 passed (unverändertes Automatenbild). GREEN 42 bzw. 43 Tests; Refactor 43 grün. Zwei zusätzliche Charakterisierungstests belegen die vorhandene 64/65-Befehlsgrenze und waren sofort grün. Keine falsche RED-Behauptung dafür.
-- M: SDL-Offscreen-Smoke über Eventqueue, Editor, Run/Step/Stop/Reset, Collect, Rendering, Fehler und Quit Exit 0 (evidence/g1-smoke.txt). Screenshots Batterie/Automat/Fehler visuell geprüft. Kein physischer Desktop- oder Human-Test.
-- M: GitHub-API gh pr list weiterhin GraphQL Forbidden; offene PRs UNKNOWN, kein PR erstellt. Git-Push wird am Abschluss separat geprüft, nicht aus API-Status abgeleitet.
-- OPEN: HUMAN_NEEDS_TEST (Verständlichkeit, Lernen, Spass); Windows/DPI real ungetestet; NO_CI; kein unabhängiger Security-Ausführungsaudit. Schmale AST-Teilmenge, keine allgemeine Python-Sandbox.
-- Start: `.venv/bin/python -m neonpaw`; Windows: start_windows.bat (Python 3.12+, erste Installation braucht Netz). README enthält Erklärung für Reset + Run nach Codeerweiterung.
-- Artefakte ausserhalb Repo: /workspace/Catworld-G0-stable.zip am G0-Abschluss; /workspace/Catworld-G1.zip und /workspace/Catworld-G1.bundle am finalen Checkpoint.
-- Nächste einzelne Aufgabe: kleine Transferaufgabe mit Batterie ein Feld weiter; zuerst prüfen, ob Spieler die Befehlsfolge selbst anpassen. Kein Schleifen-/Inventarframework.
-- Wiederaufnahme: `git status -sb`, `git log -3 --oneline`, `.venv/bin/python -m pytest -q`; danach NEXT_TASK.
+- M: Sauberer Branch g0/first-cat-action von 7bad76c auf 5c67e51 fast-forward aktualisiert. Kein ungesichertes lokales Material vorhanden. AGENTS/CURRENT/NEXT_TASK/CHATGPT_REVIEW_G1_LEARNING gelesen.
+- O: Der erste Windows-G0-Test zeigte nachvollziehbare Bewegung, aber nur Run auf vorgegebenen Code; kein eigener Programmiernachweis. Aktuelle Build-Version nicht durch Owner auf Windows getestet.
+- M: Implementierung `207ed14d79571d63277dc6007ae07b35556e2b61`: zwei Szenarien mit einem Positionsparameter, gemeinsame Welt/Runner. Nach Erfolg Weiter oder sofort Freier Einstieg; bestehender Code bleibt, Batterie und Ziel versetzt. Kein ungefragtes Beispiel oder automatisches Codeeinsetzen.
+- M: Transfer startet neue Versuche am Anfang; alte Lösung scheitert auch bei wiederholtem Run/Step. Run nach pausiertem Step setzt fort. Einstieg bleibt unverändert. Reset behält Szenario und Code.
+- M: Drei freiwillige Hilfestufen: Beobachtung, Denkhinweis, expliziter Button Beispiel anzeigen. Beispiel setzt/führt keinen Code ein/aus. Kennzeichnung mit Codebeispiel bleibt über Reset erhalten; kein permanentes Lernprofil.
+- M: Baseline 45 passed; Transfer-RED sechs Tests fehlgeschlagen wegen fehlender Szenario-/UI-Funktion. GREEN 51 passed. Zwei zusätzliche Charakterisierungstests für Step-Fortsetzung/Shortcuts sofort grün. Final/Refactor: 53 passed, Exit 0 (`evidence/transfer-refactor.txt`).
+- M: SDL-Offscreen-Smoke Exit 0: Einstieg, Szenariowechsel, unveränderte Lösung scheitert, Textinput-Änderung gewinnt, Hilfestufen, Reset, Welt-/Syntaxfehler, Quit (`evidence/transfer-smoke.txt`). Screenshots visuell geprüft. Keine Behauptung eines physischen Desktop- oder Human-Tests.
+- G: ChatGPT-Review meldete zum Review-Zeitpunkt keinen offenen PR. M: aktuelle gh-pr-Abfrage GraphQL Forbidden, daher PR-Status aktuell UNKNOWN; kein PR erstellt. Git-Push am Abschluss separat prüfen.
+- OPEN: HUMAN_LEARNING_NEEDS_TEST / HUMAN_FUN_NEEDS_TEST; aktuelle Windows-/DPI-Prüfung offen, NO_CI. Technische Lösung ist kein Beweis eigenen Verständnisses. Keine neue Syntax, keine neue Abhängigkeit, keine Subagenten.
+- Start: `.venv/bin/python -m neonpaw`; Windows start_windows.bat, Python 3.12+, erste Installation benötigt Internet. Weiter/Freier Einstieg F3, Hilfe F1.
+- Sicherung: Implementierungscommit oben plus nachfolgender Dokumentationscommit; vollständiges geprüftes Bundle /workspace/Catworld-Transfer.bundle und Quellbuild /workspace/Catworld-Transfer.zip am finalen HEAD.
+- Nächste einzelne Aufgabe: kleiner Abrufschritt ohne neue Syntax — bekannte Befehlsfolge selbst aus leerem Editor erstellen; vor Umsetzung aktuellen Lernreview/Owner-Rückmeldung prüfen. Fehlende Menschenrückmeldung allein blockiert keine technische Arbeit.
+- Wiederaufnahme: git status -sb; git log -3 --oneline; .venv/bin/python -m pytest -q; NEXT_TASK lesen.

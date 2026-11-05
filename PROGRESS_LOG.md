@@ -50,3 +50,11 @@ Zusätzliche Grenzcharakterisierung 64 akzeptiert / 65 abgewiesen war sofort gr�
 UI: echte SDL-Events und offscreen-Renderer: Bewegung, Codeänderung, Step, Stop, Reset, collect, Automatenbeleuchtung, Welt-/Syntaxfehler, Quit. Exit 0 (g1-smoke.txt). Screenshots visuell geprüft; kein Human-Pass. Windows-Start weiterhin nicht auf Windows ausgeführt.
 Review-Befunde umgesetzt: nur schmale neue Aktion mit Negativtests; Statussemantik klarer; L009-Test erhalten; alte aktive Statusangaben ersetzt. Learning L010 ergänzt. GitHub PR-API Forbidden; kein PR behauptet. Push nach Checkpoint separat prüfen.
 Nächste einzige Aufgabe: Befehlsfolge auf Batterie ein Feld weiter übertragen.
+
+## 2026-11-05 — Lerntransfer statt reinem Run-Erfolg
+O: erster Windows-G0-Test war Bedienerfolg, kein eigenes Schreiben. M: sauberer Fast-forward 7bad76c -> 5c67e51, Review G1 gelesen; Aufgabe fehlte im Code.
+Implementierung 207ed14: Szenario-Position 2/3, gemeinsame Simulation/Renderer; Weiter bzw. direkter Freier Einstieg mit erhaltenem Code. Transfer-Neustart verhindert Gewinn durch wiederholtes Run/Step bei unverändertem Code, pausierter Step setzt korrekt fort. Drei freiwillige Hilfen, Code nur nach expliziter Beispielanforderung, keine Codeinjektion. Unterstützung bleibt über Reset sichtbar.
+RED: sechs neue Tests fehlgeschlagen (fehlender Runner-Parameter/Transfer-Button), Exit 1, evidence/transfer-red.txt. GREEN: 51 passed, Exit 0. Zwei weitere Charakterisierungstests für Fortsetzen/Shortcuts sofort grün. Refactor: Hilfedarstellung aus draw extrahiert; komplette Suite 53 passed, Exit 0 (transfer-refactor.txt). Alle bisherigen G0/G1-Tests erhalten.
+UI: SDL-Eventqueue mit Button-Klicks und Textinput, alte Lösung wiederholt erfolglos, geänderte Folge erfolgreich, Hilfestufen/Reset/Szenariowechsel/Fehler/Quit geprüft, Exit 0 (transfer-smoke.txt). Screenshots visuell kontrolliert. Nur offscreen; menschliches Verständnis und Spass offen.
+Learnings L011 (Bedienung != Lernen) und L012 (Run-Akkumulation umgeht Transfer) direkt ergänzt. Keine neuen Abhängigkeiten oder Agenten. gh pr list weiterhin Forbidden, kein PR erstellt. Git-Push nach Checkpoint separat bestätigen.
+Nächste einzelne Aufgabe: unabhängiger Abruf derselben Befehle, ohne neue Syntax und ohne bestehenden Code zu verlieren.
