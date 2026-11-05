@@ -1,9 +1,10 @@
-# CATWORLD / NEONPAW — G0
+# CATWORLD / NEONPAW — Strom für die Gasse
 
 Eine schwarze Pixelkatze, eine Neon-Gasse, dein erster Python-Befehl.
 `move_right()` bewegt die Katze genau ein Feld nach rechts.
+`collect()` nimmt die Batterie auf dem Leuchtfeld auf und schaltet den verbundenen Automaten ein.
 
-![G0 nach dem ersten Schritt](evidence/g0-after.png)
+![Batterie aufgenommen, Neon-Automat an](evidence/g1-powered.png)
 
 ## Start (Python 3.12 oder neuer)
 
@@ -35,10 +36,21 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
   an der aktuellen Position. Reset bringt die Katze zum Start zurück.
 - Ein Edit stoppt die Ausführung. Der nächste Run prüft den gesamten neuen Code.
 
-Ziel: das leuchtende Feld erreichen. Danach kannst du mehrere `move_right()`-Zeilen
-probieren. Am Ende der Gasse gibt es eine verständliche Fehlermeldung.
+Ziel: Strom für die Gasse. Starte mit dem vorgegebenen `move_right()`. Auf dem
+Leuchtfeld erklärt das Spiel den nächsten Befehl. Ergänze selbst eine zweite Zeile:
 
-G0 unterstützt ausschliesslich parameterlose `move_right()`-Aufrufe, Kommentare,
+```python
+move_right()
+collect()
+```
+
+Drücke **Reset**, dann **Run**, um das ganze Programm ab Start auszuführen.
+Die Batterie verschwindet; Kabel und Automat leuchten. Step zeigt den Unterschied
+zwischen Bewegen und Aufnehmen einzeln. Ein collect am falschen Ort oder nach dem
+Aufnehmen erklärt den Fehler; Reset stellt Batterie und Automaten wieder her.
+Am Ende der Gasse bleibt die Bewegung sicher begrenzt.
+
+Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`- und `collect()`-Aufrufe, Kommentare,
 Leerzeilen und Python-Anweisungssequenzen. Schleifen und andere Python-Funktionen
 sind noch nicht freigeschaltet. Kein vollständiger Python-Interpreter.
 
@@ -55,4 +67,4 @@ Automatisierte Prüfungen sind kein menschlicher Bedienbarkeits- oder Spielspass
 Siehe `CURRENT.md`, `SAFETY_AND_EXECUTION.md` und `G0_SECURITY.md`.
 
 Langfristige Vorgaben: `PRODUCT.md`, `LONG_TERM_DESIGN.md`, `TUTORIAL_SYSTEM.md`.
-Aktiver Umfang bleibt G0; keine Stadt-, Flotten- oder Cloud-Spielsysteme.
+G0 ist technisch abgeschlossen; dieser Build ergänzt ausschliesslich den kleinen G1-Batterie-Loop. Keine Stadt-, Flotten- oder Cloud-Spielsysteme.

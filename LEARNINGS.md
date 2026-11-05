@@ -19,3 +19,6 @@ O/M: Trotz lokalem Commit 90de7e2 und geprüftem Bundle wurde G0 wegen GitHub-40
 
 ### L009 — 2026-11-05 — Veraltete Ausführungsmarkierung beim Editieren
 M: Nach Run und anschliessendem Ersetzen des Codes blieb die alte Zeile aktiv und die Ansicht scrollte am Cursor vorbei. Ursache: Stop behielt die für Debugging sinnvolle Zeile auch bei Codeänderungen. Gegenmassnahme: Editoränderungen verwerfen Ausführungsmarkierung und Fehlermeldung, Stop allein behält sie. Regression: test_edit_after_execution_keeps_cursor_visible; RED 1 failed / 2 passed, danach Gesamtsuite 29 passed. Belege evidence/red-editor.txt und evidence/refactor.txt.
+
+### L010 — 2026-11-05 — Zustandspass reicht für sichtbares Gameplay nicht
+M: Nach Implementierung von collect waren Core-Tests grün, aber der neue SDL-Test zeigte unveränderte Automatenpixel (evidence/g1-red-ui.txt). Ursache: Weltzustand allein garantiert keine sichtbare Reaktion. Gegenmassnahme: bei neuen Weltaktionen die konkrete betroffene Bildregion und Reset-Rückkehr prüfen; Statusstring allein reicht nicht. GREEN: test_collect_loop_changes_machine_and_reset_restores_it und g1-smoke.txt. Menschliche Verständlichkeit bleibt davon unabhängig offen.

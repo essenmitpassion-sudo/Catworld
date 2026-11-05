@@ -67,3 +67,33 @@ def test_edit_after_execution_keeps_cursor_visible():
     assert app.runner.line is None
     assert app.scroll >= 11
     pygame.quit()
+
+
+def test_collect_loop_changes_machine_and_reset_restores_it():
+    pygame.init()
+    app = App()
+    initial_code = app.source
+    app.draw()
+    machine = pygame.Rect(470, 400, 120, 145)
+    dark = pygame.image.tobytes(app.canvas.subsurface(machine), 'RGB')
+    click(app, 'Run')
+    app.update(.5)
+    assert app.runner.world.x == 2
+    assert app.source == initial_code  # Tutorial never writes the answer.
+    app.handle(pygame.event.Event(pygame.TEXTINPUT, text='\ncollect()'))
+    click(app, 'Reset')
+    click(app, 'Run')
+    app.update(.5)
+    assert not app.runner.world.powered
+    app.update(.5)
+    assert app.runner.world.powered
+    assert app.runner.line == 2
+    app.draw()
+    lit = pygame.image.tobytes(app.canvas.subsurface(machine), 'RGB')
+    assert lit != dark  # Visible world response, not merely a status string.
+    click(app, 'Reset')
+    app.draw()
+    assert not app.runner.world.powered
+    assert pygame.image.tobytes(app.canvas.subsurface(machine), 'RGB') == dark
+    assert app.source == 'move_right()\ncollect()'
+    pygame.quit()

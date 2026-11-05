@@ -96,7 +96,7 @@ def test_world_error_and_recovery():
 
 def test_comments_empty_and_python_statement_sequence():
     assert parse('# Kommentar\n') == ()
-    assert parse('# hi\nmove_right(); move_right()') == (2, 2)
+    assert parse('# hi\nmove_right(); move_right()') == ((2, 'move_right'), (2, 'move_right'))
     r = Runner()
     r.load('')
     r.run()

@@ -1,8 +1,9 @@
-# G0: Sicherheitsgrenze und technische Entscheidungen
+# G0/G1: Sicherheitsgrenze und technische Entscheidungen
 
 Der Runner interpretiert ausschliesslich vollständig validierte AST-Formen
-`Expr(Call(Name('move_right'), args=[], keywords=[]))`. Aus dem AST werden nur
-Zeilennummern übernommen, keine ausführbaren Python-Objekte. Es gibt weder eval,
+`Expr(Call(Name(action), args=[], keywords=[]))` mit action aus der festen Menge
+`move_right`, `collect`. Aus dem AST werden nur
+Zeilennummern und validierte Aktionsnamen übernommen, keine ausführbaren Python-Objekte. Es gibt weder eval,
 exec, compile-Ausführung, dynamische Imports noch Spielercode-I/O.
 Python wird mit ast.parse gelesen; Grammatik, Kommentare und Reihenfolge entsprechen
 der ausdrücklich unterstützten Teilmenge. Alle anderen Konstrukte werden abgewiesen.
@@ -13,16 +14,22 @@ interpretiert. Ein Tick verarbeitet höchstens einen Befehl, auch nach langen Fr
 Stop wird vor dem nächsten Tick verarbeitet. Ein ungültiges Programm wird vollständig
 abgewiesen, bevor irgendeine seiner Aktionen ausgeführt wird. Weltzustand ist immutable.
 
-Bedrohungsmodell: lokal eingegebene Programme im G0-Editor. Die kleine Eingabegrenze
+Bedrohungsmodell: lokal eingegebene Programme im Editor. Die kleine Eingabegrenze
 begrenzt Parserarbeit; es gibt kein hartes OS-Zeit-/Speicherlimit. Dies ist keine
 allgemeine Sandbox für externen Python-Code. Fremdskript-Import und allgemeines Python
 sind nicht implementiert. Vor einer Erweiterung: neue Negativtests, Ressourcenbudgets
 und separate Sicherheitsprüfung; bei externen Skripten zusätzlich Prozessisolation.
 
 Designentscheidungen: pygame-ce gemäss ARCHITECTURE; eine unveränderliche Welt,
-ein kooperativer Runner, deklarative G0-Texte und ein SDL-UI. Kein Server, keine
+ein kooperativer Runner, deklarative Einstiegstexte und ein SDL-UI. Kein Server, keine
 Framework-Schicht, keine Assets fremder Spiele. Pixelgrafik wird aus eigenen Formen
 gezeichnet. Die fünf Modulbereiche bleiben core/code/content/ui/tests.
 
 Prüfgrenzen: automatisierte State- und SDL-Ereignistests, visuell inspizierte Screenshots.
 Kein unabhängiger Security-Audit, kein menschlicher Lern-/Spassnachweis, kein Windows-Test.
+
+G1 erweitert nur den Aktionsnamen, nicht die AST-Formen oder Budgets. collect
+ändert auf dem Batteriefeld atomar den powered-Zustand: Batterie wird eingesetzt,
+Automat eingeschaltet; es gibt noch kein allgemeines Inventar. Erneutes Aufnehmen
+oder falsche Position ist ein Weltfehler. Die interne Parserdarstellung enthält
+nun (Zeile, Aktion), damit Runner und UI dieselbe geprüfte Sequenz ausführen.

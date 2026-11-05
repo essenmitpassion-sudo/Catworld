@@ -1,4 +1,4 @@
-"""Bounded interpreter for zero-argument move_right calls, not general Python."""
+"""Bounded interpreter for zero-argument move_right/collect calls, not general Python."""
 import ast
 from neonpaw.core.world import World, transition
 
@@ -14,7 +14,7 @@ class ProgramError(ValueError):
         super().__init__(f'Zeile {line}: {message}' if line else message)
 
 
-def parse(source: str) -> tuple[int, ...]:
+def parse(source: str) -> tuple[tuple[int, str], ...]:
     if len(source) > MAX_SOURCE:
         raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
     try:
@@ -32,15 +32,15 @@ def parse(source: str) -> tuple[int, ...]:
         stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
     if len(tree.body) > MAX_COMMANDS:
         raise ProgramError('Maximal 64 Befehle pro Programm.')
-    lines = []
+    commands = []
     for stmt in tree.body:
         if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
                 and isinstance(stmt.value.func, ast.Name)
-                and stmt.value.func.id == 'move_right'
+                and stmt.value.func.id in ('move_right', 'collect')
                 and not stmt.value.args and not stmt.value.keywords):
-            raise ProgramError('Hier ist nur move_right() ohne Argumente erlaubt.', stmt.lineno)
-        lines.append(stmt.lineno)
-    return tuple(lines)
+            raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+        commands.append((stmt.lineno, stmt.value.func.id))
+    return tuple(commands)
 
 
 class Runner:
@@ -92,13 +92,13 @@ class Runner:
         if self.pc >= len(self.commands):
             self.status = 'done'
             return
-        self.line = self.commands[self.pc]
+        self.line, action = self.commands[self.pc]
         if self.pc >= self.max_steps:
             self.error = f'Zeile {self.line}: Sicheres Schrittlimit erreicht.'
             self.status = 'error'
             return
         try:
-            self.world = transition(self.world, 'move_right')
+            self.world = transition(self.world, action)
         except ValueError as exc:
             self.error = f'Zeile {self.line}: {exc}'
             self.status = 'error'

@@ -1,4 +1,4 @@
-"""One-screen G0: real SDL controls and an original procedural pixel alley."""
+"""One-screen G0/G1: real SDL controls and an original procedural pixel alley."""
 import pygame
 from neonpaw.code.runner import Runner, ProgramError, MAX_SOURCE
 from neonpaw.content.levels import TITLE, OBJECTIVE, START_CODE, GOAL_X
@@ -153,8 +153,22 @@ class App:
         pygame.draw.rect(scene, '#1b263a', (15, 129, 73, 57))
         for y in range(132, 184, 6):
             pygame.draw.line(scene, '#42506a', (17, y), (86, y))
-        pygame.draw.rect(scene, '#171c30', (218, 123, 49, 63))
-        pygame.draw.rect(scene, '#58667c', (216, 120, 53, 4))
+        # The machine and its supply cable visibly share the battery's state.
+        powered = self.runner.world.powered
+        glow = CYAN if powered else '#58667c'
+        pygame.draw.rect(scene, '#193c42' if powered else '#171c30', (216, 120, 53, 66))
+        pygame.draw.rect(scene, glow, (216, 120, 53, 66), 2)
+        pygame.draw.rect(scene, '#6bf9de' if powered else '#29364b', (221, 126, 43, 13))
+        label = self.sign_font.render('ON' if powered else 'OFF', False, '#102b32' if powered else MUTED)
+        scene.blit(label, (230, 126))
+        for item_x in (224, 238, 252):
+            pygame.draw.rect(scene, '#ffc875' if powered else '#3a4054', (item_x, 146, 8, 13))
+            pygame.draw.rect(scene, PINK if powered else '#484258', (item_x, 146, 8, 3))
+        pygame.draw.rect(scene, '#0b1527', (225, 170, 34, 8))
+        pygame.draw.lines(scene, CYAN if powered else '#536077', False,
+                          [(112, 184), (112, 181), (208, 181), (208, 168), (216, 168)], 2)
+        if powered:
+            pygame.draw.line(scene, PINK, (213, 189), (273, 189), 2)
         pygame.draw.line(scene, '#62728b', (301, 108), (301, 180), 4)
         pygame.draw.line(scene, '#62728b', (301, 108), (333, 108), 4)
         pygame.draw.rect(scene, '#472f52', (106, 122, 90, 28))
@@ -171,6 +185,13 @@ class App:
         goal = pygame.Rect(13 + GOAL_X * 36, 192, 32, 30)
         pygame.draw.rect(scene, CYAN, goal, 2)
         pygame.draw.line(scene, CYAN, (goal.x + 10, 229), (goal.x + 23, 229), 2)
+        if not self.runner.world.powered:
+            bx = 29 + 36 * self.runner.world.battery_x
+            pygame.draw.rect(scene, '#111a2c', (bx - 12, 161, 24, 16))
+            pygame.draw.rect(scene, '#ffd584', (bx - 9, 164, 16, 9), 2)
+            pygame.draw.rect(scene, '#ffd584', (bx + 7, 167, 3, 3))
+            pygame.draw.line(scene, '#ffd584', (bx - 3, 166), (bx - 3, 171))
+            pygame.draw.line(scene, '#ffd584', (bx - 5, 168), (bx - 1, 168))
         # Original cat silhouette: ear triangles, outlined head, curled tail, bright eyes.
         cx = 29 + 36 * self.runner.world.x
         pygame.draw.ellipse(scene, '#111a2c', (cx - 14, 213, 31, 7))
@@ -194,9 +215,20 @@ class App:
         self.text('01 / DIE GASSE ERWACHT', (42, 135), INK, self.small)
         self.alley()
         self.text('PYTHON / DEIN ERSTER BEFEHL', (790, 42), CYAN, self.small)
-        self.text(TITLE, (790, 82), INK)
-        self.text('Ein Befehl. Ein Feld nach rechts.', (790, 118), MUTED, self.small)
-        self.text('Drücke Run und beobachte die Katze.', (790, 149), INK, self.small)
+        world = self.runner.world
+        self.text('DIE GASSE LEUCHTET' if world.powered else TITLE, (790, 82), INK)
+        if world.powered:
+            hint, instruction = 'Batterie eingesetzt. Automat eingeschaltet!', 'Zwei Befehle — ein sichtbarer Unterschied.'
+        elif world.x == world.battery_x:
+            hint, instruction = 'collect() nimmt die Batterie auf.', 'Neue Zeile ergänzen, dann Reset und Run.'
+        elif world.moves:
+            hint, instruction = 'Batterie verpasst? Reset bringt dich zurück.', 'move_right() gehen · collect() aufnehmen'
+        else:
+            hint, instruction = 'Ein Befehl. Ein Feld nach rechts.', 'Drücke Run und beobachte die Katze.'
+        self.text(hint, (790, 118), MUTED, self.small)
+        self.text(instruction, (790, 149), INK, self.small)
+        self.text('AUTOMAT: AN' if world.powered else 'AUTOMAT: AUS · Batterie auf dem Leuchtfeld',
+                  (790, 174), CYAN if world.powered else MUTED, self.small)
         pygame.draw.rect(self.canvas, '#1c2335', (780, 198, 400, 325), border_radius=8)
         lines = self.source.split('\n')
         cursor_row = self.source[:self.cursor].count('\n')
@@ -231,9 +263,15 @@ class App:
                 line, y = '', y + 22
             line += word + ' '
         self.text(line, (790, y), PINK if self.runner.error else INK, self.small)
-        success = self.runner.world.moves > 0
-        self.text('Erster Schritt geschafft! Dein Code bewegt die Welt.' if success else OBJECTIVE,
-                  (40, 666), CYAN if success else INK, self.small)
+        if world.powered:
+            objective = 'Strom da! Dein Code hat die Gasse geweckt.'
+        elif world.x == world.battery_x:
+            objective = 'Erster Schritt geschafft! Nimm jetzt die Batterie mit collect() auf.'
+        elif world.moves:
+            objective = 'Die Batterie liegt auf dem Leuchtfeld. Reset für einen neuen Versuch.'
+        else:
+            objective = OBJECTIVE
+        self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)
         pygame.transform.scale(self.canvas, self.screen.get_size(), self.screen)
         pygame.display.flip()
 

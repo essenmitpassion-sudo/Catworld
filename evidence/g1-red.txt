@@ -1,0 +1,203 @@
+FFFFF.......F                                                            [100%]
+=================================== FAILURES ===================================
+____________ test_collect_powers_machine_atomically_without_moving _____________
+
+    def test_collect_powers_machine_atomically_without_moving():
+        start = World()
+        at_battery = transition(start, 'move_right')
+>       powered = transition(at_battery, 'collect')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_collect.py:9: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=2, width=9, moves=1), action = 'collect'
+
+    def transition(world: World, action: str) -> World:
+        if action != 'move_right':
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:14: ValueError
+_______________ test_collect_wrong_tile_does_not_consume_battery _______________
+
+    def test_collect_wrong_tile_does_not_consume_battery():
+        with pytest.raises(ValueError, match='Batterie'):
+>           transition(World(), 'collect')
+
+tests/test_collect.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=1, width=9, moves=0), action = 'collect'
+
+    def transition(world: World, action: str) -> World:
+        if action != 'move_right':
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:14: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_collect_wrong_tile_does_not_consume_battery():
+>       with pytest.raises(ValueError, match='Batterie'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Batterie'
+E        Input: 'Unbekannte Weltaktion.'
+
+tests/test_collect.py:17: AssertionError
+____________________ test_battery_cannot_be_collected_twice ____________________
+
+    def test_battery_cannot_be_collected_twice():
+>       powered = transition(transition(World(), 'move_right'), 'collect')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_collect.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=2, width=9, moves=1), action = 'collect'
+
+    def transition(world: World, action: str) -> World:
+        if action != 'move_right':
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:14: ValueError
+____________ test_runner_mixed_actions_line_numbers_stop_and_reset _____________
+
+    def test_runner_mixed_actions_line_numbers_stop_and_reset():
+        r = Runner()
+>       r.load('# Strom\nmove_right()\ncollect()')
+
+tests/test_collect.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:66: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = '# Strom\nmove_right()\ncollect()'
+
+    def parse(source: str) -> tuple[int, ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        lines = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id == 'move_right'
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Hier ist nur move_right() ohne Argumente erlaubt.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 3: Hier ist nur move_right() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:41: ProgramError
+________________ test_run_sequence_and_budget_apply_to_collect _________________
+
+    def test_run_sequence_and_budget_apply_to_collect():
+        r = Runner(max_steps=1)
+>       r.load('move_right()\ncollect()')
+
+tests/test_collect.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:66: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'move_right()\ncollect()'
+
+    def parse(source: str) -> tuple[int, ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        lines = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id == 'move_right'
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Hier ist nur move_right() ohne Argumente erlaubt.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 2: Hier ist nur move_right() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:41: ProgramError
+___________________ test_collect_world_error_is_recoverable ____________________
+
+    def test_collect_world_error_is_recoverable():
+        r = Runner()
+>       r.load('collect()')
+
+tests/test_collect.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:66: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'collect()'
+
+    def parse(source: str) -> tuple[int, ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        lines = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id == 'move_right'
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Hier ist nur move_right() ohne Argumente erlaubt.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Hier ist nur move_right() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:41: ProgramError
+=========================== short test summary info ============================
+FAILED tests/test_collect.py::test_collect_powers_machine_atomically_without_moving
+FAILED tests/test_collect.py::test_collect_wrong_tile_does_not_consume_battery
+FAILED tests/test_collect.py::test_battery_cannot_be_collected_twice - ValueE...
+FAILED tests/test_collect.py::test_runner_mixed_actions_line_numbers_stop_and_reset
+FAILED tests/test_collect.py::test_run_sequence_and_budget_apply_to_collect
+FAILED tests/test_collect.py::test_collect_world_error_is_recoverable - neonp...
+6 failed, 7 passed in 0.06s

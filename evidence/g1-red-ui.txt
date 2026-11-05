@@ -1,0 +1,33 @@
+...F                                                                     [100%]
+=================================== FAILURES ===================================
+___________ test_collect_loop_changes_machine_and_reset_restores_it ____________
+
+    def test_collect_loop_changes_machine_and_reset_restores_it():
+        pygame.init()
+        app = App()
+        initial_code = app.source
+        app.draw()
+        machine = pygame.Rect(470, 400, 120, 145)
+        dark = pygame.image.tobytes(app.canvas.subsurface(machine), 'RGB')
+        click(app, 'Run')
+        app.update(.5)
+        assert app.runner.world.x == 2
+        assert app.source == initial_code  # Tutorial never writes the answer.
+        app.handle(pygame.event.Event(pygame.TEXTINPUT, text='\ncollect()'))
+        click(app, 'Reset')
+        click(app, 'Run')
+        app.update(.5)
+        assert not app.runner.world.powered
+        app.update(.5)
+        assert app.runner.world.powered
+        assert app.runner.line == 2
+        app.draw()
+        lit = pygame.image.tobytes(app.canvas.subsurface(machine), 'RGB')
+>       assert lit != dark  # Visible world response, not merely a status string.
+        ^^^^^^^^^^^^^^^^^^
+E       assert b'")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")...2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H' != b'")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")...2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H\'2H'
+
+tests/test_ui.py:93: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_ui.py::test_collect_loop_changes_machine_and_reset_restores_it
+1 failed, 3 passed in 0.23s
