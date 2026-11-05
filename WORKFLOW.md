@@ -27,3 +27,6 @@ M = unmittelbar gemessen (mit Testbefehl, Ergebnis, SHA), G = im Repo gelesen (Q
 
 ## v4 linkage
 Use `GOVERNANCE.md`, `SAFETY_AND_EXECUTION.md`, `REVIEW_PROTOCOL.md`, `MODEL_ROUTING.md` as more specific runbooks. Record milestone learnings in append-only `LEARNINGS.md`, evidence in `PROGRESS_LOG.md`, latest snapshot in `CURRENT.md`. Separate observed git/CI evidence from any agent claim.
+
+## Verbindliche Owner-Korrektur — 2026-11-05
+Ein geprüfter lokaler Git-Commit und ein erfolgreich geprüftes Git-Bundle sind ein ausreichender Sicherheitscheckpoint für lokale G0-Entwicklung. GitHub-HTTP-403 ist ein Veröffentlichungsproblem, kein Entwicklungsstopp. Nach einem abgeschlossenen Meilenstein höchstens einen erneuten Push versuchen; bei 403 LOCAL_ONLY dokumentieren und lokal weiterarbeiten. Kein Warten auf Mikrofreigaben. Nur echte Datenverlust-, Sicherheits- oder Ausführbarkeitsrisiken stoppen die Arbeit. Zunächst keine zusätzlichen Agenten. Diese Entscheidung ersetzt widersprechende ältere Regeln.

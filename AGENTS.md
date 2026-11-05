@@ -19,3 +19,6 @@ No unbounded iterative agent chains, automatic self-spawning or claims of a live
 - Modellwahl vor jedem Prompt nach `MODEL_ROUTING.md`; Start: Astra Medium, Security: Astra High, Routine: Sol Medium.
 - Bei GitHub-403 keine Schreibberechtigung vortäuschen; `CATWORLD_SETUP_AND_AUDIT.md` lesen.
 - Neues Spielwissen und Fehlerkorrekturen direkt nach überprüfbarem Ergebnis dokumentieren; keine fiktiven Agentenstarts oder Qualitätsnachweise.
+
+## Verbindliche Owner-Korrektur — 2026-11-05
+Ein geprüfter lokaler Git-Commit und ein erfolgreich geprüftes Git-Bundle sind ein ausreichender Sicherheitscheckpoint für lokale G0-Entwicklung. GitHub-HTTP-403 ist ein Veröffentlichungsproblem, kein Entwicklungsstopp. Nach einem abgeschlossenen Meilenstein höchstens einen erneuten Push versuchen; bei 403 LOCAL_ONLY dokumentieren und lokal weiterarbeiten. Kein Warten auf Mikrofreigaben. Nur echte Datenverlust-, Sicherheits- oder Ausführbarkeitsrisiken stoppen die Arbeit. Zunächst keine zusätzlichen Agenten. Diese Entscheidung ersetzt widersprechende ältere Regeln.

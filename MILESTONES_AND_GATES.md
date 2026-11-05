@@ -36,9 +36,12 @@
 ## Decision gates
 - Two unsuccessful iterations of same bug → stop, root-cause analysis and minimal reproduction.
 - Context/tool quota risk → immediate safe checkpoint, handoff and no new features.
-- No source visible on GitHub → source recovery P0; no feature work until secured.
+- No source visible on GitHub → LOCAL_ONLY; verify local commit and Git bundle, then continue development. Retry publication once after a completed milestone.
 - Repeated tester confusion → redesign onboarding before new chapters.
 - Large content proposal without evidence → reject or park in BACKLOG.
 
 ## Metrics
 Early: time to first action, 1st mission finish, independent transfer, hint reliance, error recovery, voluntary replay. Mid: number of authored reusable solutions, share of strategies that actually differ, success with altered map. Late: system robustness under seeded incidents, runtime ticks/energy, alternate solutions and repeat engagement. All metrics stay hypotheses until collected.
+
+## Verbindliche Owner-Korrektur — 2026-11-05
+Ein geprüfter lokaler Git-Commit und ein erfolgreich geprüftes Git-Bundle sind ein ausreichender Sicherheitscheckpoint für lokale G0-Entwicklung. GitHub-HTTP-403 ist ein Veröffentlichungsproblem, kein Entwicklungsstopp. Nach einem abgeschlossenen Meilenstein höchstens einen erneuten Push versuchen; bei 403 LOCAL_ONLY dokumentieren und lokal weiterarbeiten. Kein Warten auf Mikrofreigaben. Nur echte Datenverlust-, Sicherheits- oder Ausführbarkeitsrisiken stoppen die Arbeit. Zunächst keine zusätzlichen Agenten. Diese Entscheidung ersetzt widersprechende ältere Regeln.

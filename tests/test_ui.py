@@ -54,3 +54,16 @@ def test_reset_cancels_scheduled_actions():
     assert app.runner.world.x == 1
     assert app.runner.status == 'idle'
     pygame.quit()
+
+
+def test_edit_after_execution_keeps_cursor_visible():
+    pygame.init()
+    app = App()
+    click(app, 'Run')
+    app.update(.5)
+    app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+    app.handle(pygame.event.Event(pygame.TEXTINPUT, text='# note\n' * 20 + 'move_right()'))
+    app.draw()
+    assert app.runner.line is None
+    assert app.scroll >= 11
+    pygame.quit()

@@ -13,3 +13,9 @@ Record each learning with ID, date, source, observation, cause confidence, pract
 | L007 | V game design | More content alone may not sustain 100h | Compose constraints and tooling, avoid grind inflation | Validate retention and strategy diversity when built |
 
 Every future bug or scope correction gets a new entry. No duplicate listicle of all tiny fixes: log only a generalizable invariant or failure mode and how it was prevented.
+
+### L008 — 2026-11-05 — Governance blockiert Produktentwicklung
+O/M: Trotz lokalem Commit 90de7e2 und geprüftem Bundle wurde G0 wegen GitHub-403 gestoppt. Ursache: Veröffentlichbarkeit und Wiederherstellbarkeit waren fälschlich in einer P0-Regel gleichgesetzt. Gegenmassnahme: verifizierter lokaler Commit + Bundle erlauben Entwicklung; 403 nur als LOCAL_ONLY melden, ein Pushversuch pro abgeschlossenem Meilenstein. AGENTS, WORKFLOW und MILESTONES_AND_GATES dauerhaft korrigiert. Beleg: git fsck und bundle verify erfolgreich; danach G0 implementiert und getestet.
+
+### L009 — 2026-11-05 — Veraltete Ausführungsmarkierung beim Editieren
+M: Nach Run und anschliessendem Ersetzen des Codes blieb die alte Zeile aktiv und die Ansicht scrollte am Cursor vorbei. Ursache: Stop behielt die für Debugging sinnvolle Zeile auch bei Codeänderungen. Gegenmassnahme: Editoränderungen verwerfen Ausführungsmarkierung und Fehlermeldung, Stop allein behält sie. Regression: test_edit_after_execution_keeps_cursor_visible; RED 1 failed / 2 passed, danach Gesamtsuite 29 passed. Belege evidence/red-editor.txt und evidence/refactor.txt.

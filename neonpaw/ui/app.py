@@ -19,6 +19,7 @@ class App:
         self.small = pygame.font.Font(None, 22)
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
+        self.sign_font = pygame.font.Font(None, 19)
         self.runner = Runner()
         self.source = START_CODE
         self.loaded_source = None
@@ -55,6 +56,11 @@ class App:
                 self.runner.step()
         self.elapsed = 0.0
 
+    def edited(self):
+        self.runner.stop()
+        self.runner.line = None
+        self.runner.error = ''
+
     def insert(self, text):
         base = '' if self.select_all else self.source
         cursor = 0 if self.select_all else min(self.cursor, len(base))
@@ -62,7 +68,7 @@ class App:
             self.source = base[:cursor] + text + base[cursor:]
             self.cursor = cursor + len(text)
             self.select_all = False
-            self.runner.stop()
+            self.edited()
 
     def handle(self, event):
         if event.type == pygame.QUIT:
@@ -102,13 +108,13 @@ class App:
                 elif self.cursor:
                     self.source = self.source[:self.cursor - 1] + self.source[self.cursor:]
                     self.cursor -= 1
-                    self.runner.stop()
+                    self.edited()
             elif event.key == pygame.K_DELETE:
                 if self.select_all:
                     self.insert('')
                 else:
                     self.source = self.source[:self.cursor] + self.source[self.cursor + 1:]
-                    self.runner.stop()
+                    self.edited()
             elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
                 self.cursor = max(0, min(len(self.source), self.cursor + (1 if event.key == pygame.K_RIGHT else -1)))
                 self.select_all = False
@@ -153,7 +159,7 @@ class App:
         pygame.draw.line(scene, '#62728b', (301, 108), (333, 108), 4)
         pygame.draw.rect(scene, '#472f52', (106, 122, 90, 28))
         pygame.draw.rect(scene, PINK, (109, 125, 84, 22), 1)
-        sign = pygame.font.Font(None, 19).render('NEON / 09', False, PINK)
+        sign = self.sign_font.render('NEON / 09', False, PINK)
         scene.blit(sign, (116, 130))
         pygame.draw.line(scene, CYAN, (0, 117), (88, 117), 2)
         pygame.draw.line(scene, '#101528', (0, 83), (350, 97), 2)
