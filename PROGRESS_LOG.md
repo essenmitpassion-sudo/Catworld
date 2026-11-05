@@ -20,3 +20,6 @@ One next action:
 ```
 
 The journal records history; CURRENT.md is a short current snapshot, and actual git/test state outranks both.
+
+## 2026-11-05 — Startpaket / Zugriffssicherung
+M: 25 Owner-Dokumente eingelesen, Paketcommit 09cb0f4 auf g0/first-cat-action. Git-Lesen Exit 0 ohne Refs; Push Exit 128 / HTTP 403. Kein G0-Code, RED/GREEN/REFACTOR NOT_RUN, UI_UNVERIFIED, NEEDS_HUMAN. LOCAL_ONLY; kein PR erstellt. Nächste Aktion: nach Schreibfreigabe denselben Branch pushen und Remote-SHA prüfen. Keine Subagenten gestartet.
