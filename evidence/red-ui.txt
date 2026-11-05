@@ -1,0 +1,18 @@
+
+==================================== ERRORS ====================================
+______________________ ERROR collecting tests/test_ui.py _______________________
+ImportError while importing test module '/workspace/Catworld/tests/test_ui.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_ui.py:5: in <module>
+    from neonpaw.ui.app import App
+E   ModuleNotFoundError: No module named 'neonpaw.ui.app'
+------------------------------- Captured stdout --------------------------------
+pygame-ce 2.5.7 (SDL 2.32.10, Python 3.12.14)
+=========================== short test summary info ============================
+ERROR tests/test_ui.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.09s

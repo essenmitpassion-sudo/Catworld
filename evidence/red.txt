@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+_____________________ ERROR collecting tests/test_game.py ______________________
+ImportError while importing test module '/workspace/Catworld/tests/test_game.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_game.py:2: in <module>
+    from neonpaw.core.world import World, transition
+E   ModuleNotFoundError: No module named 'neonpaw.core.world'
+=========================== short test summary info ============================
+ERROR tests/test_game.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.09s
