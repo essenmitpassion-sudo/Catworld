@@ -1,15 +1,10 @@
-# ACTIVE TASK: G0 ONLY — First visible cat action
+# Einzige nächste Aufgabe: G0-Abnahme
 
-Build the smallest **working** Neonpaw 2D pixel-art prototype: visible black alley cat in a tiny readable neon alley, embedded editor with `move_right()`, Run / Step / Stop / Reset, highlighting executing line, clear errors, reproducible reset and secure narrow interpreter. Press Run and see the cat take exactly one tile step. On invalid commands, do not crash. Show a tiny clear goal; the first successful movement is rewarding.
+G0 ist implementiert; keine G1-Erweiterung beginnen.
 
-**Do not implement the long-term roadmap!** Long-term documents are design constraints, not a feature queue. No fleets, energy networks, factories, procedural maps, chapter select, subscriptions, extra agents, cloud, AI code completion or overbuilt renderer. Limit new modules to `core`, `code`, `content`, `ui`, `tests` as needed.
+1. Aktuellen Branch/HEAD und CURRENT gegen Git prüfen; Tests mit `.venv/bin/python -m pytest -q` reproduzieren.
+2. Unabhängiger Review von `neonpaw/code/runner.py`, Welt und SDL-Steuerung; keine behauptete bereits erfolgte ChatGPT-Prüfung.
+3. Menschlicher Kurztest: Run bewegt Katze; zweiten Befehl eingeben, Step/Stop/Reset nutzen; absichtlich `bad()` eingeben und Fehler selbst beheben. Verständlichkeit und Lust auf Weiterspielen separat protokollieren, ohne Mikrofreigaben für technische Fixes.
+4. Nur reproduzierte G0-Blocker beheben. Windows-Start bei verfügbarer Plattform prüfen.
 
-## G0 red-green-refactor evidence
-1. Inspect actual source/branch/dirty status and baseline. If new repo, initialize clean.
-2. RED test: moving one tile / boundary refusal, unknown AST or call denied, Stop/Reset, budget. Capture failing test output from missing implementation.
-3. GREEN: world transition, bounded/cooperative interpreter and pygame-ce UI. Confirm actual executable frame with editor, cat and action.
-4. REFACTOR smallest cleanup, all tests re-run, record concrete command and exit code.
-5. UI end-to-end smoke by actual app interaction where supported; if unavailable explicitly `UI_UNVERIFIED`, not fake PASS.
-6. Commit to branch, update CURRENT with branch/SHA/dirty/test evidence, open PR and state one NEXT task only when G0 done. If nearly out of context/credits, checkpoint rather than expand.
-
-Acceptance: visible correct one-step movement, beginner-readable objective, no unrestricted script execution, reset/stop safe, tests green, source recoverable, startup instructions accurate. Human usability remains NEEDS_HUMAN until owner or another person observes.
+GitHub-Branch ist veröffentlicht. PR-Erstellung bleibt ohne bestätigten API-Zugriff und separaten Basisbranch offen; keine automatischen Merges oder Branchschutzänderungen.
