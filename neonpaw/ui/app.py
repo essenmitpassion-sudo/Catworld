@@ -1,7 +1,8 @@
 """One-screen G0/G1: real SDL controls and an original procedural pixel alley."""
 import pygame
 from neonpaw.code.runner import Runner, ProgramError, MAX_SOURCE
-from neonpaw.content.levels import TITLE, OBJECTIVE, START_CODE, GOAL_X
+from neonpaw.content.levels import TITLE, OBJECTIVE, START_CODE, BATTERY_POSITIONS, HINTS
+from neonpaw.core.world import World
 
 BG = '#101321'
 INK = '#e5eafa'
@@ -20,7 +21,10 @@ class App:
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
         self.sign_font = pygame.font.Font(None, 19)
-        self.runner = Runner()
+        self.scenario = 0
+        self.hint_level = 0
+        self.used_example = False
+        self.runner = Runner(initial_world=World(battery_x=BATTERY_POSITIONS[0]))
         self.source = START_CODE
         self.loaded_source = None
         self.cursor = len(self.source)
@@ -31,13 +35,25 @@ class App:
         self.alive = True
         self.buttons = {name: pygame.Rect(790 + i * 95, 540, 85, 42)
                         for i, name in enumerate(('Run', 'Step', 'Stop', 'Reset'))}
+        self.buttons['Transfer'] = pygame.Rect(420, 125, 320, 36)
+        self.buttons['Hilfe'] = pygame.Rect(540, 75, 200, 36)
         pygame.key.start_text_input()
 
     def text(self, value, pos, color=INK, font=None):
         self.canvas.blit((font or self.font).render(value, True, color), pos)
 
     def activate(self, name):
-        if name == 'Reset':
+        if name == 'Transfer':
+            self.scenario = 1 - self.scenario
+            self.runner = Runner(initial_world=World(battery_x=BATTERY_POSITIONS[self.scenario]))
+            self.loaded_source = None
+            self.hint_level = 0
+            self.used_example = False
+        elif name == 'Hilfe':
+            self.hint_level = (self.hint_level + 1) % 4
+            self.used_example |= self.hint_level == 3
+            return
+        elif name == 'Reset':
             self.runner.reset()
             self.loaded_source = None
         elif name == 'Stop':
@@ -45,6 +61,10 @@ class App:
         else:
             if (self.loaded_source != self.source or
                     self.runner.status in ('idle', 'done', 'stopped', 'error')):
+                # A fresh transfer attempt always starts at its scenario origin.
+                # Repeated Run/Step after failure cannot accumulate movement.
+                if self.scenario == 1:
+                    self.runner.reset()
                 try:
                     self.runner.load(self.source)
                 except ProgramError:
@@ -91,7 +111,8 @@ class App:
             self.insert(event.text)
         elif event.type == pygame.KEYDOWN:
             shortcuts = {pygame.K_F5: 'Run', pygame.K_F6: 'Step',
-                         pygame.K_ESCAPE: 'Stop', pygame.K_F2: 'Reset'}
+                         pygame.K_ESCAPE: 'Stop', pygame.K_F2: 'Reset',
+                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer'}
             if event.key in shortcuts:
                 self.activate(shortcuts[event.key])
                 return
@@ -165,8 +186,9 @@ class App:
             pygame.draw.rect(scene, '#ffc875' if powered else '#3a4054', (item_x, 146, 8, 13))
             pygame.draw.rect(scene, PINK if powered else '#484258', (item_x, 146, 8, 3))
         pygame.draw.rect(scene, '#0b1527', (225, 170, 34, 8))
+        cable_x = 40 + 36 * self.runner.world.battery_x
         pygame.draw.lines(scene, CYAN if powered else '#536077', False,
-                          [(112, 184), (112, 181), (208, 181), (208, 168), (216, 168)], 2)
+                          [(cable_x, 184), (cable_x, 181), (208, 181), (208, 168), (216, 168)], 2)
         if powered:
             pygame.draw.line(scene, PINK, (213, 189), (273, 189), 2)
         pygame.draw.line(scene, '#62728b', (301, 108), (301, 180), 4)
@@ -182,7 +204,7 @@ class App:
             tile_x = 13 + 36 * x
             pygame.draw.rect(scene, '#37445a', (tile_x, 192, 32, 30))
             pygame.draw.line(scene, '#46546b', (tile_x, 192), (tile_x + 31, 192))
-        goal = pygame.Rect(13 + GOAL_X * 36, 192, 32, 30)
+        goal = pygame.Rect(13 + self.runner.world.battery_x * 36, 192, 32, 30)
         pygame.draw.rect(scene, CYAN, goal, 2)
         pygame.draw.line(scene, CYAN, (goal.x + 10, 229), (goal.x + 23, 229), 2)
         if not self.runner.world.powered:
@@ -208,17 +230,38 @@ class App:
         pygame.draw.rect(scene, '#080e1b', (cx + 6, 212, 6, 5))
         self.canvas.blit(pygame.transform.scale(scene, (700, 480)), (40, 170))
 
+    def draw_hint(self):
+        if self.hint_level:
+            pygame.draw.rect(self.canvas, '#182537', (50, 190, 680, 170), border_radius=8)
+            pygame.draw.rect(self.canvas, CYAN, (50, 190, 680, 170), 1, border_radius=8)
+            heading = f'OPTIONALE HILFE {self.hint_level}/3'
+            if self.hint_level == 3:
+                heading += ' · CODEBEISPIEL (UNTERSTÜTZT)'
+            self.text(heading, (70, 208), CYAN, self.small)
+            for index, line in enumerate(HINTS[self.scenario][self.hint_level - 1]):
+                self.text(line, (70, 244 + index * 28), INK,
+                          self.mono if self.hint_level == 3 else self.small)
+            if self.hint_level < 3:
+                self.text('Weitere Hilfe nur auf deinen Klick. Dein Code bleibt unverändert.',
+                          (70, 320), MUTED, self.small)
+
     def draw(self):
         self.canvas.fill(BG)
         self.text('NEONPAW', (40, 28), CYAN, self.big)
         self.text('KLEINE PFOTEN. ECHTER CODE.', (42, 87), MUTED, self.small)
-        self.text('01 / DIE GASSE ERWACHT', (42, 135), INK, self.small)
+        self.text('02 / DEIN EIGENER WEG' if self.scenario else '01 / DIE GASSE ERWACHT',
+                  (42, 135), INK, self.small)
         self.alley()
-        self.text('PYTHON / DEIN ERSTER BEFEHL', (790, 42), CYAN, self.small)
+        self.text('PYTHON / DEIN EIGENES PROGRAMM' if self.scenario else 'PYTHON / DEIN ERSTER BEFEHL',
+                  (790, 42), CYAN, self.small)
         world = self.runner.world
-        self.text('DIE GASSE LEUCHTET' if world.powered else TITLE, (790, 82), INK)
+        title = 'DEIN EIGENER WEG' if self.scenario else TITLE
+        self.text('DIE GASSE LEUCHTET' if world.powered else title, (790, 82), INK)
         if world.powered:
-            hint, instruction = 'Batterie eingesetzt. Automat eingeschaltet!', 'Zwei Befehle — ein sichtbarer Unterschied.'
+            hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Batterie eingesetzt. Automat eingeschaltet!'
+            instruction = 'Welche Änderung hat den Weg verändert?' if self.scenario else 'Bereit für einen neuen Weg? Weiter links.'
+        elif self.scenario:
+            hint, instruction = 'Die Batterie liegt jetzt weiter rechts.', 'Ändere deinen Code. Run beginnt am Start.'
         elif world.x == world.battery_x:
             hint, instruction = 'collect() nimmt die Batterie auf.', 'Neue Zeile ergänzen, dann Reset und Run.'
         elif world.moves:
@@ -249,12 +292,20 @@ class App:
         self.canvas.set_clip(None)
         for name, rect in self.buttons.items():
             pygame.draw.rect(self.canvas, CYAN if name == 'Run' else '#303c56', rect, border_radius=5)
-            label = self.font.render(name, True, BG if name == 'Run' else INK)
+            caption = name
+            if name == 'Transfer':
+                caption = 'Zurück zum Einstieg · F3' if self.scenario else ('Weiter: neuer Weg · F3' if world.powered else 'Freier Einstieg · F3')
+            elif name == 'Hilfe':
+                caption = ('Hilfe · F1', 'Nächster Tipp · F1', 'Beispiel anzeigen · F1', 'Hilfe schliessen · F1')[self.hint_level]
+            label = self.font.render(caption, True, BG if name == 'Run' else INK)
             self.canvas.blit(label, label.get_rect(center=rect.center))
         self.text('F5 Run  ·  F6 Step  ·  Esc Stop  ·  F2 Reset', (790, 594), MUTED, self.small)
         statuses = {'idle': 'Startposition. Run startet; dein Code bleibt.', 'paused': 'Step: ein Befehl. Run setzt danach fort.',
                     'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Stop: Position bleibt. Run startet Code neu.',
                     'done': 'Fertig. Run wiederholt; Reset setzt die Welt zurück.', 'error': 'Kein Problem — korrigiere deinen Code.'}
+        if self.scenario:
+            statuses['stopped'] = 'Stop: Position bleibt. Neuer Run beginnt am Start.'
+            statuses['done'] = 'Fertig. Neuer Run beginnt am Start; Code bleibt.'
         message = self.runner.error or statuses[self.runner.status]
         words, line, y = message.split(), '', 631
         for word in words:
@@ -265,6 +316,8 @@ class App:
         self.text(line, (790, y), PINK if self.runner.error else INK, self.small)
         if world.powered:
             objective = 'Strom da! Dein Code hat die Gasse geweckt.'
+        elif self.scenario:
+            objective = 'Versorge den Automaten. Die Batterie liegt an einem neuen Ort.'
         elif world.x == world.battery_x:
             objective = 'Erster Schritt geschafft! Nimm jetzt die Batterie mit collect() auf.'
         elif world.moves:
@@ -272,6 +325,7 @@ class App:
         else:
             objective = OBJECTIVE
         self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)
+        self.draw_hint()
         pygame.transform.scale(self.canvas, self.screen.get_size(), self.screen)
         pygame.display.flip()
 

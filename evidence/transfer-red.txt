@@ -1,0 +1,126 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_____________ test_runner_reset_preserves_scenario_and_world_rules _____________
+
+    def test_runner_reset_preserves_scenario_and_world_rules():
+>       r = Runner(initial_world=World(battery_x=3))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Runner.__init__() got an unexpected keyword argument 'initial_world'
+
+tests/test_transfer.py:28: TypeError
+_______ test_transfer_retains_authored_code_and_is_available_to_experts ________
+
+app = <neonpaw.ui.app.App object at 0x7f79cdf72660>
+
+    def test_transfer_retains_authored_code_and_is_available_to_experts(app):
+        before = app.source
+>       click(app, 'Transfer')
+
+tests/test_transfer.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f79cdf72660>, name = 'Transfer'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Transfer'
+
+tests/test_transfer.py:16: KeyError
+________ test_unchanged_old_solution_cannot_win_by_repeated_run_or_step ________
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb42f0>
+
+    def test_unchanged_old_solution_cannot_win_by_repeated_run_or_step(app):
+        app.source = OLD_CODE
+        click(app, 'Run')
+        for _ in range(2):
+            app.update(.5)
+        assert app.runner.world.powered
+>       click(app, 'Transfer')
+
+tests/test_transfer.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb42f0>, name = 'Transfer'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Transfer'
+
+tests/test_transfer.py:16: KeyError
+_____________ test_real_edit_solves_transfer_and_reset_keeps_code ______________
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb4ec0>
+
+    def test_real_edit_solves_transfer_and_reset_keeps_code(app):
+        app.source = OLD_CODE
+>       click(app, 'Transfer')
+
+tests/test_transfer.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb4ec0>, name = 'Transfer'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Transfer'
+
+tests/test_transfer.py:16: KeyError
+__________ test_hints_are_optional_staged_and_never_edit_or_run_code ___________
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb5c10>
+
+    def test_hints_are_optional_staged_and_never_edit_or_run_code(app):
+>       click(app, 'Transfer')
+
+tests/test_transfer.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb5c10>, name = 'Transfer'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Transfer'
+
+tests/test_transfer.py:16: KeyError
+____________________ test_target_marker_moves_with_scenario ____________________
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb6c00>
+
+    def test_target_marker_moves_with_scenario(app):
+        app.draw()
+        # Bottom of outline at tile 2 / tile 3, clear of cat and battery glyph.
+        old_target = (40 + (13 + 36 * 2) * 2, 170 + 220 * 2)
+        new_target = (40 + (13 + 36 * 3) * 2, 170 + 220 * 2)
+        cyan = pygame.Color('#65f3dd')
+        assert app.canvas.get_at(old_target) == cyan
+>       click(app, 'Transfer')
+
+tests/test_transfer.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f79cdfb6c00>, name = 'Transfer'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Transfer'
+
+tests/test_transfer.py:16: KeyError
+=========================== short test summary info ============================
+FAILED tests/test_transfer.py::test_runner_reset_preserves_scenario_and_world_rules
+FAILED tests/test_transfer.py::test_transfer_retains_authored_code_and_is_available_to_experts
+FAILED tests/test_transfer.py::test_unchanged_old_solution_cannot_win_by_repeated_run_or_step
+FAILED tests/test_transfer.py::test_real_edit_solves_transfer_and_reset_keeps_code
+FAILED tests/test_transfer.py::test_hints_are_optional_staged_and_never_edit_or_run_code
+FAILED tests/test_transfer.py::test_target_marker_moves_with_scenario - KeyEr...
+6 failed in 0.32s

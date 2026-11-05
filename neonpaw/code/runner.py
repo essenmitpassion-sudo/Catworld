@@ -44,12 +44,13 @@ def parse(source: str) -> tuple[tuple[int, str], ...]:
 
 
 class Runner:
-    def __init__(self, max_steps=64):
+    def __init__(self, max_steps=64, initial_world=None):
+        self.initial_world = initial_world if initial_world is not None else World()
         self.max_steps = max_steps
         self.reset()
 
     def reset(self):
-        self.world = World()
+        self.world = self.initial_world
         self.commands = ()
         self.pc = 0
         self.line = None

@@ -48,6 +48,36 @@ pygame.image.save(app.canvas, 'evidence/g1-battery.png')
 frame(dt=.5)
 assert app.runner.world.powered and app.runner.line == 2
 pygame.image.save(app.canvas, 'evidence/g1-powered.png')
+# Transfer preserves authored code; unchanged programs cannot accumulate movement.
+old_code = app.source
+click('Transfer')
+assert app.source == old_code and app.runner.world.battery_x == 3
+assert app.hint_level == 0
+pygame.image.save(app.canvas, 'evidence/transfer-start.png')
+for _ in range(2):
+    click('Run')
+    frame(dt=.5)
+    frame(dt=.5)
+    assert not app.runner.world.powered and app.runner.world.x == 2
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()\nmove_right()\ncollect()'))
+click('Run')
+for _ in range(3):
+    frame(dt=.5)
+assert app.runner.world.powered and not app.used_example
+pygame.image.save(app.canvas, 'evidence/transfer-solved.png')
+click('Reset')
+assert app.runner.world.battery_x == 3 and not app.runner.world.powered
+preserved = app.source
+for level in (1, 2, 3):
+    click('Hilfe')
+    assert app.hint_level == level and app.source == preserved
+    pygame.image.save(app.canvas, f'evidence/transfer-hint-{level}.png')
+assert app.used_example
+click('Hilfe')
+click('Transfer')
+assert app.runner.world.battery_x == 2
+
 click('Reset')
 assert not app.runner.world.powered and app.runner.world.x == 1
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
@@ -63,7 +93,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> machine on -> reset -> world/syntax error -> quit')
+print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
