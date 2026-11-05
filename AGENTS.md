@@ -22,3 +22,8 @@ No unbounded iterative agent chains, automatic self-spawning or claims of a live
 
 ## Verbindliche Owner-Korrektur — 2026-11-05
 Ein geprüfter lokaler Git-Commit und ein erfolgreich geprüftes Git-Bundle sind ein ausreichender Sicherheitscheckpoint für lokale G0-Entwicklung. GitHub-HTTP-403 ist ein Veröffentlichungsproblem, kein Entwicklungsstopp. Nach einem abgeschlossenen Meilenstein höchstens einen erneuten Push versuchen; bei 403 LOCAL_ONLY dokumentieren und lokal weiterarbeiten. Kein Warten auf Mikrofreigaben. Nur echte Datenverlust-, Sicherheits- oder Ausführbarkeitsrisiken stoppen die Arbeit. Zunächst keine zusätzlichen Agenten. Diese Entscheidung ersetzt widersprechende ältere Regeln.
+
+## ChatGPT-Review-Handoff (2026-11-05)
+- Bei jeder **neu begonnenen** Codex-Arbeitsrunde optional `CHATGPT_REVIEW_G0.md` als nicht-blockierenden unabhängigen Prüfbericht lesen. Aktuelle Git-/Testbelege und `NEXT_TASK.md` haben Vorrang vor einem veralteten Review.
+- Erkenntnisse übernehmen, sofern relevant und überprüft; keine G0-Feature-Erweiterung und keine neue Freigabewarteschlange aus dem Review ableiten.
+- Eine GitHub-Datei oder ein Issue startet Codex nicht automatisch. Bei neuer Sitzung zuerst `git fetch`/aktuellen HEAD prüfen; keinen ungesicherten lokalen Code überschreiben.
