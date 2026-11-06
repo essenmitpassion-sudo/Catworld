@@ -44,7 +44,7 @@ def test_step_stop_and_reset():
 @pytest.mark.parametrize('source', [
     'import os', '__import__("os")', 'move_right(1)', 'move_right(x=1)',
     'move_right.__call__()', 'x = 1', 'while True: move_right()',
-    'for x in range(3): move_right()', '[move_right() for x in range(3)]',
+    'for x in range(1 + 2): move_right()', '[move_right() for x in range(3)]',
     'print("hello")', 'lambda: move_right()', 'move_right(*[])',
     'def f():\n pass', '1 + 2', 'move_right()\nopen("secret")',
 ])

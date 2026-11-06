@@ -1,0 +1,566 @@
+FFFFFFFFFFFF...........................F                                 [100%]
+=================================== FAILURES ===================================
+___________________ test_supported_range_matches_python[5-5] ___________________
+
+arguments = '5', expected = 5
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(5):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+___________________ test_supported_range_matches_python[0-0] ___________________
+
+arguments = '0', expected = 0
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(0):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+__________________ test_supported_range_matches_python[-3-0] ___________________
+
+arguments = '-3', expected = 0
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(-3):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+_________________ test_supported_range_matches_python[2, 6-4] __________________
+
+arguments = '2, 6', expected = 4
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(2, 6):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+_______________ test_supported_range_matches_python[6, 1, -2-3] ________________
+
+arguments = '6, 1, -2', expected = 3
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(6, 1, -2):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+________________ test_supported_range_matches_python[1, 6, 2-3] ________________
+
+arguments = '1, 6, 2', expected = 3
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(1, 6, 2):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+_________________ test_supported_range_matches_python[4, 1-0] __________________
+
+arguments = '4, 1', expected = 0
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(4, 1):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+_________________ test_supported_range_matches_python[-3, 0-3] _________________
+
+arguments = '-3, 0', expected = 3
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(-3, 0):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+__________________ test_supported_range_matches_python[64-64] __________________
+
+arguments = '64', expected = 64
+
+    @pytest.mark.parametrize('arguments, expected', [
+        ('5', 5), ('0', 0), ('-3', 0), ('2, 6', 4), ('6, 1, -2', 3),
+        ('1, 6, 2', 3), ('4, 1', 0), ('-3, 0', 3), ('64', 64),
+    ])
+    def test_supported_range_matches_python(arguments, expected):
+>       commands = parse(f'for step in range({arguments}):\n    move_right()')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_loops.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for step in range(64):\n    move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+__________________ test_loop_body_order_and_following_action ___________________
+
+    def test_loop_body_order_and_following_action():
+>       assert parse('for i in range(2):\n move_right()\n collect()\nmove_right()') == (
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            (2, 'move_right'), (3, 'collect'), (2, 'move_right'), (3, 'collect'), (4, 'move_right'))
+
+tests/test_loops.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for i in range(2):\n move_right()\n collect()\nmove_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+____________________ test_loop_steps_stop_resume_and_reset _____________________
+
+    def test_loop_steps_stop_resume_and_reset():
+        r = Runner(initial_world=World(battery_x=6))
+        source = 'for _ in range(5):\n    move_right()\ncollect()'
+>       r.load(source)
+
+tests/test_loops.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:74: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for _ in range(5):\n    move_right()\ncollect()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+______________ test_runtime_budget_still_applies_to_expanded_loop ______________
+
+    def test_runtime_budget_still_applies_to_expanded_loop():
+        r = Runner(max_steps=2)
+>       r.load('for i in range(5):\n move_right()')
+
+tests/test_loops.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:74: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for i in range(5):\n move_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+______ test_empty_loop_has_no_world_effect_and_valid_following_call_runs _______
+
+    def test_empty_loop_has_no_world_effect_and_valid_following_call_runs():
+        r = Runner()
+>       r.load('for i in range(-1):\n move_right()\nmove_right()')
+
+tests/test_loops.py:84: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:74: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for i in range(-1):\n move_right()\nmove_right()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+=========================== short test summary info ============================
+FAILED tests/test_loops.py::test_supported_range_matches_python[5-5] - neonpa...
+FAILED tests/test_loops.py::test_supported_range_matches_python[0-0] - neonpa...
+FAILED tests/test_loops.py::test_supported_range_matches_python[-3-0] - neonp...
+FAILED tests/test_loops.py::test_supported_range_matches_python[2, 6-4] - neo...
+FAILED tests/test_loops.py::test_supported_range_matches_python[6, 1, -2-3]
+FAILED tests/test_loops.py::test_supported_range_matches_python[1, 6, 2-3] - ...
+FAILED tests/test_loops.py::test_supported_range_matches_python[4, 1-0] - neo...
+FAILED tests/test_loops.py::test_supported_range_matches_python[-3, 0-3] - ne...
+FAILED tests/test_loops.py::test_supported_range_matches_python[64-64] - neon...
+FAILED tests/test_loops.py::test_loop_body_order_and_following_action - neonp...
+FAILED tests/test_loops.py::test_loop_steps_stop_resume_and_reset - neonpaw.c...
+FAILED tests/test_loops.py::test_runtime_budget_still_applies_to_expanded_loop
+FAILED tests/test_loops.py::test_empty_loop_has_no_world_effect_and_valid_following_call_runs
+13 failed, 27 passed in 0.13s

@@ -35,19 +35,55 @@ def parse(source: str) -> tuple[tuple[int, str], ...]:
     if len(tree.body) > MAX_COMMANDS:
         raise ProgramError('Maximal 64 Befehle pro Programm.')
     commands = []
+    iterations = 0
     for stmt in tree.body:
-        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
-                and isinstance(stmt.value.func, ast.Name)):
-            raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
-        name = stmt.value.func.id
-        if name not in ACTIONS:
-            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
-            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
-            raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
-        if stmt.value.args or stmt.value.keywords:
-            raise ProgramError(f'{name}() braucht hier keine Argumente zwischen den Klammern.', stmt.lineno)
-        commands.append((stmt.lineno, name))
+        if isinstance(stmt, ast.For):
+            if (not isinstance(stmt.target, ast.Name) or
+                    stmt.target.id in (*ACTIONS, 'range') or stmt.orelse):
+                raise ProgramError('Einfache Schleifenvariable verwenden; kein for/else.', stmt.lineno)
+            call = stmt.iter
+            if (not isinstance(call, ast.Call) or not isinstance(call.func, ast.Name)
+                    or call.func.id != 'range' or call.keywords or not 1 <= len(call.args) <= 3):
+                raise ProgramError('range() braucht ein bis drei ganze Zahlen.', stmt.lineno)
+            values = []
+            for arg in call.args:
+                sign = 1
+                if isinstance(arg, ast.UnaryOp) and isinstance(arg.op, (ast.USub, ast.UAdd)):
+                    sign = -1 if isinstance(arg.op, ast.USub) else 1
+                    arg = arg.operand
+                if not isinstance(arg, ast.Constant) or type(arg.value) is not int or abs(arg.value) > 64:
+                    raise ProgramError('range(): nur feste ganze Zahlen von -64 bis 64.', stmt.lineno)
+                values.append(sign * arg.value)
+            if len(values) == 3 and values[2] == 0:
+                raise ProgramError('Die Schrittweite von range() darf nicht 0 sein.', stmt.lineno)
+            count = len(range(*values))
+            # Validate the body even for an empty range. No nesting, variable reads or effects.
+            body = [parse_action(child) for child in stmt.body]
+            iterations += count
+            if iterations > MAX_COMMANDS or len(commands) + count * len(body) > MAX_COMMANDS:
+                raise ProgramError('Maximal 64 Wiederholungen und 64 Aktionen pro Programm.', stmt.lineno)
+            commands.extend(body * count)
+        else:
+            commands.append(parse_action(stmt))
+        if len(commands) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 ausgeführte Aktionen pro Programm.', stmt.lineno)
     return tuple(commands)
+
+
+def parse_action(stmt):
+    if isinstance(stmt, ast.For):
+        raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+    if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+            and isinstance(stmt.value.func, ast.Name)):
+        raise ProgramError('Hier sind nur move_right() und collect() ohne Argumente erlaubt.', stmt.lineno)
+    name = stmt.value.func.id
+    if name not in ACTIONS:
+        near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+        suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+        raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+    if stmt.value.args or stmt.value.keywords:
+        raise ProgramError(f'{name}() braucht hier keine Argumente zwischen den Klammern.', stmt.lineno)
+    return stmt.lineno, name
 
 
 class Runner:
