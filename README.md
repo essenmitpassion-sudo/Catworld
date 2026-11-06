@@ -81,10 +81,30 @@ die drei Hilfestufen bleiben optional. Deine bisherige Eigenlösung wartet unter
 **Zur Eigenlösung / F4** (auch F3). Auch ein unfertiger Abrufentwurf bleibt beim
 Zurückwechseln erhalten. Reset setzt nur die Welt zurück, nicht deinen Text.
 
-Beide Texte, Cursor und Hilfestatus bleiben **innerhalb der laufenden Sitzung**
-erhalten. Es gibt noch keine Speicherung über das Schliessen des Spiels hinaus.
+Beim Wechsel innerhalb der Sitzung bleiben beide Texte, Cursor und Hilfestatus
+erhalten. Beide Texte und die Kennzeichnung verwendeter Beispiele werden zusätzlich
+lokal gespeichert und nach einem Spielneustart wiederhergestellt. Die Welt startet
+am Anfang; geladener Code läuft erst nach Run oder Step.
 Ein leeres Programm schaltet den Automaten nicht ein. Erfolg zeigt die Weltreaktion,
 beweist aber nicht, dass der Spieler die Reihenfolge selbst verstanden hat.
+
+## Eigene Programme bleiben erhalten
+
+Das Spiel speichert geänderte Entwürfe automatisch. **Strg+S** speichert zusätzlich
+manuell oder versucht es nach einem Schreibfehler erneut. Die Meldung unten zeigt,
+ob das Speichern funktioniert hat. Bei Speicherfehlern bleibt der Code im Editor;
+vor dem Schliessen die Meldung beachten.
+
+Standardort: Windows `%LOCALAPPDATA%\.neonpaw\drafts.json`, Linux/macOS
+`~/.neonpaw/drafts.json`. Die letzte gültige Fassung liegt daneben als `drafts.bak`.
+Bei beschädigter Hauptdatei wird eine gültige Sicherung geladen und dies angezeigt.
+Ohne gültige Sicherung bleibt die Datei unangetastet; **Strg+S** speichert auf
+Wunsch einen neuen Entwurf und erhält die beschädigte Datei als `drafts.damaged-*`.
+Kein Cloud-Upload, keine Ausführung geladener Texte, keine Speicherung von Weltpositionen.
+
+Für portable oder eingeschränkte Umgebungen kann `NEONPAW_DATA_DIR` auf einen
+beschreibbaren Ordner gesetzt werden. Tests/Smoke verwenden ausschliesslich temporäre
+Dateien und überschreiben keine persönlichen Programme.
 
 ## Nachweise
 

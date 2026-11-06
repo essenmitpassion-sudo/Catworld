@@ -1,20 +1,18 @@
-# Nächster kleiner Schritt: eigene Programme behalten
+# Nächster kleiner Schritt: Tippfehler selbst beheben
 
-Abruf aus leerem Editor ist implementiert und geprüft: 58 Tests sowie SDL-Smoke.
-Nicht noch einmal bauen. Die Eigenlösung und der Abrufentwurf bleiben bisher nur
-während einer Sitzung erhalten; nach dem Schliessen fehlen sie.
+Abruf und wiederherstellbare eigene Entwürfe sind fertig (a15b644 / 95032c5),
+76 Tests und SDL-Smoke grün. Nicht erneut implementieren.
 
-Kleinste sinnvolle Fortsetzung: beide selbst geschriebenen Texte lokal speichern
-und beim nächsten Start wieder bereitstellen. Keine Cloud, Accounts oder neue
-Sprachsyntax. Vorhandene Entwürfe nicht blind überschreiben; atomar schreiben,
-Format/Länge beim Lesen begrenzen, beschädigte Daten verständlich melden und
-Wiederherstellung ermöglichen. Geladener Text darf niemals automatisch laufen.
-Keine allgemeine Spielstand-/Migrationsengine bauen.
+Kleinste sinnvolle Verbesserung: konkrete Fehlermeldungen für falsch geschriebene
+bekannte Befehle, z.B. move_rigth(), und unerlaubte Argumente unterscheiden.
+Zeile und verständliche Ursache zeigen; gegebenenfalls den bekannten Befehlsnamen
+als Hinweis anbieten. Nie Code ersetzen oder automatisch starten, keine Komplettlösung
+für eine Mission einblenden. AST-Allowlist und Budgets unverändert streng halten.
 
-RED zuerst für Speichern, Neustart/Wiederherstellen, defekte Daten und fehlende
-Schreibrechte; bestehende Run/Step/Stop/Reset- und Abruf-Tests erhalten. SDL-Smoke
-mit Neustart und wiedergefundenem Text. Persönliche Testdaten nicht committen.
-Menschlicher Lernwert weiterhin offen markieren; echte neue Reviews priorisieren.
+RED mit echten Eingaben; Core- und SDL-Tests für Fehlermeldung, Korrektur durch eigene
+Texteingabe und erfolgreichen erneuten Run. Bestehende Anfänger-/Transfer-/Abruf-
+und Speicherfunktionen erhalten. Neue Review- oder Owner-Befunde zuerst prüfen.
 
-Bei Kapazitätsgrenze vor neuer Arbeit Commit + geprüftes Bundle + CURRENT sichern.
-Keine behauptete tägliche Automation: hier derzeit nicht verfügbar.
+Kein Warten auf menschliche Mikrofreigaben; Lernwert/Spass bleiben ohne Menschentest
+offen. Bei Kapazitätsgrenze erst Commit/Backup/Status sichern. Keine aktive Automation
+behaupten: in dieser Sitzung kein Zeitplan-Werkzeug verfügbar.

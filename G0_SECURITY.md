@@ -33,3 +33,12 @@ G1 erweitert nur den Aktionsnamen, nicht die AST-Formen oder Budgets. collect
 Automat eingeschaltet; es gibt noch kein allgemeines Inventar. Erneutes Aufnehmen
 oder falsche Position ist ein Weltfehler. Die interne Parserdarstellung enthält
 nun (Zeile, Aktion), damit Runner und UI dieselbe geprüfte Sequenz ausführen.
+
+Lokale Entwurfsspeicherung: ausschliesslich begrenztes JSON mit festem Schema,
+maximal 65536 Datei-Bytes und 4096 Zeichen je Programm. Typen/Version/Szenario/Unicode
+werden geprüft, unbekannte Felder abgewiesen. Laden rekonstruiert nur Text und
+Editorzustand; Runner bleibt idle. Erst explizites Run/Step verwendet dieselbe
+AST-Prüfung. Keine Ausführung von JSON, keine Pfade aus gespeicherten Daten.
+Temporärdatei + fsync + atomarer Ersatz sichern gültige Schreibvorgänge; vorherige
+Fassung als Backup. Beschädigte Originale bleiben zur Wiederherstellung erhalten.
+Dies bleibt keine allgemeine Sandbox für fremde Python-Programme.
