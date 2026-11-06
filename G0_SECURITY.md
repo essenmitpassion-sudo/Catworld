@@ -2,15 +2,21 @@
 
 Der Runner interpretiert ausschliesslich vollständig validierte AST-Formen
 `Expr(Call(Name(action), args=[], keywords=[]))` mit action aus der festen Menge
-`move_right`, `collect`. Aus dem AST werden nur
+`move_right`, `collect`, zusätzlich begrenzte Top-Level-For-Schleifen. Aus dem AST werden nur
 Zeilennummern und validierte Aktionsnamen übernommen, keine ausführbaren Python-Objekte. Es gibt weder eval,
 exec, compile-Ausführung, dynamische Imports noch Spielercode-I/O.
 Python wird mit ast.parse gelesen; Grammatik, Kommentare und Reihenfolge entsprechen
 der ausdrücklich unterstützten Teilmenge. Alle anderen Konstrukte werden abgewiesen.
 
 Budgets: 4096 Zeichen vor dem Parser, 320 AST-Knoten, Tiefe 16, 64 Befehle,
-64 Ausführungsschritte. Konstanten/Container/Schleifen/Rekursion werden nicht
-interpretiert. Ein Tick verarbeitet höchstens einen Befehl, auch nach langen Frames.
+64 Ausführungsschritte. For-Schleifen erlauben nur `range` mit 1–3 vorzeichenbehafteten
+ganzzahligen Literalen (Betrag höchstens 64, kein bool, keine Ausdrücke, Schrittweite
+ungleich null). Python-range-Semantik, auch leere und absteigende Bereiche. Höchstens
+64 Durchläufe insgesamt und 64 expandierte Aktionen, vor Expansion geprüft.
+Schleifenvariable nur einfacher Name, ohne Überschreiben von range oder Aktionsnamen;
+keine Verwendung der Variable im Rumpf. Keine Verschachtelung, for-else, break oder
+continue. Auch leere Schleifenrümpfe werden vollständig statisch validiert.
+Container, Rekursion und allgemeine Ausdrucksauswertung bleiben ausgeschlossen. Ein Tick verarbeitet höchstens einen Befehl, auch nach langen Frames.
 Stop wird vor dem nächsten Tick verarbeitet. Ein ungültiges Programm wird vollständig
 abgewiesen, bevor irgendeine seiner Aktionen ausgeführt wird. Weltzustand ist immutable.
 
@@ -42,3 +48,7 @@ AST-Prüfung. Keine Ausführung von JSON, keine Pfade aus gespeicherten Daten.
 Temporärdatei + fsync + atomarer Ersatz sichern gültige Schreibvorgänge; vorherige
 Fassung als Backup. Beschädigte Originale bleiben zur Wiederherstellung erhalten.
 Dies bleibt keine allgemeine Sandbox für fremde Python-Programme.
+
+Dachweg-Speicherformat: Version 2 ergänzt einen separaten Dachentwurf; Version 1
+bleibt lesbar. Alle drei Programme teilen die Dateigröße von höchstens 65536 Bytes;
+diese Grenze wird auch vor dem Schreiben der UTF-8-JSON-Datei geprüft.

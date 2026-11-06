@@ -55,7 +55,7 @@ def test_power_changes_alley_beyond_machine_and_reset_restores_it():
     pygame.quit()
 
 
-def test_complete_episode_shows_finish_and_honest_preview(monkeypatch):
+def test_complete_episode_invites_playable_roof_and_preserves_solution(monkeypatch):
     pygame.init()
     app = App()
     unlock(app)
@@ -72,9 +72,15 @@ def test_complete_episode_shows_finish_and_honest_preview(monkeypatch):
     monkeypatch.setattr(app, 'text', record)
     app.draw()
     assert 'ABSCHNITT GESCHAFFT' in rendered
-    assert any('Wiederholungen' in line for line in rendered)
+    assert any('Dachweg' in line and 'F7' in line for line in rendered)
+    assert not any('Vorschau' in line for line in rendered)
     assert app.source == SOLUTION
     assert app.runner.world.powered
+    app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F7, mod=0))
+    assert app.roof_active and app.runner.world.battery_x == 6
+    assert 'for ' not in app.source
+    app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F7, mod=0))
+    assert app.source == SOLUTION and app.recall_active
     pygame.quit()
 
 

@@ -37,3 +37,7 @@ G/M: Der Abrufschritt bewahrte zwei Texte nur im Speicher. Ein Spielneustart kon
 
 ### L015 — 2026-11-06 — Technische Bausteine ergeben noch keinen Spielabschnitt
 G/O: Bewegung, Batterie, Transfer und Abruf waren vorhanden, aber Owner verlangte einen zusammenhängenden, motivierenden Abschnitt. Gegenmassnahme: gemeinsames Weltziel „Licht für Nox“, kurze Übergänge, animierte Reaktion ohne Eingriff in die Weltregeln, sichtbare Lampenkette und klarer Abschluss mit ausdrücklich zukünftigem Ausblick. M: test_power_changes_alley_beyond_machine_and_reset_restores_it sowie vollständiger SDL-/Video-Durchlauf prüfen Weltreaktion und Reihenfolge. Ob daraus mehr Freude/Neugier entsteht, bleibt V bis zum Menschentest; keine FUN_PASS-Aussage.
+
+## 2026-11-06 — Dachweg-Integration
+- Ein API-403 beweist keinen fehlgeschlagenen GitHub-Lauf: Die öffentliche Actions-Webseite lieferte hier Commit-Zuordnung und erfolgreichen Abschluss, ohne neuen Dienst oder Zugangsdaten.
+- Beim Freischalten einer Vorschau müssen auch bestehende Abschlussmeldungen nachgezogen werden. Der alte Text bezeichnete den fertigen Dachweg weiter als Vorschau; korrigiert und Übergang samt Rückkehr zur Eigenlösung geprüft.

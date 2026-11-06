@@ -33,8 +33,9 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
 2. Eigenen Code für die Batterie ergänzen. Der Automat und die Lampenkette reagieren.
 3. **Weiter / F3:** den zweiten Anschluss mit einer selbst geänderten Folge versorgen.
 4. **Selbst schreiben / F4:** aus leerem Editor einen eigenen Plan bauen.
-5. Am Abschluss den leuchtenden Dachweg entdecken. **Wiederholungen sind ein Ausblick,
-   noch kein freigeschalteter Befehl in diesem Build.**
+5. **Dachweg / F7:** die weiter entfernte Dachlaterne erreichen. Erst bekannte Schritte
+   ausprobieren; nach erlebter Wiederholung bietet F1 freiwillige Hilfe zu `for`/`range`.
+   Schreibe deinen Plan selbst. Zurück / F7 erhält deinen bisherigen Entwurf.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;
@@ -71,8 +72,12 @@ Aufnehmen erklärt den Fehler; Reset stellt Batterie und Automaten wieder her.
 Am Ende der Gasse bleibt die Bewegung sicher begrenzt.
 
 Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`- und `collect()`-Aufrufe, Kommentare,
-Leerzeilen und Python-Anweisungssequenzen. Schleifen und andere Python-Funktionen
-sind noch nicht freigeschaltet. Kein vollständiger Python-Interpreter.
+Leerzeilen und Python-Anweisungssequenzen sowie begrenzte `for name in range(...)`-Schleifen.
+`range` akzeptiert ein bis drei ganzzahlige Literale von -64 bis 64; Schrittweite null
+ist ungültig. Höchstens 64 Schleifendurchläufe insgesamt und 64 ausgeführte Aktionen.
+Keine Verschachtelung, Variablenverwendung oder weiteren Python-Funktionen.
+Step führt auch in Schleifen genau eine Aktion aus; Run setzt pausierte Versuche fort.
+Enter übernimmt die Einrückung, Tab/Shift+Tab rückt ein/aus. Kein vollständiger Python-Interpreter.
 
 ## Vom Vormachen zum eigenen Programm
 
@@ -97,7 +102,7 @@ die drei Hilfestufen bleiben optional. Deine bisherige Eigenlösung wartet unter
 Zurückwechseln erhalten. Reset setzt nur die Welt zurück, nicht deinen Text.
 
 Beim Wechsel innerhalb der Sitzung bleiben beide Texte, Cursor und Hilfestatus
-erhalten. Beide Texte und die Kennzeichnung verwendeter Beispiele werden zusätzlich
+erhalten. Beide Texte sowie der getrennte Dachweg-Entwurf und verwendete Beispiele werden zusätzlich
 lokal gespeichert und nach einem Spielneustart wiederhergestellt. Die Welt startet
 am Anfang; geladener Code läuft erst nach Run oder Step.
 Ein leeres Programm schaltet den Automaten nicht ein. Erfolg zeigt die Weltreaktion,

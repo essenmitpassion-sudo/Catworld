@@ -1,0 +1,31 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_complete_episode_invites_playable_roof_and_preserves_solution ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8630d81e80>
+
+    def test_complete_episode_invites_playable_roof_and_preserves_solution(monkeypatch):
+        pygame.init()
+        app = App()
+        unlock(app)
+        click(app, 'Abruf')
+        write(app, SOLUTION)
+        click(app, 'Run')
+        for _ in range(3):
+            app.update(.5)
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+        assert 'ABSCHNITT GESCHAFFT' in rendered
+>       assert any('Dachweg' in line and 'F7' in line for line in rendered)
+E       assert False
+E        +  where False = any(<generator object test_complete_episode_invites_playable_roof_and_preserves_solution.<locals>.<genexpr> at 0x7f8630e33e00>)
+
+tests/test_episode.py:75: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_episode.py::test_complete_episode_invites_playable_roof_and_preserves_solution
+1 failed, 7 deselected in 0.08s

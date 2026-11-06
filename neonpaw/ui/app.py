@@ -461,7 +461,7 @@ class App:
         self.text(heading, (790, 82), INK)
         if world.powered:
             hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Warmlicht! Nox hat die Gasse zurück.'
-            instruction = 'Als Nächstes: Wiederholungen.' if self.recall_active else ('Dein eigener Plan? Selbst schreiben mit F4.' if self.scenario else 'Der zweite Anschluss wartet. Weiter mit F3.')
+            instruction = 'Weiter auf den Dachweg · F7' if self.recall_active else ('Dein eigener Plan? Selbst schreiben mit F4.' if self.scenario else 'Der zweite Anschluss wartet. Weiter mit F3.')
         elif self.recall_active:
             hint, instruction = 'Bring das Licht mit deinem eigenen Plan zurück.', 'Deine Eigenlösung wartet unter Zurück.'
         elif self.scenario:
@@ -547,7 +547,7 @@ class App:
             line += word + ' '
         self.text(line, (790, y), PINK if self.runner.error else INK, self.small)
         if world.powered:
-            objective = ('Hinter dem Dachweg warten längere Wege. Vorschau: ein Plan, viele Schritte.'
+            objective = ('Nox entdeckt eine dunkle Dachlaterne. Dachweg / F7: Finde deinen nächsten Plan.'
                          if self.recall_active else 'Nox schnurrt. Dein Programm bringt das Licht zurück in die Gasse.')
         elif self.recall_active:
             objective = 'Baue dein Programm selbst. Deine Eigenlösung bleibt in dieser Sitzung erhalten.'

@@ -1,14 +1,9 @@
-# CURRENT — 2026-11-06 — Dachweg-Checkpoint
+# CURRENT — 2026-11-06 — Dachweg und CI integriert
 
-- M: Branch g0/first-cat-action; Runner-Commit 3461d94. Dachweg-UI und Speichermigration werden im anschließenden Checkpoint gesichert; vollständige SHA mit git log -1 ermitteln.
-- M: Dachweg mit Zielposition 6, sichtbarem Fortschritt, optionaler Schleifenhilfe erst nach erlebter Wiederholung; ausgeschriebene Befehle bleiben gültig. Run/Step/Stop/Reset mit begrenztem for/range. Drei getrennte Entwürfe; alte Speicherversion 1 lesbar, neue Version 2.
-- M: Erneut 130 Tests bestanden. RED-Nachweise: evidence/roof-loops-red.txt (13 failed), roof-ui-red.txt (6 failed); GREEN roof-green.txt. SDL-Offscreen-Smoke laut roof-smoke.txt erfolgreich, einschließlich Dachweg und Entwurfswiederherstellung; kein menschlicher Bediennachweis.
-- M: Beim Automationsauftrag uncommittete Dachweg-Arbeit gefunden und ohne Reset beibehalten. Prozessprüfung: ein aktiver Codex-Hauptprozess mit eigenen Sandbox-Unterprozessen, alte Git-Zombies, kein laufender pytest-/Spielprozess. Keine weiteren Agenten gestartet. Diese lokale Momentaufnahme garantiert keinen globalen Instanzausschluss.
-- M: Keine native Automationsverwaltung verfügbar: gewünschter 60-Minuten-Takt NICHT aktiviert, kein erfolgreicher automatischer Lauf bestätigt. Kein Ersatz-Scheduler eingerichtet. Anforderungen in AUTONOMOUS_LOOP.md.
-- Offen: abschließende visuelle Prüfung der Dachweg-Screenshots, Sicherheits-/README-Dokumentation aktualisieren, Quellbuild erstellen und separat testen, GitHub-Abgleich/Push. PR-Bestand unbekannt (bisher API Forbidden). Menschlicher Lernwert/Spielspaß und nativer Windows-Test offen.
-- Wiederaufnahme: Git-Status und Prozesse zuerst prüfen, vorhandene Arbeit sichern; keine Doppelimplementierung des Dachwegs. NEXT_TASK.md enthält verbleibende Abschlussarbeiten.
-
-## CI-Integration — 2026-11-06
-- M: Lokaler Ausgangspunkt 5d3d559 sauber, Bundle geprüft, 130 Tests reproduziert. Fetch brachte 37aa6fb (CI) und bae7b57 (Handoff); konfliktfreier normaler Merge 13fa15d vereint beide mit dem Dachweg. Workflow unverändert erhalten.
-- M: Nach Integration 130 Tests bestanden; SDL-Smoke sowohl offscreen als auch dummy erfolgreich. Belege: evidence/ci-integration-tests.txt, ci-integration-smoke.txt, ci-dummy-smoke.txt.
-- GitHub-Actions-Ergebnis noch zu prüfen; lokale Tests sind kein CI-Nachweis. Nur Test-CI konfiguriert, kein Codex-Entwicklungs-Scheduler.
+- M: Ausgangspunkt 5d3d559 sauber, Bundle geprüft, 130 Tests reproduziert. Remote enthielt 37aa6fb (CI) plus bae7b57 (Handoff). Normaler konfliktfreier Merge 13fa15d erhält beide Entwicklungsstränge und die unveränderte CI. 08c07aa erfolgreich gepusht und Remote-SHA geprüft.
+- M: GitHub-Actions-Lauf #3 für 08c07aa erfolgreich: https://github.com/essenmitpassion-sudo/Catworld/actions/runs/42239921670 . Über öffentliche Actions-Webseite geprüft; API-Zugriff am Proxy mit 403 gesperrt. Auch Läufe #1/#2 erfolgreich. Auszug evidence/github-ci-integration.json.
+- M: Nach Integration 130 Tests sowie SDL-Smoke mit offscreen und CI-Treiber dummy erfolgreich. Anschließend veraltete Vorschau im Abschluss korrigiert: Dachweg / F7 führt direkt weiter; Eigenlösung bleibt bei Rückkehr erhalten. Reproduzierter RED, danach 130 GREEN und voller SDL-Smoke. evidence/roof-transition-*.txt.
+- M: Spielbar: Einstieg, eigene Ergänzung, Transfer, leerer Abrufeditor, Dachweg mit Ziel 6. Wiederholte Befehle und begrenzte for/range-Schleifen, freiwillige Hinweise, sichtbare Laterne. Drei getrennte Entwürfe, alte Speicherversion lesbar. README/Sicherheitsbeschreibung aktualisiert. Screenshots für Hilfe, Erfolg und Übergang visuell geprüft.
+- Automation: nur Test-CI; kein aktivierter Codex-Entwicklungs-Scheduler. Keine neuen Dienste, API-Keys, Runner oder Eingriffe in andere Anwendungen.
+- Offen: menschlicher Lernwert/Spielspaß, nativer Windows-/DPI-Test, unabhängiger Security-Audit. Build bleibt Python-Quellbuild mit Startskript. Finale SHA über git log -1; Bundle/Build unter /workspace/Catworld-Roof.*.
+- Nächste einzelne Produktaufgabe: Dachweg-Transfer mit verändertem Ziel und selbst angepasster Wiederholungszahl, bisherige Lösung erhalten. Keine neue Sprachidee oder Engine. Vorher echten Git-/Prozessstand und frische Reviews prüfen.
