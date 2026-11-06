@@ -21,6 +21,10 @@ class App:
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
         self.sign_font = pygame.font.Font(None, 19)
+        self.recall_active = False
+        self.recall_available = False
+        self.saved_editor = None
+        self.recall_draft = ('', 0, 0, False)
         self.scenario = 0
         self.hint_level = 0
         self.used_example = False
@@ -37,12 +41,37 @@ class App:
                         for i, name in enumerate(('Run', 'Step', 'Stop', 'Reset'))}
         self.buttons['Transfer'] = pygame.Rect(420, 125, 320, 36)
         self.buttons['Hilfe'] = pygame.Rect(540, 75, 200, 36)
+        self.buttons['Abruf'] = pygame.Rect(340, 28, 400, 36)
         pygame.key.start_text_input()
 
     def text(self, value, pos, color=INK, font=None):
         self.canvas.blit((font or self.font).render(value, True, color), pos)
 
+    def toggle_recall(self):
+        if self.scenario != 1 or not self.recall_available:
+            return
+        editor = (self.source, self.cursor, self.hint_level, self.used_example)
+        if self.recall_active:
+            self.recall_draft = editor
+            self.source, self.cursor, self.hint_level, self.used_example = self.saved_editor
+        else:
+            self.saved_editor = editor
+            self.source, self.cursor, self.hint_level, self.used_example = self.recall_draft
+        self.recall_active = not self.recall_active
+        self.runner.reset()
+        self.loaded_source = None
+        self.select_all = False
+        self.scroll = 0
+        self.elapsed = 0.0
+
+    def remember_success(self):
+        if self.scenario == 1 and self.runner.world.powered and not self.recall_active:
+            self.recall_available = True
+
     def activate(self, name):
+        if name == 'Abruf' or (name == 'Transfer' and self.recall_active):
+            self.toggle_recall()
+            return
         if name == 'Transfer':
             self.scenario = 1 - self.scenario
             self.runner = Runner(initial_world=World(battery_x=BATTERY_POSITIONS[self.scenario]))
@@ -74,6 +103,7 @@ class App:
                 self.runner.run()
             else:
                 self.runner.step()
+        self.remember_success()
         self.elapsed = 0.0
 
     def edited(self):
@@ -112,7 +142,7 @@ class App:
         elif event.type == pygame.KEYDOWN:
             shortcuts = {pygame.K_F5: 'Run', pygame.K_F6: 'Step',
                          pygame.K_ESCAPE: 'Stop', pygame.K_F2: 'Reset',
-                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer'}
+                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer', pygame.K_F4: 'Abruf'}
             if event.key in shortcuts:
                 self.activate(shortcuts[event.key])
                 return
@@ -158,6 +188,7 @@ class App:
         self.elapsed += dt
         if self.elapsed >= 0.45:
             self.runner.tick()  # Never catch up with an unbounded action loop.
+            self.remember_success()
             self.elapsed = 0.0
 
     def alley(self):
@@ -249,17 +280,20 @@ class App:
         self.canvas.fill(BG)
         self.text('NEONPAW', (40, 28), CYAN, self.big)
         self.text('KLEINE PFOTEN. ECHTER CODE.', (42, 87), MUTED, self.small)
-        self.text('02 / DEIN EIGENER WEG' if self.scenario else '01 / DIE GASSE ERWACHT',
+        stage = '03 / SELBST AUFBAUEN' if self.recall_active else ('02 / DEIN EIGENER WEG' if self.scenario else '01 / DIE GASSE ERWACHT')
+        self.text(stage,
                   (42, 135), INK, self.small)
         self.alley()
         self.text('PYTHON / DEIN EIGENES PROGRAMM' if self.scenario else 'PYTHON / DEIN ERSTER BEFEHL',
                   (790, 42), CYAN, self.small)
         world = self.runner.world
-        title = 'DEIN EIGENER WEG' if self.scenario else TITLE
+        title = 'OHNE VORLAGE' if self.recall_active else ('DEIN EIGENER WEG' if self.scenario else TITLE)
         self.text('DIE GASSE LEUCHTET' if world.powered else title, (790, 82), INK)
         if world.powered:
             hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Batterie eingesetzt. Automat eingeschaltet!'
-            instruction = 'Welche Änderung hat den Weg verändert?' if self.scenario else 'Bereit für einen neuen Weg? Weiter links.'
+            instruction = 'Erkläre dir: Warum diese Reihenfolge?' if self.recall_active else ('Selbst schreiben? F4 startet ohne Vorlage.' if self.scenario else 'Bereit für einen neuen Weg? Weiter links.')
+        elif self.recall_active:
+            hint, instruction = 'Schreibe den bekannten Auftrag selbst.', 'Deine Eigenlösung wartet unter Zurück.'
         elif self.scenario:
             hint, instruction = 'Die Batterie liegt jetzt weiter rechts.', 'Ändere deinen Code. Run beginnt am Start.'
         elif world.x == world.battery_x:
@@ -291,12 +325,18 @@ class App:
             pygame.draw.line(self.canvas, INK, (x, y), (x, y + 21), 2)
         self.canvas.set_clip(None)
         for name, rect in self.buttons.items():
+            if name == 'Abruf' and (self.scenario != 1 or not self.recall_available):
+                continue
             pygame.draw.rect(self.canvas, CYAN if name == 'Run' else '#303c56', rect, border_radius=5)
             caption = name
             if name == 'Transfer':
                 caption = 'Zurück zum Einstieg · F3' if self.scenario else ('Weiter: neuer Weg · F3' if world.powered else 'Freier Einstieg · F3')
+            elif name == 'Abruf':
+                caption = 'Zur Eigenlösung · F4' if self.recall_active else 'Selbst schreiben · F4'
             elif name == 'Hilfe':
                 caption = ('Hilfe · F1', 'Nächster Tipp · F1', 'Beispiel anzeigen · F1', 'Hilfe schliessen · F1')[self.hint_level]
+            if name == 'Transfer' and self.recall_active:
+                caption = 'Zur Eigenlösung · F3'
             label = self.font.render(caption, True, BG if name == 'Run' else INK)
             self.canvas.blit(label, label.get_rect(center=rect.center))
         self.text('F5 Run  ·  F6 Step  ·  Esc Stop  ·  F2 Reset', (790, 594), MUTED, self.small)
@@ -316,6 +356,8 @@ class App:
         self.text(line, (790, y), PINK if self.runner.error else INK, self.small)
         if world.powered:
             objective = 'Strom da! Dein Code hat die Gasse geweckt.'
+        elif self.recall_active:
+            objective = 'Baue dein Programm selbst. Deine Eigenlösung bleibt in dieser Sitzung erhalten.'
         elif self.scenario:
             objective = 'Versorge den Automaten. Die Batterie liegt an einem neuen Ort.'
         elif world.x == world.battery_x:
