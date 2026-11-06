@@ -27,6 +27,15 @@ def click(name):
 
 frame()
 assert app.runner.world.x == 1
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_rigth()'))
+click('Run')
+assert 'Meintest du move_right()?' in app.runner.error
+assert app.source == 'move_rigth()' and app.runner.world.x == 1
+pygame.image.save(app.canvas, 'evidence/episode-typo.png')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()'))
+click('Reset')
 click('Run')
 frame(dt=.5)
 assert app.runner.world.x == 2
@@ -139,7 +148,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> disk save/restart -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> disk save/restart -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

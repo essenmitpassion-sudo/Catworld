@@ -1,11 +1,13 @@
 """Bounded interpreter for zero-argument move_right/collect calls, not general Python."""
 import ast
+from difflib import get_close_matches
 from neonpaw.core.world import World, transition
 
 MAX_SOURCE = 4096
 MAX_COMMANDS = 64
 MAX_NODES = 320
 MAX_DEPTH = 16
+ACTIONS = ('move_right', 'collect')
 
 
 class ProgramError(ValueError):
@@ -35,11 +37,16 @@ def parse(source: str) -> tuple[tuple[int, str], ...]:
     commands = []
     for stmt in tree.body:
         if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
-                and isinstance(stmt.value.func, ast.Name)
-                and stmt.value.func.id in ('move_right', 'collect')
-                and not stmt.value.args and not stmt.value.keywords):
+                and isinstance(stmt.value.func, ast.Name)):
             raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
-        commands.append((stmt.lineno, stmt.value.func.id))
+        name = stmt.value.func.id
+        if name not in ACTIONS:
+            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+            raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+        if stmt.value.args or stmt.value.keywords:
+            raise ProgramError(f'{name}() braucht hier keine Argumente zwischen den Klammern.', stmt.lineno)
+        commands.append((stmt.lineno, name))
     return tuple(commands)
 
 

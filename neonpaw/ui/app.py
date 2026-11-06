@@ -38,6 +38,8 @@ class App:
         self.focus = True
         self.scroll = 0
         self.elapsed = 0.0
+        self.visual_x = float(self.runner.world.x)
+        self.scene_time = 0.0
         self.alive = True
         self.buttons = {name: pygame.Rect(790 + i * 95, 540, 85, 42)
                         for i, name in enumerate(('Run', 'Step', 'Stop', 'Reset'))}
@@ -244,11 +246,16 @@ class App:
                 self.select_all = False
 
     def update(self, dt):
+        self.scene_time += max(0.0, dt)
         self.elapsed += dt
         if self.elapsed >= 0.45:
             self.runner.tick()  # Never catch up with an unbounded action loop.
             self.remember_success()
             self.elapsed = 0.0
+        if self.runner.world.moves == 0:
+            self.visual_x = float(self.runner.world.x)
+        else:
+            self.visual_x += (self.runner.world.x - self.visual_x) * min(1.0, max(0.0, dt) / 0.12)
         self.save_drafts()
 
     def alley(self):
@@ -290,6 +297,15 @@ class App:
         scene.blit(sign, (116, 130))
         pygame.draw.line(scene, CYAN, (0, 117), (88, 117), 2)
         pygame.draw.line(scene, '#101528', (0, 83), (350, 97), 2)
+        # A restored string of warm lamps makes the whole alley respond to code.
+        for lx in range(24, 340, 33):
+            ly = 92 + lx // 40
+            pygame.draw.line(scene, '#52617b', (lx, ly - 7), (lx, ly + 3))
+            if powered:
+                pygame.draw.rect(scene, '#5b4749', (lx - 5, ly, 11, 11))
+            pygame.draw.rect(scene, '#ffcf8a' if powered else '#34415c', (lx - 2, ly + 2, 5, 5))
+        if powered:
+            scene.blit(self.sign_font.render('DACHWEG >', False, '#ffc875'), (182, 45))
         scene.fill('#273248', (0, 186, 350, 54))
         for x in range(9):
             tile_x = 13 + 36 * x
@@ -306,19 +322,28 @@ class App:
             pygame.draw.line(scene, '#ffd584', (bx - 3, 166), (bx - 3, 171))
             pygame.draw.line(scene, '#ffd584', (bx - 5, 168), (bx - 1, 168))
         # Original cat silhouette: ear triangles, outlined head, curled tail, bright eyes.
-        cx = 29 + 36 * self.runner.world.x
+        if self.runner.world.moves == 0:
+            self.visual_x = float(self.runner.world.x)
+        cx = round(29 + 36 * self.visual_x)
+        moving = abs(self.runner.world.x - self.visual_x) > 0.02
+        tail = 1 if int(self.scene_time * 2) % 2 else 0
+        blink = self.scene_time % 3.8 > 3.65
         pygame.draw.ellipse(scene, '#111a2c', (cx - 14, 213, 31, 7))
-        pygame.draw.lines(scene, '#77849d', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16, 189)], 5)
-        pygame.draw.lines(scene, '#0d1020', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16, 189)], 3)
+        pygame.draw.lines(scene, '#77849d', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16 + tail, 189 - tail)], 5)
+        pygame.draw.lines(scene, '#0d1020', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16 + tail, 189 - tail)], 3)
         pygame.draw.rect(scene, '#7a88a2', (cx - 9, 192, 20, 23))
         pygame.draw.rect(scene, '#0b1020', (cx - 8, 193, 18, 21))
         pygame.draw.polygon(scene, '#8794ad', [(cx - 11, 187), (cx - 11, 175), (cx - 3, 181), (cx + 5, 181), (cx + 12, 175), (cx + 13, 195), (cx - 11, 195)])
         pygame.draw.polygon(scene, '#090f1c', [(cx - 10, 188), (cx - 10, 177), (cx - 3, 183), (cx + 5, 183), (cx + 11, 177), (cx + 12, 194), (cx - 10, 194)])
-        pygame.draw.rect(scene, CYAN, (cx - 6, 186, 4, 3))
-        pygame.draw.rect(scene, CYAN, (cx + 5, 186, 4, 3))
+        pygame.draw.rect(scene, CYAN, (cx - 6, 187 if blink else 186, 4, 1 if blink else 3))
+        pygame.draw.rect(scene, CYAN, (cx + 5, 187 if blink else 186, 4, 1 if blink else 3))
         pygame.draw.rect(scene, PINK, (cx + 1, 191, 2, 2))
-        pygame.draw.rect(scene, '#080e1b', (cx - 9, 212, 6, 5))
-        pygame.draw.rect(scene, '#080e1b', (cx + 6, 212, 6, 5))
+        pygame.draw.rect(scene, '#080e1b', (cx - 9, 211 if moving else 212, 6, 5))
+        pygame.draw.rect(scene, '#080e1b', (cx + 6, 213 if moving else 212, 6, 5))
+        if self.runner.world.powered:
+            scene.blit(self.sign_font.render('mrr', False, '#ffcf8a'), (cx - 11, 155))
+        if not self.runner.world.moves:
+            scene.blit(self.sign_font.render('NOX', False, '#cad5ea'), (cx - 13, 151))
         self.canvas.blit(pygame.transform.scale(scene, (700, 480)), (40, 170))
 
     def draw_hint(self):
@@ -339,8 +364,8 @@ class App:
     def draw(self):
         self.canvas.fill(BG)
         self.text('NEONPAW', (40, 28), CYAN, self.big)
-        self.text('KLEINE PFOTEN. ECHTER CODE.', (42, 87), MUTED, self.small)
-        stage = '03 / SELBST AUFBAUEN' if self.recall_active else ('02 / DEIN EIGENER WEG' if self.scenario else '01 / DIE GASSE ERWACHT')
+        self.text('LICHT FÜR NOX · EINE NACHT IN DER GASSE', (42, 87), MUTED, self.small)
+        stage = '03 / AUS EIGENER KRAFT' if self.recall_active else ('02 / DER ZWEITE ANSCHLUSS' if self.scenario else '01 / LICHT FÜR NOX')
         self.text(stage,
                   (42, 135), INK, self.small)
         self.alley()
@@ -348,20 +373,21 @@ class App:
                   (790, 42), CYAN, self.small)
         world = self.runner.world
         title = 'OHNE VORLAGE' if self.recall_active else ('DEIN EIGENER WEG' if self.scenario else TITLE)
-        self.text('DIE GASSE LEUCHTET' if world.powered else title, (790, 82), INK)
+        heading = 'ABSCHNITT GESCHAFFT' if world.powered and self.recall_active else ('DIE GASSE LEUCHTET' if world.powered else title)
+        self.text(heading, (790, 82), INK)
         if world.powered:
-            hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Batterie eingesetzt. Automat eingeschaltet!'
-            instruction = 'Erkläre dir: Warum diese Reihenfolge?' if self.recall_active else ('Selbst schreiben? F4 startet ohne Vorlage.' if self.scenario else 'Bereit für einen neuen Weg? Weiter links.')
+            hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Warmlicht! Nox hat die Gasse zurück.'
+            instruction = 'Als Nächstes: Wiederholungen.' if self.recall_active else ('Dein eigener Plan? Selbst schreiben mit F4.' if self.scenario else 'Der zweite Anschluss wartet. Weiter mit F3.')
         elif self.recall_active:
-            hint, instruction = 'Schreibe den bekannten Auftrag selbst.', 'Deine Eigenlösung wartet unter Zurück.'
+            hint, instruction = 'Bring das Licht mit deinem eigenen Plan zurück.', 'Deine Eigenlösung wartet unter Zurück.'
         elif self.scenario:
-            hint, instruction = 'Die Batterie liegt jetzt weiter rechts.', 'Ändere deinen Code. Run beginnt am Start.'
+            hint, instruction = 'Der zweite Anschluss liegt weiter rechts.', 'Ändere deinen Code. Run beginnt am Start.'
         elif world.x == world.battery_x:
             hint, instruction = 'collect() nimmt die Batterie auf.', 'Neue Zeile ergänzen, dann Reset und Run.'
         elif world.moves:
             hint, instruction = 'Batterie verpasst? Reset bringt dich zurück.', 'move_right() gehen · collect() aufnehmen'
         else:
-            hint, instruction = 'Ein Befehl. Ein Feld nach rechts.', 'Drücke Run und beobachte die Katze.'
+            hint, instruction = 'Nox braucht Licht. Der Automat ist aus.', 'Run: Beobachte deinen ersten Pfotenschritt.'
         self.text(hint, (790, 118), MUTED, self.small)
         self.text(instruction, (790, 149), INK, self.small)
         self.text('AUTOMAT: AN' if world.powered else 'AUTOMAT: AUS · Batterie auf dem Leuchtfeld',
@@ -415,7 +441,8 @@ class App:
             line += word + ' '
         self.text(line, (790, y), PINK if self.runner.error else INK, self.small)
         if world.powered:
-            objective = 'Strom da! Dein Code hat die Gasse geweckt.'
+            objective = ('Hinter dem Dachweg warten längere Wege. Vorschau: ein Plan, viele Schritte.'
+                         if self.recall_active else 'Nox schnurrt. Dein Programm bringt das Licht zurück in die Gasse.')
         elif self.recall_active:
             objective = 'Baue dein Programm selbst. Deine Eigenlösung bleibt in dieser Sitzung erhalten.'
         elif self.scenario:
@@ -425,7 +452,7 @@ class App:
         elif world.moves:
             objective = 'Die Batterie liegt auf dem Leuchtfeld. Reset für einen neuen Versuch.'
         else:
-            objective = OBJECTIVE
+            objective = 'Weck den Nacht-Automaten. Der erste Schritt bringt Nox zur Batterie.'
         self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)
         self.draw_hint()
         if self.storage_message:

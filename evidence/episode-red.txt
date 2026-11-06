@@ -1,0 +1,373 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_friendly_error_keeps_whole_program_unexecuted[move_rigth()-Meintest du move_right()?] _
+
+source = 'move_rigth()', expected = 'Meintest du move_right()?'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+        with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+>           runner.load('move_right()\n' + source)
+
+tests/test_episode.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:67: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'move_right()\nmove_rigth()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id in ('move_right', 'collect')
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+
+During handling of the above exception, another exception occurred:
+
+source = 'move_rigth()', expected = 'Meintest du move_right()?'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+>       with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Meintest du move_right\\(\\)\\?'
+E        Input: 'Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.'
+
+tests/test_episode.py:19: AssertionError
+_ test_friendly_error_keeps_whole_program_unexecuted[collect(1)-keine Argumente] _
+
+source = 'collect(1)', expected = 'keine Argumente'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+        with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+>           runner.load('move_right()\n' + source)
+
+tests/test_episode.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:67: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'move_right()\ncollect(1)'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id in ('move_right', 'collect')
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+
+During handling of the above exception, another exception occurred:
+
+source = 'collect(1)', expected = 'keine Argumente'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+>       with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'keine Argumente'
+E        Input: 'Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.'
+
+tests/test_episode.py:19: AssertionError
+_ test_friendly_error_keeps_whole_program_unexecuted[move_right(x=1)-keine Argumente] _
+
+source = 'move_right(x=1)', expected = 'keine Argumente'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+        with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+>           runner.load('move_right()\n' + source)
+
+tests/test_episode.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:67: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'move_right()\nmove_right(x=1)'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id in ('move_right', 'collect')
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+
+During handling of the above exception, another exception occurred:
+
+source = 'move_right(x=1)', expected = 'keine Argumente'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+>       with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'keine Argumente'
+E        Input: 'Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.'
+
+tests/test_episode.py:19: AssertionError
+_ test_friendly_error_keeps_whole_program_unexecuted[dance()-Unbekannter Befehl] _
+
+source = 'dance()', expected = 'Unbekannter Befehl'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+        with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+>           runner.load('move_right()\n' + source)
+
+tests/test_episode.py:20: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:67: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'move_right()\ndance()'
+
+    def parse(source: str) -> tuple[tuple[int, str], ...]:
+        if len(source) > MAX_SOURCE:
+            raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
+        try:
+            tree = ast.parse(source)
+        except (SyntaxError, ValueError, RecursionError) as exc:
+            raise ProgramError('Python-Syntax prüfen: Klammern und Einrückung.',
+                               getattr(exc, 'lineno', None)) from None
+        stack = [(tree, 0)]
+        count = 0
+        while stack:
+            node, depth = stack.pop()
+            count += 1
+            if count > MAX_NODES or depth > MAX_DEPTH:
+                raise ProgramError('Das Programm ist zu komplex.', getattr(node, 'lineno', None))
+            stack.extend((child, depth + 1) for child in ast.iter_child_nodes(node))
+        if len(tree.body) > MAX_COMMANDS:
+            raise ProgramError('Maximal 64 Befehle pro Programm.')
+        commands = []
+        for stmt in tree.body:
+            if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                    and isinstance(stmt.value.func, ast.Name)
+                    and stmt.value.func.id in ('move_right', 'collect')
+                    and not stmt.value.args and not stmt.value.keywords):
+>               raise ProgramError('Erlaubt: move_right() und collect(), jeweils ohne Argumente.', stmt.lineno)
+E               neonpaw.code.runner.ProgramError: Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.
+
+neonpaw/code/runner.py:41: ProgramError
+
+During handling of the above exception, another exception occurred:
+
+source = 'dance()', expected = 'Unbekannter Befehl'
+
+    @pytest.mark.parametrize('source, expected', [
+        ('move_rigth()', 'Meintest du move_right()?'),
+        ('collect(1)', 'keine Argumente'),
+        ('move_right(x=1)', 'keine Argumente'),
+        ('dance()', 'Unbekannter Befehl'),
+    ])
+    def test_friendly_error_keeps_whole_program_unexecuted(source, expected):
+        runner = Runner()
+>       with pytest.raises(ProgramError, match=expected.replace('?', r'\?').replace('(', r'\(').replace(')', r'\)')):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Unbekannter Befehl'
+E        Input: 'Zeile 2: Erlaubt: move_right() und collect(), jeweils ohne Argumente.'
+
+tests/test_episode.py:19: AssertionError
+___________ test_walk_animation_is_bounded_and_reset_snaps_to_start ____________
+
+    def test_walk_animation_is_bounded_and_reset_snaps_to_start():
+        pygame.init()
+        app = App()
+        click(app, 'Step')
+        assert app.runner.world.x == 2
+        app.update(.03)
+>       assert 1 < app.visual_x < 2
+                   ^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'visual_x'
+
+tests/test_episode.py:30: AttributeError
+________ test_power_changes_alley_beyond_machine_and_reset_restores_it _________
+
+    def test_power_changes_alley_beyond_machine_and_reset_restores_it():
+        pygame.init()
+        app = App()
+        lights = pygame.Rect(40, 355, 700, 45)
+        app.draw()
+        dark = pygame.image.tobytes(app.canvas.subsurface(lights), 'RGB')
+        write(app, 'move_right()\ncollect()')
+        click(app, 'Run')
+        app.update(.5)
+        app.update(.5)
+        app.draw()
+>       assert pygame.image.tobytes(app.canvas.subsurface(lights), 'RGB') != dark
+E       assert b'")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")...B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B' != b'")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")...B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B'
+E        +  where b'")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")...B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B")B' = <built-in function tobytes>(<Surface(700x45x32)>, 'RGB')
+E        +    where <built-in function tobytes> = <module 'pygame.image' from '/workspace/Catworld/.venv/lib/python3.12/site-packages/pygame/image.cpython-312-x86_64-linux-gnu.so'>.tobytes
+E        +      where <module 'pygame.image' from '/workspace/Catworld/.venv/lib/python3.12/site-packages/pygame/image.cpython-312-x86_64-linux-gnu.so'> = pygame.image
+E        +    and   <Surface(700x45x32)> = <built-in method subsurface of pygame.surface.Surface object at 0x7f9baee62870>(Rect(40, 355, 700, 45))
+E        +      where <built-in method subsurface of pygame.surface.Surface object at 0x7f9baee62870> = <Surface(1200x720x32)>.subsurface
+E        +        where <Surface(1200x720x32)> = <neonpaw.ui.app.App object at 0x7f9baef7a510>.canvas
+
+tests/test_episode.py:51: AssertionError
+____________ test_complete_episode_shows_finish_and_honest_preview _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9baef7b920>
+
+    def test_complete_episode_shows_finish_and_honest_preview(monkeypatch):
+        pygame.init()
+        app = App()
+        unlock(app)
+        click(app, 'Abruf')
+        write(app, SOLUTION)
+        click(app, 'Run')
+        for _ in range(3):
+            app.update(.5)
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+>       assert 'ABSCHNITT GESCHAFFT' in rendered
+E       AssertionError: assert 'ABSCHNITT GESCHAFFT' in ['NEONPAW', 'KLEINE PFOTEN. ECHTER CODE.', '03 / SELBST AUFBAUEN', 'PYTHON / DEIN EIGENES PROGRAMM', 'DIE GASSE LEUCHTET', 'Batterie eingesetzt. Automat eingeschaltet!', ...]
+
+tests/test_episode.py:74: AssertionError
+_________ test_typo_is_fixed_by_real_editor_input_not_auto_replacement _________
+
+    def test_typo_is_fixed_by_real_editor_input_not_auto_replacement():
+        pygame.init()
+        app = App()
+        write(app, 'move_rigth()')
+        click(app, 'Run')
+>       assert 'Meintest du' in app.runner.error
+E       AssertionError: assert 'Meintest du' in 'Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.'
+E        +  where 'Zeile 1: Erlaubt: move_right() und collect(), jeweils ohne Argumente.' = <neonpaw.code.runner.Runner object at 0x7f9baef80380>.error
+E        +    where <neonpaw.code.runner.Runner object at 0x7f9baef80380> = <neonpaw.ui.app.App object at 0x7f9baef82ba0>.runner
+
+tests/test_episode.py:86: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_episode.py::test_friendly_error_keeps_whole_program_unexecuted[move_rigth()-Meintest du move_right()?]
+FAILED tests/test_episode.py::test_friendly_error_keeps_whole_program_unexecuted[collect(1)-keine Argumente]
+FAILED tests/test_episode.py::test_friendly_error_keeps_whole_program_unexecuted[move_right(x=1)-keine Argumente]
+FAILED tests/test_episode.py::test_friendly_error_keeps_whole_program_unexecuted[dance()-Unbekannter Befehl]
+FAILED tests/test_episode.py::test_walk_animation_is_bounded_and_reset_snaps_to_start
+FAILED tests/test_episode.py::test_power_changes_alley_beyond_machine_and_reset_restores_it
+FAILED tests/test_episode.py::test_complete_episode_shows_finish_and_honest_preview
+FAILED tests/test_episode.py::test_typo_is_fixed_by_real_editor_input_not_auto_replacement
+8 failed in 0.14s
