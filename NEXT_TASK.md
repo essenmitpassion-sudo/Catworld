@@ -1,18 +1,20 @@
-# Nächster kleiner Lernschritt: selbst abrufen
+# Nächster kleiner Schritt: eigene Programme behalten
 
-Transfer umgesetzt in 207ed14: alte Lösung bleibt erhalten, Batterie wandert ein Feld
-weiter, eigene Änderung erforderlich, Hilfen nur optional. 53 Tests und SDL-Smoke grün.
-Keine Doppelimplementierung; tatsächlichen HEAD/Review zuerst prüfen.
+Abruf aus leerem Editor ist implementiert und geprüft: 58 Tests sowie SDL-Smoke.
+Nicht noch einmal bauen. Die Eigenlösung und der Abrufentwurf bleiben bisher nur
+während einer Sitzung erhalten; nach dem Schliessen fehlen sie.
 
-Kleinste passende Fortsetzung: nach erfolgreichem Transfer optional einen bekannten
-Auftrag aus einem leeren Editor lösen. Kein neuer Befehl, keine neue Engine und keine
-Schleifen. Bisherigen selbst geschriebenen Code beim Wechsel aufbewahren, nicht löschen;
-Rückkehr muss möglich sein. Hilfe weiterhin nur auf Wunsch, Beispiele als unterstützt
-kennzeichnen. Erfolg allein ist noch kein Verständnisnachweis.
+Kleinste sinnvolle Fortsetzung: beide selbst geschriebenen Texte lokal speichern
+und beim nächsten Start wieder bereitstellen. Keine Cloud, Accounts oder neue
+Sprachsyntax. Vorhandene Entwürfe nicht blind überschreiben; atomar schreiben,
+Format/Länge beim Lesen begrenzen, beschädigte Daten verständlich melden und
+Wiederherstellung ermöglichen. Geladener Text darf niemals automatisch laufen.
+Keine allgemeine Spielstand-/Migrationsengine bauen.
 
-Wenn Owner-Rückmeldung vorliegt: zuerst konkrete Verwirrung reproduzieren und beheben.
-Kurzer Lerncheck: nächsten Befehl vorhersagen, erklären warum die alte Folge nicht mehr
-passte, dann eine bekannte Folge selbst schreiben. Beobachtungen als O/M unterscheiden.
-Ohne Tester keine menschlichen Lernerfolge behaupten und keine Warteschleife erzeugen.
-Red/Green, bestehende Regressionen, SDL-Eingaben und Wiederherstellbarkeit belegen.
-Keine weiteren Lernsysteme in derselben Etappe.
+RED zuerst für Speichern, Neustart/Wiederherstellen, defekte Daten und fehlende
+Schreibrechte; bestehende Run/Step/Stop/Reset- und Abruf-Tests erhalten. SDL-Smoke
+mit Neustart und wiedergefundenem Text. Persönliche Testdaten nicht committen.
+Menschlicher Lernwert weiterhin offen markieren; echte neue Reviews priorisieren.
+
+Bei Kapazitätsgrenze vor neuer Arbeit Commit + geprüftes Bundle + CURRENT sichern.
+Keine behauptete tägliche Automation: hier derzeit nicht verfügbar.

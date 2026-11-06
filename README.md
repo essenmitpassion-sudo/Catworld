@@ -1,10 +1,10 @@
-# CATWORLD / NEONPAW — Dein eigener Weg
+# CATWORLD / NEONPAW — Selbst aufbauen
 
 Eine schwarze Pixelkatze, eine Neon-Gasse, dein erster Python-Befehl.
 `move_right()` bewegt die Katze genau ein Feld nach rechts.
 `collect()` nimmt die Batterie auf dem Leuchtfeld auf und schaltet den verbundenen Automaten ein.
 
-![Transferaufgabe mit versetzter Batterie](evidence/transfer-start.png)
+![Selbst schreiben, ohne die Eigenlösung zu verlieren](evidence/recall-empty.png)
 
 ## Start (Python 3.12 oder neuer)
 
@@ -72,6 +72,19 @@ Hilfe erscheint ausschliesslich auf Klick. Nach zwei Tipps steht auf dem Button
 oder auszuführen. Solche Versuche werden als „mit Codebeispiel“ gekennzeichnet;
 Reset löscht diese Kennzeichnung nicht. Sie ist nur eine Sitzungsanzeige, kein
 Lernnachweis oder dauerhaftes Profil.
+
+## Selbst aufbauen — ohne Vorlage
+
+Nach einem erfolgreichen Transfer erscheint **Selbst schreiben / F4**.
+Der bekannte Auftrag startet mit leerem Editor. Schreibe die Folge selbst;
+die drei Hilfestufen bleiben optional. Deine bisherige Eigenlösung wartet unter
+**Zur Eigenlösung / F4** (auch F3). Auch ein unfertiger Abrufentwurf bleibt beim
+Zurückwechseln erhalten. Reset setzt nur die Welt zurück, nicht deinen Text.
+
+Beide Texte, Cursor und Hilfestatus bleiben **innerhalb der laufenden Sitzung**
+erhalten. Es gibt noch keine Speicherung über das Schliessen des Spiels hinaus.
+Ein leeres Programm schaltet den Automaten nicht ein. Erfolg zeigt die Weltreaktion,
+beweist aber nicht, dass der Spieler die Reihenfolge selbst verstanden hat.
 
 ## Nachweise
 

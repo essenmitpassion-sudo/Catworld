@@ -66,6 +66,38 @@ for _ in range(3):
     frame(dt=.5)
 assert app.runner.world.powered and not app.used_example
 pygame.image.save(app.canvas, 'evidence/transfer-solved.png')
+# A voluntary recall attempt starts blank without destroying either draft.
+original_program = app.source
+click('Abruf')
+assert app.recall_active and app.source == ''
+pygame.image.save(app.canvas, 'evidence/recall-empty.png')
+click('Run')
+frame(dt=.5)
+assert not app.runner.world.powered
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()'))
+click('Abruf')
+assert app.source == original_program and not app.recall_active
+click('Abruf')
+assert app.source == 'move_right()'
+frame(pygame.event.Event(pygame.TEXTINPUT, text='\nmove_right()\ncollect()'))
+click('Step')
+assert app.runner.world.x == 2
+click('Stop')
+frame(dt=2)
+assert not app.runner.world.powered
+click('Run')
+for _ in range(3):
+    frame(dt=.5)
+assert app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/recall-solved.png')
+click('Reset')
+assert app.source == original_program and not app.runner.world.powered
+for _ in range(3):
+    click('Hilfe')
+assert app.used_example and app.source == original_program
+click('Abruf')
+assert app.source == original_program and not app.used_example
+
 click('Reset')
 assert app.runner.world.battery_x == 3 and not app.runner.world.powered
 preserved = app.source
@@ -93,7 +125,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

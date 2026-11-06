@@ -1,15 +1,15 @@
-# CURRENT — 2026-11-05 — Transferaufgabe implementiert
+# CURRENT — 2026-11-06 — Abrufschritt gerettet und abgeschlossen
 
-- M: Sauberer Branch g0/first-cat-action von 7bad76c auf 5c67e51 fast-forward aktualisiert. Kein ungesichertes lokales Material vorhanden. AGENTS/CURRENT/NEXT_TASK/CHATGPT_REVIEW_G1_LEARNING gelesen.
-- O: Der erste Windows-G0-Test zeigte nachvollziehbare Bewegung, aber nur Run auf vorgegebenen Code; kein eigener Programmiernachweis. Aktuelle Build-Version nicht durch Owner auf Windows getestet.
-- M: Implementierung `207ed14d79571d63277dc6007ae07b35556e2b61`: zwei Szenarien mit einem Positionsparameter, gemeinsame Welt/Runner. Nach Erfolg Weiter oder sofort Freier Einstieg; bestehender Code bleibt, Batterie und Ziel versetzt. Kein ungefragtes Beispiel oder automatisches Codeeinsetzen.
-- M: Transfer startet neue Versuche am Anfang; alte Lösung scheitert auch bei wiederholtem Run/Step. Run nach pausiertem Step setzt fort. Einstieg bleibt unverändert. Reset behält Szenario und Code.
-- M: Drei freiwillige Hilfestufen: Beobachtung, Denkhinweis, expliziter Button Beispiel anzeigen. Beispiel setzt/führt keinen Code ein/aus. Kennzeichnung mit Codebeispiel bleibt über Reset erhalten; kein permanentes Lernprofil.
-- M: Baseline 45 passed; Transfer-RED sechs Tests fehlgeschlagen wegen fehlender Szenario-/UI-Funktion. GREEN 51 passed. Zwei zusätzliche Charakterisierungstests für Step-Fortsetzung/Shortcuts sofort grün. Final/Refactor: 53 passed, Exit 0 (`evidence/transfer-refactor.txt`).
-- M: SDL-Offscreen-Smoke Exit 0: Einstieg, Szenariowechsel, unveränderte Lösung scheitert, Textinput-Änderung gewinnt, Hilfestufen, Reset, Welt-/Syntaxfehler, Quit (`evidence/transfer-smoke.txt`). Screenshots visuell geprüft. Keine Behauptung eines physischen Desktop- oder Human-Tests.
-- G: ChatGPT-Review meldete zum Review-Zeitpunkt keinen offenen PR. M: aktuelle gh-pr-Abfrage GraphQL Forbidden, daher PR-Status aktuell UNKNOWN; kein PR erstellt. Git-Push am Abschluss separat prüfen.
-- OPEN: HUMAN_LEARNING_NEEDS_TEST / HUMAN_FUN_NEEDS_TEST; aktuelle Windows-/DPI-Prüfung offen, NO_CI. Technische Lösung ist kein Beweis eigenen Verständnisses. Keine neue Syntax, keine neue Abhängigkeit, keine Subagenten.
-- Start: `.venv/bin/python -m neonpaw`; Windows start_windows.bat, Python 3.12+, erste Installation benötigt Internet. Weiter/Freier Einstieg F3, Hilfe F1.
-- Sicherung: Implementierungscommit oben plus nachfolgender Dokumentationscommit; vollständiges geprüftes Bundle /workspace/Catworld-Transfer.bundle und Quellbuild /workspace/Catworld-Transfer.zip am finalen HEAD.
-- Nächste einzelne Aufgabe: kleiner Abrufschritt ohne neue Syntax — bekannte Befehlsfolge selbst aus leerem Editor erstellen; vor Umsetzung aktuellen Lernreview/Owner-Rückmeldung prüfen. Fehlende Menschenrückmeldung allein blockiert keine technische Arbeit.
-- Wiederaufnahme: git status -sb; git log -3 --oneline; .venv/bin/python -m pytest -q; NEXT_TASK lesen.
+- M: Ausgangs-HEAD lokal e32eed08310405396f99e40e86116c34b7ea5e5c, mit uncommittetem Abruf-Code, tests/test_recall.py und RED/GREEN-Logs. Vor Fetch erneut 58 Tests grün, Rettungscommit 0469ae86e0e95b2de3af0f40f69b0c398c35f7f5; /workspace/Catworld-resume-2026-11-06.bundle erfolgreich geprüft.
+- M: Remote-HEAD beim Abruf 6358fd88ae7d5e3fcf39c58e516721b7a4709a85. Nur CODEX_RESUME_2026-11-06.md neu. Nach Backup konfliktfrei lokal integriert in 4a03027. Keine Resets, Force-Pushs oder PR-Merges.
+- M: Abruf war bereits implementiert, daher nicht doppelt gebaut. Jetzt vollständig technisch geprüft: nach Transfer-Erfolg optional F4, zunächst leerer Editor; ursprüngliche Eigenlösung und neuer Entwurf mitsamt Cursor/Hilfestatus bleiben beim Wechsel erhalten. Reset löscht keinen Text. Rückkehr bricht offene Ausführung ab. Gleiche Simulation und sichere Befehle.
+- M: RED des begonnenen Batches: 5 Tests fehlgeschlagen wegen fehlendem Abruf-Button (recall-red.txt). GREEN und frisch wiederholt: 58 passed, Exit 0 (recall-final-tests.txt). Alte G0/G1/Transfer-Tests enthalten.
+- M: SDL-Offscreen-Smoke erweitert und Exit 0: leerer Abruf, echte Texteingabe, Run/Step/Stop/Reset, beide Entwürfe wiederhergestellt, Hilfestatus, Welt-/Syntaxfehler und Quit (recall-smoke.txt). Screenshot recall-empty.png visuell geprüft. Kein physischer Desktop-Test.
+- M: Keine Thread-/Zeitplan-Automationsfunktion in den verfügbaren Tools. KEINE tägliche Automation eingerichtet, kein Scheduler-Ersatz gebaut. Manuelle oder separat im Produkt eingerichtete Fortsetzung bleibt erforderlich.
+- M: gh pr list weiterhin GraphQL Forbidden; aktuelle offene PRs UNKNOWN. Kein PR erstellt, keine zusätzlichen Agenten. Git-Push am Abschluss gesondert verifizieren.
+- O/G: Owner beobachtete den ursprünglichen G0-Run unter Windows, keinen eigenen Lernnachweis. Aktuelle Version: HUMAN_LEARNING_NEEDS_TEST / HUMAN_FUN_NEEDS_TEST, Windows-/DPI-Check offen. NO_CI.
+- Grenze: Entwürfe sind bisher nur innerhalb der Sitzung erhalten; Schliessen des Spiels verliert sie. Keine unbelegten dauerhaften Speicherbehauptungen.
+- Start: `.venv/bin/python -m neonpaw` oder Windows start_windows.bat. F3 Transfer, F1 optionale Hilfe, F4 nach Transfer-Erfolg Abruf/Rückkehr.
+- Checkpoint: finale SHA mit git log -1 prüfen; /workspace/Catworld-Recall.bundle und /workspace/Catworld-Recall.zip werden am Abschluss-HEAD erzeugt und Bundle geprüft.
+- Nächste einzelne Aufgabe: beide eigenen Programmentwürfe auch über Spielneustarts erhalten, ohne automatische Ausführung. Keine neue Sprachsyntax.
+- Wiederaufnahme: git status -sb und git log -5; lokale Arbeit vor Fetch sichern; Reviews lesen; `.venv/bin/python -m pytest -q`; SDL-Smoke bei UI-Änderungen.

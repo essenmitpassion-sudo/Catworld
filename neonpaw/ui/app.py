@@ -24,6 +24,7 @@ class App:
         self.recall_active = False
         self.recall_available = False
         self.saved_editor = None
+        # Each editor snapshot retains source, cursor, hint stage and example use.
         self.recall_draft = ('', 0, 0, False)
         self.scenario = 0
         self.hint_level = 0

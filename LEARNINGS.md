@@ -28,3 +28,6 @@ O: Owner konnte unter Windows den vorgegebenen move_right()-Befehl mit Run ausf�
 
 ### L012 — 2026-11-05 — Wiederholtes Run darf Transfer nicht umgehen
 G/V: Der G1-Runner behält die Position zwischen vollständigen Runs; eine alte Bewegungsfolge könnte am versetzten Ziel durch Wiederholen statt Codeänderung ankommen. Gegenmassnahme nur im Transfer: jeder neue Versuch startet am Szenarioanfang, ein pausierter Step-Lauf bleibt fortsetzbar. M: test_unchanged_old_solution_cannot_win_by_repeated_run_or_step und test_step_then_run_resumes_without_restarting prüfen beide Seiten. G0/G1-Einstiegssemantik bleibt durch bestehende Tests gesichert.
+
+### L013 — 2026-11-06 — Handoff kennt lokale Arbeit nicht
+M: Remote-Handoff 6358fd8 meldete den Abrufschritt als noch nicht auf GitHub belegt; lokal lagen Implementierung, fünf neue Tests und RED/GREEN-Logs uncommitted vor. Erst 58 Tests erneut ausgeführt, dann vor Fetch in 0469ae8 committed und Git-Bundle geprüft. Anschliessend den reinen Dokumentationszweig konfliktfrei integriert; keine Doppelimplementierung. Gegenmassnahme: vor Remote-Synchronisation immer lokale Änderungen und eigene Commits sichern, Handoff als Beobachtung des Remote behandeln. UI-Smoke schliesst die tatsächliche lokale Restarbeit ab.
