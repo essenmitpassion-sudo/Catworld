@@ -3,6 +3,7 @@ import pygame
 from neonpaw.code.runner import Runner, ProgramError, MAX_SOURCE
 from neonpaw.content.levels import TITLE, OBJECTIVE, START_CODE, BATTERY_POSITIONS, HINTS
 from neonpaw.core.world import World
+from neonpaw.ui import drafts
 
 BG = '#101321'
 INK = '#e5eafa'
@@ -12,7 +13,7 @@ PINK = '#ff79bc'
 
 
 class App:
-    def __init__(self):
+    def __init__(self, save_path=None):
         self.screen = pygame.display.set_mode((1200, 720), pygame.RESIZABLE)
         pygame.display.set_caption('NEONPAW — Erster Pfotenschritt')
         self.canvas = pygame.Surface((1200, 720))
@@ -43,7 +44,61 @@ class App:
         self.buttons['Transfer'] = pygame.Rect(420, 125, 320, 36)
         self.buttons['Hilfe'] = pygame.Rect(540, 75, 200, 36)
         self.buttons['Abruf'] = pygame.Rect(340, 28, 400, 36)
+        self.save_path = save_path
+        self.storage_message = ''
+        self.storage_error = False
+        self._storage_blocked = False
+        self._last_save_attempt = None
+        if save_path is not None:
+            self.restore_drafts()
         pygame.key.start_text_input()
+
+    def draft_snapshot(self):
+        if self.recall_active:
+            original, _, _, original_example = self.saved_editor
+            recall, recall_example = self.source, self.used_example
+        else:
+            original, original_example = self.source, self.used_example
+            recall, _, _, recall_example = self.recall_draft
+        return dict(version=1, scenario=self.scenario, recall_active=self.recall_active,
+                    recall_available=self.recall_available, original=original, recall=recall,
+                    original_example=original_example, recall_example=recall_example)
+
+    def restore_drafts(self):
+        try:
+            state, warning = drafts.load(self.save_path)
+        except (drafts.DraftError, OSError):
+            self.storage_error = self._storage_blocked = True
+            self.storage_message = 'Laden fehlgeschlagen. Datei behalten. Strg+S sichert neuen Entwurf.'
+            return
+        if state is None:
+            return
+        self.scenario = state['scenario']
+        self.recall_available = state['recall_available']
+        self.recall_active = state['recall_active']
+        original = (state['original'], len(state['original']), 0, state['original_example'])
+        self.recall_draft = (state['recall'], len(state['recall']), 0, state['recall_example'])
+        self.saved_editor = original if self.recall_active else None
+        self.source, self.cursor, self.hint_level, self.used_example = self.recall_draft if self.recall_active else original
+        self.runner = Runner(initial_world=World(battery_x=BATTERY_POSITIONS[self.scenario]))
+        self.storage_message = warning or 'Eigene Programme wieder da. Ausführen nur mit Run oder Step.'
+        self._last_save_attempt = self.draft_snapshot()
+
+    def save_drafts(self, force=False):
+        if self.save_path is None or (self._storage_blocked and not force):
+            return
+        snapshot = self.draft_snapshot()
+        if not force and snapshot == self._last_save_attempt:
+            return
+        self._last_save_attempt = snapshot
+        try:
+            drafts.save(self.save_path, snapshot)
+        except (OSError, drafts.DraftError, UnicodeError):
+            self.storage_error = True
+            self.storage_message = 'Speichern fehlgeschlagen. Code bleibt offen. Strg+S versucht es erneut.'
+        else:
+            self.storage_error = self._storage_blocked = False
+            self.storage_message = 'Beide Programme lokal gesichert. Strg+S speichert auch manuell.'
 
     def text(self, value, pos, color=INK, font=None):
         self.canvas.blit((font or self.font).render(value, True, color), pos)
@@ -141,6 +196,9 @@ class App:
         elif event.type == pygame.TEXTINPUT and self.focus:
             self.insert(event.text)
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s and event.mod & pygame.KMOD_CTRL:
+                self.save_drafts(force=True)
+                return
             shortcuts = {pygame.K_F5: 'Run', pygame.K_F6: 'Step',
                          pygame.K_ESCAPE: 'Stop', pygame.K_F2: 'Reset',
                          pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer', pygame.K_F4: 'Abruf'}
@@ -191,6 +249,7 @@ class App:
             self.runner.tick()  # Never catch up with an unbounded action loop.
             self.remember_success()
             self.elapsed = 0.0
+        self.save_drafts()
 
     def alley(self):
         scene = pygame.Surface((350, 240))
@@ -369,13 +428,15 @@ class App:
             objective = OBJECTIVE
         self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)
         self.draw_hint()
+        if self.storage_message:
+            self.text(self.storage_message, (40, 694), PINK if self.storage_error else MUTED, self.small)
         pygame.transform.scale(self.canvas, self.screen.get_size(), self.screen)
         pygame.display.flip()
 
 
 def main():
     pygame.init()
-    app = App()
+    app = App(save_path=drafts.default_path())
     clock = pygame.time.Clock()
     while app.alive:
         dt = clock.tick(60) / 1000

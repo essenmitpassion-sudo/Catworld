@@ -1,0 +1,30 @@
+............F....                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_invalid_unicode_does_not_reach_renderer_or_disk _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_unicode_does_not_0')
+
+    def test_invalid_unicode_does_not_reach_renderer_or_disk(tmp_path):
+        with pytest.raises(DraftError):
+>           save(tmp_path / 'drafts.json', document('\ud800'))
+
+tests/test_drafts.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/ui/drafts.py:70: in save
+    json.dump(state, stream, ensure_ascii=False)
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py:180: in dump
+    fp.write(chunk)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('"\ud800"',), kwargs = {}
+
+    @_functools.wraps(func)
+    def func_wrapper(*args, **kwargs):
+>       return func(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^
+E       UnicodeEncodeError: 'utf-8' codec can't encode character '\ud800' in position 1: surrogates not allowed
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py:499: UnicodeEncodeError
+=========================== short test summary info ============================
+FAILED tests/test_drafts.py::test_invalid_unicode_does_not_reach_renderer_or_disk
+1 failed, 16 passed in 0.29s

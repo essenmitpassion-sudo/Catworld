@@ -1,0 +1,4 @@
+pygame-ce 2.5.7 (SDL 2.32.10, Python 3.12.14)
+PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> disk save/restart -> optional hints -> reset -> errors -> quit
+Video driver: offscreen
+Physical desktop interaction / human usability: NOT_TESTED

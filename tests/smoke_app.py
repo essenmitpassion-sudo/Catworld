@@ -3,10 +3,14 @@ Run from the repository: SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy
     .venv/bin/python -m tests.smoke_app
 """
 import pygame
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from neonpaw.ui.app import App
 
 pygame.init()
-app = App()
+storage = TemporaryDirectory(prefix='neonpaw-smoke-')
+save_path = Path(storage.name) / 'drafts.json'
+app = App(save_path=save_path)
 
 def frame(event=None, dt=0):
     if event:
@@ -90,6 +94,16 @@ for _ in range(3):
     frame(dt=.5)
 assert app.runner.world.powered
 pygame.image.save(app.canvas, 'evidence/recall-solved.png')
+# Recreate the real app with the saved file: texts return, world never autoruns.
+app = App(save_path=save_path)
+frame()
+assert app.recall_active and app.source == original_program
+assert app.runner.status == 'idle' and not app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/drafts-restored.png')
+click('Abruf')
+assert app.source == original_program
+click('Abruf')
+
 click('Reset')
 assert app.source == original_program and not app.runner.world.powered
 for _ in range(3):
@@ -125,7 +139,8 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> disk save/restart -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
+storage.cleanup()

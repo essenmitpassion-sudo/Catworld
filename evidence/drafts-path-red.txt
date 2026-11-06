@@ -1,0 +1,18 @@
+.............F                                                           [100%]
+=================================== FAILURES ===================================
+___________ test_storage_location_can_be_selected_for_portable_build ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-26/test_storage_location_can_be_s0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1ed8c54410>
+
+    def test_storage_location_can_be_selected_for_portable_build(tmp_path, monkeypatch):
+        from neonpaw.ui.drafts import default_path
+        monkeypatch.setenv('NEONPAW_DATA_DIR', str(tmp_path))
+>       assert default_path() == tmp_path / 'drafts.json'
+E       AssertionError: assert PosixPath('/home/agent/.neonpaw/drafts.json') == (PosixPath('/tmp/pytest-of-agent/pytest-26/test_storage_location_can_be_s0') / 'drafts.json')
+E        +  where PosixPath('/home/agent/.neonpaw/drafts.json') = <function default_path at 0x7f1ed8d12d40>()
+
+tests/test_drafts.py:81: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_drafts.py::test_storage_location_can_be_selected_for_portable_build
+1 failed, 13 passed in 0.06s

@@ -1,0 +1,45 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______________ test_restart_restores_both_drafts_without_running _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-22/test_restart_restores_both_dra0')
+
+    def test_restart_restores_both_drafts_without_running(tmp_path):
+        pygame.init()
+        path = tmp_path / 'drafts.json'
+>       app = App(save_path=path)
+              ^^^^^^^^^^^^^^^^^^^
+E       TypeError: App.__init__() got an unexpected keyword argument 'save_path'
+
+tests/test_draft_ui.py:12: TypeError
+________________ test_broken_file_preserved_until_explicit_save ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-22/test_broken_file_preserved_unt0')
+
+    def test_broken_file_preserved_until_explicit_save(tmp_path):
+        pygame.init()
+        path = tmp_path / 'drafts.json'
+        path.write_text('broken')
+>       app = App(save_path=path)
+              ^^^^^^^^^^^^^^^^^^^
+E       TypeError: App.__init__() got an unexpected keyword argument 'save_path'
+
+tests/test_draft_ui.py:30: TypeError
+_____________ test_save_failure_is_visible_and_does_not_break_game _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-22/test_save_failure_is_visible_a0')
+
+    def test_save_failure_is_visible_and_does_not_break_game(tmp_path):
+        pygame.init()
+        parent = tmp_path / 'not-a-directory'
+        parent.write_text('preserve')
+>       app = App(save_path=parent / 'drafts.json')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: App.__init__() got an unexpected keyword argument 'save_path'
+
+tests/test_draft_ui.py:47: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_draft_ui.py::test_restart_restores_both_drafts_without_running
+FAILED tests/test_draft_ui.py::test_broken_file_preserved_until_explicit_save
+FAILED tests/test_draft_ui.py::test_save_failure_is_visible_and_does_not_break_game
+3 failed in 0.05s
