@@ -103,6 +103,46 @@ for _ in range(3):
     frame(dt=.5)
 assert app.runner.world.powered
 pygame.image.save(app.canvas, 'evidence/recall-solved.png')
+# Rooftop: experience repetition first; write a loop without automatic solution insertion.
+protected_program = app.source
+click('Dach')
+assert app.roof_active and app.runner.world.battery_x == 6
+assert not app.roof_repetition_seen
+pygame.image.save(app.canvas, 'evidence/roof-start.png')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()\n' * 3))
+click('Run')
+for _ in range(3):
+    frame(dt=.5)
+assert app.roof_repetition_seen and not app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/roof-repetition.png')
+click('Hilfe')
+click('Hilfe')
+assert app.source == 'move_right()\n' * 3
+pygame.image.save(app.canvas, 'evidence/roof-hint.png')
+click('Hilfe')
+click('Hilfe')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='for _ in range(5):\n    move_right()\ncollect()'))
+roof_program = app.source
+click('Step')
+click('Step')
+assert app.runner.world.x == 3 and app.runner.line == 2
+click('Stop')
+frame(dt=2)
+assert app.runner.world.x == 3
+click('Run')
+for _ in range(6):
+    frame(dt=.5)
+assert app.runner.world.powered and app.runner.world.x == 6 and app.runner.line == 3
+pygame.image.save(app.canvas, 'evidence/roof-solved.png')
+app = App(save_path=save_path)
+frame()
+assert app.roof_active and app.source == roof_program and app.runner.status == 'idle'
+assert app.runner.world.battery_x == 6 and not app.runner.world.powered
+click('Dach')
+assert app.source == protected_program and app.recall_active
+
 # Recreate the real app with the saved file: texts return, world never autoruns.
 app = App(save_path=save_path)
 frame()
@@ -148,7 +188,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> disk save/restart -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

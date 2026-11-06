@@ -1,14 +1,9 @@
-# CURRENT — 2026-11-06 — Licht für Nox: zusammenhängender Abschnitt
+# CURRENT — 2026-11-06 — Dachweg-Checkpoint
 
-- M: Ausgangspunkt lokal/remote 31993c9, sauber, vorhandenes Bundle geprüft; Baseline 76 Tests grün. Remote keine neuen Commits/Reviews beim Fetch. Aktuelle AGENTS/Status/Loop/Learnings und bisherige Reviews berücksichtigt.
-- O: CEO-Push priorisiert einen vollständigen Spielabschnitt statt isolierter Tutorialtechnik. Vorhandenes wiederverwendet, kein neues Framework oder Agent.
-- M: Implementierung d5081fd2c8c39d65ac2a91ac30c653a9975ed1c2: „Licht für Nox“ verbindet Beobachtung, eigene Ergänzung, Transfer und Abruf. Kurze klare Übergänge, animierte Schritte, Blinzeln/Schwanz, Automat plus Lampenkette und Dachweg-Schild. Abschnitt geschafft nach Abruf-Erfolg; Wiederholungen ausdrücklich Vorschau, nicht implementiert.
-- M: Tippfehlerdiagnose und Argumentfehler verständlicher; keine automatische Codeänderung. Enge AST-Formen, zwei Aktionsnamen und Budgets erhalten. Präsentationsanimation verändert keine Weltaktionen. Reset stellt dunkle Gasse wieder her. Speicherformat unverändert.
-- M: RED 8 failed, Exit 1 (episode-red.txt). GREEN/Refactor volle Suite 84 passed, Exit 0 (episode-refactor.txt). Bestehende 76 Prüfungen enthalten, darunter alle Speicherrisiken.
-- M: Vollständiger SDL-Offscreen-Smoke mit echter Ereignisqueue/Texteingabe, eigener Tippfehlerkorrektur, Einstieg/Transfer/Abruf, Dateispeichern/erneuter App-Instanz, Stop/Reset/Hilfen/Fehler/Quit Exit 0 (episode-smoke.txt). Screenshots visuell geprüft. 240 automatisierte SDL-Frames erzeugt, Szenarioergebnisse im Recorder geprüft (episode-demo.txt); kein Menschentest.
-- M: Sicherheitscheckpoint d5081fd + geprüftes Catworld-Nox-checkpoint.bundle. Finale Dokumentations-SHA mit git log -1 prüfen; /workspace/Catworld-Nox.zip und .bundle, Demo /workspace/Catworld-Nox-demo.mp4.
-- M: GitHub REST-PR-Abfrage Forbidden; vorhandene PRs UNKNOWN, keine PR erstellt. Pushstatus final separat prüfen, keine Auto-Merges. Keine tägliche Thread-Automation verfügbar/aktiv.
-- OPEN: HUMAN_LEARNING_NEEDS_TEST / HUMAN_FUN_NEEDS_TEST; nativer Windows-/DPI-Test der aktuellen Version offen; NO_CI. Build ist Python-Quellbuild mit Startskript, kein separat getesteter Windows-Installer.
-- Start: Python 3.12+, start_windows.bat oder README-Linux/macOS-Befehle. F1 Hilfe, F3 Transfer, F4 Abruf nach Erfolg; Strg+S lokale Entwürfe. Bestehende Programme bleiben erhalten; geladener Text startet nicht von allein.
-- Nächste einzelne Aufgabe: längerer Weg als konkreter Anlass für begrenztes for/range; eine neue Sprachidee, gleiche Simulation. Vorher frische Reviews/Owner-Beobachtungen prüfen.
-- Wiederaufnahme: lokale Arbeit/Commits zuerst sichern, Fetch/Reviews, pytest; neue Features nur in abgesicherten kleinen Batches.
+- M: Branch g0/first-cat-action; Runner-Commit 3461d94. Dachweg-UI und Speichermigration werden im anschließenden Checkpoint gesichert; vollständige SHA mit git log -1 ermitteln.
+- M: Dachweg mit Zielposition 6, sichtbarem Fortschritt, optionaler Schleifenhilfe erst nach erlebter Wiederholung; ausgeschriebene Befehle bleiben gültig. Run/Step/Stop/Reset mit begrenztem for/range. Drei getrennte Entwürfe; alte Speicherversion 1 lesbar, neue Version 2.
+- M: Erneut 130 Tests bestanden. RED-Nachweise: evidence/roof-loops-red.txt (13 failed), roof-ui-red.txt (6 failed); GREEN roof-green.txt. SDL-Offscreen-Smoke laut roof-smoke.txt erfolgreich, einschließlich Dachweg und Entwurfswiederherstellung; kein menschlicher Bediennachweis.
+- M: Beim Automationsauftrag uncommittete Dachweg-Arbeit gefunden und ohne Reset beibehalten. Prozessprüfung: ein aktiver Codex-Hauptprozess mit eigenen Sandbox-Unterprozessen, alte Git-Zombies, kein laufender pytest-/Spielprozess. Keine weiteren Agenten gestartet. Diese lokale Momentaufnahme garantiert keinen globalen Instanzausschluss.
+- M: Keine native Automationsverwaltung verfügbar: gewünschter 60-Minuten-Takt NICHT aktiviert, kein erfolgreicher automatischer Lauf bestätigt. Kein Ersatz-Scheduler eingerichtet. Anforderungen in AUTONOMOUS_LOOP.md.
+- Offen: abschließende visuelle Prüfung der Dachweg-Screenshots, Sicherheits-/README-Dokumentation aktualisieren, Quellbuild erstellen und separat testen, GitHub-Abgleich/Push. PR-Bestand unbekannt (bisher API Forbidden). Menschlicher Lernwert/Spielspaß und nativer Windows-Test offen.
+- Wiederaufnahme: Git-Status und Prozesse zuerst prüfen, vorhandene Arbeit sichern; keine Doppelimplementierung des Dachwegs. NEXT_TASK.md enthält verbleibende Abschlussarbeiten.

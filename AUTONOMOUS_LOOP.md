@@ -29,3 +29,9 @@ G0 abgeschlossen. Batterie und Transferaufgabe technisch implementiert; 53 Tests
 
 ## Nicht behaupten
 GitHub-Commit ≠ laufende Codex-Automation. Dokumentiertes pytest-PASS ≠ unabhängiger Test oder menschlicher Spielspass. ChatGPT Review in GitHub ≠ sofortiger Codex-Empfang. Eine Automation gilt erst als aktiv, wenn im Codex-Produkt ein bestätigter Task/Zeitplan vorliegt.
+
+## Gewünschte Fortsetzung — 2026-11-06
+- O: Intervall 60 Minuten, höchstens eine aktive Entwicklungsinstanz; keine parallelen Writer oder automatischen Merges.
+- M: In dieser Sitzung keine native Automationsverwaltung als Werkzeug verfügbar. Zeitplan NICHT eingerichtet, erster automatischer Lauf NICHT nachgewiesen. Diese Datei aktiviert keinen Scheduler.
+- Vor jedem tatsächlichen Start: laufende Entwicklungs-/Git-Prozesse und Git-Status einschließlich lokaler Commits prüfen, dann AGENTS.md, CURRENT.md, NEXT_TASK.md und neue unabhängige Reviews lesen. Vor Fetch/Integration lokale Arbeit sichern. Keine ungesicherten Resets oder Force-Pushs.
+- Eine künftig verfügbare native Automation muss überlappende Läufe zuverlässig ausschließen (bei bereits aktivem Integrator auslassen); eine reine Prozessmomentaufnahme reicht nicht als gegenseitiger Ausschluss. Keine eigenen Cron-/Scheduler-Ersatzprozesse.

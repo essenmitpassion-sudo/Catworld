@@ -15,3 +15,15 @@ HINTS = (
         ('move_right()', 'move_right()', 'collect()'),
     ),
 )
+
+ROOF_BATTERY_X = 6
+ROOF_WALK_HINTS = (
+    ('Die Dachlaterne wartet am markierten Feld. Zähle die Abstände.',),
+    ('Schreibe mehrere bekannte Bewegungsschritte untereinander.',),
+    ('move_right()', 'move_right()', 'move_right()', 'move_right()', 'move_right()', 'collect()'),
+)
+ROOF_LOOP_HINTS = (
+    ('Welche Aktion hast du gerade mehrfach wiederholt?',),
+    ('for _ in range(2):', '    move_right()', 'Beispiel für zwei Schritte. Passe die Anzahl an deinen Weg an.'),
+    ('for _ in range(5):', '    move_right()', 'collect()'),
+)

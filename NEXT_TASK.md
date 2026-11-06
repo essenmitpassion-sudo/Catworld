@@ -1,21 +1,11 @@
-# Nächster Abschnitt: ein Plan für viele Schritte
+# Nächste Aufgabe: Dachweg abschließen, dann Transfer
 
-„Licht für Nox“ ist technisch als zusammenhängender Abschnitt umgesetzt in d5081fd:
-84 Tests plus vollständiger SDL-Smoke. Tippfehlerdiagnose ist ebenfalls fertig.
-Keine Doppelimplementierung; aktuelle Reviews zuerst prüfen.
+Dachweg und begrenzte for/range-Ausführung sind implementiert, 130 Tests grün.
+Nicht erneut implementieren. Zuerst Prozesse/Git-Status und neue Reviews prüfen.
 
-Nächster sinnvoller kleiner Spielschritt: ein längerer Dachweg motiviert Wiederholung.
-Erst die bestehende Bewegungsfolge ausführbar halten, dann genau eine neue Sprachidee:
-ein eng begrenztes `for ... in range(...)` für die bestehenden Aktionsaufrufe.
-Kein allgemeiner Python-Interpreter, keine Variablen-/Funktions-/Flottenengine.
+1. Screenshot evidence/roof-start.png, roof-hint.png, roof-solved.png visuell prüfen.
+2. Speicherformat-2-Grenzfälle und Rückkehr aus aktivem Abruf überprüfen; nur relevante Fehler mit RED/GREEN korrigieren. README und Sicherheitsdokumentation an erlaubte Schleifen und drei Entwürfe anpassen.
+3. Vollständige Tests/SDL-Smoke, zusammenhängenden Quellbuild erzeugen und aus ZIP erneut testen; Commit/Bundle sichern, GitHub-Push und Remote-SHA prüfen. Keine automatischen Merges.
+4. Danach kleinster Lerntransfer: verändertes Dachziel, Anzahl selbst anpassen, bisherige Lösung erhalten. Keine weitere Python-Syntax nötig. Menschlichen Lernwert nicht aus Tests ableiten.
 
-Vor Implementierung die erlaubten AST-Formen und Laufzeitbudgets festlegen; echtes
-Python-Verhalten für die unterstützte Teilmenge, Ressourcen vor Ausführung begrenzen,
-keine uneingeschränkte Auswertung. Negative Schleifen-/Grössenfälle und Stop/Reset
-zuerst RED testen. Alte Programme, beide gespeicherten Entwürfe und freie Einstiege
-erhalten. Neue Zielposition aus derselben Szenariokonfiguration rendern.
-
-Eine beobachtbare Weltreaktion und eine optionale Hilfe statt ungefragter Komplettlösung.
-Bestehenden Abschnitt weiterhin spielbar halten, vollständiger Regressionstest und
-SDL-Smoke, Checkpoint vor Erweiterung. Menschliche Klarheit/Freude bleiben ohne
-Beobachtung offen; reale Owner-Rückmeldung hat Vorrang vor dieser nächsten Idee.
+Automation: 60 Minuten vom Owner gewünscht, hier nicht eingerichtet; keine native Verwaltungsfunktion verfügbar. Kein bestätigter erster automatischer Lauf. Keine Ersatz-Scheduler bauen.

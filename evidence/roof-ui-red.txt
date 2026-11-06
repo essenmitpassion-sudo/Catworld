@@ -1,0 +1,127 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_____________ test_roof_preserves_old_program_and_has_longer_goal ______________
+
+app = <neonpaw.ui.app.App object at 0x7f60569fffb0>
+
+    def test_roof_preserves_old_program_and_has_longer_goal(app):
+        original = app.source
+>       click(app, 'Dach')
+
+tests/test_roof.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f60569fffb0>, name = 'Dach'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Dach'
+
+tests/test_recall.py:14: KeyError
+________________ test_roof_loops_controls_and_visible_progress _________________
+
+app = <neonpaw.ui.app.App object at 0x7f6056a41d30>
+
+    def test_roof_loops_controls_and_visible_progress(app):
+>       click(app, 'Dach')
+
+tests/test_roof.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f6056a41d30>, name = 'Dach'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Dach'
+
+tests/test_recall.py:14: KeyError
+_________________ test_repeated_lines_are_a_valid_alternative __________________
+
+app = <neonpaw.ui.app.App object at 0x7f6056a42d50>
+
+    def test_repeated_lines_are_a_valid_alternative(app):
+>       click(app, 'Dach')
+
+tests/test_roof.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f6056a42d50>, name = 'Dach'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Dach'
+
+tests/test_recall.py:14: KeyError
+____________________ test_roof_hints_never_insert_solution _____________________
+
+app = <neonpaw.ui.app.App object at 0x7f6056a43080>
+
+    def test_roof_hints_never_insert_solution(app):
+>       click(app, 'Dach')
+
+tests/test_roof.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f6056a43080>, name = 'Dach'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Dach'
+
+tests/test_recall.py:14: KeyError
+_____________ test_existing_v1_drafts_and_all_three_texts_survive ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-34/test_existing_v1_drafts_and_al0')
+
+    def test_existing_v1_drafts_and_all_three_texts_survive(tmp_path):
+        pygame.init()
+        path = tmp_path / 'drafts.json'
+        state = document(SOLUTION)
+        state['recall'] = '# Mein Abruf'
+        save(path, state)
+        app = App(save_path=path)
+        assert app.source == SOLUTION
+>       click(app, 'Dach')
+
+tests/test_roof.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f6056b7d910>, name = 'Dach'
+
+    def click(app, name):
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1,
+>                                     pos=app.buttons[name].center))
+                                          ^^^^^^^^^^^^^^^^^
+E       KeyError: 'Dach'
+
+tests/test_recall.py:14: KeyError
+________________ test_enter_and_tab_support_python_indentation _________________
+
+app = <neonpaw.ui.app.App object at 0x7f60569fdfd0>
+
+    def test_enter_and_tab_support_python_indentation(app):
+        write(app, 'for _ in range(5):')
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_RETURN, mod=0))
+>       assert app.source.endswith(':\n    ')
+E       AssertionError: assert False
+E        +  where False = <built-in method endswith of str object at 0x7f6056906ab0>(':\n    ')
+E        +    where <built-in method endswith of str object at 0x7f6056906ab0> = 'for _ in range(5):\n'.endswith
+E        +      where 'for _ in range(5):\n' = <neonpaw.ui.app.App object at 0x7f60569fdfd0>.source
+
+tests/test_roof.py:114: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_roof.py::test_roof_preserves_old_program_and_has_longer_goal
+FAILED tests/test_roof.py::test_roof_loops_controls_and_visible_progress - Ke...
+FAILED tests/test_roof.py::test_repeated_lines_are_a_valid_alternative - KeyE...
+FAILED tests/test_roof.py::test_roof_hints_never_insert_solution - KeyError: ...
+FAILED tests/test_roof.py::test_existing_v1_drafts_and_all_three_texts_survive
+FAILED tests/test_roof.py::test_enter_and_tab_support_python_indentation - As...
+6 failed in 0.27s

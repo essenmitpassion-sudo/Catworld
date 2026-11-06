@@ -15,16 +15,21 @@ class DraftError(ValueError):
 def validate(state):
     expected = {'version', 'scenario', 'recall_active', 'recall_available',
                 'original', 'recall', 'original_example', 'recall_example'}
-    if not isinstance(state, dict) or set(state) != expected:
-        raise DraftError('Unbekanntes Entwurfsformat.')
-    if type(state['version']) is not int or state['version'] != 1:
+    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2):
         raise DraftError('Unbekannte Entwurfsversion.')
+    if state['version'] == 2:
+        expected |= {'roof_active', 'roof', 'roof_example', 'roof_repetition_seen'}
+    if set(state) != expected:
+        raise DraftError('Unbekanntes Entwurfsformat.')
     if type(state['scenario']) is not int or state['scenario'] not in (0, 1):
         raise DraftError('Ungültiges Szenario.')
-    for key in ('recall_active', 'recall_available', 'original_example', 'recall_example'):
+    bool_keys = ('recall_active', 'recall_available', 'original_example', 'recall_example')
+    if state['version'] == 2:
+        bool_keys += ('roof_active', 'roof_example', 'roof_repetition_seen')
+    for key in bool_keys:
         if type(state[key]) is not bool:
             raise DraftError('Ungültiger Entwurfsstatus.')
-    for key in ('original', 'recall'):
+    for key in (('original', 'recall', 'roof') if state['version'] == 2 else ('original', 'recall')):
         if not isinstance(state[key], str) or len(state[key]) > MAX_SOURCE:
             raise DraftError('Programmtext fehlt oder ist zu lang.')
         try:
@@ -33,6 +38,8 @@ def validate(state):
             raise DraftError('Programmtext enthält ungültige Unicode-Zeichen.') from exc
     if state['recall_active'] and (state['scenario'] != 1 or not state['recall_available']):
         raise DraftError('Ungültiger Abrufstatus.')
+    if state.get('roof_active') and not state['recall_available']:
+        raise DraftError('Ungültiger Dachwegstatus.')
     return state
 
 
@@ -64,6 +71,9 @@ def load(path):
 
 def save(path, state):
     validate(state)
+    encoded = json.dumps(state, ensure_ascii=False)
+    if len(encoded.encode('utf-8')) > 65536:
+        raise DraftError('Entwurfsdatei ist zu gross.')
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
@@ -71,7 +81,7 @@ def save(path, state):
         with tempfile.NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent,
                                          suffix='.tmp', delete=False) as stream:
             temporary = Path(stream.name)
-            json.dump(state, stream, ensure_ascii=False)
+            stream.write(encoded)
             stream.flush()
             os.fsync(stream.fileno())
         if path.exists():
