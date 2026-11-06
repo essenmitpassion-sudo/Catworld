@@ -1,10 +1,12 @@
-# CATWORLD / NEONPAW — Selbst aufbauen
+# CATWORLD / NEONPAW — Licht für Nox
 
-Eine schwarze Pixelkatze, eine Neon-Gasse, dein erster Python-Befehl.
+Nox sitzt vor einem dunklen Nacht-Automaten. Dein Programm bringt das Licht zurück.
+Ein kurzer Abschnitt: beobachten, selbst ergänzen, den zweiten Anschluss lösen und
+den eigenen Plan ohne Vorlage schreiben.
 `move_right()` bewegt die Katze genau ein Feld nach rechts.
 `collect()` nimmt die Batterie auf dem Leuchtfeld auf und schaltet den verbundenen Automaten ein.
 
-![Selbst schreiben, ohne die Eigenlösung zu verlieren](evidence/recall-empty.png)
+![Licht für Nox — Abschnitt abgeschlossen](evidence/recall-solved.png)
 
 ## Start (Python 3.12 oder neuer)
 
@@ -24,6 +26,19 @@ python3 -m venv .venv
 
 Ein grafischer Desktop ist für das Spielfenster nötig. In der Cloud wurde die
 SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüft.
+
+## Diesen Abschnitt ausprobieren
+
+1. Run drücken und Nox beim ersten Schritt beobachten.
+2. Eigenen Code für die Batterie ergänzen. Der Automat und die Lampenkette reagieren.
+3. **Weiter / F3:** den zweiten Anschluss mit einer selbst geänderten Folge versorgen.
+4. **Selbst schreiben / F4:** aus leerem Editor einen eigenen Plan bauen.
+5. Am Abschluss den leuchtenden Dachweg entdecken. **Wiederholungen sind ein Ausblick,
+   noch kein freigeschalteter Befehl in diesem Build.**
+
+Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
+ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;
+die Simulation bleibt unabhängig von diesen Darstellungsdetails.
 
 ## Spielen
 
@@ -119,4 +134,4 @@ Automatisierte Prüfungen sind kein menschlicher Bedienbarkeits- oder Spielspass
 Siehe `CURRENT.md`, `SAFETY_AND_EXECUTION.md` und `G0_SECURITY.md`.
 
 Langfristige Vorgaben: `PRODUCT.md`, `LONG_TERM_DESIGN.md`, `TUTORIAL_SYSTEM.md`.
-G0 ist technisch abgeschlossen; dieser Build ergänzt den G1-Batterie-Loop um genau eine Transferaufgabe und optionale Hilfen. Keine Stadt-, Flotten- oder Cloud-Spielsysteme.
+G0 ist technisch abgeschlossen; dieser Build verbindet Batterie, Transfer und Abruf zu einem kleinen Abschnitt mit sichtbarem Abschluss. Keine Stadt-, Flotten- oder Cloud-Spielsysteme.

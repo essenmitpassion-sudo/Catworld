@@ -34,3 +34,6 @@ M: Remote-Handoff 6358fd8 meldete den Abrufschritt als noch nicht auf GitHub bel
 
 ### L014 — 2026-11-06 — Editorwechsel-Sicherheit ist keine dauerhafte Speicherung
 G/M: Der Abrufschritt bewahrte zwei Texte nur im Speicher. Ein Spielneustart konnte diese eigene Arbeit verlieren. Gegenmassnahme: begrenzte lokale Text-Snapshots mit atomarem Ersatz, vorheriger gültiger Fassung und expliziter Fehlermeldung. Kein automatisches Ausführen beim Laden. Regressionsbelege: test_restart_restores_both_drafts_without_running, test_failed_replace_keeps_previous_program und SDL-Smoke mit erneutem App-Start. Ungültige Unicode-Zeichen separat reproduziert und vor Renderer/Schreiben abgewiesen.
+
+### L015 — 2026-11-06 — Technische Bausteine ergeben noch keinen Spielabschnitt
+G/O: Bewegung, Batterie, Transfer und Abruf waren vorhanden, aber Owner verlangte einen zusammenhängenden, motivierenden Abschnitt. Gegenmassnahme: gemeinsames Weltziel „Licht für Nox“, kurze Übergänge, animierte Reaktion ohne Eingriff in die Weltregeln, sichtbare Lampenkette und klarer Abschluss mit ausdrücklich zukünftigem Ausblick. M: test_power_changes_alley_beyond_machine_and_reset_restores_it sowie vollständiger SDL-/Video-Durchlauf prüfen Weltreaktion und Reihenfolge. Ob daraus mehr Freude/Neugier entsteht, bleibt V bis zum Menschentest; keine FUN_PASS-Aussage.

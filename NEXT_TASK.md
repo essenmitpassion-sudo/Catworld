@@ -1,18 +1,21 @@
-# Nächster kleiner Schritt: Tippfehler selbst beheben
+# Nächster Abschnitt: ein Plan für viele Schritte
 
-Abruf und wiederherstellbare eigene Entwürfe sind fertig (a15b644 / 95032c5),
-76 Tests und SDL-Smoke grün. Nicht erneut implementieren.
+„Licht für Nox“ ist technisch als zusammenhängender Abschnitt umgesetzt in d5081fd:
+84 Tests plus vollständiger SDL-Smoke. Tippfehlerdiagnose ist ebenfalls fertig.
+Keine Doppelimplementierung; aktuelle Reviews zuerst prüfen.
 
-Kleinste sinnvolle Verbesserung: konkrete Fehlermeldungen für falsch geschriebene
-bekannte Befehle, z.B. move_rigth(), und unerlaubte Argumente unterscheiden.
-Zeile und verständliche Ursache zeigen; gegebenenfalls den bekannten Befehlsnamen
-als Hinweis anbieten. Nie Code ersetzen oder automatisch starten, keine Komplettlösung
-für eine Mission einblenden. AST-Allowlist und Budgets unverändert streng halten.
+Nächster sinnvoller kleiner Spielschritt: ein längerer Dachweg motiviert Wiederholung.
+Erst die bestehende Bewegungsfolge ausführbar halten, dann genau eine neue Sprachidee:
+ein eng begrenztes `for ... in range(...)` für die bestehenden Aktionsaufrufe.
+Kein allgemeiner Python-Interpreter, keine Variablen-/Funktions-/Flottenengine.
 
-RED mit echten Eingaben; Core- und SDL-Tests für Fehlermeldung, Korrektur durch eigene
-Texteingabe und erfolgreichen erneuten Run. Bestehende Anfänger-/Transfer-/Abruf-
-und Speicherfunktionen erhalten. Neue Review- oder Owner-Befunde zuerst prüfen.
+Vor Implementierung die erlaubten AST-Formen und Laufzeitbudgets festlegen; echtes
+Python-Verhalten für die unterstützte Teilmenge, Ressourcen vor Ausführung begrenzen,
+keine uneingeschränkte Auswertung. Negative Schleifen-/Grössenfälle und Stop/Reset
+zuerst RED testen. Alte Programme, beide gespeicherten Entwürfe und freie Einstiege
+erhalten. Neue Zielposition aus derselben Szenariokonfiguration rendern.
 
-Kein Warten auf menschliche Mikrofreigaben; Lernwert/Spass bleiben ohne Menschentest
-offen. Bei Kapazitätsgrenze erst Commit/Backup/Status sichern. Keine aktive Automation
-behaupten: in dieser Sitzung kein Zeitplan-Werkzeug verfügbar.
+Eine beobachtbare Weltreaktion und eine optionale Hilfe statt ungefragter Komplettlösung.
+Bestehenden Abschnitt weiterhin spielbar halten, vollständiger Regressionstest und
+SDL-Smoke, Checkpoint vor Erweiterung. Menschliche Klarheit/Freude bleiben ohne
+Beobachtung offen; reale Owner-Rückmeldung hat Vorrang vor dieser nächsten Idee.

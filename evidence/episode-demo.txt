@@ -1,0 +1,2 @@
+pygame-ce 2.5.7 (SDL 2.32.10, Python 3.12.14)
+PASS: 240 automated SDL frames; full episode completed. Not a human test.
