@@ -43,3 +43,12 @@ Nur Test-CI, kein Entwicklungsscheduler. Tatsächlicher Git-Status gilt vor Doku
 O: Neuer langfristiger Masterprompt auf Wunsch „MERKE DIR“ vollständig und unverändert
 in PRODUCT_MASTER_PROMPT.md gespeichert, über AGENTS.md bei Wiederaufnahme auffindbar.
 Nur Dokumentation; keine neue Implementierung oder Änderung der nächsten Editoraufgabe.
+
+## 2026-11-09 — Horizontales Nachführen
+Ausgangspunkt cb1023a sauber, Remote ohne Neuerungen. Lange Zeilen halten Cursor
+sichtbar; Mauspositionierung berücksichtigt Offset, Zeilennummern bleiben fest.
+Home/End, Undo/Redo, Editorwechsel und ausführbare Zeilen getestet. RED 5, GREEN 175,
+voller SDL-Smoke PASS (evidence/horizontal-*.txt), Screenshot geprüft.
+Eigener Randfehler beim Undo auf kurze Zeile im Test gefunden und korrigiert.
+Nächster einzelner Batch: beobachtbare Ausführungsanzahl derselben Codezeile bei
+Schleifen, aus vorhandenen geprüften Befehlen abgeleitet. Keine neue Python-Syntax.

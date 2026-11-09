@@ -1,0 +1,76 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+__ test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text[size0] __
+
+app = <neonpaw.ui.app.App object at 0x7f7135d2e540>, size = (1200, 720)
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    def test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text(app,size):
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(app,'#'+'a'*80)
+        app.draw()
+>       assert app.horizontal_scroll > 0
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'horizontal_scroll'
+
+tests/test_horizontal_editor.py:22: AttributeError
+__ test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text[size1] __
+
+app = <neonpaw.ui.app.App object at 0x7f7135d20980>, size = (960, 600)
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    def test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text(app,size):
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(app,'#'+'a'*80)
+        app.draw()
+>       assert app.horizontal_scroll > 0
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'horizontal_scroll'
+
+tests/test_horizontal_editor.py:22: AttributeError
+__ test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text[size2] __
+
+app = <neonpaw.ui.app.App object at 0x7f7135bed7f0>, size = (1600, 1000)
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    def test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text(app,size):
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(app,'#'+'a'*80)
+        app.draw()
+>       assert app.horizontal_scroll > 0
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'horizontal_scroll'
+
+tests/test_horizontal_editor.py:22: AttributeError
+______________ test_undo_and_editor_switch_restore_visible_cursor ______________
+
+app = <neonpaw.ui.app.App object at 0x7f7135bee690>
+
+    def test_undo_and_editor_switch_restore_visible_cursor(app):
+        unlock(app)
+        write(app,'move_right()')
+        write(app,'#'+'x'*100);app.draw()
+        undo(app);app.draw()
+>       assert app.source=='move_right()' and app.horizontal_scroll==0
+                                              ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'horizontal_scroll'
+
+tests/test_horizontal_editor.py:41: AttributeError
+_________ test_execution_shows_start_of_instruction_not_end_of_comment _________
+
+app = <neonpaw.ui.app.App object at 0x7f7135bef4d0>
+
+    def test_execution_shows_start_of_instruction_not_end_of_comment(app):
+        write(app,'move_right() # '+'x'*100);app.draw()
+>       assert app.horizontal_scroll>0
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'horizontal_scroll'
+
+tests/test_horizontal_editor.py:52: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_horizontal_editor.py::test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text[size0]
+FAILED tests/test_horizontal_editor.py::test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text[size1]
+FAILED tests/test_horizontal_editor.py::test_long_line_cursor_visible_and_scaled_mouse_selects_visible_text[size2]
+FAILED tests/test_horizontal_editor.py::test_undo_and_editor_switch_restore_visible_cursor
+FAILED tests/test_horizontal_editor.py::test_execution_shows_start_of_instruction_not_end_of_comment
+5 failed in 0.38s

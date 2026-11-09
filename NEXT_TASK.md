@@ -1,7 +1,7 @@
-# Nächste Aufgabe: Cursor bei langen Codezeilen sichtbar halten
-Undo/Redo und Hilfelayout sind abgeschlossen, 170 Tests und SDL-Smoke grün.
-Nach Git-/Remote-Abgleich einen RED-UI-Test für eine Zeile breiter als das Codefeld:
-Cursor am Zeilenende muss sichtbar und per Mausklick korrekt platzierbar bleiben.
-Minimalen horizontalen Offset ergänzen; Home/End, Undo/Redo, Auswahl, Fenstergröße
-und Szenariowechsel prüfen. Keine neue Editorbibliothek oder Python-Syntax.
-Danach vollständig testen und extern sichern. Menschliche Lesbarkeit separat prüfen.
+# Nächste Aufgabe: Schleifenwiederholung beobachten
+Editor-Nachführung ist umgesetzt: 175 Tests und SDL-Smoke grün.
+Nach Git-Abgleich RED-Test für Zeilenfortschritt: Step durch eine Schleife soll
+zeigen, wie oft die aktuelle Zeile bereits ausgeführt wurde und wie oft sie insgesamt
+vorkommt. Aus Runner.commands/pc ableiten, keine zweite Simulation. Fehler dürfen
+nicht als erfolgreich ausgeführte Aktionen gezählt werden. Stop/Reset prüfen.
+Dann kleine sichtbare Anzeige, Regression/SDL und sofortiger Checkpoint.

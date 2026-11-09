@@ -114,3 +114,8 @@ Bundle geprüft. Hilfelayout RED 9 (drei Hilfestufen × drei Fenstergrößen), G
 Welt proportional vollständig unter Hilfe; Code/Buttons bleiben fest. Resize-Klicks,
 Fokus und Rückkehr zur vollen Welt geprüft. Voller SDL-Smoke PASS, Screenshot geprüft.
 Nächste einzelne Priorität aus Codeanalyse: horizontales Nachführen langer Editorzeilen.
+
+## 2026-11-09 — Editor-Nachführung
+RED 5, GREEN 175; langer Text, Home/End, skalierte Mausklicks, Undo/Redo,
+Editorwechsel und Step durch kommentierte Zeile geprüft. Voller SDL-Smoke PASS.
+Masterplan nach Nutzen/Risiko ausgewertet, drei Richtungen in PRODUCT.md festgehalten.

@@ -75,3 +75,8 @@ Ein Overlay versteckte die Welt gerade beim Nachdenken über sie. Zwei getrennte
 Bereiche in derselben linken Spalte lösen das ohne neues Fenster oder Bibliothek.
 Welt wird proportional kleiner, Text und Controls bleiben gleich groß. Geometrie,
 Resize-Hit-Test und Fokus sind testbar; menschliche Lesbarkeit ist damit nicht bewiesen.
+
+## 2026-11-09 — Darstellung und Eingabe teilen denselben Ausschnitt
+Horizontales Scrollen ohne Anpassung der Mauskoordinaten würde falsche Textstellen
+bearbeiten. Beide verwenden denselben Offset; Undo auf kurze Zeilen muss diesen
+zusätzlich auf die neue Zeilenbreite begrenzen. Ausführung zeigt den Anweisungsanfang.

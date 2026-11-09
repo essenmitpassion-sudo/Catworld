@@ -26,6 +26,16 @@ def click(name):
                             pos=app.buttons[name].center))
 
 frame()
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='# ' + 'weiter ' * 20))
+assert app.horizontal_scroll > 0
+pygame.image.save(app.canvas, 'evidence/editor-long-line.png')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_HOME, mod=0))
+assert app.horizontal_scroll == 0
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_END, mod=0))
+assert app.horizontal_scroll > 0
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
+assert app.source == 'move_right()' and app.horizontal_scroll == 0
 assert app.runner.world.x == 1
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
 frame(pygame.event.Event(pygame.TEXTINPUT, text='move_rigth()'))

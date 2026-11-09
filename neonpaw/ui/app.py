@@ -22,6 +22,8 @@ class App:
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
         self.sign_font = pygame.font.Font(None, 19)
+        self.horizontal_scroll = 0
+        self.viewport_editor = None
         self.edit_histories = {}  # Five bounded, session-local undo/redo pairs.
         self.pair_active = False
         self.pair_unlocked = False
@@ -370,7 +372,7 @@ class App:
             if pygame.Rect(790, 210, 370, 310).collidepoint(pos):
                 lines = self.source.split('\n')
                 row = min(len(lines) - 1, max(0, int((pos[1] - 225) // 26) + self.scroll))
-                col = max(0, int((pos[0] - 830) // self.mono.size(' ')[0]))
+                col = max(0, int((pos[0] - 830 + self.horizontal_scroll) // self.mono.size(' ')[0]))
                 self.cursor = sum(len(line) + 1 for line in lines[:row]) + min(col, len(lines[row]))
                 self.select_all = False
                 self.focus = True
@@ -677,16 +679,28 @@ class App:
         cursor_row = self.source[:self.cursor].count('\n')
         active_row = self.runner.line - 1 if self.runner.line is not None else cursor_row
         self.scroll = max(0, active_row - 9)
+        if self.viewport_editor != self.editor_key():
+            self.horizontal_scroll = 0
+            self.viewport_editor = self.editor_key()
+        col = len(self.source[:self.cursor].split('\n')[-1])
+        cursor_pixel = self.mono.size(lines[cursor_row][:col])[0]
+        if self.runner.line is not None:
+            self.horizontal_scroll = 0
+        else:
+            self.horizontal_scroll = max(0, min(self.horizontal_scroll, cursor_pixel, self.mono.size(lines[cursor_row])[0] - 330))
+            self.horizontal_scroll = max(self.horizontal_scroll, cursor_pixel - 330)
         self.canvas.set_clip(pygame.Rect(790, 210, 380, 306))
         for row, line in enumerate(lines[self.scroll:self.scroll + 11], self.scroll):
             y = 225 + (row - self.scroll) * 26
             if self.select_all or self.runner.line == row + 1:
                 pygame.draw.rect(self.canvas, '#374563', (795, y - 2, 370, 26))
             self.text(str(row + 1), (798, y), MUTED, self.small)
-            self.text(line, (830, y), CYAN, self.mono)
-        if self.focus and not self.select_all:
+            self.canvas.set_clip(pygame.Rect(830, 210, 340, 306))
+            self.text(line, (830 - self.horizontal_scroll, y), CYAN, self.mono)
+            self.canvas.set_clip(pygame.Rect(790, 210, 380, 306))
+        if self.focus and not self.select_all and self.runner.line is None:
             col = len(self.source[:self.cursor].split('\n')[-1])
-            x = 830 + self.mono.size(lines[cursor_row][:col])[0]
+            x = 830 + self.mono.size(lines[cursor_row][:col])[0] - self.horizontal_scroll
             y = 225 + (cursor_row - self.scroll) * 26
             pygame.draw.line(self.canvas, INK, (x, y), (x, y + 21), 2)
         self.canvas.set_clip(None)
