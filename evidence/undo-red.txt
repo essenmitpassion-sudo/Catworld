@@ -1,0 +1,238 @@
+FFFFFFFFFFFF.                                                            [100%]
+=================================== FAILURES ===================================
+_______________ test_replace_undo_and_editor_isolation[original] _______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c465d4290>, editor = 'original'
+
+    @pytest.mark.parametrize('editor',['original','recall','roof','transfer','pair'])
+    def test_replace_undo_and_editor_isolation(app,editor):
+        enter(app,editor)
+        write(app,'# my '+editor+'\nmove_right()')
+        original=app.source
+        write(app,'oops')
+        undo(app)
+>       assert app.source == original and app.select_all
+E       AssertionError: assert ('oops' == '# my original\nmove_right()'
+E         
+E         + oops
+E         - # my original
+E         - move_right())
+
+tests/test_undo.py:44: AssertionError
+________________ test_replace_undo_and_editor_isolation[recall] ________________
+
+app = <neonpaw.ui.app.App object at 0x7f9c464932c0>, editor = 'recall'
+
+    @pytest.mark.parametrize('editor',['original','recall','roof','transfer','pair'])
+    def test_replace_undo_and_editor_isolation(app,editor):
+        enter(app,editor)
+        write(app,'# my '+editor+'\nmove_right()')
+        original=app.source
+        write(app,'oops')
+        undo(app)
+>       assert app.source == original and app.select_all
+E       AssertionError: assert ('oops' == '# my recall\nmove_right()'
+E         
+E         + oops
+E         - # my recall
+E         - move_right())
+
+tests/test_undo.py:44: AssertionError
+_________________ test_replace_undo_and_editor_isolation[roof] _________________
+
+app = <neonpaw.ui.app.App object at 0x7f9c464924b0>, editor = 'roof'
+
+    @pytest.mark.parametrize('editor',['original','recall','roof','transfer','pair'])
+    def test_replace_undo_and_editor_isolation(app,editor):
+        enter(app,editor)
+        write(app,'# my '+editor+'\nmove_right()')
+        original=app.source
+        write(app,'oops')
+        undo(app)
+>       assert app.source == original and app.select_all
+E       AssertionError: assert ('oops' == '# my roof\nmove_right()'
+E         
+E         + oops
+E         - # my roof
+E         - move_right())
+
+tests/test_undo.py:44: AssertionError
+_______________ test_replace_undo_and_editor_isolation[transfer] _______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c465c62d0>, editor = 'transfer'
+
+    @pytest.mark.parametrize('editor',['original','recall','roof','transfer','pair'])
+    def test_replace_undo_and_editor_isolation(app,editor):
+        enter(app,editor)
+        write(app,'# my '+editor+'\nmove_right()')
+        original=app.source
+        write(app,'oops')
+        undo(app)
+>       assert app.source == original and app.select_all
+E       AssertionError: assert ('oops' == '# my transfer\nmove_right()'
+E         
+E         + oops
+E         - # my transfer
+E         - move_right())
+
+tests/test_undo.py:44: AssertionError
+_________________ test_replace_undo_and_editor_isolation[pair] _________________
+
+app = <neonpaw.ui.app.App object at 0x7f9c46496720>, editor = 'pair'
+
+    @pytest.mark.parametrize('editor',['original','recall','roof','transfer','pair'])
+    def test_replace_undo_and_editor_isolation(app,editor):
+        enter(app,editor)
+        write(app,'# my '+editor+'\nmove_right()')
+        original=app.source
+        write(app,'oops')
+        undo(app)
+>       assert app.source == original and app.select_all
+E       AssertionError: assert ('oops' == '# my pair\nmove_right()'
+E         
+E         + oops
+E         - # my pair
+E         - move_right())
+
+tests/test_undo.py:44: AssertionError
+______________ test_edit_operations_restore_cursor_and_text[8-0] _______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c465c7050>, code = 8, mod = 0
+
+    @pytest.mark.parametrize('code,mod',[(pygame.K_BACKSPACE,0),(pygame.K_DELETE,0),(pygame.K_TAB,0),(pygame.K_TAB,pygame.KMOD_SHIFT),(pygame.K_RETURN,0)])
+    def test_edit_operations_restore_cursor_and_text(app,code,mod):
+        write(app,'    move_right()\ncollect()')
+        app.cursor=5; app.select_all=False
+        before=(app.source,app.cursor,app.select_all)
+        key(app,code,mod)
+        assert app.source != before[0]
+        undo(app)
+>       assert (app.source,app.cursor,app.select_all) == before
+E       AssertionError: assert ('    ove_rig...()', 4, False) == ('    move_ri...()', 5, False)
+E         
+E         At index 0 diff: '    ove_right()\ncollect()' != '    move_right()\ncollect()'
+E         Use -v to get more diff
+
+tests/test_undo.py:69: AssertionError
+_____________ test_edit_operations_restore_cursor_and_text[127-0] ______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c464924b0>, code = 127, mod = 0
+
+    @pytest.mark.parametrize('code,mod',[(pygame.K_BACKSPACE,0),(pygame.K_DELETE,0),(pygame.K_TAB,0),(pygame.K_TAB,pygame.KMOD_SHIFT),(pygame.K_RETURN,0)])
+    def test_edit_operations_restore_cursor_and_text(app,code,mod):
+        write(app,'    move_right()\ncollect()')
+        app.cursor=5; app.select_all=False
+        before=(app.source,app.cursor,app.select_all)
+        key(app,code,mod)
+        assert app.source != before[0]
+        undo(app)
+>       assert (app.source,app.cursor,app.select_all) == before
+E       AssertionError: assert ('    mve_rig...()', 5, False) == ('    move_ri...()', 5, False)
+E         
+E         At index 0 diff: '    mve_right()\ncollect()' != '    move_right()\ncollect()'
+E         Use -v to get more diff
+
+tests/test_undo.py:69: AssertionError
+______________ test_edit_operations_restore_cursor_and_text[9-0] _______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c465afa10>, code = 9, mod = 0
+
+    @pytest.mark.parametrize('code,mod',[(pygame.K_BACKSPACE,0),(pygame.K_DELETE,0),(pygame.K_TAB,0),(pygame.K_TAB,pygame.KMOD_SHIFT),(pygame.K_RETURN,0)])
+    def test_edit_operations_restore_cursor_and_text(app,code,mod):
+        write(app,'    move_right()\ncollect()')
+        app.cursor=5; app.select_all=False
+        before=(app.source,app.cursor,app.select_all)
+        key(app,code,mod)
+        assert app.source != before[0]
+        undo(app)
+>       assert (app.source,app.cursor,app.select_all) == before
+E       AssertionError: assert ('    m    ov...()', 9, False) == ('    move_ri...()', 5, False)
+E         
+E         At index 0 diff: '    m    ove_right()\ncollect()' != '    move_right()\ncollect()'
+E         Use -v to get more diff
+
+tests/test_undo.py:69: AssertionError
+______________ test_edit_operations_restore_cursor_and_text[9-3] _______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c46497ad0>, code = 9, mod = 3
+
+    @pytest.mark.parametrize('code,mod',[(pygame.K_BACKSPACE,0),(pygame.K_DELETE,0),(pygame.K_TAB,0),(pygame.K_TAB,pygame.KMOD_SHIFT),(pygame.K_RETURN,0)])
+    def test_edit_operations_restore_cursor_and_text(app,code,mod):
+        write(app,'    move_right()\ncollect()')
+        app.cursor=5; app.select_all=False
+        before=(app.source,app.cursor,app.select_all)
+        key(app,code,mod)
+        assert app.source != before[0]
+        undo(app)
+>       assert (app.source,app.cursor,app.select_all) == before
+E       AssertionError: assert ('move_right(...()', 1, False) == ('    move_ri...()', 5, False)
+E         
+E         At index 0 diff: 'move_right()\ncollect()' != '    move_right()\ncollect()'
+E         Use -v to get more diff
+
+tests/test_undo.py:69: AssertionError
+______________ test_edit_operations_restore_cursor_and_text[13-0] ______________
+
+app = <neonpaw.ui.app.App object at 0x7f9c46494950>, code = 13, mod = 0
+
+    @pytest.mark.parametrize('code,mod',[(pygame.K_BACKSPACE,0),(pygame.K_DELETE,0),(pygame.K_TAB,0),(pygame.K_TAB,pygame.KMOD_SHIFT),(pygame.K_RETURN,0)])
+    def test_edit_operations_restore_cursor_and_text(app,code,mod):
+        write(app,'    move_right()\ncollect()')
+        app.cursor=5; app.select_all=False
+        before=(app.source,app.cursor,app.select_all)
+        key(app,code,mod)
+        assert app.source != before[0]
+        undo(app)
+>       assert (app.source,app.cursor,app.select_all) == before
+E       AssertionError: assert ('    m\n    ...)', 10, False) == ('    move_ri...()', 5, False)
+E         
+E         At index 0 diff: '    m\n    ove_right()\ncollect()' != '    move_right()\ncollect()'
+E         Use -v to get more diff
+
+tests/test_undo.py:69: AssertionError
+________________ test_undo_stops_running_program_and_autosaves _________________
+
+app = <neonpaw.ui.app.App object at 0x7f9c46496a50>
+
+    def test_undo_stops_running_program_and_autosaves(app):
+        write(app,'move_right()'); write(app,'move_right()\n'*6)
+        click(app,'Run'); app.update(.5)
+        x=app.runner.world.x
+        undo(app); app.update(5)
+>       assert app.runner.status == 'stopped' and app.runner.world.x == x
+E       AssertionError: assert ('running' == 'stopped'
+E         
+E         - stopped
+E         + running)
+
+tests/test_undo.py:77: AssertionError
+____________ test_history_bound_rejected_input_noop_and_redo_branch ____________
+
+app = <neonpaw.ui.app.App object at 0x7f9c46499e50>
+
+    def test_history_bound_rejected_input_noop_and_redo_branch(app):
+        for _ in range(50): app.insert('a')
+        after=app.source
+        for _ in range(40): undo(app)
+>       assert app.source == after[:-32]
+E       AssertionError: assert '# Mein eigen...aaaaaaaaaaaaa' == '# Mein eigen...aaaaaaaaaaaaa'
+E         
+E         Skipping 61 identical leading characters in diff, use -v to show
+E         - aaaaaaaaaaa
+E         + aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+tests/test_undo.py:86: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_undo.py::test_replace_undo_and_editor_isolation[original]
+FAILED tests/test_undo.py::test_replace_undo_and_editor_isolation[recall] - A...
+FAILED tests/test_undo.py::test_replace_undo_and_editor_isolation[roof] - Ass...
+FAILED tests/test_undo.py::test_replace_undo_and_editor_isolation[transfer]
+FAILED tests/test_undo.py::test_replace_undo_and_editor_isolation[pair] - Ass...
+FAILED tests/test_undo.py::test_edit_operations_restore_cursor_and_text[8-0]
+FAILED tests/test_undo.py::test_edit_operations_restore_cursor_and_text[127-0]
+FAILED tests/test_undo.py::test_edit_operations_restore_cursor_and_text[9-0]
+FAILED tests/test_undo.py::test_edit_operations_restore_cursor_and_text[9-3]
+FAILED tests/test_undo.py::test_edit_operations_restore_cursor_and_text[13-0]
+FAILED tests/test_undo.py::test_undo_stops_running_program_and_autosaves - As...
+FAILED tests/test_undo.py::test_history_bound_rejected_input_noop_and_redo_branch
+12 failed, 1 passed in 1.05s

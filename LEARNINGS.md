@@ -62,3 +62,10 @@ Separat gepflegte Sichtbarkeitsbedingungen ließen verborgene Navigation aktiv.
 Gemeinsame Button-Auswahl beseitigt diese Divergenz; Regression prüft tatsächliche
 Mausereignisse. Mehrere identische Rückwege brachten keinen zusätzlichen Nutzen;
 ein sichtbarer Rückweg reicht, vorhandene Tastenkürzel bleiben kompatibel.
+
+## 2026-11-09 — Textzustände statt Command-Framework
+Die fünf vorhandenen Entwurfsidentitäten reichen für getrennte Undo/Redo-Stacks.
+Nur tatsächliche Textänderungen erzeugen History; abgewiesene Eingaben und leeres
+Undo stoppen kein laufendes Programm. Erfolgreiches Undo stoppt es. Beide Stacks
+sind auf 32 begrenzt, Texte auf 4096 Zeichen. Autosave ersetzt keine Undo-Historie;
+der wiederhergestellte Text wird gespeichert, History bleibt bewusst sitzungslokal.

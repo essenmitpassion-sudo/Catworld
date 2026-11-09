@@ -182,6 +182,18 @@ assert app.pair_active and app.source == ''
 pygame.image.save(app.canvas, 'evidence/pair-start.png')
 frame(pygame.event.Event(pygame.TEXTINPUT, text='for _ in range(2):\n    move_right()\n    move_right()\n    move_right()\n    collect()'))
 pair_program = app.source
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='versehentlich ersetzt'))
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
+assert app.source == pair_program
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_y, mod=pygame.KMOD_CTRL))
+assert app.source == 'versehentlich ersetzt'
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
+click('Laternenpaar')
+assert app.source == transfer_program
+click('Laternenpaar')
+assert app.source == pair_program
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_s, mod=pygame.KMOD_CTRL))
 for _ in range(4):
     click('Step')
 assert app.runner.world.first_lit and not app.runner.world.powered
@@ -261,7 +273,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> two lanterns partial/complete -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

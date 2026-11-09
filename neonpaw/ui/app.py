@@ -22,6 +22,7 @@ class App:
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
         self.sign_font = pygame.font.Font(None, 19)
+        self.edit_histories = {}  # Five bounded, session-local undo/redo pairs.
         self.pair_active = False
         self.pair_unlocked = False
         self.pair_return = None
@@ -302,14 +303,40 @@ class App:
         self.runner.line = None
         self.runner.error = ''
 
+    def editor_key(self):
+        if self.pair_active:
+            return 'pair'
+        if self.roof_active:
+            return 'roof_transfer' if self.roof_transfer_active else 'roof'
+        return 'recall' if self.recall_active else 'original'
+
+    def editor_state(self):
+        return self.source, self.cursor, self.select_all
+
+    def change_text(self, source, cursor, selected=False):
+        if len(source) > MAX_SOURCE or source == self.source:
+            return
+        undo, redo = self.edit_histories.setdefault(self.editor_key(), ([], []))
+        undo.append(self.editor_state())
+        del undo[:-32]
+        redo.clear()
+        self.source, self.cursor, self.select_all = source, max(0, min(cursor, len(source))), selected
+        self.edited()
+
+    def restore_edit(self, redo=False):
+        past, future = self.edit_histories.setdefault(self.editor_key(), ([], []))
+        origin, destination = (future, past) if redo else (past, future)
+        if not origin:
+            return
+        destination.append(self.editor_state())
+        del destination[:-32]
+        self.source, self.cursor, self.select_all = origin.pop()
+        self.edited()
+
     def insert(self, text):
         base = '' if self.select_all else self.source
         cursor = 0 if self.select_all else min(self.cursor, len(base))
-        if len(base) + len(text) <= MAX_SOURCE:
-            self.source = base[:cursor] + text + base[cursor:]
-            self.cursor = cursor + len(text)
-            self.select_all = False
-            self.edited()
+        self.change_text(base[:cursor] + text + base[cursor:], cursor + len(text))
 
     def visible_buttons(self):
         visible = {}
@@ -361,6 +388,9 @@ class App:
                 return
             if not self.focus:
                 return
+            if event.mod & pygame.KMOD_CTRL and event.key in (pygame.K_z, pygame.K_y):
+                self.restore_edit(redo=event.key == pygame.K_y or bool(event.mod & pygame.KMOD_SHIFT))
+                return
             self.cursor = min(self.cursor, len(self.source))
             if event.key == pygame.K_a and event.mod & pygame.KMOD_CTRL:
                 self.select_all = True
@@ -372,24 +402,19 @@ class App:
                 if event.mod & pygame.KMOD_SHIFT:
                     start = self.source.rfind('\n', 0, self.cursor) + 1
                     count = min(4, len(self.source[start:]) - len(self.source[start:].lstrip(' ')))
-                    self.source = self.source[:start] + self.source[start + count:]
-                    self.cursor = max(start, self.cursor - count)
-                    self.edited()
+                    self.change_text(self.source[:start] + self.source[start + count:], max(start, self.cursor - count))
                 else:
                     self.insert('    ')
             elif event.key == pygame.K_BACKSPACE:
                 if self.select_all:
                     self.insert('')
                 elif self.cursor:
-                    self.source = self.source[:self.cursor - 1] + self.source[self.cursor:]
-                    self.cursor -= 1
-                    self.edited()
+                    self.change_text(self.source[:self.cursor - 1] + self.source[self.cursor:], self.cursor - 1)
             elif event.key == pygame.K_DELETE:
                 if self.select_all:
                     self.insert('')
                 else:
-                    self.source = self.source[:self.cursor] + self.source[self.cursor + 1:]
-                    self.edited()
+                    self.change_text(self.source[:self.cursor] + self.source[self.cursor + 1:], self.cursor)
             elif event.key in (pygame.K_LEFT, pygame.K_RIGHT):
                 self.cursor = max(0, min(len(self.source), self.cursor + (1 if event.key == pygame.K_RIGHT else -1)))
                 self.select_all = False

@@ -54,6 +54,10 @@ die Simulation bleibt unabhängig von diesen Darstellungsdetails.
 - **Reset / F2:** setzt das aktuelle Szenario und die Ausführung zurück; dein Code bleibt erhalten.
 - **Hilfe / F1:** optional Beobachtung → Denkhinweis → ausdrücklich angefordertes Codebeispiel.
 - **Weiter / Freier Einstieg / F3:** wechselt zwischen Einstieg und Transfer; Code bleibt erhalten.
+- **Strg+Z:** Änderung rückgängig; **Strg+Y / Strg+Shift+Z:** wiederholen.
+  Je Entwurf höchstens 32 Schritte innerhalb der Sitzung. Editorwechsel erhält die
+  Historie; Neustart erhält den gespeicherten Text, nicht die Historie. Undo/Redo
+  stoppt laufenden Code. Neue Änderungen verwerfen den Redo-Zweig.
 - Klicke ins Codefeld. Pfeile, Home/End, Enter, Backspace/Delete und Strg+A funktionieren.
 - Im **Einstieg** beginnt ein neuer Run nach Ende oder Stop den Code wieder von vorn,
   an der aktuellen Position. Reset bringt die Katze zum Start zurück.

@@ -102,3 +102,8 @@ Navigation/Titelüberdeckung, fehlendes Undo, Weltverdeckung durch Hinweise.
 Erste korrigiert: sichtbare Controls gemeinsam für Renderer und Maus-Hit-Test;
 Paarabschnitt hat einen Rückweg. Zwei RED-Tests, 148 GREEN und kompletter SDL-Smoke.
 README und Sicherheits-/Speicherdokumentation aktualisiert. Keine Sprach-/Budgeterweiterung.
+
+## 2026-11-09 — Undo/Redo
+RED 12 failed/1 passed, danach 161 GREEN. Fünf getrennte begrenzte Historien,
+Textersatz/Löschen/Einrückung/mehrzeilige Eingabe/Cursor/Auswahl/Autosave getestet.
+SDL: echte Tastenereignisse, Undo/Redo, Editorwechsel, Neustart, Run/Stop/Reset PASS.

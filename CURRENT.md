@@ -40,3 +40,13 @@ Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log
 1. Arbeit/Backups prüfen und sichern, Fetch/Reviews/Remote vergleichen.
 2. NEXT_TASK.md: RED für versehentlichen Textersatz und Undo, dann minimal implementieren.
 3. Vollsuite + SDL-Smoke, Commit/Bundle/Push/Remote prüfen; bei Limit zuerst Checkpoint.
+
+## Undo-Batch — 2026-11-09
+Ausgangspunkt 7818ced sauber, keine Remote-Neuerungen. Undo/Redo implementiert:
+Strg+Z / Strg+Y / Strg+Shift+Z, je fünf Editoren getrennt, maximal 32 Zustände pro
+Stack, maximal 4096 Zeichen pro Zustand. Cursor/Auswahl wiederhergestellt; leere
+History und unveränderte/abgewiesene Eingaben ändern nichts. Undo stoppt Ausführung;
+Autosave speichert Text. Historie nur Sitzung, kein neues Speicherformat.
+RED 12 failed/1 passed, GREEN 161; SDL mit Ersatz/Undo/Redo, Editorwechsel, Speichern,
+Neustart und vollständigem Spielablauf grün (evidence/undo-*.txt).
+Nächster Schritt nach externer Sicherung: Hilfe ohne Überdeckung der Welt darstellen.
