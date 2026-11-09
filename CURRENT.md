@@ -52,3 +52,15 @@ voller SDL-Smoke PASS (evidence/horizontal-*.txt), Screenshot geprüft.
 Eigener Randfehler beim Undo auf kurze Zeile im Test gefunden und korrigiert.
 Nächster einzelner Batch: beobachtbare Ausführungsanzahl derselben Codezeile bei
 Schleifen, aus vorhandenen geprüften Befehlen abgeleitet. Keine neue Python-Syntax.
+
+## 2026-11-09 — Beobachtbare Schleifen
+Editor-Checkpoint 5d5237da73622c09705f1aacdb57fc9014e00098 extern bestätigt.
+Zusätzlich zeigt die Oberfläche bei mehrfach ausgeführten Zeilen deren tatsächlichen
+Fortschritt (z.B. Zeile 2: 2/5 Aktionen ausgeführt). Aus vorhandener commands/pc-Liste
+abgeleitet, keine zweite Simulation, keine Syntaxänderung. Fehlgeschlagene Aktionen
+zählen nicht. RED 3, GREEN 178; kompletter SDL-Smoke und Screenshot geprüft.
+Belege evidence/line-progress-*.txt. Kein menschlicher Lernnachweis.
+Nächste konkrete Produktaufgabe: kleine Energieentscheidung mit einem Akku und zwei
+Verbrauchern untersuchen, unterschiedliche sichtbare Folgen statt längerer Zahlenfolge.
+Wiederaufnahme: `cd /workspace/Catworld && git status --short --branch && git log -5 --oneline`.
+Keine absichtlich offene WIP-Arbeit; tatsächlichen Status zuerst prüfen.

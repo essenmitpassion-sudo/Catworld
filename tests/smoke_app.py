@@ -138,6 +138,8 @@ roof_program = app.source
 click('Step')
 click('Step')
 assert app.runner.world.x == 3 and app.runner.line == 2
+assert app.runner.line_progress == (2,2,5)
+pygame.image.save(app.canvas, 'evidence/loop-progress.png')
 click('Stop')
 frame(dt=2)
 assert app.runner.world.x == 3

@@ -119,3 +119,9 @@ Nächste einzelne Priorität aus Codeanalyse: horizontales Nachführen langer Ed
 RED 5, GREEN 175; langer Text, Home/End, skalierte Mausklicks, Undo/Redo,
 Editorwechsel und Step durch kommentierte Zeile geprüft. Voller SDL-Smoke PASS.
 Masterplan nach Nutzen/Risiko ausgewertet, drei Richtungen in PRODUCT.md festgehalten.
+
+## 2026-11-09 — Schleifen sichtbar verstehen
+Nach extern gesichertem Editorbatch 5d5237d: vorhandene Befehlsliste liefert
+Zeilenfortschritt. Drei RED-Tests, danach 178 GREEN und vollständiger SDL-Smoke.
+Anzeige und Screenshot bei 2/5 geprüft, Stop/Reset und erfolglose Aktionen enthalten.
+Nächste Produktpriorität: kleine Ressourcenentscheidung, keine weitere Syntax.

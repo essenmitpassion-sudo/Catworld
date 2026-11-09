@@ -80,3 +80,9 @@ Resize-Hit-Test und Fokus sind testbar; menschliche Lesbarkeit ist damit nicht b
 Horizontales Scrollen ohne Anpassung der Mauskoordinaten würde falsche Textstellen
 bearbeiten. Beide verwenden denselben Offset; Undo auf kurze Zeilen muss diesen
 zusätzlich auf die neue Zeilenbreite begrenzen. Ausführung zeigt den Anweisungsanfang.
+
+## 2026-11-09 — Wiederholung aus tatsächlicher Ausführung ableiten
+Ein Zeilenmarker allein zeigt bei Schleifen nicht den Fortschritt. commands und pc
+enthalten bereits alle nötigen Daten; keine zusätzlichen veränderlichen Zähler nötig.
+Die Anzeige spricht von Aktionen pro Zeile statt Schleifendurchläufen, weil auch
+mehrere durch Semikolon getrennte Aktionen dieselbe Zeile teilen können.

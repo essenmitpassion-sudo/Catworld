@@ -115,6 +115,16 @@ class Runner:
             raise
         self.status = 'paused'
 
+    @property
+    def line_progress(self):
+        if self.line is None or not self.commands:
+            return None
+        total = sum(line == self.line for line, _ in self.commands)
+        if not total:
+            return None
+        completed = sum(line == self.line for line, _ in self.commands[:self.pc])
+        return self.line, completed, total
+
     def run(self):
         if self.status == 'paused':
             self.status = 'running' if self.commands else 'done'

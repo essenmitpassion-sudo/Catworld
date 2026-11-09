@@ -728,7 +728,13 @@ class App:
         self.text('F5 Run  ·  F6 Step  ·  Esc Stop  ·  F2 Reset', (790, 594), MUTED, self.small)
         if self.roof_active and self.runner.commands:
             count = sum(bool(line.strip()) for line in self.source.splitlines())
-            self.text(f'Aktion {self.runner.pc}/{len(self.runner.commands)} · {count} Textzeilen', (790, 614), CYAN, self.small)
+            progress = self.runner.line_progress
+            if progress is not None and progress[2] > 1:
+                line, completed, total = progress
+                label = f'Zeile {line}: {completed}/{total} Aktionen ausgeführt'
+            else:
+                label = f'Aktion {self.runner.pc}/{len(self.runner.commands)} · {count} Textzeilen'
+            self.text(label, (790, 614), CYAN, self.small)
         statuses = {'idle': 'Startposition. Run startet; dein Code bleibt.', 'paused': 'Step: ein Befehl. Run setzt danach fort.',
                     'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Stop: Position bleibt. Run startet Code neu.',
                     'done': 'Fertig. Run wiederholt; Reset setzt die Welt zurück.', 'error': 'Kein Problem — korrigiere deinen Code.'}

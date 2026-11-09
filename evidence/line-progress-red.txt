@@ -1,0 +1,38 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_step_run_and_stop_show_actual_repeated_line_execution __________
+
+    def test_step_run_and_stop_show_actual_repeated_line_execution():
+        r=Runner(initial_world=World(battery_x=6))
+        r.load('for _ in range(5):\n    move_right()\ncollect()')
+>       assert r.line_progress is None
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'line_progress'
+
+tests/test_line_progress.py:8: AttributeError
+________________ test_failed_action_is_not_counted_as_executed _________________
+
+    def test_failed_action_is_not_counted_as_executed():
+        r=Runner()
+        r.load('for _ in range(3):\n    collect()');r.step()
+>       assert r.status=='error' and r.line_progress==(2,0,3)
+                                     ^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'line_progress'
+
+tests/test_line_progress.py:25: AttributeError
+____________________ test_each_body_line_has_its_own_count _____________________
+
+    def test_each_body_line_has_its_own_count():
+        r=Runner(initial_world=World(battery_x=4,second_battery_x=7))
+        r.load('for _ in range(2):\n    move_right()\n    move_right()\n    move_right()\n    collect()')
+        for _ in range(4):r.step()
+>       assert r.line_progress==(5,1,2)
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'line_progress'
+
+tests/test_line_progress.py:32: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_line_progress.py::test_step_run_and_stop_show_actual_repeated_line_execution
+FAILED tests/test_line_progress.py::test_failed_action_is_not_counted_as_executed
+FAILED tests/test_line_progress.py::test_each_body_line_has_its_own_count - A...
+3 failed in 0.05s
