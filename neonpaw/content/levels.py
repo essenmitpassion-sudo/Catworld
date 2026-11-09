@@ -27,3 +27,10 @@ ROOF_LOOP_HINTS = (
     ('for _ in range(2):', '    move_right()', 'Beispiel für zwei Schritte. Passe die Anzahl an deinen Weg an.'),
     ('for _ in range(5):', '    move_right()', 'collect()'),
 )
+
+ROOF_TRANSFER_X = 8
+ROOF_TRANSFER_HINTS = (
+    ('Vergleiche Startfeld und neues Leuchtfeld. Was hat sich verändert?',),
+    ('Die Aktion bleibt gleich. Welche Zahl bestimmt ihre Wiederholung?',),
+    ('for _ in range(7):', '    move_right()', 'collect()'),
+)

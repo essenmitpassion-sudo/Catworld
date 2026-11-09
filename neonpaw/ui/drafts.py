@@ -15,21 +15,26 @@ class DraftError(ValueError):
 def validate(state):
     expected = {'version', 'scenario', 'recall_active', 'recall_available',
                 'original', 'recall', 'original_example', 'recall_example'}
-    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2):
+    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2, 3):
         raise DraftError('Unbekannte Entwurfsversion.')
-    if state['version'] == 2:
+    if state['version'] >= 2:
         expected |= {'roof_active', 'roof', 'roof_example', 'roof_repetition_seen'}
+    if state['version'] == 3:
+        expected |= {'roof_transfer_active', 'roof_transfer_unlocked', 'roof_transfer', 'roof_transfer_example'}
     if set(state) != expected:
         raise DraftError('Unbekanntes Entwurfsformat.')
     if type(state['scenario']) is not int or state['scenario'] not in (0, 1):
         raise DraftError('Ungültiges Szenario.')
     bool_keys = ('recall_active', 'recall_available', 'original_example', 'recall_example')
-    if state['version'] == 2:
+    if state['version'] >= 2:
         bool_keys += ('roof_active', 'roof_example', 'roof_repetition_seen')
+    if state['version'] == 3:
+        bool_keys += ('roof_transfer_active', 'roof_transfer_unlocked', 'roof_transfer_example')
     for key in bool_keys:
         if type(state[key]) is not bool:
             raise DraftError('Ungültiger Entwurfsstatus.')
-    for key in (('original', 'recall', 'roof') if state['version'] == 2 else ('original', 'recall')):
+    text_keys = ('original', 'recall') + (('roof',) if state['version'] >= 2 else ()) + (('roof_transfer',) if state['version'] == 3 else ())
+    for key in text_keys:
         if not isinstance(state[key], str) or len(state[key]) > MAX_SOURCE:
             raise DraftError('Programmtext fehlt oder ist zu lang.')
         try:
@@ -40,6 +45,10 @@ def validate(state):
         raise DraftError('Ungültiger Abrufstatus.')
     if state.get('roof_active') and not state['recall_available']:
         raise DraftError('Ungültiger Dachwegstatus.')
+    if state.get('roof_transfer_active') and not state.get('roof_transfer_unlocked'):
+        raise DraftError('Dachtransfer ist noch gesperrt.')
+    if state.get('roof_transfer_unlocked') and not state['recall_available']:
+        raise DraftError('Ungültiger Dachtransferstatus.')
     return state
 
 

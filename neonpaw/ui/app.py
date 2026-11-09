@@ -1,7 +1,7 @@
 """One-screen G0/G1: real SDL controls and an original procedural pixel alley."""
 import pygame
 from neonpaw.code.runner import Runner, ProgramError, MAX_SOURCE
-from neonpaw.content.levels import TITLE, OBJECTIVE, START_CODE, BATTERY_POSITIONS, HINTS, ROOF_BATTERY_X, ROOF_WALK_HINTS, ROOF_LOOP_HINTS
+from neonpaw.content.levels import TITLE, OBJECTIVE, START_CODE, BATTERY_POSITIONS, HINTS, ROOF_BATTERY_X, ROOF_WALK_HINTS, ROOF_LOOP_HINTS, ROOF_TRANSFER_X, ROOF_TRANSFER_HINTS
 from neonpaw.core.world import World
 from neonpaw.ui import drafts
 
@@ -22,6 +22,9 @@ class App:
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
         self.sign_font = pygame.font.Font(None, 19)
+        self.roof_transfer_active = False
+        self.roof_transfer_unlocked = False
+        self.roof_transfer_draft = (START_CODE, len(START_CODE), 0, False)
         self.roof_active = False
         self.roof_repetition_seen = False
         self.roof_return = None
@@ -50,6 +53,7 @@ class App:
         self.buttons['Transfer'] = pygame.Rect(420, 125, 320, 36)
         self.buttons['Hilfe'] = pygame.Rect(540, 75, 200, 36)
         self.buttons['Abruf'] = pygame.Rect(540, 28, 200, 36)
+        self.buttons['Dachtransfer'] = pygame.Rect(40, 75, 340, 36)
         self.buttons['Dach'] = pygame.Rect(340, 28, 190, 36)
         self.save_path = save_path
         self.storage_message = ''
@@ -68,12 +72,22 @@ class App:
         else:
             original, original_example = base[0], base[3]
             recall, _, _, recall_example = self.recall_draft
-        return dict(version=2, scenario=self.scenario, recall_active=self.recall_active,
+        roof = self.roof_draft
+        transfer = self.roof_transfer_draft
+        if self.roof_active:
+            current = (self.source, self.cursor, self.hint_level, self.used_example)
+            if self.roof_transfer_active:
+                transfer = current
+            else:
+                roof = current
+        return dict(version=3, scenario=self.scenario, recall_active=self.recall_active,
                     recall_available=self.recall_available, original=original, recall=recall,
                     original_example=original_example, recall_example=recall_example,
                     roof_active=self.roof_active, roof_repetition_seen=self.roof_repetition_seen,
-                    roof=self.source if self.roof_active else self.roof_draft[0],
-                    roof_example=self.used_example if self.roof_active else self.roof_draft[3])
+                    roof=roof[0], roof_example=roof[3],
+                    roof_transfer_active=self.roof_transfer_active,
+                    roof_transfer_unlocked=self.roof_transfer_unlocked,
+                    roof_transfer=transfer[0], roof_transfer_example=transfer[3])
 
     def restore_drafts(self):
         try:
@@ -91,13 +105,17 @@ class App:
         self.recall_draft = (state['recall'], len(state['recall']), 0, state['recall_example'])
         self.saved_editor = original if self.recall_active else None
         self.source, self.cursor, self.hint_level, self.used_example = self.recall_draft if self.recall_active else original
+        self.roof_transfer_active = state.get('roof_transfer_active', False)
+        self.roof_transfer_unlocked = state.get('roof_transfer_unlocked', False)
+        transfer_source = state.get('roof_transfer', START_CODE)
+        self.roof_transfer_draft = (transfer_source, len(transfer_source), 0, state.get('roof_transfer_example', False))
         self.roof_active = state.get('roof_active', False)
         self.roof_repetition_seen = state.get('roof_repetition_seen', False)
         roof_source = state.get('roof', START_CODE)
         self.roof_draft = (roof_source, len(roof_source), 0, state.get('roof_example', False))
         if self.roof_active:
             self.roof_return = (self.source, self.cursor, self.hint_level, self.used_example)
-            self.source, self.cursor, self.hint_level, self.used_example = self.roof_draft
+            self.source, self.cursor, self.hint_level, self.used_example = self.roof_transfer_draft if self.roof_transfer_active else self.roof_draft
         self.runner = Runner(initial_world=self.initial_world())
         self.storage_message = warning or 'Eigene Programme wieder da. Ausführen nur mit Run oder Step.'
         self._last_save_attempt = self.draft_snapshot()
@@ -122,19 +140,41 @@ class App:
         self.canvas.blit((font or self.font).render(value, True, color), pos)
 
     def initial_world(self):
-        return World(battery_x=ROOF_BATTERY_X if self.roof_active else BATTERY_POSITIONS[self.scenario])
+        roof_target = ROOF_TRANSFER_X if self.roof_transfer_active else ROOF_BATTERY_X
+        return World(battery_x=roof_target if self.roof_active else BATTERY_POSITIONS[self.scenario])
 
     def toggle_roof(self):
         if not self.recall_available:
             return
         editor = (self.source, self.cursor, self.hint_level, self.used_example)
         if self.roof_active:
-            self.roof_draft = editor
+            if self.roof_transfer_active:
+                self.roof_transfer_draft = editor
+            else:
+                self.roof_draft = editor
             self.source, self.cursor, self.hint_level, self.used_example = self.roof_return
         else:
             self.roof_return = editor
-            self.source, self.cursor, self.hint_level, self.used_example = self.roof_draft
+            self.source, self.cursor, self.hint_level, self.used_example = self.roof_transfer_draft if self.roof_transfer_active else self.roof_draft
         self.roof_active = not self.roof_active
+        self.runner = Runner(initial_world=self.initial_world())
+        self.loaded_source = None
+        self.select_all = False
+        self.scroll = 0
+        self.elapsed = 0.0
+
+    def toggle_roof_transfer(self):
+        if not self.roof_active or not self.roof_transfer_unlocked:
+            return
+        editor = (self.source, self.cursor, self.hint_level, self.used_example)
+        if self.roof_transfer_active:
+            self.roof_transfer_draft = editor
+            target = self.roof_draft
+        else:
+            self.roof_draft = editor
+            target = self.roof_transfer_draft
+        self.roof_transfer_active = not self.roof_transfer_active
+        self.source, self.cursor, self.hint_level, self.used_example = target
         self.runner = Runner(initial_world=self.initial_world())
         self.loaded_source = None
         self.select_all = False
@@ -160,6 +200,9 @@ class App:
 
     def remember_success(self):
         if self.roof_active:
+            if self.runner.world.powered and not self.roof_transfer_active and not self.roof_transfer_unlocked:
+                self.roof_transfer_unlocked = True
+                self.roof_transfer_draft = (self.source, self.cursor, 0, False)
             if self.runner.world.moves >= 3 and not self.roof_repetition_seen:
                 self.roof_repetition_seen = True
                 self.hint_level = 0  # Never swap a requested old example into a new full solution.
@@ -168,6 +211,9 @@ class App:
             self.recall_available = True
 
     def activate(self, name):
+        if name == 'Dachtransfer':
+            self.toggle_roof_transfer()
+            return
         if name == 'Dach' or (self.roof_active and name in ('Abruf', 'Transfer')):
             self.toggle_roof()
             return
@@ -247,7 +293,7 @@ class App:
                 return
             shortcuts = {pygame.K_F5: 'Run', pygame.K_F6: 'Step',
                          pygame.K_ESCAPE: 'Stop', pygame.K_F2: 'Reset',
-                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer', pygame.K_F4: 'Abruf', pygame.K_F7: 'Dach'}
+                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer', pygame.K_F4: 'Abruf', pygame.K_F7: 'Dach', pygame.K_F8: 'Dachtransfer'}
             if event.key in shortcuts:
                 self.activate(shortcuts[event.key])
                 return
@@ -426,6 +472,8 @@ class App:
     def draw_hint(self):
         if self.hint_level:
             hints = (ROOF_LOOP_HINTS if self.roof_repetition_seen else ROOF_WALK_HINTS) if self.roof_active else HINTS[self.scenario]
+            if self.roof_active and self.roof_transfer_active:
+                hints = ROOF_TRANSFER_HINTS
             lines = hints[self.hint_level - 1]
             panel_height = max(170, 70 + len(lines) * 28)
             pygame.draw.rect(self.canvas, '#182537', (50, 190, 680, panel_height), border_radius=8)
@@ -444,10 +492,11 @@ class App:
     def draw(self):
         self.canvas.fill(BG)
         self.text('NEONPAW', (40, 28), CYAN, self.big)
-        self.text('LICHT FÜR NOX · EINE NACHT IN DER GASSE', (42, 87), MUTED, self.small)
+        if not self.roof_active:
+            self.text('LICHT FÜR NOX · EINE NACHT IN DER GASSE', (42, 87), MUTED, self.small)
         stage = '03 / AUS EIGENER KRAFT' if self.recall_active else ('02 / DER ZWEITE ANSCHLUSS' if self.scenario else '01 / LICHT FÜR NOX')
         if self.roof_active:
-            stage = '04 / EIN PLAN FÜR VIELE SCHRITTE'
+            stage = '05 / DIE FERNE LATERNE' if self.roof_transfer_active else '04 / EIN PLAN FÜR VIELE SCHRITTE'
         self.text(stage,
                   (42, 135), INK, self.small)
         self.alley()
@@ -457,7 +506,7 @@ class App:
         title = 'OHNE VORLAGE' if self.recall_active else ('DEIN EIGENER WEG' if self.scenario else TITLE)
         heading = 'ABSCHNITT GESCHAFFT' if world.powered and self.recall_active else ('DIE GASSE LEUCHTET' if world.powered else title)
         if self.roof_active:
-            heading = 'DACHLATERNE GERETTET' if world.powered else 'DER LANGE DACHWEG'
+            heading = ('DÄCHER VERBUNDEN' if self.roof_transfer_active else 'DACHLATERNE GERETTET') if world.powered else ('DIE FERNE LATERNE' if self.roof_transfer_active else 'DER LANGE DACHWEG')
         self.text(heading, (790, 82), INK)
         if world.powered:
             hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Warmlicht! Nox hat die Gasse zurück.'
@@ -475,7 +524,10 @@ class App:
         if self.roof_active:
             if world.powered:
                 hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Nox leuchtet den Weg über die Dächer aus.'
-                instruction = 'Gleicher Weg. Wie kurz ist dein eigener Plan?'
+                instruction = 'Nox schnurrt: Dein Plan reicht jetzt weiter!' if self.roof_transfer_active else 'Nächste Laterne · F8: Passe deinen Plan an.'
+            elif self.roof_transfer_active:
+                hint = 'Die nächste Laterne steht weiter rechts.'
+                instruction = 'Passe deinen Plan an. Run startet am Anfang.'
             elif self.roof_repetition_seen:
                 hint = 'Mehrmals derselbe Schritt. Geht das kürzer?'
                 instruction = 'F1: freiwillige Hilfe zu for und range.'
@@ -486,7 +538,7 @@ class App:
         self.text(instruction, (790, 149), INK, self.small)
         state_label = 'AUTOMAT: AN' if world.powered else 'AUTOMAT: AUS · Batterie auf dem Leuchtfeld'
         if self.roof_active:
-            state_label = f'DACHWEG: {min(world.moves, 5)}/5 Schritte · ' + ('LICHT AN' if world.powered else 'Licht aus')
+            state_label = f'DACHWEG: {min(world.moves, world.battery_x - 1)}/{world.battery_x - 1} Schritte · ' + ('LICHT AN' if world.powered else 'Licht aus')
         self.text(state_label,
                   (790, 174), CYAN if world.powered else MUTED, self.small)
         pygame.draw.rect(self.canvas, '#1c2335', (780, 198, 400, 325), border_radius=8)
@@ -508,13 +560,17 @@ class App:
             pygame.draw.line(self.canvas, INK, (x, y), (x, y + 21), 2)
         self.canvas.set_clip(None)
         for name, rect in self.buttons.items():
+            if name == 'Dachtransfer' and not (self.roof_active and self.roof_transfer_unlocked):
+                continue
             if name == 'Dach' and not self.recall_available:
                 continue
             if name == 'Abruf' and (self.roof_active or self.scenario != 1 or not self.recall_available):
                 continue
             pygame.draw.rect(self.canvas, CYAN if name == 'Run' else '#303c56', rect, border_radius=5)
             caption = name
-            if name == 'Transfer':
+            if name == 'Dachtransfer':
+                caption = 'Erste Laterne · F8' if self.roof_transfer_active else 'Nächste Laterne · F8'
+            elif name == 'Transfer':
                 caption = 'Zurück zum Einstieg · F3' if self.scenario else ('Weiter: neuer Weg · F3' if world.powered else 'Freier Einstieg · F3')
             elif name == 'Dach':
                 caption = 'Zur Gasse · F7' if self.roof_active else 'Dachweg · F7'
