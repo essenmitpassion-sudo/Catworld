@@ -50,3 +50,9 @@ angelegt und extern verifiziert. Gegenmaßnahme: kleine Pakete unmittelbar siche
 auch wenn der erweiterte UI-Smoke noch offen ist (klar als Checkpoint benennen).
 Ein fehlender Executor ist kein Beweis für verlorene Dateien; nicht neu aufsetzen
 oder Funktionen erneut implementieren, bevor der bestehende Workspace geprüft ist.
+
+## 2026-11-09 — Kombination statt neuer Syntax
+Zwei gleich lange Abschnitte machen Bewegung+Aufnehmen zu einem wiederholbaren
+Ablauf. Ausgeschriebene Befehle und zwei getrennte Schleifen bleiben gültig; keine
+Lösungsform erzwingen. Ein eigener breiter Textersatz beschädigte die alte
+Hinweislisten-Auswahl; SDL fand den Fehler, gezielter Renderingtest sichert ihn ab.

@@ -1,0 +1,34 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_every_hint_stage_renders_in_transfer_and_pair ______________
+
+app = <neonpaw.ui.app.App object at 0x7fa51a153e90>
+
+    def test_every_hint_stage_renders_in_transfer_and_pair(app):
+        finish(app, NEW_CODE)
+        for _ in range(4):
+>           click(app,'Hilfe'); app.draw()
+                                ^^^^^^^^^^
+
+tests/test_pair_ui.py:86: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/ui/app.py:700: in draw
+    self.draw_hint()
+neonpaw/ui/app.py:545: in draw_hint
+    self.text(line, (70, 244 + index * 28), INK,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <neonpaw.ui.app.App object at 0x7fa51a153e90>
+value = ('Vergleiche Startfeld und neues Leuchtfeld. Was hat sich verändert?',)
+pos = (70, 244), color = '#e5eafa'
+font = <pygame.font.Font object at 0x7fa519f8c8a0>
+
+    def text(self, value, pos, color=INK, font=None):
+>       self.canvas.blit((font or self.font).render(value, True, color), pos)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: text must be a unicode or bytes
+
+neonpaw/ui/app.py:156: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_pair_ui.py::test_every_hint_stage_renders_in_transfer_and_pair
+1 failed, 5 deselected in 0.35s

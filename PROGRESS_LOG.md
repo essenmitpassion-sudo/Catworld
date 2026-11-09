@@ -89,3 +89,9 @@ Fortsetzung: SDL-Smoke um neuen Dachtransfer erweitert (F8, falscher Plan zweima
 optionale Hinweise, eigene Korrektur, Step/Stop/Reset, Neustart, vier Entwürfe), PASS.
 Sichtprüfung Erfolgsbild bestanden. Menschliches Verständnis/Spielspaß nicht geprüft.
 Dauerhafte Checkpoint-Regel in AGENTS/Loop; CURRENT/NEXT_TASK aktualisiert.
+
+## 2026-11-09 — Zwei Laternen
+Weltlogik RED 6, GREEN 140; checkpoint d7c3f9f gepusht und verifiziert.
+UI/Persistenz RED 5, GREEN 146 einschließlich zusätzlichem Hinweis-Renderingtest.
+SDL-Smoke: beide dunklen Ziele, erste Aktivierung, Stop/Reset, Step→Run, kompletter
+Erfolg, Neustart und erhaltene frühere Entwürfe. Kein Menschentest.

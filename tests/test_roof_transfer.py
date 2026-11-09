@@ -83,7 +83,7 @@ def test_step_stop_reset_and_both_roof_drafts_survive_restart(app):
 
 def test_transfer_state_types_and_locked_active_rejected(app):
     state = app.draft_snapshot()
-    assert state['version'] == 3
+    assert state['version'] == 4
     state['roof_transfer_active'] = True
     with pytest.raises(drafts.DraftError):
         drafts.validate(state)

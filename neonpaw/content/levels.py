@@ -34,3 +34,9 @@ ROOF_TRANSFER_HINTS = (
     ('Die Aktion bleibt gleich. Welche Zahl bestimmt ihre Wiederholung?',),
     ('for _ in range(7):', '    move_right()', 'collect()'),
 )
+
+PAIR_HINTS = (
+    ('Wo musst du anhalten, damit beide Laternen leuchten?',),
+    ('Nach jeder Strecke kommt collect(). Welche Teilfolge wiederholt sich?',),
+    ('for _ in range(2):', '    move_right()', '    move_right()', '    move_right()', '    collect()'),
+)

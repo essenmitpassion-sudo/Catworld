@@ -1,0 +1,74 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_________ test_pair_unlocked_by_transfer_and_preserves_previous_editor _________
+
+app = <neonpaw.ui.app.App object at 0x7f7b91135af0>
+
+    def test_pair_unlocked_by_transfer_and_preserves_previous_editor(app):
+        app.activate('Laternenpaar')
+>       assert not app.pair_active
+                   ^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'pair_active'. Did you mean: 'roof_active'?
+
+tests/test_pair_ui.py:25: AttributeError
+_____ test_partial_program_never_wins_by_repeated_run_and_hints_never_edit _____
+
+app = <neonpaw.ui.app.App object at 0x7f7b915e7410>
+
+    def test_partial_program_never_wins_by_repeated_run_and_hints_never_edit(app):
+        finish(app, NEW_CODE); app.activate('Laternenpaar')
+        partial = 'move_right()\n'*3+'collect()'
+        write(app, partial)
+        for _ in range(2):
+            click(app, 'Run')
+            for _ in range(4): app.update(.5)
+>           assert app.runner.world.first_lit and not app.runner.world.powered
+E           assert (False)
+E            +  where False = World(x=4, width=9, moves=3, battery_x=8, powered=False, second_battery_x=None, first_lit=False).first_lit
+E            +    where World(x=4, width=9, moves=3, battery_x=8, powered=False, second_battery_x=None, first_lit=False) = <neonpaw.code.runner.Runner object at 0x7f7b908ae9c0>.world
+E            +      where <neonpaw.code.runner.Runner object at 0x7f7b908ae9c0> = <neonpaw.ui.app.App object at 0x7f7b915e7410>.runner
+
+tests/test_pair_ui.py:55: AssertionError
+_________ test_old_save_versions_migrate_without_losing_any_program[1] _________
+
+app = <neonpaw.ui.app.App object at 0x7f7b908af350>, version = 1
+
+    @pytest.mark.parametrize('version',[1,2,3])
+    def test_old_save_versions_migrate_without_losing_any_program(app,version):
+        finish(app,NEW_CODE)
+        state=app.draft_snapshot()
+>       assert state['version'] == 4
+E       assert 3 == 4
+
+tests/test_pair_ui.py:68: AssertionError
+_________ test_old_save_versions_migrate_without_losing_any_program[2] _________
+
+app = <neonpaw.ui.app.App object at 0x7f7b908b7290>, version = 2
+
+    @pytest.mark.parametrize('version',[1,2,3])
+    def test_old_save_versions_migrate_without_losing_any_program(app,version):
+        finish(app,NEW_CODE)
+        state=app.draft_snapshot()
+>       assert state['version'] == 4
+E       assert 3 == 4
+
+tests/test_pair_ui.py:68: AssertionError
+_________ test_old_save_versions_migrate_without_losing_any_program[3] _________
+
+app = <neonpaw.ui.app.App object at 0x7f7b90dd2270>, version = 3
+
+    @pytest.mark.parametrize('version',[1,2,3])
+    def test_old_save_versions_migrate_without_losing_any_program(app,version):
+        finish(app,NEW_CODE)
+        state=app.draft_snapshot()
+>       assert state['version'] == 4
+E       assert 3 == 4
+
+tests/test_pair_ui.py:68: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pair_ui.py::test_pair_unlocked_by_transfer_and_preserves_previous_editor
+FAILED tests/test_pair_ui.py::test_partial_program_never_wins_by_repeated_run_and_hints_never_edit
+FAILED tests/test_pair_ui.py::test_old_save_versions_migrate_without_losing_any_program[1]
+FAILED tests/test_pair_ui.py::test_old_save_versions_migrate_without_losing_any_program[2]
+FAILED tests/test_pair_ui.py::test_old_save_versions_migrate_without_losing_any_program[3]
+5 failed in 0.46s

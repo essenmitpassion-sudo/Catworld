@@ -29,3 +29,14 @@ Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log
 2. `.venv/bin/python -m pytest -q` und `SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy .venv/bin/python -m tests.smoke_app` bei Codeänderungen reproduzieren.
 3. Als nächsten Produktbatch mehrere Laternen in einem Ablauf untersuchen; vorher den aktuellen Stand extern sichern. Bei Limit zuerst Checkpoint statt Feature.
 Alle zum Abschluss gehörenden Änderungen werden committed; keine absichtlich zurückgelassene WIP-Arbeit. Tatsächlicher git status gilt vor dieser Aussage. Das Rettungsarchiv bleibt zusätzlich unverändert erhalten.
+
+## 2026-11-09 — Zwei Laternen implementiert
+Ausgangspunkt f5beee9, Weltlogik d7c3f9f extern verifiziert. Neues Gameplay: nach
+Dachtransfer F9, leerer separater Editor, Laternen auf Feld 4 und 7. Erste Aktivierung
+ist Teilerfolg; zweite verbindet beide Lichter. Mehrere gültige Programme ohne neue
+Syntax. Schema 4 erhält alle fünf Texte; Migration von 1–3 getestet.
+146 Tests grün, voller SDL-Smoke einschließlich beider Laternen und Neustart.
+Belege evidence/two-lanterns-*.txt. Eigener Hinweislisten-Fehler im SDL-Smoke erkannt,
+korrigiert und durch Renderingtest abgesichert. Menschliches Lernen bleibt offen.
+Nächster Batch: redundante Rückkehrbuttons und verdeckten Titel im Paarabschnitt
+beseitigen; sichtbare und klickbare Buttons aus derselben Auswahl ableiten.
