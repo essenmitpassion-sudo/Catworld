@@ -38,3 +38,8 @@ Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log
 3. Volle Tests/SDL, Commit, Bundle verify, Push und Remote-SHA prüfen.
 Recovery-Archive unverändert erhalten; /workspace/Catworld-undo.bundle geprüft.
 Nur Test-CI, kein Entwicklungsscheduler. Tatsächlicher Git-Status gilt vor Dokumenten.
+
+## Gemerkte Produktleitlinie — 2026-11-09
+O: Neuer langfristiger Masterprompt auf Wunsch „MERKE DIR“ vollständig und unverändert
+in PRODUCT_MASTER_PROMPT.md gespeichert, über AGENTS.md bei Wiederaufnahme auffindbar.
+Nur Dokumentation; keine neue Implementierung oder Änderung der nächsten Editoraufgabe.

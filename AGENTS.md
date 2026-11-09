@@ -41,3 +41,14 @@ Lokale Sicherungen schützen nicht vor Workspaceverlust. Bei Pushfehler LOCAL_ON
 notieren, kein Force-Push/Reset; nur sicher wiederherstellbare Arbeit fortsetzen.
 Beim Neustart zuerst lokale Änderungen/Backups prüfen und sichern, dann Remote
 vergleichen; keine Doppelimplementierung aufgrund veralteter Dokumente.
+
+## Langfristige Produktleitlinie (Owner, 2026-11-09)
+Den vollständigen Owner-Masterprompt in `PRODUCT_MASTER_PROMPT.md` bei strategischen
+Produktentscheidungen lesen. Auf Wunsch „MERKE DIR“ unverändert dauerhaft abgelegt;
+dieser Ablageauftrag startet keine sofortige Neuentwicklung oder Großumplanung.
+Kern: Programmieren als kreative Spielmechanik, echte Entscheidungen und mehrere
+Lösungswege; freiwillige Hilfen, Lerntransfer und kombinierbare Systeme statt Grind,
+Musterlösungszwang oder Feature-Menge. Mutig denken, kontrolliert bauen, bestehende
+Arbeit schützen. Technische Tests, menschlichen Spielspaß und Lernnachweise trennen.
+Der konkrete nächste Arbeitsauftrag und bestehende Sicherheits-/Kosten-/Integrator-
+Grenzen bleiben maßgeblich. Keine autonome Ausführung nach Sitzungsende behaupten.
