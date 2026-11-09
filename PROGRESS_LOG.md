@@ -107,3 +107,10 @@ README und Sicherheits-/Speicherdokumentation aktualisiert. Keine Sprach-/Budget
 RED 12 failed/1 passed, danach 161 GREEN. Fünf getrennte begrenzte Historien,
 Textersatz/Löschen/Einrückung/mehrzeilige Eingabe/Cursor/Auswahl/Autosave getestet.
 SDL: echte Tastenereignisse, Undo/Redo, Editorwechsel, Neustart, Run/Stop/Reset PASS.
+
+## 2026-11-09 — Hilfe ohne Weltüberdeckung
+Undo-Checkpoint ddcb0e2 vor Layoutarbeit gepusht und Remote-SHA verifiziert;
+Bundle geprüft. Hilfelayout RED 9 (drei Hilfestufen × drei Fenstergrößen), GREEN 170.
+Welt proportional vollständig unter Hilfe; Code/Buttons bleiben fest. Resize-Klicks,
+Fokus und Rückkehr zur vollen Welt geprüft. Voller SDL-Smoke PASS, Screenshot geprüft.
+Nächste einzelne Priorität aus Codeanalyse: horizontales Nachführen langer Editorzeilen.

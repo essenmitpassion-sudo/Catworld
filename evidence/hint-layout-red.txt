@@ -1,0 +1,175 @@
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+________ test_help_and_complete_world_are_separate_with_resize[1-size0] ________
+
+size = (1200, 720), stage = 1
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[1-size1] ________
+
+size = (960, 600), stage = 1
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[1-size2] ________
+
+size = (1600, 1000), stage = 1
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[2-size0] ________
+
+size = (1200, 720), stage = 2
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[2-size1] ________
+
+size = (960, 600), stage = 2
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[2-size2] ________
+
+size = (1600, 1000), stage = 2
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[3-size0] ________
+
+size = (1200, 720), stage = 3
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[3-size1] ________
+
+size = (960, 600), stage = 3
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+________ test_help_and_complete_world_are_separate_with_resize[3-size2] ________
+
+size = (1600, 1000), stage = 3
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('stage',[1,2,3])
+    def test_help_and_complete_world_are_separate_with_resize(size,stage):
+        pygame.init()
+        app=App()
+        app.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        app.roof_active=True; app.recall_available=True
+        app.hint_level=stage
+        app.draw()
+>       world=app.world_display_rect()
+              ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'world_display_rect'
+
+tests/test_hint_layout.py:18: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[1-size0]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[1-size1]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[1-size2]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[2-size0]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[2-size1]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[2-size2]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[3-size0]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[3-size1]
+FAILED tests/test_hint_layout.py::test_help_and_complete_world_are_separate_with_resize[3-size2]
+9 failed in 1.30s

@@ -69,3 +69,9 @@ Nur tatsächliche Textänderungen erzeugen History; abgewiesene Eingaben und lee
 Undo stoppen kein laufendes Programm. Erfolgreiches Undo stoppt es. Beide Stacks
 sind auf 32 begrenzt, Texte auf 4096 Zeichen. Autosave ersetzt keine Undo-Historie;
 der wiederhergestellte Text wird gespeichert, History bleibt bewusst sitzungslokal.
+
+## 2026-11-09 — Hinweise und Ursache/Wirkung gleichzeitig zeigen
+Ein Overlay versteckte die Welt gerade beim Nachdenken über sie. Zwei getrennte
+Bereiche in derselben linken Spalte lösen das ohne neues Fenster oder Bibliothek.
+Welt wird proportional kleiner, Text und Controls bleiben gleich groß. Geometrie,
+Resize-Hit-Test und Fokus sind testbar; menschliche Lesbarkeit ist damit nicht bewiesen.

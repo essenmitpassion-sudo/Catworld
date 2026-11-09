@@ -53,6 +53,8 @@ die Simulation bleibt unabhängig von diesen Darstellungsdetails.
 - **Stop / Esc:** verwirft die laufende Ausführung, Position und Code bleiben.
 - **Reset / F2:** setzt das aktuelle Szenario und die Ausführung zurück; dein Code bleibt erhalten.
 - **Hilfe / F1:** optional Beobachtung → Denkhinweis → ausdrücklich angefordertes Codebeispiel.
+  Hinweise und vollständige Welt stehen gleichzeitig übereinander; beim Schließen
+  wird die Welt wieder groß. Codefeld und Buttons bleiben an ihren Positionen.
 - **Weiter / Freier Einstieg / F3:** wechselt zwischen Einstieg und Transfer; Code bleibt erhalten.
 - **Strg+Z:** Änderung rückgängig; **Strg+Y / Strg+Shift+Z:** wiederholen.
   Je Entwurf höchstens 32 Schritte innerhalb der Sitzung. Editorwechsel erhält die

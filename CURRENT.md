@@ -1,52 +1,40 @@
-# CURRENT — 2026-11-09 — Zwei Laternen und klare Navigation
+# CURRENT — 2026-11-09 — Undo/Redo und beobachtbare Hilfen
 
-Projektziel: Cyberpunk-Python-Lernspiel, ein Integrator, keine neue Engine.
-Branch g0/first-cat-action. Ausgangspunkt f5beee9629a614e0df68878ee85b1141d76a7456.
-Extern bestätigter spielbarer Checkpoint: e880e51c075c7b99bfe7f42b171412030d873b37.
-Folgender Abschlusscommit ergänzt Navigationskorrektur und diese Übergabe; SHA mit git log -1 prüfen.
+Ziel: kleines Cyberpunk-Python-Lernspiel. Ein Integrator, keine neue Engine.
+Branch g0/first-cat-action. Ausgangspunkt 7818cedda43270c86fce959984c1f22753a6e0ea.
+Extern bestätigter Undo-Checkpoint ddcb0e2b2047a4ba5bc9c935a076129b714644c6.
+Folgender Abschlusscommit enthält Hilfelayout und Übergabe; SHA mit git log -1 prüfen.
 
-## Fertig / geprüft
-- Einstieg, Batterie/Automat, Transfer, Abruf ohne Vorlage, Dachweg und Dachtransfer.
-- Zwei Laternen nach Dachtransfer mit F9: leerer separater Editor; Ziele 4 und 7,
-  Teilerfolg 1/2 sichtbar, erst 2/2 gewinnt. Zwei gleich lange Strecken erlauben
-  wiederholte Aktionsgruppen, einzelne Befehle oder zwei Schleifen. Keine neue Syntax.
-- Fünf dauerhaft getrennte Entwürfe, Schema 4; Migration von Version 1–3 getestet.
-  Geladener Text startet nie automatisch. Run nach Ende/Stop beginnt frisch,
-  Step→Run setzt fort; Reset löscht keine Programme.
-- 148 Tests grün; evidence/navigation-green.txt. RED: Weltlogik 6, UI/Migration 5,
-  Hinweisregression 1, Navigation 2. Vollständiger SDL-Smoke (navigation-smoke.txt)
-  umfasst alle Aufgaben, falsche Pläne, Stop/Reset, Teilerfolg, Erfolg und Neustart.
-- Bestehende AST- und Ressourcenlimits unverändert, Negativtests enthalten.
-- Navigationsfehler korrigiert: ein sichtbarer Rückweg im Paarabschnitt, freier Titel;
-  unsichtbare Buttons können keine Klicks abfangen. Anzeige/Klick verwenden dieselbe Auswahl.
+## Fertig
+Bestehende Aufgaben bis Zwei-Laternen-Abschnitt unverändert spielbar. Sichere
+begrenzte AST-Teilmenge, fünf gespeicherte Entwürfe, Speicherformat 4 mit Migration 1–3.
+- Undo Strg+Z, Redo Strg+Y/Strg+Shift+Z: fünf getrennte Sitzungshistorien, maximal
+  32 Zustände je Stack, maximal 4096 Zeichen je Text. Cursor und Auswahl werden
+  restauriert; neue Änderung verwirft Redo. Abgewiesene/unveränderte Eingaben oder
+  leere History sind No-ops. Erfolgreiches Undo stoppt laufende Ausführung.
+- Autosave speichert den wiederhergestellten Text. Neustart erhält Texte, nicht
+  History; kein Speicherformatwechsel. Einstieg/Transfer teilen wie zuvor einen
+  Entwurf und damit eine History; die vier anderen Entwürfe sind unabhängig.
+- Hilfe überdeckt die Welt nicht mehr: Hinweise oben links, vollständige Welt
+  proportional darunter. Codefeld/Buttons unverändert. Schließen stellt große
+  Weltansicht wieder her. Welt ist während Hilfe kleiner; menschliche Lesbarkeit offen.
 
-## Qualitätsprüfung: drei größte konkrete Schwächen
-1. BEHOBEN: überdeckter Titel und redundante Rückwege; zuvor sogar unsichtbar klickbare
-   Controls. Sichtprüfung und zwei reproduzierte RED-Tests, danach GREEN/SDL.
-2. OFFEN: kein Undo. Strg+A und versehentliche Texteingabe ersetzen den Entwurf sofort;
-   Autosave ist keine intuitive Rücknahme. Nächster kleiner Produktbatch.
-3. OFFEN: Hilfepanel verdeckt einen Teil der Welt, statt Beobachtung daneben zu lassen.
-   Sichtbar im Screenshot; menschliche Frustration daraus ist noch nicht nachgewiesen.
-Eigener Fehler: breiter Textersatz verschachtelte alte Hinweislisten versehentlich;
-SDL fand den Absturz, korrigiert und durch Rendering aller Hilfestufen abgesichert.
-Menschliches Verständnis/Spielspaß, nativer Windows-/DPI-Test und externer Security-Audit offen.
+## Nachweise
+Undo RED 12 failed/1 passed, GREEN 161; Hilfelayout RED 9, finale GREEN 170.
+Belege evidence/undo-*.txt und hint-layout-*.txt. Volle Regression inklusive
+Schleifenlimits, Speicherschäden, Szenariowechsel; SDL-Smoke mit echten Events,
+Undo/Redo, Wechsel, Speichern, Neustart, Run/Stop/Reset und beiden Laternen.
+Layouttests 960×600, 1200×720, 1600×1000; Mausklick-Skalierung/Fokus geprüft.
+Screenshot der Hilfe visuell geprüft. Kein menschlicher Lern-/Spaßnachweis,
+kein nativer Windows-/DPI-Test oder unabhängiger Security-Audit.
 
-## Sicherung / Wiederaufnahme
-Unverändertes Recovery-Archiv: /workspace/Catworld-recovery-2026-11-09.tar.gz
-(3078 Dateien per SHA-256 geprüft), weitere versionierte Bundles unter /workspace.
-Keine bewusst ungesicherte WIP-Arbeit; tatsächlicher git status gilt zuerst.
-Nur GitHub-Test-CI, kein kontinuierlicher Codex-Scheduler. Keine anderen Projekte angefasst.
+## Nächste Priorität / Wiederaufnahme
+Genau eine nächste Produktaufgabe: horizontales Nachführen des Codefelds, damit
+Cursor und bearbeiteter Text bei langen Zeilen sichtbar bleiben. Reproduzierbar:
+Renderer clippt auf 380 Pixel, Cursor-x wächst mit Zeilenlänge ohne horizontalen Offset.
 Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log -5 --oneline`
-1. Arbeit/Backups prüfen und sichern, Fetch/Reviews/Remote vergleichen.
-2. NEXT_TASK.md: RED für versehentlichen Textersatz und Undo, dann minimal implementieren.
-3. Vollsuite + SDL-Smoke, Commit/Bundle/Push/Remote prüfen; bei Limit zuerst Checkpoint.
-
-## Undo-Batch — 2026-11-09
-Ausgangspunkt 7818ced sauber, keine Remote-Neuerungen. Undo/Redo implementiert:
-Strg+Z / Strg+Y / Strg+Shift+Z, je fünf Editoren getrennt, maximal 32 Zustände pro
-Stack, maximal 4096 Zeichen pro Zustand. Cursor/Auswahl wiederhergestellt; leere
-History und unveränderte/abgewiesene Eingaben ändern nichts. Undo stoppt Ausführung;
-Autosave speichert Text. Historie nur Sitzung, kein neues Speicherformat.
-RED 12 failed/1 passed, GREEN 161; SDL mit Ersatz/Undo/Redo, Editorwechsel, Speichern,
-Neustart und vollständigem Spielablauf grün (evidence/undo-*.txt).
-Nächster Schritt nach externer Sicherung: Hilfe ohne Überdeckung der Welt darstellen.
+1. Arbeit/Backups sichern, Remote/Reviews vergleichen. Undo nicht erneut entwickeln.
+2. NEXT_TASK.md: RED für langen Text und sichtbaren Cursor; minimal korrigieren.
+3. Volle Tests/SDL, Commit, Bundle verify, Push und Remote-SHA prüfen.
+Recovery-Archive unverändert erhalten; /workspace/Catworld-undo.bundle geprüft.
+Nur Test-CI, kein Entwicklungsscheduler. Tatsächlicher Git-Status gilt vor Dokumenten.

@@ -568,29 +568,46 @@ class App:
             scene.blit(self.sign_font.render('mrr', False, '#ffcf8a'), (cx - 11, 155))
         if not self.runner.world.moves:
             scene.blit(self.sign_font.render('NOX', False, '#cad5ea'), (cx - 13, 151))
-        self.canvas.blit(pygame.transform.scale(scene, (700, 480)), (40, 170))
+        viewport = self.world_display_rect()
+        self.canvas.blit(pygame.transform.scale(scene, viewport.size), viewport.topleft)
+
+    def hint_lines(self):
+        if not self.hint_level:
+            return ()
+        hints = (ROOF_LOOP_HINTS if self.roof_repetition_seen else ROOF_WALK_HINTS) if self.roof_active else HINTS[self.scenario]
+        if self.roof_active and self.roof_transfer_active:
+            hints = ROOF_TRANSFER_HINTS
+        if self.pair_active:
+            hints = PAIR_HINTS
+        return hints[self.hint_level - 1]
+
+    def hint_panel_rect(self):
+        return pygame.Rect(40, 170, 700, max(170, 70 + len(self.hint_lines()) * 28))
+
+    def world_display_rect(self):
+        if not self.hint_level:
+            return pygame.Rect(40, 170, 700, 480)
+        top = self.hint_panel_rect().bottom + 12
+        height = 650 - top
+        width = int(height * 350 / 240)
+        return pygame.Rect(40 + (700 - width) // 2, top, width, height)
 
     def draw_hint(self):
         if self.hint_level:
-            hints = (ROOF_LOOP_HINTS if self.roof_repetition_seen else ROOF_WALK_HINTS) if self.roof_active else HINTS[self.scenario]
-            if self.roof_active and self.roof_transfer_active:
-                hints = ROOF_TRANSFER_HINTS
-            if self.pair_active:
-                hints = PAIR_HINTS
-            lines = hints[self.hint_level - 1]
-            panel_height = max(170, 70 + len(lines) * 28)
-            pygame.draw.rect(self.canvas, '#182537', (50, 190, 680, panel_height), border_radius=8)
-            pygame.draw.rect(self.canvas, CYAN, (50, 190, 680, panel_height), 1, border_radius=8)
+            lines = self.hint_lines()
+            panel = self.hint_panel_rect()
+            pygame.draw.rect(self.canvas, '#182537', panel, border_radius=8)
+            pygame.draw.rect(self.canvas, CYAN, panel, 1, border_radius=8)
             heading = f'OPTIONALE HILFE {self.hint_level}/3'
             if self.hint_level == 3:
                 heading += ' · CODEBEISPIEL (UNTERSTÜTZT)'
-            self.text(heading, (70, 208), CYAN, self.small)
+            self.text(heading, (60, 188), CYAN, self.small)
             for index, line in enumerate(lines):
-                self.text(line, (70, 244 + index * 28), INK,
+                self.text(line, (60, 224 + index * 28), INK,
                           self.mono if self.hint_level == 3 else self.small)
             if self.hint_level < 3:
                 self.text('Weitere Hilfe nur auf deinen Klick. Dein Code bleibt unverändert.',
-                          (70, 190 + panel_height - 24), MUTED, self.small)
+                          (60, panel.bottom - 24), MUTED, self.small)
 
     def draw(self):
         self.canvas.fill(BG)
