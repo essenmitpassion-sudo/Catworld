@@ -78,3 +78,14 @@ M: Umsetzung d5081fd. Animierte Bewegung rein in der Präsentation, Nox-Blinzeln
 RED 8 failed / Exit 1 (episode-red.txt), GREEN/Refactor 84 passed / Exit 0 (episode-refactor.txt). Refactor: Aktionsnamen zentral zusammengefasst; keine neue Abhängigkeit oder Speicherformatänderung. SDL-Gesamtdurchlauf inkl. Tippfehlerkorrektur, Transfer, Abruf, Speicherung/erneutem Start und Fehlerpfaden Exit 0 (episode-smoke.txt). 240 deterministisch angesteuerte SDL-Frames mit Ergebnisassertions (episode-demo.txt); Video ist automatisierte Demonstration, kein Human-Test.
 Selbstkritik: vorherige Technik zeigte vor allem einzelne Übungen; technische Tests allein rechtfertigten kein Urteil „fühlt sich wie ein Spiel an“. Jetzt sind Zusammenhang und Darstellung technisch belegt, aber Freude/Neugier bleiben menschlich offen. Learning L015.
 M: REST-PR-Abfrage Forbidden, keine PR erstellt/kein Bestand behauptet. d5081fd und Bundle vor Artefaktarbeit gesichert. Nächste einzelne Aufgabe: längerer Weg + eng begrenzte Wiederholung, keine gesamte Stadt.
+
+## 2026-11-09 — P0 Workspace-Recovery und Dachtransfer-Abschluss
+M: Bestehende Umgebung wieder erreichbar. Uncommittete Dachtransfer-Arbeit erhalten:
+3 geänderte Quelldateien, neuer Test und RED/GREEN-Protokolle. Vor Tests Vollarchiv
+mit 3078 per SHA-256 geprüften Dateien, Commit 7d4675c, Bundle verify erfolgreich.
+Fetch: Remote db0ea246; kein Integrationskonflikt. Push 7d4675c und Remote-SHA bestätigt.
+Erst danach 134 Tests erneut grün und bisheriger SDL-Smoke erfolgreich.
+Fortsetzung: SDL-Smoke um neuen Dachtransfer erweitert (F8, falscher Plan zweimal,
+optionale Hinweise, eigene Korrektur, Step/Stop/Reset, Neustart, vier Entwürfe), PASS.
+Sichtprüfung Erfolgsbild bestanden. Menschliches Verständnis/Spielspaß nicht geprüft.
+Dauerhafte Checkpoint-Regel in AGENTS/Loop; CURRENT/NEXT_TASK aktualisiert.

@@ -136,6 +136,51 @@ for _ in range(6):
     frame(dt=.5)
 assert app.runner.world.powered and app.runner.world.x == 6 and app.runner.line == 3
 pygame.image.save(app.canvas, 'evidence/roof-solved.png')
+# Roof transfer: unchanged old plan must fail, own edit succeeds, both drafts survive.
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F8, mod=0))
+assert app.roof_transfer_active and app.runner.world.battery_x == 8
+assert app.source == roof_program
+pygame.image.save(app.canvas, 'evidence/roof-transfer-start.png')
+for attempt in range(2):
+    click('Run')
+    for _ in range(6):
+        frame(dt=.5)
+    assert app.runner.error and app.runner.world.x == 6 and not app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/roof-transfer-error.png')
+click('Hilfe')
+assert app.source == roof_program
+click('Hilfe')
+assert app.source == roof_program
+pygame.image.save(app.canvas, 'evidence/roof-transfer-hint.png')
+# Write the correction while the optional second hint remains visible.
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='for _ in range(7):\n    move_right()\ncollect()'))
+transfer_program = app.source
+click('Step')
+click('Step')
+assert app.runner.world.x == 3
+click('Stop')
+frame(dt=2)
+assert app.runner.world.x == 3
+click('Reset')
+assert app.runner.world.x == 1 and app.source == transfer_program
+click('Run')
+for _ in range(8):
+    frame(dt=.5)
+assert app.runner.world.powered and not app.used_example
+app = App(save_path=save_path)
+frame()
+assert app.roof_transfer_active and app.source == transfer_program
+assert app.runner.status == 'idle' and not app.runner.world.powered
+click('Run')
+for _ in range(8):
+    frame(dt=.5)
+pygame.image.save(app.canvas, 'evidence/roof-transfer-solved.png')
+click('Dachtransfer')
+assert app.source == roof_program and app.runner.world.battery_x == 6
+click('Dachtransfer')
+assert app.source == transfer_program
+click('Dachtransfer')
 app = App(save_path=save_path)
 frame()
 assert app.roof_active and app.source == roof_program and app.runner.status == 'idle'
@@ -188,7 +233,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

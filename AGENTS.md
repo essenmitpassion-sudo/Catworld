@@ -28,3 +28,16 @@ G0: eine programmierbare schwarze Pixelkatze mit sichtbarer Bewegung, Run/Step/S
 
 ## Autonomer Betrieb
 Der kurze, nicht-blockierende Ablauf steht in `AUTONOMOUS_LOOP.md`. Bei neu begonnenen Entwicklungsrunden lesen; er erlaubt eigenständige kleine Inkremente und ersetzt keine Sicherheitsgrenzen. Eine zeitgesteuerte Codex-Ausführung muss separat aktiviert werden.
+
+## Checkpoints und Limits (Owner, 2026-11-09)
+SICHERN → VERIFIZIEREN → PUSHEN → WEITERENTWICKELN. Nach jedem getesteten Paket,
+vor riskanten Änderungen oder Hauptaufgabenwechseln und bei ersten Limitzeichen
+sichern. Bei Limitzeichen sofort Featurearbeit beenden. Unfertiges separat und
+vollständig archivieren (auch untracked Assets), Inhalt/Hashes prüfen; nicht als
+fertig deklarieren. Commits durch geprüftes Git-Bundle ergänzen. CURRENT.md mit
+Commit, Tests, offenen Änderungen und Wiederaufnahmebefehl aktualisieren;
+NEXT_TASK.md nennt den nächsten ausführbaren Schritt. Push mit Remote-SHA prüfen.
+Lokale Sicherungen schützen nicht vor Workspaceverlust. Bei Pushfehler LOCAL_ONLY
+notieren, kein Force-Push/Reset; nur sicher wiederherstellbare Arbeit fortsetzen.
+Beim Neustart zuerst lokale Änderungen/Backups prüfen und sichern, dann Remote
+vergleichen; keine Doppelimplementierung aufgrund veralteter Dokumente.

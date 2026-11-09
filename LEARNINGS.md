@@ -41,3 +41,12 @@ G/O: Bewegung, Batterie, Transfer und Abruf waren vorhanden, aber Owner verlangt
 ## 2026-11-06 — Dachweg-Integration
 - Ein API-403 beweist keinen fehlgeschlagenen GitHub-Lauf: Die öffentliche Actions-Webseite lieferte hier Commit-Zuordnung und erfolgreichen Abschluss, ohne neuen Dienst oder Zugangsdaten.
 - Beim Freischalten einer Vorschau müssen auch bestehende Abschlussmeldungen nachgezogen werden. Der alte Text bezeichnete den fertigen Dachweg weiter als Vorschau; korrigiert und Übergang samt Rückkehr zur Eigenlösung geprüft.
+
+## 2026-11-09 — P0 vor Validierung
+Der Cloud-Ausfall unterbrach ein grünes, aber noch nicht committetes Paket.
+134 bestandene Tests bedeuteten keine externe Sicherung. Die Dateien waren nach
+Wiederverbindung erhalten; Vollarchiv und Checkpoint wurden vor erneutem Testen
+angelegt und extern verifiziert. Gegenmaßnahme: kleine Pakete unmittelbar sichern,
+auch wenn der erweiterte UI-Smoke noch offen ist (klar als Checkpoint benennen).
+Ein fehlender Executor ist kein Beweis für verlorene Dateien; nicht neu aufsetzen
+oder Funktionen erneut implementieren, bevor der bestehende Workspace geprüft ist.

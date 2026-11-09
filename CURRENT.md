@@ -1,9 +1,31 @@
-# CURRENT — 2026-11-06 — Dachweg und CI integriert
+# CURRENT — 2026-11-09 — P0-Rettung und Dachtransfer
 
-- M: Ausgangspunkt 5d3d559 sauber, Bundle geprüft, 130 Tests reproduziert. Remote enthielt 37aa6fb (CI) plus bae7b57 (Handoff). Normaler konfliktfreier Merge 13fa15d erhält beide Entwicklungsstränge und die unveränderte CI. 08c07aa erfolgreich gepusht und Remote-SHA geprüft.
-- M: GitHub-Actions-Lauf #3 für 08c07aa erfolgreich: https://github.com/essenmitpassion-sudo/Catworld/actions/runs/42239921670 . Über öffentliche Actions-Webseite geprüft; API-Zugriff am Proxy mit 403 gesperrt. Auch Läufe #1/#2 erfolgreich. Auszug evidence/github-ci-integration.json.
-- M: Nach Integration 130 Tests sowie SDL-Smoke mit offscreen und CI-Treiber dummy erfolgreich. Anschließend veraltete Vorschau im Abschluss korrigiert: Dachweg / F7 führt direkt weiter; Eigenlösung bleibt bei Rückkehr erhalten. Reproduzierter RED, danach 130 GREEN und voller SDL-Smoke. evidence/roof-transition-*.txt.
-- M: Spielbar: Einstieg, eigene Ergänzung, Transfer, leerer Abrufeditor, Dachweg mit Ziel 6. Wiederholte Befehle und begrenzte for/range-Schleifen, freiwillige Hinweise, sichtbare Laterne. Drei getrennte Entwürfe, alte Speicherversion lesbar. README/Sicherheitsbeschreibung aktualisiert. Screenshots für Hilfe, Erfolg und Übergang visuell geprüft.
-- Automation: nur Test-CI; kein aktivierter Codex-Entwicklungs-Scheduler. Keine neuen Dienste, API-Keys, Runner oder Eingriffe in andere Anwendungen.
-- Offen: menschlicher Lernwert/Spielspaß, nativer Windows-/DPI-Test, unabhängiger Security-Audit. Build bleibt Python-Quellbuild mit Startskript. Finale SHA über git log -1; Bundle/Build unter /workspace/Catworld-Roof.*.
-- Nächste einzelne Produktaufgabe: Dachweg-Transfer mit verändertem Ziel und selbst angepasster Wiederholungszahl, bisherige Lösung erhalten. Keine neue Sprachidee oder Engine. Vorher echten Git-/Prozessstand und frische Reviews prüfen.
+Ziel: Cyberpunk-Spiel mit selbst geschriebenem Python; ein Integrator.
+Branch: g0/first-cat-action. Extern verifizierter Rettungscommit:
+7d4675c2d1f48e32b132088c0590e17241fdec9c (auf db0ea246 aufgebaut).
+Nachfolgender Abschlusscommit ergänzt SDL-Nachweise und diese Übergabe; SHA mit git log -1 prüfen.
+
+## Bestandsaufnahme
+- TECH_PASS: Einstieg, Batterie/Automat, Transfer, Abruf ohne Vorlage, animierte Pixelkatze, Dachweg mit for/range; sichere AST-Teilmenge und Aktionsbudgets. Run/Step/Stop/Reset.
+- TECH_PASS: geretteter Dachtransfer (F8 nach Dach-Erfolg): Ziel von 6 auf 8, unveränderter eigener Plan, neue Zahl selbst schreiben; falscher Plan gewinnt nicht durch wiederholtes Run. Freiwillige Hinweise, sichtbare Laterne. Vier separate Entwürfe in Schema 3; Schema 1/2 weiter lesbar.
+- M: 134 Tests nach externer Rettung erneut bestanden (evidence/recovery-tests.txt). Vollständiger SDL-Offscreen-Smoke erweitert: F8, zweimal falscher Plan, eigene Korrektur, Step/Stop/Reset, Neustart, beide Dachentwürfe und Rückkehr. evidence/roof-transfer-smoke.txt. Erfolgsbild visuell geprüft.
+- Nicht verifiziert: menschlicher Lernwert/Spielspaß, nativer Windows-/DPI-Test, unabhängiger Sicherheits-Audit. Keine aktuell reproduzierten Testfehler. UI-Zustand wird beim Neustart zurückgesetzt, Programme laufen nie automatisch.
+- Geplant, nicht implementiert: mehrere Laternen in einem Programm verbinden (Bewegen und Aufnehmen sinnvoll kombinieren), keine neue Python-Syntax. Vor Ausbau kurze Produktprüfung anhand des bestehenden Spiels.
+
+## Rettung / Infrastruktur
+Bestehende Umgebung wieder erreichbar, kein Workspaceersatz durch den Agenten.
+Alle sechs geänderten/neuen Dateien gefunden. Vollarchiv einschließlich Git,
+untracked und ignored: /workspace/Catworld-recovery-2026-11-09.tar.gz;
+3078 Dateien per SHA-256 gegen Original verglichen. Bundle gleichen Namens .bundle
+geprüft. GitHub-Remote vor Rettung db0ea246, Push auf 7d4675c bestätigt.
+Cloud-Startfehler war beobachtet, Ursache unbekannt; Shell/Mount/Dateien jetzt erreichbar.
+Sandbox konnte Proxy nicht erreichen; genehmigter äußerer Netzwerkaufruf erfolgreich.
+Keine Datenlöschung, Resets, anderen Projekte, Dienste oder Scheduler verändert.
+Nur Test-CI; kein kontinuierlicher Codex-Entwicklungsscheduler.
+
+## Wiederaufnahme
+Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log -5 --oneline`
+1. Lokalen Stand/Backups sichern, Fetch und Remote/Reviews vergleichen; Dachtransfer nicht erneut entwickeln.
+2. `.venv/bin/python -m pytest -q` und `SDL_VIDEODRIVER=offscreen SDL_AUDIODRIVER=dummy .venv/bin/python -m tests.smoke_app` bei Codeänderungen reproduzieren.
+3. Als nächsten Produktbatch mehrere Laternen in einem Ablauf untersuchen; vorher den aktuellen Stand extern sichern. Bei Limit zuerst Checkpoint statt Feature.
+Alle zum Abschluss gehörenden Änderungen werden committed; keine absichtlich zurückgelassene WIP-Arbeit. Tatsächlicher git status gilt vor dieser Aussage. Das Rettungsarchiv bleibt zusätzlich unverändert erhalten.

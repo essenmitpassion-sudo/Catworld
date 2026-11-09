@@ -35,3 +35,10 @@ GitHub-Commit ≠ laufende Codex-Automation. Dokumentiertes pytest-PASS ≠ unab
 - M: In dieser Sitzung keine native Automationsverwaltung als Werkzeug verfügbar. Zeitplan NICHT eingerichtet, erster automatischer Lauf NICHT nachgewiesen. Diese Datei aktiviert keinen Scheduler.
 - Vor jedem tatsächlichen Start: laufende Entwicklungs-/Git-Prozesse und Git-Status einschließlich lokaler Commits prüfen, dann AGENTS.md, CURRENT.md, NEXT_TASK.md und neue unabhängige Reviews lesen. Vor Fetch/Integration lokale Arbeit sichern. Keine ungesicherten Resets oder Force-Pushs.
 - Eine künftig verfügbare native Automation muss überlappende Läufe zuverlässig ausschließen (bei bereits aktivem Integrator auslassen); eine reine Prozessmomentaufnahme reicht nicht als gegenseitiger Ausschluss. Keine eigenen Cron-/Scheduler-Ersatzprozesse.
+
+## Sicherung während der Sitzung
+Verbindliche Checkpoint-Regel siehe AGENTS.md: auch vor Aufgabenwechseln und
+Refactorings sichern, bei Limitzeichen sofort auf Rettung umschalten. Unfertige
+Dateien einschließlich untracked/Assets separat archivieren und Inhaltsvergleich
+prüfen. Commit + geprüftes Bundle + bestätigter Remote-SHA für fertige Pakete.
+Eine Chat-Zusammenfassung ist keine Sicherung. Keine neuen Scheduler.
