@@ -57,7 +57,7 @@ class App:
         self.buttons['Transfer'] = pygame.Rect(420, 125, 320, 36)
         self.buttons['Hilfe'] = pygame.Rect(540, 75, 200, 36)
         self.buttons['Abruf'] = pygame.Rect(540, 28, 200, 36)
-        self.buttons['Laternenpaar'] = pygame.Rect(40, 28, 285, 36)
+        self.buttons['Laternenpaar'] = pygame.Rect(420, 125, 320, 36)
         self.buttons['Dachtransfer'] = pygame.Rect(40, 75, 340, 36)
         self.buttons['Dach'] = pygame.Rect(340, 28, 190, 36)
         self.save_path = save_path
@@ -311,13 +311,32 @@ class App:
             self.select_all = False
             self.edited()
 
+    def visible_buttons(self):
+        visible = {}
+        pair_link = self.roof_active and self.pair_unlocked
+        for name, rect in self.buttons.items():
+            if self.pair_active and name in ('Dach', 'Dachtransfer', 'Abruf', 'Transfer'):
+                continue
+            if name == 'Laternenpaar' and not pair_link:
+                continue
+            if name == 'Transfer' and pair_link:
+                continue
+            if name == 'Dachtransfer' and not (self.roof_active and self.roof_transfer_unlocked):
+                continue
+            if name == 'Dach' and not self.recall_available:
+                continue
+            if name == 'Abruf' and (self.roof_active or self.scenario != 1 or not self.recall_available):
+                continue
+            visible[name] = rect
+        return visible
+
     def handle(self, event):
         if event.type == pygame.QUIT:
             self.alive = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             w, h = self.screen.get_size()
             pos = event.pos[0] * 1200 / w, event.pos[1] * 720 / h
-            for name, rect in self.buttons.items():
+            for name, rect in self.visible_buttons().items():
                 if rect.collidepoint(pos):
                     self.activate(name)
                     return
@@ -629,15 +648,7 @@ class App:
             y = 225 + (cursor_row - self.scroll) * 26
             pygame.draw.line(self.canvas, INK, (x, y), (x, y + 21), 2)
         self.canvas.set_clip(None)
-        for name, rect in self.buttons.items():
-            if name == 'Laternenpaar' and not (self.roof_active and self.pair_unlocked):
-                continue
-            if name == 'Dachtransfer' and not (self.roof_active and self.roof_transfer_unlocked):
-                continue
-            if name == 'Dach' and not self.recall_available:
-                continue
-            if name == 'Abruf' and (self.roof_active or self.scenario != 1 or not self.recall_available):
-                continue
+        for name, rect in self.visible_buttons().items():
             pygame.draw.rect(self.canvas, CYAN if name == 'Run' else '#303c56', rect, border_radius=5)
             caption = name
             if name == 'Laternenpaar':
@@ -656,8 +667,6 @@ class App:
                 caption = 'Zur Eigenlösung · F3'
             if name == 'Transfer' and self.roof_active:
                 caption = 'Zurück zu deinem Programm · F3'
-            if self.pair_active and name in ('Dach', 'Dachtransfer', 'Transfer'):
-                caption = {'Dach': 'Zurück · F7', 'Dachtransfer': 'Zur Eigenlösung · F8', 'Transfer': 'Zur Eigenlösung · F3'}[name]
             label = self.font.render(caption, True, BG if name == 'Run' else INK)
             self.canvas.blit(label, label.get_rect(center=rect.center))
         self.text('F5 Run  ·  F6 Step  ·  Esc Stop  ·  F2 Reset', (790, 594), MUTED, self.small)

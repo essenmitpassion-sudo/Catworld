@@ -56,3 +56,9 @@ Zwei gleich lange Abschnitte machen Bewegung+Aufnehmen zu einem wiederholbaren
 Ablauf. Ausgeschriebene Befehle und zwei getrennte Schleifen bleiben gültig; keine
 Lösungsform erzwingen. Ein eigener breiter Textersatz beschädigte die alte
 Hinweislisten-Auswahl; SDL fand den Fehler, gezielter Renderingtest sichert ihn ab.
+
+## 2026-11-09 — Unsichtbar muss auch unklickbar sein
+Separat gepflegte Sichtbarkeitsbedingungen ließen verborgene Navigation aktiv.
+Gemeinsame Button-Auswahl beseitigt diese Divergenz; Regression prüft tatsächliche
+Mausereignisse. Mehrere identische Rückwege brachten keinen zusätzlichen Nutzen;
+ein sichtbarer Rückweg reicht, vorhandene Tastenkürzel bleiben kompatibel.

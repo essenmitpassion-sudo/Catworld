@@ -88,3 +88,25 @@ def test_every_hint_stage_renders_in_transfer_and_pair(app):
     for _ in range(4):
         click(app,'Hilfe'); app.draw()
     assert app.source == ''
+
+
+def test_pair_navigation_has_one_visible_return_and_no_title_overlap(app):
+    finish(app, NEW_CODE)
+    app.activate('Laternenpaar')
+    controls = app.visible_buttons()
+    assert set(controls) == {'Run','Step','Stop','Reset','Hilfe','Laternenpaar'}
+    title = pygame.Rect(40,28,260,45)
+    assert not any(rect.colliderect(title) for rect in controls.values())
+    click(app,'Laternenpaar')
+    assert not app.pair_active and app.source == NEW_CODE
+
+
+def test_hidden_navigation_cannot_intercept_pair_entry_or_exit(app):
+    finish(app, NEW_CODE)
+    click(app,'Laternenpaar')
+    assert app.pair_active
+    # Old roof button area is empty in this mode, not an invisible exit.
+    app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=app.buttons['Dach'].center))
+    assert app.pair_active
+    click(app,'Laternenpaar')
+    assert not app.pair_active

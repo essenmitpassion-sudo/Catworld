@@ -52,3 +52,9 @@ Dies bleibt keine allgemeine Sandbox für fremde Python-Programme.
 Dachweg-Speicherformat: Version 2 ergänzt einen separaten Dachentwurf; Version 1
 bleibt lesbar. Alle drei Programme teilen die Dateigröße von höchstens 65536 Bytes;
 diese Grenze wird auch vor dem Schreiben der UTF-8-JSON-Datei geprüft.
+
+Zwei-Laternen-Abschnitt: World ergänzt nur ein optionales zweites Ziel und einen
+Teilerfolgsstatus. Der Parser und alle Aktionsbudgets bleiben unverändert. Erst beide
+Aktivierungen setzen powered. Neue Versuche starten ohne akkumulierten Fortschritt.
+Speicherversion 4 ergänzt den fünften Editor; Versionen 1–3 werden weiterhin validiert
+und verlustfrei geladen. Gesamtdateigrenze bleibt 65536 Bytes, je Text 4096 Zeichen.

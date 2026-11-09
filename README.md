@@ -36,6 +36,11 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
 5. **Dachweg / F7:** die weiter entfernte Dachlaterne erreichen. Erst bekannte Schritte
    ausprobieren; nach erlebter Wiederholung bietet F1 freiwillige Hilfe zu `for`/`range`.
    Schreibe deinen Plan selbst. Zurück / F7 erhält deinen bisherigen Entwurf.
+6. **Nächste Laterne / F8:** nach Dach-Erfolg den eigenen Plan an das fernere Ziel anpassen.
+7. **Zwei Laternen / F9:** nach Dachtransfer-Erfolg aus leerem Editor beide Lichter
+   mit einem Programm verbinden. Die erste Aktivierung ist nur ein Teilerfolg.
+   Bewegung und `collect()` reichen; mehrere Programme sind gültig. F9 kehrt zur
+   bisherigen Eigenlösung zurück. Alle fünf Entwürfe bleiben auch nach Neustart erhalten.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;

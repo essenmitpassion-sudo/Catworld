@@ -95,3 +95,10 @@ Weltlogik RED 6, GREEN 140; checkpoint d7c3f9f gepusht und verifiziert.
 UI/Persistenz RED 5, GREEN 146 einschließlich zusätzlichem Hinweis-Renderingtest.
 SDL-Smoke: beide dunklen Ziele, erste Aktivierung, Stop/Reset, Step→Run, kompletter
 Erfolg, Neustart und erhaltene frühere Entwürfe. Kein Menschentest.
+
+## 2026-11-09 — Navigationsqualität nach zwei Laternen
+Spielbarer Checkpoint e880e51 extern bestätigt. Drei Schwächen geprüft: redundante
+Navigation/Titelüberdeckung, fehlendes Undo, Weltverdeckung durch Hinweise.
+Erste korrigiert: sichtbare Controls gemeinsam für Renderer und Maus-Hit-Test;
+Paarabschnitt hat einen Rückweg. Zwei RED-Tests, 148 GREEN und kompletter SDL-Smoke.
+README und Sicherheits-/Speicherdokumentation aktualisiert. Keine Sprach-/Budgeterweiterung.

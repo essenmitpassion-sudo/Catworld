@@ -1,0 +1,33 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_pair_navigation_has_one_visible_return_and_no_title_overlap _______
+
+app = <neonpaw.ui.app.App object at 0x7f2777e1e300>
+
+    def test_pair_navigation_has_one_visible_return_and_no_title_overlap(app):
+        finish(app, NEW_CODE)
+        app.activate('Laternenpaar')
+>       controls = app.visible_buttons()
+                   ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'visible_buttons'
+
+tests/test_pair_ui.py:96: AttributeError
+__________ test_hidden_navigation_cannot_intercept_pair_entry_or_exit __________
+
+app = <neonpaw.ui.app.App object at 0x7f2777e25dc0>
+
+    def test_hidden_navigation_cannot_intercept_pair_entry_or_exit(app):
+        finish(app, NEW_CODE)
+        click(app,'Laternenpaar')
+        assert app.pair_active
+        # Old roof button area is empty in this mode, not an invisible exit.
+        app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=app.buttons['Dach'].center))
+>       assert app.pair_active
+E       assert False
+E        +  where False = <neonpaw.ui.app.App object at 0x7f2777e25dc0>.pair_active
+
+tests/test_pair_ui.py:110: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_pair_ui.py::test_pair_navigation_has_one_visible_return_and_no_title_overlap
+FAILED tests/test_pair_ui.py::test_hidden_navigation_cannot_intercept_pair_entry_or_exit
+2 failed, 6 deselected in 0.43s
