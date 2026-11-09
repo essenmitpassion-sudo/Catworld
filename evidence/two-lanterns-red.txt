@@ -1,0 +1,112 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_two_lanterns_accept_alternative_programs[for _ in range(2):\n    move_right()\n    move_right()\n    move_right()\n    collect()] _
+
+code = 'for _ in range(2):\n    move_right()\n    move_right()\n    move_right()\n    collect()'
+
+    @pytest.mark.parametrize('code', [PAIR_CODE, ('move_right()\n'*3+'collect()\n')*2,
+        'for _ in range(3):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_right()\ncollect()'])
+    def test_two_lanterns_accept_alternative_programs(code):
+>       r = pair_runner()
+            ^^^^^^^^^^^^^
+
+tests/test_two_lanterns.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pair_runner():
+>       return Runner(initial_world=World(battery_x=4, second_battery_x=7))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'second_battery_x'
+
+tests/test_two_lanterns.py:9: TypeError
+_ test_two_lanterns_accept_alternative_programs[move_right()\nmove_right()\nmove_right()\ncollect()\nmove_right()\nmove_right()\nmove_right()\ncollect()\n] _
+
+code = 'move_right()\nmove_right()\nmove_right()\ncollect()\nmove_right()\nmove_right()\nmove_right()\ncollect()\n'
+
+    @pytest.mark.parametrize('code', [PAIR_CODE, ('move_right()\n'*3+'collect()\n')*2,
+        'for _ in range(3):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_right()\ncollect()'])
+    def test_two_lanterns_accept_alternative_programs(code):
+>       r = pair_runner()
+            ^^^^^^^^^^^^^
+
+tests/test_two_lanterns.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pair_runner():
+>       return Runner(initial_world=World(battery_x=4, second_battery_x=7))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'second_battery_x'
+
+tests/test_two_lanterns.py:9: TypeError
+_ test_two_lanterns_accept_alternative_programs[for _ in range(3):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_right()\ncollect()] _
+
+code = 'for _ in range(3):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_right()\ncollect()'
+
+    @pytest.mark.parametrize('code', [PAIR_CODE, ('move_right()\n'*3+'collect()\n')*2,
+        'for _ in range(3):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_right()\ncollect()'])
+    def test_two_lanterns_accept_alternative_programs(code):
+>       r = pair_runner()
+            ^^^^^^^^^^^^^
+
+tests/test_two_lanterns.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pair_runner():
+>       return Runner(initial_world=World(battery_x=4, second_battery_x=7))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'second_battery_x'
+
+tests/test_two_lanterns.py:9: TypeError
+____________ test_second_before_first_fails_without_lighting_either ____________
+
+    def test_second_before_first_fails_without_lighting_either():
+>       r = pair_runner()
+            ^^^^^^^^^^^^^
+
+tests/test_two_lanterns.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pair_runner():
+>       return Runner(initial_world=World(battery_x=4, second_battery_x=7))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'second_battery_x'
+
+tests/test_two_lanterns.py:9: TypeError
+______________ test_stop_reset_and_step_run_after_partial_success ______________
+
+    def test_stop_reset_and_step_run_after_partial_success():
+>       r = pair_runner()
+            ^^^^^^^^^^^^^
+
+tests/test_two_lanterns.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pair_runner():
+>       return Runner(initial_world=World(battery_x=4, second_battery_x=7))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'second_battery_x'
+
+tests/test_two_lanterns.py:9: TypeError
+____________ test_collect_twice_at_first_lantern_explains_next_goal ____________
+
+    def test_collect_twice_at_first_lantern_explains_next_goal():
+>       r = pair_runner()
+            ^^^^^^^^^^^^^
+
+tests/test_two_lanterns.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def pair_runner():
+>       return Runner(initial_world=World(battery_x=4, second_battery_x=7))
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'second_battery_x'
+
+tests/test_two_lanterns.py:9: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_two_lanterns.py::test_two_lanterns_accept_alternative_programs[for _ in range(2):\n    move_right()\n    move_right()\n    move_right()\n    collect()]
+FAILED tests/test_two_lanterns.py::test_two_lanterns_accept_alternative_programs[move_right()\nmove_right()\nmove_right()\ncollect()\nmove_right()\nmove_right()\nmove_right()\ncollect()\n]
+FAILED tests/test_two_lanterns.py::test_two_lanterns_accept_alternative_programs[for _ in range(3):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_right()\ncollect()]
+FAILED tests/test_two_lanterns.py::test_second_before_first_fails_without_lighting_either
+FAILED tests/test_two_lanterns.py::test_stop_reset_and_step_run_after_partial_success
+FAILED tests/test_two_lanterns.py::test_collect_twice_at_first_lantern_explains_next_goal
+6 failed in 0.06s
