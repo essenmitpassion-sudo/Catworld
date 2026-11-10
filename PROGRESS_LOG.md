@@ -131,3 +131,9 @@ RED 5 failed/3 passed → 186 GREEN. Vorhandene Parserformen/Budgets erhalten,
 neuer Aktionsname gegen Shadowing/Argumente geprüft; Grenzen links/rechts und
 Stop/Reset getestet. SDL: kompletter Umweg mit zwei Schleifen, sichtbare Rückbewegung,
 collect-Erfolg und vollständige Regression. Produktwahl in PRODUCT.md dokumentiert.
+
+## 2026-11-10 — Freiwilliger Heimweg
+Rückweg-Commit 86aed28 vor Folgearbeit extern bestätigt. Bestehende Laternenaufgabe
+um freiwilligen Heimweg ergänzt, keine neue Speicherung oder Sondermission.
+RED 1, GREEN 187, SDL vollständiger Plan mit 2 Lichtern + Rückweg + Neustart PASS;
+Screenshot geprüft. Technische Wirkung belegt, menschliche Motivation offen.

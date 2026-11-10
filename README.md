@@ -42,6 +42,9 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
    mit einem Programm verbinden. Die erste Aktivierung ist nur ein Teilerfolg.
    Bewegung und `collect()` reichen; mehrere Programme sind gültig. F9 kehrt zur
    bisherigen Eigenlösung zurück. Alle fünf Entwürfe bleiben auch nach Neustart erhalten.
+8. **Freiwilliger Heimweg:** Erweitere deinen Zwei-Laternen-Plan so, dass Nox anschließend
+   zum Start zurückkehrt. `move_left()` ermöglicht Rückwege; die Lichter bleiben an.
+   Der bisherige Zwei-Laternen-Erfolg bleibt auch ohne diesen Bonus gültig.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;

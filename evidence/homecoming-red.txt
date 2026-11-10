@@ -1,0 +1,32 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_optional_homecoming_keeps_old_success_and_rewards_complete_route _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f8012320ad0>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-65/test_optional_homecoming_keeps0')
+
+    def test_optional_homecoming_keeps_old_success_and_rewards_complete_route(monkeypatch,tmp_path):
+        pygame.init()
+        a=App(save_path=tmp_path/'drafts.json')
+        unlock(a);click(a,'Dach');finish(a,ROOF_CODE)
+        click(a,'Dachtransfer');finish(a,NEW_CODE);click(a,'Laternenpaar')
+        rendered=[];draw_text=a.text
+        def record(value,*args,**kwargs):
+            rendered.append(value);return draw_text(value,*args,**kwargs)
+        monkeypatch.setattr(a,'text',record)
+        finish(a,PAIR_CODE);a.draw()
+        assert a.runner.world.powered and a.runner.world.x==7
+        assert any('Heimweg' in t for t in rendered)
+        assert 'NOX IST ZUHAUSE' not in rendered
+        full=PAIR_CODE+'\nfor _ in range(6):\n    move_left()'
+        write(a,full);click(a,'Run')
+        for _ in range(14):a.update(.5)
+        rendered.clear();a.draw()
+        assert a.runner.world.x==1 and a.runner.world.first_lit and a.runner.world.powered
+>       assert 'NOX IST ZUHAUSE' in rendered
+E       AssertionError: assert 'NOX IST ZUHAUSE' in ['NEONPAW', '06 / ZWEI LATERNEN, EIN PLAN', 'PYTHON / DEIN EIGENES PROGRAMM', 'DER DACHWEG LEUCHTET', 'Beide Lichter an. Nox hat einen Heimweg!', 'Dein Programm verbindet beide Dächer.', ...]
+
+tests/test_homecoming.py:30: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_homecoming.py::test_optional_homecoming_keeps_old_success_and_rewards_complete_route
+1 failed in 0.11s

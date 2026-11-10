@@ -91,3 +91,9 @@ mehrere durch Semikolon getrennte Aktionen dieselbe Zeile teilen können.
 Rückwärtsbewegung macht einen Gesamt-Schrittzähler als Ziel-Fortschritt falsch.
 Die Anzeige nutzt nun die aktuelle Position; moves bleibt die Zahl tatsächlich
 gegangener Schritte. Neue Spielhandlungen müssen vorhandene Anzeigen mitprüfen.
+
+## 2026-11-10 — Optionaler Zusatz statt neuer Aufgabenverwaltung
+Die Rückkehr nach beiden Aktivierungen nutzt nur Position und vorhandenen
+Weltzustand. Der bisherige Erfolg bleibt bestehen; Spieler erweitert seinen Plan
+freiwillig. Keine zusätzliche Mission/Editorhistorie nötig. Heimkehr zählt erst
+bei beendetem Programm, nicht beim bloßen Durchlaufen des Startfelds.

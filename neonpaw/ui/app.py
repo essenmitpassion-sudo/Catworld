@@ -537,6 +537,11 @@ class App:
         if self.pair_active:
             for position in (self.runner.world.battery_x, self.runner.world.second_battery_x):
                 pygame.draw.rect(scene, MUTED, (13 + position * 36, 192, 32, 30), 1)
+        if self.pair_active:
+            home_x = 29 + self.runner.initial_world.x * 36
+            color = '#ffd584' if self.homecoming_complete() else '#8794ad'
+            pygame.draw.lines(scene, color, False, [(home_x - 10, 175), (home_x - 10, 164), (home_x, 155), (home_x + 10, 164), (home_x + 10, 175)], 2)
+            scene.blit(self.sign_font.render('HEIM', False, color), (home_x - 17, 140))
         goal = pygame.Rect(13 + self.runner.world.target_x * 36, 192, 32, 30)
         pygame.draw.rect(scene, CYAN, goal, 2)
         pygame.draw.line(scene, CYAN, (goal.x + 10, 229), (goal.x + 23, 229), 2)
@@ -611,6 +616,11 @@ class App:
                 self.text('Weitere Hilfe nur auf deinen Klick. Dein Code bleibt unverändert.',
                           (60, panel.bottom - 24), MUTED, self.small)
 
+    def homecoming_complete(self):
+        return (self.pair_active and self.runner.world.powered
+                and self.runner.world.x == self.runner.initial_world.x
+                and self.runner.status == 'done')
+
     def draw(self):
         self.canvas.fill(BG)
         self.text('NEONPAW', (40, 28), CYAN, self.big)
@@ -632,7 +642,7 @@ class App:
         if self.roof_active:
             heading = ('DÄCHER VERBUNDEN' if self.roof_transfer_active else 'DACHLATERNE GERETTET') if world.powered else ('DIE FERNE LATERNE' if self.roof_transfer_active else 'DER LANGE DACHWEG')
         if self.pair_active:
-            heading = 'DER DACHWEG LEUCHTET' if world.powered else 'ZWEI LATERNEN, EIN PLAN'
+            heading = 'NOX IST ZUHAUSE' if self.homecoming_complete() else ('DER DACHWEG LEUCHTET' if world.powered else 'ZWEI LATERNEN, EIN PLAN')
         self.text(heading, (790, 82), INK)
         if world.powered:
             hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Warmlicht! Nox hat die Gasse zurück.'
@@ -662,7 +672,7 @@ class App:
                 instruction = 'Nutze erst die bekannten Bewegungsbefehle.'
         if self.pair_active:
             hint = 'Beide Lichter an. Nox hat einen Heimweg!' if world.powered else ('Ein Licht brennt. Das zweite wartet noch.' if world.first_lit else 'Zwei dunkle Laternen. Ein eigener Plan.')
-            instruction = 'Dein Programm verbindet beide Dächer.' if world.powered else 'Bewegen und Aufnehmen passend verbinden.'
+            instruction = 'Licht und Heimweg in einem eigenen Plan.' if self.homecoming_complete() else ('Bonus: Mit move_left() heimkehren.' if world.powered else 'Bewegen und Aufnehmen passend verbinden.')
         elif self.roof_active and self.roof_transfer_active and world.powered:
             instruction = 'Zwei Laternen · F9: Verbinde die Dächer.'
         if not world.powered and world.x > world.target_x:
@@ -769,7 +779,7 @@ class App:
             objective = ('Nox schnurrt. Die Dachlaterne brennt — dein Ablauf funktioniert!' if world.powered
                          else 'Erreiche die Batterie am Leuchtfeld und schalte die Dachlaterne ein.')
         if self.pair_active:
-            objective = 'Nox schnurrt: Zwei Lichter, ein zusammenhängender Heimweg.' if world.powered else 'Aktiviere beide Laternen in einem Ablauf. Die erste allein reicht noch nicht.'
+            objective = 'Nox ist daheim. Deine Laternen leuchten weiter.' if self.homecoming_complete() else ('Beide Ziele geschafft. Freiwillig: Plane den Heimweg zum Start.' if world.powered else 'Aktiviere beide Laternen in einem Ablauf. Die erste allein reicht noch nicht.')
         self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)
         self.draw_hint()
         if self.storage_message:

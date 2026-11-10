@@ -1,8 +1,8 @@
-# Nächste Aufgabe: Rückwege sinnvoll einsetzen
-move_left ist implementiert; 186 Tests und SDL-Smoke grün. Keine Doppelimplementierung.
-Nächster ausführbarer Produktschritt: einen kleinen Rückweg-Auftrag mit vorhandenem
-World/Runner entwerfen und RED testen, bei dem bekannte Bewegungen und collect
-kombiniert werden. Eigene bisherige Lösungen vollständig erhalten. Prüfen, ob eine
-Variante in vorhandener Aufgabenstruktur genügt; nicht einen weiteren Stapel von
-UI-Sonderfällen/Editoren anlegen. Keine neue Python-Grammatik oder Engine.
-Vorher Git-/Remote-/Review-Abgleich und Sicherung. Menschlichen Spielwert offenlassen.
+# Nächste Aufgabe: Fehler gezielt im Plan korrigieren
+Rückwege und freiwilliger Heimweg sind fertig (187 Tests, voller SDL-Smoke).
+Nach Git-/Remote-Abgleich tatsächliches Verhalten beim Kartenrandfehler prüfen:
+Kann der Spieler die markierte fehlerhafte Zeile direkt anklicken und bearbeiten,
+ohne dass die alte Ausführungsmarkierung den Editor-Fokus weiter festhält?
+Wenn reproduzierbar, gezielt mit RED/GREEN korrigieren; sonst keine Doppelarbeit.
+Keine neue Mission oder Syntax. Vorhandene Spielpläne/History bewahren; volle
+Regression/SDL und externer Checkpoint. Menschliche Verständlichkeit separat prüfen.
