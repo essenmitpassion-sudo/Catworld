@@ -113,3 +113,9 @@ Anzeige und Batterien müssen die Alternative ebenso unterstützen wie die Simul
 Weltwirkung und Programmausgang können auseinanderfallen. Beides explizit anzeigen,
 statt einen Fehler durch die große Erfolgsmeldung zu überdecken. Fehlerkorrektur
 bleibt nachvollziehbar; keine rückwirkende Simulation oder automatische Textreparatur.
+
+## 2026-11-10 — Padding ist keine versteckte Textzeile
+Bei vertikalem Scrollen muss zuerst der lokale Zeilenindex auf sichtbare Zeilen
+begrenzt werden, erst dann der Scrolloffset addiert werden. Sonst wird ein Klick
+ins obere Padding zu einer unsichtbaren Zeile darüber. Resize-Tests sichern die
+Umrechnung der echten Fensterkoordinaten ab.

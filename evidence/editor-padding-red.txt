@@ -1,0 +1,124 @@
+FFFFFF.                                                                  [100%]
+=================================== FAILURES ===================================
+_____ test_editor_padding_click_stays_within_displayed_lines[212-0-size0] ______
+
+size = (1200, 720), y = 212, offset = 0
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('y,offset',[(212,0),(518,10)])
+    def test_editor_padding_click_stays_within_displayed_lines(size,y,offset):
+        pygame.init();a=App();a.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(a,'# observe\n'*20+('move_right()\nmove_left()\n'*30))
+        click(a,'Step') if size==(1200,720) else a.activate('Step')
+        a.draw();first=a.scroll
+        assert first>0
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850*size[0]/1200,y*size[1]/720)))
+>       assert a.source[:a.cursor].count('\n')==first+offset
+E       AssertionError: assert 10 == (11 + 0)
+E        +  where 10 = <built-in method count of str object at 0x7f2847436430>('\n')
+E        +    where <built-in method count of str object at 0x7f2847436430> = '# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n#'.count
+
+tests/test_long_program.py:19: AssertionError
+_____ test_editor_padding_click_stays_within_displayed_lines[212-0-size1] ______
+
+size = (960, 600), y = 212, offset = 0
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('y,offset',[(212,0),(518,10)])
+    def test_editor_padding_click_stays_within_displayed_lines(size,y,offset):
+        pygame.init();a=App();a.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(a,'# observe\n'*20+('move_right()\nmove_left()\n'*30))
+        click(a,'Step') if size==(1200,720) else a.activate('Step')
+        a.draw();first=a.scroll
+        assert first>0
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850*size[0]/1200,y*size[1]/720)))
+>       assert a.source[:a.cursor].count('\n')==first+offset
+E       AssertionError: assert 10 == (11 + 0)
+E        +  where 10 = <built-in method count of str object at 0x7f284735e4c0>('\n')
+E        +    where <built-in method count of str object at 0x7f284735e4c0> = '# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n#'.count
+
+tests/test_long_program.py:19: AssertionError
+_____ test_editor_padding_click_stays_within_displayed_lines[212-0-size2] ______
+
+size = (1600, 1000), y = 212, offset = 0
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('y,offset',[(212,0),(518,10)])
+    def test_editor_padding_click_stays_within_displayed_lines(size,y,offset):
+        pygame.init();a=App();a.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(a,'# observe\n'*20+('move_right()\nmove_left()\n'*30))
+        click(a,'Step') if size==(1200,720) else a.activate('Step')
+        a.draw();first=a.scroll
+        assert first>0
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850*size[0]/1200,y*size[1]/720)))
+>       assert a.source[:a.cursor].count('\n')==first+offset
+E       AssertionError: assert 10 == (11 + 0)
+E        +  where 10 = <built-in method count of str object at 0x7f28474360d0>('\n')
+E        +    where <built-in method count of str object at 0x7f28474360d0> = '# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n#'.count
+
+tests/test_long_program.py:19: AssertionError
+_____ test_editor_padding_click_stays_within_displayed_lines[518-10-size0] _____
+
+size = (1200, 720), y = 518, offset = 10
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('y,offset',[(212,0),(518,10)])
+    def test_editor_padding_click_stays_within_displayed_lines(size,y,offset):
+        pygame.init();a=App();a.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(a,'# observe\n'*20+('move_right()\nmove_left()\n'*30))
+        click(a,'Step') if size==(1200,720) else a.activate('Step')
+        a.draw();first=a.scroll
+        assert first>0
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850*size[0]/1200,y*size[1]/720)))
+>       assert a.source[:a.cursor].count('\n')==first+offset
+E       AssertionError: assert 22 == (11 + 10)
+E        +  where 22 = <built-in method count of str object at 0x7f2847396450>('\n')
+E        +    where <built-in method count of str object at 0x7f2847396450> = '# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# obser...\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\nmove_right()\nmove_left()\nm'.count
+
+tests/test_long_program.py:19: AssertionError
+_____ test_editor_padding_click_stays_within_displayed_lines[518-10-size1] _____
+
+size = (960, 600), y = 518, offset = 10
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('y,offset',[(212,0),(518,10)])
+    def test_editor_padding_click_stays_within_displayed_lines(size,y,offset):
+        pygame.init();a=App();a.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(a,'# observe\n'*20+('move_right()\nmove_left()\n'*30))
+        click(a,'Step') if size==(1200,720) else a.activate('Step')
+        a.draw();first=a.scroll
+        assert first>0
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850*size[0]/1200,y*size[1]/720)))
+>       assert a.source[:a.cursor].count('\n')==first+offset
+E       AssertionError: assert 22 == (11 + 10)
+E        +  where 22 = <built-in method count of str object at 0x7f2847396780>('\n')
+E        +    where <built-in method count of str object at 0x7f2847396780> = '# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# obser...\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\nmove_right()\nmove_left()\nm'.count
+
+tests/test_long_program.py:19: AssertionError
+_____ test_editor_padding_click_stays_within_displayed_lines[518-10-size2] _____
+
+size = (1600, 1000), y = 518, offset = 10
+
+    @pytest.mark.parametrize('size',[(1200,720),(960,600),(1600,1000)])
+    @pytest.mark.parametrize('y,offset',[(212,0),(518,10)])
+    def test_editor_padding_click_stays_within_displayed_lines(size,y,offset):
+        pygame.init();a=App();a.screen=pygame.display.set_mode(size,pygame.RESIZABLE)
+        write(a,'# observe\n'*20+('move_right()\nmove_left()\n'*30))
+        click(a,'Step') if size==(1200,720) else a.activate('Step')
+        a.draw();first=a.scroll
+        assert first>0
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850*size[0]/1200,y*size[1]/720)))
+>       assert a.source[:a.cursor].count('\n')==first+offset
+E       AssertionError: assert 22 == (11 + 10)
+E        +  where 22 = <built-in method count of str object at 0x7f2847396ab0>('\n')
+E        +    where <built-in method count of str object at 0x7f2847396ab0> = '# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# obser...\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\n# observe\nmove_right()\nmove_left()\nm'.count
+
+tests/test_long_program.py:19: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_long_program.py::test_editor_padding_click_stays_within_displayed_lines[212-0-size0]
+FAILED tests/test_long_program.py::test_editor_padding_click_stays_within_displayed_lines[212-0-size1]
+FAILED tests/test_long_program.py::test_editor_padding_click_stays_within_displayed_lines[212-0-size2]
+FAILED tests/test_long_program.py::test_editor_padding_click_stays_within_displayed_lines[518-10-size0]
+FAILED tests/test_long_program.py::test_editor_padding_click_stays_within_displayed_lines[518-10-size1]
+FAILED tests/test_long_program.py::test_editor_padding_click_stays_within_displayed_lines[518-10-size2]
+6 failed, 1 passed in 0.19s

@@ -344,6 +344,9 @@ click('Run')
 assert app.runner.error and app.scroll == 0
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_HOME, mod=0))
 assert app.scroll > 0 and app.runner.error
+first_visible = app.scroll
+frame(pygame.event.Event(pygame.MOUSEBUTTONDOWN, button=1, pos=(850,212)))
+assert app.source[:app.cursor].count('\n') == first_visible
 pygame.image.save(app.canvas, 'evidence/error-editor-focus.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive

@@ -71,3 +71,14 @@ RED 1, finale GREEN 192; voller SDL-Smoke mit spätem Fehler/Korrektur und alter
 Laternenrouten PASS. Belege evidence/partial-success-*.txt, Screenshot geprüft.
 Kein menschlicher Lern-/Spaßnachweis. Nächste Aufgabe: Ausgabe-/Editor-Lesbarkeit bei
 maximal erlaubtem Programm prüfen, nur reproduzierbare Engpässe beheben.
+
+## 2026-11-10 — Lange Programme und präzise Mausklicks
+Checkpoint 2e8f0b9b78db62de40e1072eabd583fa96f19c7e extern bestätigt.
+80 Textzeilen / 60 Aktionen geprüft: 120 Offscreen-Frames median 4,46 ms,
+p95 7,89 ms, max 11,45 ms in dieser Cloud; kein Hardware-/Windows-Leistungsversprechen.
+Dabei reproduzierter Fehler: Klick in Editorpadding wählte unsichtbare Nachbarzeile.
+Auf sichtbare Zeilen begrenzt, bei drei Fenstergrößen geprüft. RED 6 failed/1 passed,
+GREEN 199; 4096-Zeichen-Programm mit 64 Aktionen sowie Stop/Reset geprüft.
+SDL-Smoke inklusive Klick nach Fehler und allen Spielabschnitten PASS.
+Belege evidence/editor-padding-*.txt. Nächste Prüfung: konsistente Run-Neustartregel
+im Einstieg gegenüber späteren Aufgaben, ohne pausiertes Step→Run zu verändern.

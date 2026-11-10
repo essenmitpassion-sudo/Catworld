@@ -158,3 +158,9 @@ Programme unverändert gültig; nur bisher absichtlich abgewiesene Alternative z
 RED 1 → 192 GREEN. SDL zeigt Licht bleibt an, spätes collect scheitert, UI fordert
 Prüfung des Plans statt pauschalem Erfolg. Eigene Korrektur führt zu sauberem Erfolg.
 Screenshot geprüft. Keine Löschung von Weltzustand oder Spielertext als Fehlerreaktion.
+
+## 2026-11-10 — Lange Programme
+Gemessener Offscreen-Zeichencheck: 120 Frames, median 4,46 ms, p95 7,89 ms.
+Klick in oberen/unteren Editorrand reproduzierbar auf unsichtbarer Zeile: sechs RED,
+199 GREEN nach Begrenzung auf sichtbare Zeilen. Maximale Quelltext-/Aktionsgrenzen
+mit kooperativem Stop/Reset zusätzlich geprüft. Vollständiger SDL-Smoke PASS.

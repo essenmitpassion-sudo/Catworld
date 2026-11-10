@@ -1,8 +1,7 @@
-# Nächste Aufgabe: lange gültige Programme verständlich bedienen
-Freie Laternenreihenfolge und Unterscheidung Weltziel/Programmfehler fertig;
-192 Tests und kompletter SDL-Smoke grün. Keine Doppelimplementierung.
-Nach Git-/Remote-Abgleich ein gültiges Programm nahe dem 64-Aktionen-Limit durch
-Step/Run/Stop und Editorwechsel prüfen. Aktuelle Zeile, Fehleranzeige und Navigation
-müssen auch bei langem Text sichtbar/reagierbar bleiben. Erst reproduzieren, dann
-kleinsten tatsächlichen Engpass korrigieren; kein Framework oder neuer Sprachumfang.
-README-Spieltest ohne Musterlösung ist bereits vorhanden, nicht erneut erstellen.
+# Nächste Aufgabe: konsistente Wiederholbarkeit von Run prüfen
+Lange Programme/Editorpadding fertig, 199 Tests plus voller SDL-Smoke grün.
+Nach Git-Abgleich untersuchen: Im Einstieg startet neuer Run derzeit an der letzten
+Position, später immer am Szenariostart. Prüfen, ob das gültige Pläne beim zweiten
+Run scheitern lässt. Bei reproduzierbarer Verwirrung kleinste Vereinheitlichung mit
+RED/GREEN; Step→Run muss weiterhin fortsetzen, Stop behält die Position bis zum neuen
+Versuch, Code und Undo bleiben erhalten. Keine allgemeine Runner-Neuarchitektur.

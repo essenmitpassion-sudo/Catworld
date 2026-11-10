@@ -375,7 +375,7 @@ class App:
             if pygame.Rect(790, 210, 370, 310).collidepoint(pos):
                 self.follow_execution = False
                 lines = self.source.split('\n')
-                row = min(len(lines) - 1, max(0, int((pos[1] - 225) // 26) + self.scroll))
+                row = min(len(lines) - 1, self.scroll + max(0, min(10, int((pos[1] - 225) // 26))))
                 col = max(0, int((pos[0] - 830 + self.horizontal_scroll) // self.mono.size(' ')[0]))
                 self.cursor = sum(len(line) + 1 for line in lines[:row]) + min(col, len(lines[row]))
                 self.select_all = False
