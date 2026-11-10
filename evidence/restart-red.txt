@@ -1,0 +1,180 @@
+FFFFFFF.FF                                                               [100%]
+=================================== FAILURES ===================================
+_______________ test_completed_intro_solution_is_repeatable[Run] _______________
+
+app = <neonpaw.ui.app.App object at 0x7fa3324b49b0>, control = 'Run'
+
+    @pytest.mark.parametrize('control', ['Run', 'Step'])
+    def test_completed_intro_solution_is_repeatable(app, control):
+        app.change_text(SOLUTION, len(SOLUTION))
+        history = list(app.edit_histories['original'][0])
+        for _ in range(2):
+            attempt(app, control, 2)
+>           assert app.runner.status == 'done', app.runner.error
+E           AssertionError: Zeile 2: Die Batterie ist bereits im Automaten. Er leuchtet!
+E           assert 'error' == 'done'
+E             
+E             - done
+E             + error
+
+tests/test_restart.py:37: AssertionError
+______________ test_completed_intro_solution_is_repeatable[Step] _______________
+
+app = <neonpaw.ui.app.App object at 0x7fa3324fc890>, control = 'Step'
+
+    @pytest.mark.parametrize('control', ['Run', 'Step'])
+    def test_completed_intro_solution_is_repeatable(app, control):
+        app.change_text(SOLUTION, len(SOLUTION))
+        history = list(app.edit_histories['original'][0])
+        for _ in range(2):
+            attempt(app, control, 2)
+>           assert app.runner.status == 'done', app.runner.error
+E           AssertionError: Zeile 2: Die Batterie ist bereits im Automaten. Er leuchtet!
+E           assert 'error' == 'done'
+E             
+E             - done
+E             + error
+
+tests/test_restart.py:37: AssertionError
+_____________ test_stop_keeps_position_until_a_fresh_attempt[Run] ______________
+
+app = <neonpaw.ui.app.App object at 0x7fa3324fcad0>, control = 'Run'
+
+    @pytest.mark.parametrize('control', ['Run', 'Step'])
+    def test_stop_keeps_position_until_a_fresh_attempt(app, control):
+        app.source = SOLUTION
+        click(app, 'Step')
+        click(app, 'Stop')
+        app.update(5)
+        assert app.runner.world.x == 2 and not app.runner.world.powered
+        attempt(app, control, 2)
+>       assert app.runner.status == 'done', app.runner.error
+E       AssertionError: Zeile 2: Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.
+E       assert 'error' == 'done'
+E         
+E         - done
+E         + error
+
+tests/test_restart.py:52: AssertionError
+_____________ test_stop_keeps_position_until_a_fresh_attempt[Step] _____________
+
+app = <neonpaw.ui.app.App object at 0x7fa3324fc680>, control = 'Step'
+
+    @pytest.mark.parametrize('control', ['Run', 'Step'])
+    def test_stop_keeps_position_until_a_fresh_attempt(app, control):
+        app.source = SOLUTION
+        click(app, 'Step')
+        click(app, 'Stop')
+        app.update(5)
+        assert app.runner.world.x == 2 and not app.runner.world.powered
+        attempt(app, control, 2)
+>       assert app.runner.status == 'done', app.runner.error
+E       AssertionError: Zeile 2: Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.
+E       assert 'error' == 'done'
+E         
+E         - done
+E         + error
+
+tests/test_restart.py:52: AssertionError
+__________ test_adding_collect_after_first_step_needs_no_manual_reset __________
+
+app = <neonpaw.ui.app.App object at 0x7fa3324fe750>
+
+    def test_adding_collect_after_first_step_needs_no_manual_reset(app):
+        click(app, 'Run')
+        app.update(.5)
+        app.handle(pygame.event.Event(pygame.TEXTINPUT, text='\ncollect()'))
+        assert app.runner.world.x == 2  # Editing itself does not rewind the world.
+        attempt(app, 'Run', 2)
+>       assert app.runner.world.powered and app.runner.status == 'done'
+E       assert (False)
+E        +  where False = World(x=3, width=9, moves=2, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False).powered
+E        +    where World(x=3, width=9, moves=2, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False) = <neonpaw.code.runner.Runner object at 0x7fa3324fecf0>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7fa3324fecf0> = <neonpaw.ui.app.App object at 0x7fa3324fe750>.runner
+
+tests/test_restart.py:62: AssertionError
+______________ test_failed_intro_plan_replays_the_same_error[Run] ______________
+
+app = <neonpaw.ui.app.App object at 0x7fa3324ffb60>, control = 'Run'
+
+    @pytest.mark.parametrize('control', ['Run', 'Step'])
+    def test_failed_intro_plan_replays_the_same_error(app, control):
+        app.source = 'move_right()\nmove_right()\ncollect()'
+        for _ in range(2):
+            attempt(app, control, 3)
+            assert app.runner.status == 'error' and app.runner.line == 3
+>           assert app.runner.world.x == 3 and app.runner.world.moves == 2
+E           assert (5 == 3)
+E            +  where 5 = World(x=5, width=9, moves=4, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False).x
+E            +    where World(x=5, width=9, moves=4, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False) = <neonpaw.code.runner.Runner object at 0x7fa3324fff50>.world
+E            +      where <neonpaw.code.runner.Runner object at 0x7fa3324fff50> = <neonpaw.ui.app.App object at 0x7fa3324ffb60>.runner
+
+tests/test_restart.py:72: AssertionError
+_____________ test_failed_intro_plan_replays_the_same_error[Step] ______________
+
+app = <neonpaw.ui.app.App object at 0x7fa332507650>, control = 'Step'
+
+    @pytest.mark.parametrize('control', ['Run', 'Step'])
+    def test_failed_intro_plan_replays_the_same_error(app, control):
+        app.source = 'move_right()\nmove_right()\ncollect()'
+        for _ in range(2):
+            attempt(app, control, 3)
+            assert app.runner.status == 'error' and app.runner.line == 3
+>           assert app.runner.world.x == 3 and app.runner.world.moves == 2
+E           assert (5 == 3)
+E            +  where 5 = World(x=5, width=9, moves=4, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False).x
+E            +    where World(x=5, width=9, moves=4, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False) = <neonpaw.code.runner.Runner object at 0x7fa332506ab0>.world
+E            +      where <neonpaw.code.runner.Runner object at 0x7fa332506ab0> = <neonpaw.ui.app.App object at 0x7fa332507650>.runner
+
+tests/test_restart.py:72: AssertionError
+_ test_invalid_or_empty_new_program_does_not_keep_old_success[move_rigth()-error] _
+
+app = <neonpaw.ui.app.App object at 0x7fa332504590>, source = 'move_rigth()'
+status = 'error'
+
+    @pytest.mark.parametrize('source, status', [('move_rigth()', 'error'), ('', 'done')])
+    def test_invalid_or_empty_new_program_does_not_keep_old_success(app, source, status):
+        app.source = SOLUTION
+        attempt(app, 'Run', 2)
+        assert app.runner.world.powered
+        app.change_text(source, len(source))
+        click(app, 'Run')
+        assert app.runner.status == status
+>       assert app.runner.world.x == 1 and not app.runner.world.powered
+E       assert (2 == 1)
+E        +  where 2 = World(x=2, width=9, moves=1, battery_x=2, powered=True, second_battery_x=None, first_lit=False, second_lit=False).x
+E        +    where World(x=2, width=9, moves=1, battery_x=2, powered=True, second_battery_x=None, first_lit=False, second_lit=False) = <neonpaw.code.runner.Runner object at 0x7fa332507770>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7fa332507770> = <neonpaw.ui.app.App object at 0x7fa332504590>.runner
+
+tests/test_restart.py:95: AssertionError
+______ test_invalid_or_empty_new_program_does_not_keep_old_success[-done] ______
+
+app = <neonpaw.ui.app.App object at 0x7fa3325c5640>, source = ''
+status = 'done'
+
+    @pytest.mark.parametrize('source, status', [('move_rigth()', 'error'), ('', 'done')])
+    def test_invalid_or_empty_new_program_does_not_keep_old_success(app, source, status):
+        app.source = SOLUTION
+        attempt(app, 'Run', 2)
+        assert app.runner.world.powered
+        app.change_text(source, len(source))
+        click(app, 'Run')
+        assert app.runner.status == status
+>       assert app.runner.world.x == 1 and not app.runner.world.powered
+E       assert (2 == 1)
+E        +  where 2 = World(x=2, width=9, moves=1, battery_x=2, powered=True, second_battery_x=None, first_lit=False, second_lit=False).x
+E        +    where World(x=2, width=9, moves=1, battery_x=2, powered=True, second_battery_x=None, first_lit=False, second_lit=False) = <neonpaw.code.runner.Runner object at 0x7fa332505e20>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7fa332505e20> = <neonpaw.ui.app.App object at 0x7fa3325c5640>.runner
+
+tests/test_restart.py:95: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_restart.py::test_completed_intro_solution_is_repeatable[Run]
+FAILED tests/test_restart.py::test_completed_intro_solution_is_repeatable[Step]
+FAILED tests/test_restart.py::test_stop_keeps_position_until_a_fresh_attempt[Run]
+FAILED tests/test_restart.py::test_stop_keeps_position_until_a_fresh_attempt[Step]
+FAILED tests/test_restart.py::test_adding_collect_after_first_step_needs_no_manual_reset
+FAILED tests/test_restart.py::test_failed_intro_plan_replays_the_same_error[Run]
+FAILED tests/test_restart.py::test_failed_intro_plan_replays_the_same_error[Step]
+FAILED tests/test_restart.py::test_invalid_or_empty_new_program_does_not_keep_old_success[move_rigth()-error]
+FAILED tests/test_restart.py::test_invalid_or_empty_new_program_does_not_keep_old_success[-done]
+9 failed, 1 passed in 0.47s

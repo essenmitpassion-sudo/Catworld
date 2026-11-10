@@ -91,6 +91,14 @@ pygame.image.save(app.canvas, 'evidence/g1-battery.png')
 frame(dt=.5)
 assert app.runner.world.powered and app.runner.line == 2
 pygame.image.save(app.canvas, 'evidence/g1-powered.png')
+# Replay the same successful intro plan without requiring manual Reset.
+click('Run')
+assert app.runner.world.x == 1 and not app.runner.world.powered
+frame(dt=.5)
+frame(dt=.5)
+assert app.runner.world.powered and app.runner.status == 'done'
+assert app.runner.world.moves == 1
+pygame.image.save(app.canvas, 'evidence/restart-replayed.png')
 # Goal reached is not the same as a fully successful program.
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
 frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()\ncollect()\ncollect()'))

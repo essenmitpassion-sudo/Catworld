@@ -287,10 +287,9 @@ class App:
         else:
             if (self.loaded_source != self.source or
                     self.runner.status in ('idle', 'done', 'stopped', 'error')):
-                # A fresh transfer attempt always starts at its scenario origin.
-                # Repeated Run/Step after failure cannot accumulate movement.
-                if self.scenario == 1 or self.roof_active:
-                    self.runner.reset()
+                # Every fresh attempt replays from the same world, including the intro.
+                # A paused/running unchanged program continues without a reset.
+                self.runner.reset()
                 try:
                     self.runner.load(self.source)
                 except ProgramError:
@@ -663,7 +662,7 @@ class App:
         elif self.scenario:
             hint, instruction = 'Der zweite Anschluss liegt weiter rechts.', 'Ändere deinen Code. Run beginnt am Start.'
         elif world.x == world.battery_x:
-            hint, instruction = 'collect() nimmt die Batterie auf.', 'Neue Zeile ergänzen, dann Reset und Run.'
+            hint, instruction = 'collect() nimmt die Batterie auf.', 'Neue Zeile ergänzen. Run beginnt am Start.'
         elif world.moves:
             hint, instruction = 'Dein Plan bestimmt den Weg.', 'move_right() rechts · move_left() links'
         else:
@@ -764,11 +763,8 @@ class App:
                 label = f'Aktion {self.runner.pc}/{len(self.runner.commands)} · {count} Textzeilen'
             self.text(label, (790, 614), CYAN, self.small)
         statuses = {'idle': 'Startposition. Run startet; dein Code bleibt.', 'paused': 'Step: ein Befehl. Run setzt danach fort.',
-                    'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Stop: Position bleibt. Run startet Code neu.',
-                    'done': 'Fertig. Run wiederholt; Reset setzt die Welt zurück.', 'error': 'Kein Problem — korrigiere deinen Code.'}
-        if self.scenario or self.roof_active:
-            statuses['stopped'] = 'Stop: Position bleibt. Neuer Run beginnt am Start.'
-            statuses['done'] = 'Fertig. Neuer Run beginnt am Start; Code bleibt.'
+                    'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Stop: Position bleibt. Neuer Run beginnt am Start.',
+                    'done': 'Fertig. Neuer Run beginnt am Start; Code bleibt.', 'error': 'Kein Problem — korrigiere deinen Code.'}
         message = self.runner.error or statuses[self.runner.status]
         words, line, y = message.split(), '', 631
         for word in words:

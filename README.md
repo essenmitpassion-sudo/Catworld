@@ -66,9 +66,7 @@ die Simulation bleibt unabhängig von diesen Darstellungsdetails.
   Historie; Neustart erhält den gespeicherten Text, nicht die Historie. Undo/Redo
   stoppt laufenden Code. Neue Änderungen verwerfen den Redo-Zweig.
 - Klicke ins Codefeld. Pfeile, Home/End, Enter, Backspace/Delete und Strg+A funktionieren.
-- Im **Einstieg** beginnt ein neuer Run nach Ende oder Stop den Code wieder von vorn,
-  an der aktuellen Position. Reset bringt die Katze zum Start zurück.
-- In der **Transferaufgabe** beginnt jeder neue Versuch (Run oder Step nach Ende, Stop,
+- In **allen Aufgaben**, auch im Einstieg, beginnt jeder neue Versuch (Run oder Step nach Ende, Stop,
   Fehler oder Editieren) am Szenariostart. Step pausiert nach einem Befehl; Run setzt
   einen pausierten Versuch fort. Unveränderter Code gewinnt nicht durch mehrfache Runs.
 - Ein Edit stoppt die Ausführung. Der nächste Run prüft den gesamten neuen Code.
@@ -81,7 +79,7 @@ move_right()
 collect()
 ```
 
-Drücke **Reset**, dann **Run**, um das ganze Programm ab Start auszuführen.
+Drücke **Run**, um das ergänzte Programm ab Start auszuführen; ein vorheriges Reset ist nicht nötig.
 Die Batterie verschwindet; Kabel und Automat leuchten. Step zeigt den Unterschied
 zwischen Bewegen und Aufnehmen einzeln. Ein collect am falschen Ort oder nach dem
 Aufnehmen erklärt den Fehler; Reset stellt Batterie und Automaten wieder her.

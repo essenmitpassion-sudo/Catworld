@@ -52,3 +52,10 @@ Musterlösungszwang oder Feature-Menge. Mutig denken, kontrolliert bauen, besteh
 Arbeit schützen. Technische Tests, menschlichen Spielspaß und Lernnachweise trennen.
 Der konkrete nächste Arbeitsauftrag und bestehende Sicherheits-/Kosten-/Integrator-
 Grenzen bleiben maßgeblich. Keine autonome Ausführung nach Sitzungsende behaupten.
+
+## Masterplan erneut beauftragt (Owner, 2026-11-10)
+Der erneut hochgeladene Plan ist bytegleich mit `PRODUCT_MASTER_PROMPT.md`
+(SHA-256 aaf4308463907f64d951b10c3c4c5a72175295b293d664e63f84b30fed74ca07).
+Neuer Auftrag: sorgfältig lesen, als verantwortlicher Lead damit arbeiten und den
+Stand vermerken. Aktuelle Bestandsaufnahme und priorisierte Umsetzung stehen in
+`MASTERPLAN_STATUS.md`; kein Neustart oder Doppelbau bereits vorhandener Funktionen.

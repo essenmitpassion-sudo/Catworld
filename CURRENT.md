@@ -1,4 +1,43 @@
-# CURRENT — 2026-11-10 — Rückwege und freiwilliger Heimweg
+# CURRENT — 2026-11-10 — Masterplan geprüft, Run wiederholbar
+
+Aktueller Arbeitsbranch: `codex/masterplan-run-consistency`.
+Basis: `7175190acf5dec4c84bf00d1a1d22f36acb4c1d2`, Remote-SHA bestätigt.
+Abschluss-SHA mit `git log -1 --format=%H` lesen; Historie unten ist älter.
+
+## Aktueller Auftrag und Ergebnis
+- Owner: Masterplan sorgfältig lesen, eigenständig damit arbeiten und vermerken.
+- Upload ist bytegleich mit PRODUCT_MASTER_PROMPT.md (SHA-256 in AGENTS.md).
+- MASTERPLAN_STATUS.md vergleicht alle 18 Abschnitte mit dem vorhandenen Stand,
+  bewertet drei Spielrichtungen und hält Lern-/Architekturpfad und Roadmap fest.
+- Neue Versuche im Einstieg beginnen jetzt wie alle späteren Aufgaben am Start.
+  Ein erfolgreiches Programm scheitert beim zweiten Run nicht mehr an seinem alten
+  Weltzustand. Nach dem ersten Schritt kann collect ergänzt und direkt gestartet werden.
+- Step→Run setzt einen pausierten Versuch fort; Stop hält Position bis zum nächsten
+  Versuch. Code, Cursor und Undo bleiben erhalten. UI und README sind angepasst.
+
+## Gemessene Qualität
+Baseline: 199 PASS. Regression vor Fix: 9 FAIL, 1 PASS (Fortsetzungs-Schutz).
+Nach Fix: 209 PASS, voller SDL-Offscreen-Smoke PASS, Screenshot visuell geprüft.
+Unabhängiger Code-Review: keine Critical/Important-Befunde; 10 neue Tests erneut PASS.
+Ein falscher Methodenname im Plan wurde berichtigt.
+Belege: evidence/restart-red.txt, restart-green.txt, restart-smoke.txt,
+restart-replayed.png. Smoke separat in /workspace/work/restart-smoke ausgeführt,
+damit ältere Bildnachweise nicht überschrieben werden.
+Kein menschlicher Spielspass-/Lernnachweis und kein Windows-/DPI-Test.
+Kein allgemeiner Python-Interpreter, keine neue Sprache, kein Save-Schemawechsel.
+
+## Sicherung und Wiederaufnahme
+Geprüftes Ausgangs-Bundle: /workspace/work/catworld-before-masterplan.bundle.
+Abschluss-Bundle vorgesehen: /workspace/work/catworld-masterplan-final.bundle;
+Push/SHA-Nachweis separat in /workspace/work/masterplan-checkpoint.txt prüfen.
+Vor Wiederaufnahme Branch und Remote abgleichen; dieser neue Branch enthält den
+Fortschritt, g0/first-cat-action wurde nicht automatisch zusammengeführt.
+Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log -3 --oneline`.
+Nächste konkrete Aktion: siehe NEXT_TASK.md. Kein Scheduler eingerichtet.
+
+---
+
+# Historische Übergabe — Rückwege und freiwilliger Heimweg
 
 Ziel: Cyberpunk-Python-Lernspiel, kleine spielbare Batches, ein Integrator.
 Branch g0/first-cat-action. Ausgangspunkt a647738a879e78f2ad32db01530600f5883a2d9e.

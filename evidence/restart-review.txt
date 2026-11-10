@@ -1,0 +1,5 @@
+Read-only review against base 7175190acf5dec4c84bf00d1a1d22f36acb4c1d2
+No Critical or Important findings. Reviewer ran 10 restart tests: PASS.
+Minor: plan used App.action instead of App.activate; corrected in documentation.
+Full suite and SDL evidence inspected by reviewer; not independently rerun.
+Human usability/learning/fun and Windows/DPI not validated.
