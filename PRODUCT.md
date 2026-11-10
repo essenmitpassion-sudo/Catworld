@@ -31,3 +31,11 @@ Nächster messbarer Nutzen: Wiederholungen einer Codezeile sichtbar machen, dami
 Step/Run den Zusammenhang zwischen kurzem Programm und vielen Aktionen erklären.
 Menschlichen Lerntransfer und freiwilliges Wiederholen im Spieltest prüfen;
 automatisierte Tests können nur Darstellung und Wirkung belegen.
+
+## Pareto-Entscheidung — 2026-11-10
+Die geplante Energieentscheidung ist zurückgestellt: rein unterschiedlich leuchtende
+Objekte wären kein belastbarer neuer Entscheidungsraum. Zuerst vorhandene Karten
+weniger starr machen: move_left erlaubt Rückwege und Umwegkorrekturen mit denselben
+Aufruf-/Schleifenkonzepten. Keine zusätzliche Entwurfs-/Levelverwaltung, keine neue
+Python-Grammatik. Vorhandene Lösungen bleiben gültig. Mehr Spielfreiheit ist technisch
+nachweisbar; subjektiver Spielwert bleibt eine zu prüfende Hypothese.

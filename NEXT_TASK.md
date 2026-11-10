@@ -1,10 +1,8 @@
-# Nächste Aufgabe: eine echte Energieentscheidung
-Editor-Nachführung und Zeilenfortschritt sind fertig, 178 Tests plus SDL-Smoke grün.
-Nach Git-/Remote-Abgleich vorhandene World/collect-Regeln prüfen und die kleinste
-abgegrenzte Aufgabe entwerfen: ein Akku reicht für einen von zwei Verbrauchern,
-jeder löst eine andere sichtbare Weltreaktion aus. Beide Entscheidungen sollen gültig
-sein; Spieler wählt den Verbraucher durch seinen Weg und collect(), keine neue Syntax.
-Vor Implementierung einen RED-Test für Ressourcenverbrauch und alternative gültige
-Entscheidungen schreiben. Bisherige Laternenaufgaben/Entwürfe unverändert erhalten.
-Hypothese: unterschiedliche Folgen bieten mehr Autonomie als bloß längere Wege.
-Menschlich noch nicht validiert. Kein allgemeines Inventar- oder Questframework.
+# Nächste Aufgabe: Rückwege sinnvoll einsetzen
+move_left ist implementiert; 186 Tests und SDL-Smoke grün. Keine Doppelimplementierung.
+Nächster ausführbarer Produktschritt: einen kleinen Rückweg-Auftrag mit vorhandenem
+World/Runner entwerfen und RED testen, bei dem bekannte Bewegungen und collect
+kombiniert werden. Eigene bisherige Lösungen vollständig erhalten. Prüfen, ob eine
+Variante in vorhandener Aufgabenstruktur genügt; nicht einen weiteren Stapel von
+UI-Sonderfällen/Editoren anlegen. Keine neue Python-Grammatik oder Engine.
+Vorher Git-/Remote-/Review-Abgleich und Sicherung. Menschlichen Spielwert offenlassen.

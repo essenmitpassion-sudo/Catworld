@@ -1,0 +1,136 @@
+FF..F.FF                                                                 [100%]
+=================================== FAILURES ===================================
+________________ test_overshoot_can_be_corrected_in_one_program ________________
+
+    def test_overshoot_can_be_corrected_in_one_program():
+        r=Runner(initial_world=World(battery_x=3))
+>       r.load('for _ in range(3):\n    move_right()\nmove_left()\ncollect()')
+
+tests/test_backtracking.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.Expr object at 0x7fa71f15e090>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+            raise ProgramError('Hier sind nur move_right() und collect() ohne Argumente erlaubt.', stmt.lineno)
+        name = stmt.value.func.id
+        if name not in ACTIONS:
+            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+>           raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 3: Unbekannter Befehl move_left. Nutze einen Befehl aus deiner Hilfe.
+
+neonpaw/code/runner.py:83: ProgramError
+______________________ test_left_boundary_and_stop_reset _______________________
+
+    def test_left_boundary_and_stop_reset():
+        r=Runner()
+>       r.load('move_left()\nmove_left()');r.step()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_backtracking.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.Expr object at 0x7fa71f0b0250>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+            raise ProgramError('Hier sind nur move_right() und collect() ohne Argumente erlaubt.', stmt.lineno)
+        name = stmt.value.func.id
+        if name not in ACTIONS:
+            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+>           raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 1: Unbekannter Befehl move_left. Nutze einen Befehl aus deiner Hilfe.
+
+neonpaw/code/runner.py:83: ProgramError
+_ test_new_action_preserves_allowlist_and_budgets[for move_left in range(2):\n    move_right()] _
+
+source = 'for move_left in range(2):\n    move_right()'
+
+    @pytest.mark.parametrize('source', ['move_left(1)','move_left(x=1)','for move_left in range(2):\n    move_right()', 'for _ in range(64):\n    move_left()\n    move_right()'])
+    def test_new_action_preserves_allowlist_and_budgets(source):
+>       with pytest.raises(ProgramError):Runner().load(source)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'neonpaw.code.runner.ProgramError'>
+
+tests/test_backtracking.py:33: Failed
+_________________ test_left_then_right_is_position_reversible __________________
+
+    def test_left_then_right_is_position_reversible():
+        w=World(x=4,battery_x=6)
+>       result=transition(transition(w,'move_left'),'move_right')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_backtracking.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=4, width=9, moves=0, battery_x=6, powered=False, second_battery_x=None, first_lit=False)
+action = 'move_left'
+
+    def transition(world: World, action: str) -> World:
+        if action == 'collect':
+            if world.powered:
+                raise ValueError('Die Batterie ist bereits im Automaten. Er leuchtet!')
+            if world.second_battery_x is not None:
+                if world.x != world.target_x:
+                    goal = 'zweite Laterne' if world.first_lit else 'erste Laterne'
+                    raise ValueError(f'Hier ist nicht die nächste Batterie. Erreiche die {goal} am Leuchtfeld.')
+                if not world.first_lit:
+                    return replace(world, first_lit=True)
+            if world.x != world.target_x:
+                raise ValueError('Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.')
+            return replace(world, powered=True)
+        if action != 'move_right':
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:34: ValueError
+_____________ test_ui_shows_backtrack_hint_without_editing_program _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa71f116660>
+
+    def test_ui_shows_backtrack_hint_without_editing_program(monkeypatch):
+        pygame.init()
+        app=App();unlock(app);click(app,'Dach')
+        source='for _ in range(6):\n    move_right()'
+        write(app,source);click(app,'Run')
+        for _ in range(6):app.update(.5)
+        rendered=[];original=app.text
+        def record(value,*args,**kwargs):
+            rendered.append(value);return original(value,*args,**kwargs)
+        monkeypatch.setattr(app,'text',record)
+        app.draw()
+>       assert any('move_left()' in text for text in rendered)
+E       assert False
+E        +  where False = any(<generator object test_ui_shows_backtrack_hint_without_editing_program.<locals>.<genexpr> at 0x7fa71efd1cb0>)
+
+tests/test_backtracking.py:53: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_backtracking.py::test_overshoot_can_be_corrected_in_one_program
+FAILED tests/test_backtracking.py::test_left_boundary_and_stop_reset - neonpa...
+FAILED tests/test_backtracking.py::test_new_action_preserves_allowlist_and_budgets[for move_left in range(2):\n    move_right()]
+FAILED tests/test_backtracking.py::test_left_then_right_is_position_reversible
+FAILED tests/test_backtracking.py::test_ui_shows_backtrack_hint_without_editing_program
+5 failed, 3 passed in 0.16s

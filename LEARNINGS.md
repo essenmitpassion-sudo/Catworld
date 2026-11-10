@@ -86,3 +86,8 @@ Ein Zeilenmarker allein zeigt bei Schleifen nicht den Fortschritt. commands und 
 enthalten bereits alle nötigen Daten; keine zusätzlichen veränderlichen Zähler nötig.
 Die Anzeige spricht von Aktionen pro Zeile statt Schleifendurchläufen, weil auch
 mehrere durch Semikolon getrennte Aktionen dieselbe Zeile teilen können.
+
+## 2026-11-10 — Wege sind nicht immer Fortschritt
+Rückwärtsbewegung macht einen Gesamt-Schrittzähler als Ziel-Fortschritt falsch.
+Die Anzeige nutzt nun die aktuelle Position; moves bleibt die Zahl tatsächlich
+gegangener Schritte. Neue Spielhandlungen müssen vorhandene Anzeigen mitprüfen.

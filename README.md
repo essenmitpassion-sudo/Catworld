@@ -4,6 +4,7 @@ Nox sitzt vor einem dunklen Nacht-Automaten. Dein Programm bringt das Licht zur�
 Ein kurzer Abschnitt: beobachten, selbst ergänzen, den zweiten Anschluss lösen und
 den eigenen Plan ohne Vorlage schreiben.
 `move_right()` bewegt die Katze genau ein Feld nach rechts.
+`move_left()` geht ein Feld zurück: Ein Umweg kann im eigenen Programm korrigiert werden.
 `collect()` nimmt die Batterie auf dem Leuchtfeld auf und schaltet den verbundenen Automaten ein.
 
 ![Licht für Nox — Abschnitt abgeschlossen](evidence/recall-solved.png)
@@ -82,7 +83,7 @@ zwischen Bewegen und Aufnehmen einzeln. Ein collect am falschen Ort oder nach de
 Aufnehmen erklärt den Fehler; Reset stellt Batterie und Automaten wieder her.
 Am Ende der Gasse bleibt die Bewegung sicher begrenzt.
 
-Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`- und `collect()`-Aufrufe, Kommentare,
+Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`-, `move_left()`- und `collect()`-Aufrufe, Kommentare,
 Leerzeilen und Python-Anweisungssequenzen sowie begrenzte `for name in range(...)`-Schleifen.
 `range` akzeptiert ein bis drei ganzzahlige Literale von -64 bis 64; Schrittweite null
 ist ungültig. Höchstens 64 Schleifendurchläufe insgesamt und 64 ausgeführte Aktionen.

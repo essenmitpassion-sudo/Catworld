@@ -2,7 +2,7 @@
 
 Der Runner interpretiert ausschliesslich vollständig validierte AST-Formen
 `Expr(Call(Name(action), args=[], keywords=[]))` mit action aus der festen Menge
-`move_right`, `collect`, zusätzlich begrenzte Top-Level-For-Schleifen. Aus dem AST werden nur
+`move_right`, `move_left`, `collect`, zusätzlich begrenzte Top-Level-For-Schleifen. Aus dem AST werden nur
 Zeilennummern und validierte Aktionsnamen übernommen, keine ausführbaren Python-Objekte. Es gibt weder eval,
 exec, compile-Ausführung, dynamische Imports noch Spielercode-I/O.
 Python wird mit ast.parse gelesen; Grammatik, Kommentare und Reihenfolge entsprechen
@@ -58,3 +58,7 @@ Teilerfolgsstatus. Der Parser und alle Aktionsbudgets bleiben unverändert. Erst
 Aktivierungen setzen powered. Neue Versuche starten ohne akkumulierten Fortschritt.
 Speicherversion 4 ergänzt den fünften Editor; Versionen 1–3 werden weiterhin validiert
 und verlustfrei geladen. Gesamtdateigrenze bleibt 65536 Bytes, je Text 4096 Zeichen.
+
+2026-11-10: move_left ergänzt nur einen erlaubten Aktionsnamen und die negative
+Bewegungsrichtung. Keine neue AST-Form, keine veränderten Limits. Kartenrand links
+und rechts geprüft; Schleifenvariable darf auch move_left nicht überschreiben.

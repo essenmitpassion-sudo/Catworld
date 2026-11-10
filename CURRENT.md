@@ -64,3 +64,15 @@ Nächste konkrete Produktaufgabe: kleine Energieentscheidung mit einem Akku und 
 Verbrauchern untersuchen, unterschiedliche sichtbare Folgen statt längerer Zahlenfolge.
 Wiederaufnahme: `cd /workspace/Catworld && git status --short --branch && git log -5 --oneline`.
 Keine absichtlich offene WIP-Arbeit; tatsächlichen Status zuerst prüfen.
+
+## 2026-11-10 — Rückwege statt erzwungener Neustarts
+Ausgangspunkt a647738a879e78f2ad32db01530600f5883a2d9e sauber, Remote unverändert.
+move_left() ergänzt parameterlose Bewegung nach links. Ein Programm kann ein Ziel
+überschreiten und zurückgehen; beide Kartenränder begrenzt. UI zeigt bei verpasstem
+Ziel den Rückwegbefehl ohne Texteinsatz. Dachfortschritt basiert auf Position statt
+Gesamtbewegungen. Keine neue Python-Grammatik, kein Speicherformatwechsel.
+RED 5 failed/3 passed, GREEN 186, voller SDL-Smoke mit Umweg, Stop/Reset, Rückkehr und
+allen bisherigen Aufgaben. Belege evidence/backtracking-*.txt; Screenshot geprüft.
+Energieentscheidung bewusst zurückgestellt (Begründung PRODUCT.md). Nächster kleiner
+Schritt: optionale Rückweg-Transferaufgabe innerhalb vorhandener Mechaniken entwerfen,
+ohne zusätzliche Editor-Sonderfälle. Vorher den aktuellen Checkpoint sichern.

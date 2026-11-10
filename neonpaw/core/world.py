@@ -30,8 +30,12 @@ def transition(world: World, action: str) -> World:
         if world.x != world.target_x:
             raise ValueError('Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.')
         return replace(world, powered=True)
-    if action != 'move_right':
+    if action not in ('move_right', 'move_left'):
         raise ValueError('Unbekannte Weltaktion.')
-    if world.x + 1 >= world.width:
-        raise ValueError('Hier endet die Gasse. Reset bringt die Katze zurück.')
-    return replace(world, x=world.x + 1, moves=world.moves + 1)
+    step = 1 if action == 'move_right' else -1
+    target = world.x + step
+    if target < 0:
+        raise ValueError('Hier ist der linke Rand. move_right() führt zurück auf den Weg.')
+    if target >= world.width:
+        raise ValueError('Hier endet die Gasse. move_left() führt zurück auf den Weg.')
+    return replace(world, x=target, moves=world.moves + 1)

@@ -644,7 +644,7 @@ class App:
         elif world.x == world.battery_x:
             hint, instruction = 'collect() nimmt die Batterie auf.', 'Neue Zeile ergänzen, dann Reset und Run.'
         elif world.moves:
-            hint, instruction = 'Batterie verpasst? Reset bringt dich zurück.', 'move_right() gehen · collect() aufnehmen'
+            hint, instruction = 'Dein Plan bestimmt den Weg.', 'move_right() rechts · move_left() links'
         else:
             hint, instruction = 'Nox braucht Licht. Der Automat ist aus.', 'Run: Beobachte deinen ersten Pfotenschritt.'
         if self.roof_active:
@@ -665,11 +665,14 @@ class App:
             instruction = 'Dein Programm verbindet beide Dächer.' if world.powered else 'Bewegen und Aufnehmen passend verbinden.'
         elif self.roof_active and self.roof_transfer_active and world.powered:
             instruction = 'Zwei Laternen · F9: Verbinde die Dächer.'
+        if not world.powered and world.x > world.target_x:
+            hint = 'Das nächste Ziel liegt links von Nox.'
+            instruction = 'move_left() geht ein Feld zurück.'
         self.text(hint, (790, 118), MUTED, self.small)
         self.text(instruction, (790, 149), INK, self.small)
         state_label = 'AUTOMAT: AN' if world.powered else 'AUTOMAT: AUS · Batterie auf dem Leuchtfeld'
         if self.roof_active:
-            state_label = f'DACHWEG: {min(world.moves, world.battery_x - 1)}/{world.battery_x - 1} Schritte · ' + ('LICHT AN' if world.powered else 'Licht aus')
+            state_label = f'DACHWEG: {max(0, min(world.x - 1, world.battery_x - 1))}/{world.battery_x - 1} Schritte · ' + ('LICHT AN' if world.powered else 'Licht aus')
         if self.pair_active:
             state_label = f'LATERNEN: {2 if world.powered else int(world.first_lit)}/2 AN'
         self.text(state_label,
@@ -759,7 +762,7 @@ class App:
         elif world.x == world.battery_x:
             objective = 'Erster Schritt geschafft! Nimm jetzt die Batterie mit collect() auf.'
         elif world.moves:
-            objective = 'Die Batterie liegt auf dem Leuchtfeld. Reset für einen neuen Versuch.'
+            objective = 'Die Batterie liegt auf dem Leuchtfeld. Dein Programm darf auch zurückgehen.'
         else:
             objective = 'Weck den Nacht-Automaten. Der erste Schritt bringt Nox zur Batterie.'
         if self.roof_active:

@@ -125,3 +125,9 @@ Nach extern gesichertem Editorbatch 5d5237d: vorhandene Befehlsliste liefert
 Zeilenfortschritt. Drei RED-Tests, danach 178 GREEN und vollständiger SDL-Smoke.
 Anzeige und Screenshot bei 2/5 geprüft, Stop/Reset und erfolglose Aktionen enthalten.
 Nächste Produktpriorität: kleine Ressourcenentscheidung, keine weitere Syntax.
+
+## 2026-11-10 — Rückwärtsbewegung
+RED 5 failed/3 passed → 186 GREEN. Vorhandene Parserformen/Budgets erhalten,
+neuer Aktionsname gegen Shadowing/Argumente geprüft; Grenzen links/rechts und
+Stop/Reset getestet. SDL: kompletter Umweg mit zwei Schleifen, sichtbare Rückbewegung,
+collect-Erfolg und vollständige Regression. Produktwahl in PRODUCT.md dokumentiert.

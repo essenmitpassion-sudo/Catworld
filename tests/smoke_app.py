@@ -37,6 +37,26 @@ assert app.horizontal_scroll > 0
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
 assert app.source == 'move_right()' and app.horizontal_scroll == 0
 assert app.runner.world.x == 1
+# A complete detour is a valid own plan, not a forced Reset.
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='for _ in range(3):\n    move_right()\nfor _ in range(2):\n    move_left()\ncollect()'))
+for _ in range(3):
+    click('Step')
+assert app.runner.world.x == 4
+click('Step')
+assert app.runner.world.x == 3 and app.runner.line == 4
+frame(dt=.5)
+pygame.image.save(app.canvas, 'evidence/backtracking-step.png')
+click('Stop')
+frame(dt=2)
+assert app.runner.world.x == 3
+click('Reset')
+click('Run')
+for _ in range(6):
+    frame(dt=.5)
+assert app.runner.world.x == 2 and app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/backtracking-solved.png')
+click('Reset')
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
 frame(pygame.event.Event(pygame.TEXTINPUT, text='move_rigth()'))
 click('Run')
@@ -285,7 +305,7 @@ assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
