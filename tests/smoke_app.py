@@ -91,6 +91,19 @@ pygame.image.save(app.canvas, 'evidence/g1-battery.png')
 frame(dt=.5)
 assert app.runner.world.powered and app.runner.line == 2
 pygame.image.save(app.canvas, 'evidence/g1-powered.png')
+# Goal reached is not the same as a fully successful program.
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()\ncollect()\ncollect()'))
+click('Reset'); click('Run')
+for _ in range(3):
+    frame(dt=.5)
+assert app.runner.world.powered and app.runner.status == 'error'
+pygame.image.save(app.canvas, 'evidence/goal-with-program-error.png')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()\ncollect()'))
+click('Reset'); click('Run')
+frame(dt=.5); frame(dt=.5)
+assert app.runner.world.powered and not app.runner.error
 # Transfer preserves authored code; unchanged programs cannot accumulate movement.
 old_code = app.source
 click('Transfer')
@@ -334,7 +347,7 @@ assert app.scroll > 0 and app.runner.error
 pygame.image.save(app.canvas, 'evidence/error-editor-focus.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> far-first alternative -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
+print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> late-error correction -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> far-first alternative -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

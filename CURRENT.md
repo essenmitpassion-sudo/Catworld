@@ -61,3 +61,13 @@ Alten Test für erzwungene Reihenfolge bewusst durch neue Produktregel ersetzt:
 RED 2, GREEN 191 einschließlich unabhängig gerenderter ferner Laterne. SDL mit
 ferner Laterne zuerst, Rückweg, Heimkehr, Neustart und allen alten Aufgaben PASS.
 Belege evidence/free-order-*.txt; Screenshot geprüft. Spielspaß bleibt unbewiesen.
+
+## 2026-11-10 — Weltziel und Programmfehler unterscheiden
+Checkpoint freie Routenwahl 4f70f5b8eaf638702230a3450ec43fd442541878 extern bestätigt.
+Reproduziert: collect aktiviert Licht, späteres collect scheitert, alte große
+Erfolgsmeldung blieb. Jetzt „LICHT AN · PROGRAMM PRÜFEN“ mit Fehlerhinweis; Weltzustand
+bleibt korrekt, eigener Code unverändert. Nach echter Korrektur normale Erfolgsmeldung.
+RED 1, finale GREEN 192; voller SDL-Smoke mit spätem Fehler/Korrektur und alternativen
+Laternenrouten PASS. Belege evidence/partial-success-*.txt, Screenshot geprüft.
+Kein menschlicher Lern-/Spaßnachweis. Nächste Aufgabe: Ausgabe-/Editor-Lesbarkeit bei
+maximal erlaubtem Programm prüfen, nur reproduzierbare Engpässe beheben.

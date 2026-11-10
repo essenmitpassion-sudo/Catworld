@@ -1,0 +1,22 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+________ test_goal_then_error_is_not_presented_as_clean_program_success ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f78a6eac770>
+
+    def test_goal_then_error_is_not_presented_as_clean_program_success(monkeypatch):
+        pygame.init();a=App()
+        write(a,'move_right()\ncollect()\ncollect()');click(a,'Run')
+        for _ in range(3):a.update(.5)
+        assert a.runner.world.powered and a.runner.status=='error'
+        rendered=[];original=a.text
+        def record(value,*args,**kwargs):
+            rendered.append(value);return original(value,*args,**kwargs)
+        monkeypatch.setattr(a,'text',record);a.draw()
+>       assert 'LICHT AN · PROGRAMM PRÜFEN' in rendered
+E       AssertionError: assert 'LICHT AN · PROGRAMM PRÜFEN' in ['NEONPAW', 'LICHT FÜR NOX · EINE NACHT IN DER GASSE', '01 / LICHT FÜR NOX', 'PYTHON / DEIN ERSTER BEFEHL', 'DIE GASSE LEUCHTET', 'Warmlicht! Nox hat die Gasse zurück.', ...]
+
+tests/test_partial_success_feedback.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_partial_success_feedback.py::test_goal_then_error_is_not_presented_as_clean_program_success
+1 failed in 0.09s

@@ -108,3 +108,8 @@ Die Reihenfolgensperre hatte keine physische oder spielerische Abhängigkeit.
 Mit Rückwärtsbewegung wurde sie zu einer unnötigen Ablehnung eines eigenen Plans.
 Unabhängige Lichtzustände erlauben beide Routen, ohne Ziel oder Budgets zu lockern.
 Anzeige und Batterien müssen die Alternative ebenso unterstützen wie die Simulation.
+
+## 2026-11-10 — Ziel erreicht ist nicht gleich fehlerfreies Programm
+Weltwirkung und Programmausgang können auseinanderfallen. Beides explizit anzeigen,
+statt einen Fehler durch die große Erfolgsmeldung zu überdecken. Fehlerkorrektur
+bleibt nachvollziehbar; keine rückwirkende Simulation oder automatische Textreparatur.

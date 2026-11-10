@@ -652,6 +652,8 @@ class App:
             heading = ('DÄCHER VERBUNDEN' if self.roof_transfer_active else 'DACHLATERNE GERETTET') if world.powered else ('DIE FERNE LATERNE' if self.roof_transfer_active else 'DER LANGE DACHWEG')
         if self.pair_active:
             heading = 'NOX IST ZUHAUSE' if self.homecoming_complete() else ('DER DACHWEG LEUCHTET' if world.powered else 'ZWEI LATERNEN, EIN PLAN')
+        if world.powered and self.runner.error:
+            heading = 'LICHT AN · PROGRAMM PRÜFEN'
         self.text(heading, (790, 82), INK)
         if world.powered:
             hint = 'Ziel erreicht — mit Codebeispiel.' if self.used_example else 'Warmlicht! Nox hat die Gasse zurück.'
@@ -687,6 +689,9 @@ class App:
         if not world.powered and world.x > world.target_x and (not self.pair_active or world.first_lit or world.second_lit):
             hint = 'Das nächste Ziel liegt links von Nox.'
             instruction = 'move_left() geht ein Feld zurück.'
+        if world.powered and self.runner.error:
+            hint = 'Das Licht brennt. Danach kam ein Fehler.'
+            instruction = 'Prüfe die markierte Zeile in deinem Plan.'
         self.text(hint, (790, 118), MUTED, self.small)
         self.text(instruction, (790, 149), INK, self.small)
         state_label = 'AUTOMAT: AN' if world.powered else 'AUTOMAT: AUS · Batterie auf dem Leuchtfeld'
@@ -790,6 +795,8 @@ class App:
                          else 'Erreiche die Batterie am Leuchtfeld und schalte die Dachlaterne ein.')
         if self.pair_active:
             objective = 'Nox ist daheim. Deine Laternen leuchten weiter.' if self.homecoming_complete() else ('Beide Ziele geschafft. Freiwillig: Plane den Heimweg zum Start.' if world.powered else 'Aktiviere beide Laternen in einem Ablauf. Die erste allein reicht noch nicht.')
+        if world.powered and self.runner.error:
+            objective = 'Die Weltreaktion bleibt erhalten. Korrigiere den Fehler und teste deinen ganzen Plan.'
         self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)
         self.draw_hint()
         if self.storage_message:

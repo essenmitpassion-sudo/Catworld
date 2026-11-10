@@ -1,9 +1,8 @@
-# Nächste Aufgabe: Lerntransfer beim eigenen Hin- und Rückweg überprüfen
-Rückwärtsbewegung, freiwilliger Heimweg und Fehler-Editor-Fokus sind implementiert.
-189 Tests und kompletter SDL-Smoke grün. Keine Doppelimplementierung.
-Nächster ausführbarer Schritt: einen kurzen reproduzierbaren Spieltestablauf in
-vorhandener README ergänzen: eigenes Laternenprogramm um Heimweg erweitern, nächste
-Aktion vor Step vorhersagen, einen absichtlichen Umweg ohne Reset korrigieren.
-Technische Beobachtungen von menschlichem Verständnis trennen; keinen FUN_PASS erfinden.
-Bei verfügbarer echter Rückmeldung genau den größten beobachteten Engpass beheben.
-Vorher Git-/Remote-Abgleich und Sicherung; keine weitere Editor- oder Levelverwaltung.
+# Nächste Aufgabe: lange gültige Programme verständlich bedienen
+Freie Laternenreihenfolge und Unterscheidung Weltziel/Programmfehler fertig;
+192 Tests und kompletter SDL-Smoke grün. Keine Doppelimplementierung.
+Nach Git-/Remote-Abgleich ein gültiges Programm nahe dem 64-Aktionen-Limit durch
+Step/Run/Stop und Editorwechsel prüfen. Aktuelle Zeile, Fehleranzeige und Navigation
+müssen auch bei langem Text sichtbar/reagierbar bleiben. Erst reproduzieren, dann
+kleinsten tatsächlichen Engpass korrigieren; kein Framework oder neuer Sprachumfang.
+README-Spieltest ohne Musterlösung ist bereits vorhanden, nicht erneut erstellen.

@@ -153,3 +153,8 @@ Reihenfolgensperre ohne modellierte Weltabhängigkeit entfernt. Nahe/ferne Later
 zuerst sind gültig; beide Lichtzustände separat gerendert, beide Batterien sichtbar.
 RED 2, GREEN 191, SDL alternative Route plus Heimkehr/Neustart PASS. Alte erfolgreiche
 Programme unverändert gültig; nur bisher absichtlich abgewiesene Alternative zugelassen.
+
+## 2026-11-10 — Programmfehler nach erreichtem Weltziel
+RED 1 → 192 GREEN. SDL zeigt Licht bleibt an, spätes collect scheitert, UI fordert
+Prüfung des Plans statt pauschalem Erfolg. Eigene Korrektur führt zu sauberem Erfolg.
+Screenshot geprüft. Keine Löschung von Weltzustand oder Spielertext als Fehlerreaktion.
