@@ -37,7 +37,7 @@ Dateien: `tests/test_restart.py`, `neonpaw/ui/app.py`, `tests/smoke_app.py`,
   Einstiegshinweis und Statusmeldungen dieser Regel anpassen.
 - [x] GREEN: gesamte Suite, dann SDL-Offscreen-Smoke einschließlich erneutem
   Run über Ereigniswarteschlange und sichtbarem Zustand. README aktualisieren.
-- [ ] Review, Commit, Bundle erstellen/prüfen und Branch pushen; Remote-SHA prüfen.
+- [x] Review, Commit, Bundle erstellen/prüfen und Branch pushen; Remote-SHA prüfen.
 
 ## Task 2: Masterplan vermerken
 - [x] Upload und `PRODUCT_MASTER_PROMPT.md` bytegleich per SHA-256 bestätigt.
@@ -53,3 +53,7 @@ Ausgangsstand als vollständiges geprüftes Git-Bundle in /workspace/work gesich
 Ergebnisse: 9 RED / 1 Fortsetzungs-Guard PASS; nach Fix 209 PASS; voller SDL-Smoke PASS.
 Unabhängiger Read-only-Code-Review: keine Critical/Important-Befunde; falschen
 Methodennamen im Plan zu App.activate korrigiert. Menschentests/Windows bleiben offen.
+
+Checkpoint: 827bfe2a7558f0c36d6ab8dc0ee005a7467c7460 committed, Bundle geprüft,
+auf origin/codex/masterplan-run-consistency gepusht und Remote-SHA bestätigt.
+Task 1 und Task 2 abgeschlossen; dieses Protokoll ergänzt den bestätigten Checkpoint.
