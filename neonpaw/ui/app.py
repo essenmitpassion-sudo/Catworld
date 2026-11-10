@@ -517,7 +517,7 @@ class App:
                 pygame.draw.line(scene, '#3d516c', (rail_x, 182), (rail_x, 173), 2)
             if self.pair_active:
                 world = self.runner.world
-                for index, (position, lit) in enumerate(((world.battery_x, world.first_lit), (world.second_battery_x, world.powered)), 1):
+                for index, (position, lit) in enumerate(((world.battery_x, world.first_lit), (world.second_battery_x, world.second_lit)), 1):
                     lx = 29 + 36 * position
                     pygame.draw.line(scene, '#7989a1', (lx, 130), (lx, 183), 3)
                     pygame.draw.rect(scene, '#46556c', (lx - 12, 119, 26, 25))
@@ -541,8 +541,8 @@ class App:
             if self.roof_active and 1 < x <= self.runner.world.x:
                 pygame.draw.line(scene, CYAN, (tile_x + 6, 217), (tile_x + 26, 217), 2)
         if self.pair_active:
-            for position in (self.runner.world.battery_x, self.runner.world.second_battery_x):
-                pygame.draw.rect(scene, MUTED, (13 + position * 36, 192, 32, 30), 1)
+            for position, lit in ((self.runner.world.battery_x, self.runner.world.first_lit), (self.runner.world.second_battery_x, self.runner.world.second_lit)):
+                pygame.draw.rect(scene, MUTED if lit else CYAN, (13 + position * 36, 192, 32, 30), 2)
         if self.pair_active:
             home_x = 29 + self.runner.initial_world.x * 36
             color = '#ffd584' if self.homecoming_complete() else '#8794ad'
@@ -551,8 +551,11 @@ class App:
         goal = pygame.Rect(13 + self.runner.world.target_x * 36, 192, 32, 30)
         pygame.draw.rect(scene, CYAN, goal, 2)
         pygame.draw.line(scene, CYAN, (goal.x + 10, 229), (goal.x + 23, 229), 2)
-        if not self.runner.world.powered:
-            bx = 29 + 36 * self.runner.world.target_x
+        batteries = [] if self.runner.world.powered else [self.runner.world.target_x]
+        if self.pair_active:
+            batteries = [position for position, lit in ((self.runner.world.battery_x, self.runner.world.first_lit), (self.runner.world.second_battery_x, self.runner.world.second_lit)) if not lit]
+        for position in batteries:
+            bx = 29 + 36 * position
             pygame.draw.rect(scene, '#111a2c', (bx - 12, 161, 24, 16))
             pygame.draw.rect(scene, '#ffd584', (bx - 9, 164, 16, 9), 2)
             pygame.draw.rect(scene, '#ffd584', (bx + 7, 167, 3, 3))
@@ -677,11 +680,11 @@ class App:
                 hint = 'Die Laterne wartet weit rechts. Plane den Weg.'
                 instruction = 'Nutze erst die bekannten Bewegungsbefehle.'
         if self.pair_active:
-            hint = 'Beide Lichter an. Nox hat einen Heimweg!' if world.powered else ('Ein Licht brennt. Das zweite wartet noch.' if world.first_lit else 'Zwei dunkle Laternen. Ein eigener Plan.')
+            hint = 'Beide Lichter an. Nox hat einen Heimweg!' if world.powered else ('Ein Licht brennt. Das andere wartet noch.' if world.first_lit or world.second_lit else 'Zwei dunkle Laternen. Deine Reihenfolge.')
             instruction = 'Licht und Heimweg in einem eigenen Plan.' if self.homecoming_complete() else ('Bonus: Mit move_left() heimkehren.' if world.powered else 'Bewegen und Aufnehmen passend verbinden.')
         elif self.roof_active and self.roof_transfer_active and world.powered:
             instruction = 'Zwei Laternen · F9: Verbinde die Dächer.'
-        if not world.powered and world.x > world.target_x:
+        if not world.powered and world.x > world.target_x and (not self.pair_active or world.first_lit or world.second_lit):
             hint = 'Das nächste Ziel liegt links von Nox.'
             instruction = 'move_left() geht ein Feld zurück.'
         self.text(hint, (790, 118), MUTED, self.small)
@@ -690,7 +693,7 @@ class App:
         if self.roof_active:
             state_label = f'DACHWEG: {max(0, min(world.x - 1, world.battery_x - 1))}/{world.battery_x - 1} Schritte · ' + ('LICHT AN' if world.powered else 'Licht aus')
         if self.pair_active:
-            state_label = f'LATERNEN: {2 if world.powered else int(world.first_lit)}/2 AN'
+            state_label = f'LATERNEN: {int(world.first_lit) + int(world.second_lit)}/2 AN'
         self.text(state_label,
                   (790, 174), CYAN if world.powered else MUTED, self.small)
         pygame.draw.rect(self.canvas, '#1c2335', (780, 198, 400, 325), border_radius=8)

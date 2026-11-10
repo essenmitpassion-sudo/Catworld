@@ -1,0 +1,29 @@
+...FF..                                                                  [100%]
+=================================== FAILURES ===================================
+__________ test_far_lantern_can_be_lit_first_then_return_to_near_one ___________
+
+    def test_far_lantern_can_be_lit_first_then_return_to_near_one():
+        r = pair_runner()
+        r.load('move_right()\n'*6+'collect()\n'+'move_left()\n'*3+'collect()')
+        for _ in range(7): r.step()
+>       assert r.world.second_lit and not r.world.first_lit and not r.world.powered
+               ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'World' object has no attribute 'second_lit'
+
+tests/test_two_lanterns.py:27: AttributeError
+_________ test_far_lantern_cannot_be_counted_twice_and_reset_clears_it _________
+
+    def test_far_lantern_cannot_be_counted_twice_and_reset_clears_it():
+        r = pair_runner()
+        r.load('move_right()\n'*6+'collect()\ncollect()')
+        r.run()
+        for _ in range(8): r.tick()
+>       assert r.status == 'error' and r.world.second_lit and not r.world.first_lit
+                                       ^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'World' object has no attribute 'second_lit'
+
+tests/test_two_lanterns.py:39: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_two_lanterns.py::test_far_lantern_can_be_lit_first_then_return_to_near_one
+FAILED tests/test_two_lanterns.py::test_far_lantern_cannot_be_counted_twice_and_reset_clears_it
+2 failed, 5 passed in 0.05s

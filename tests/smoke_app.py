@@ -251,6 +251,19 @@ for _ in range(14):
     frame(dt=.5)
 assert app.homecoming_complete() and app.runner.world.first_lit
 pygame.image.save(app.canvas, 'evidence/homecoming.png')
+# A different player route: far lantern first, then near lantern, then home.
+pair_program = 'for _ in range(6):\n    move_right()\ncollect()\nfor _ in range(3):\n    move_left()\ncollect()\nfor _ in range(3):\n    move_left()'
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text=pair_program))
+click('Run')
+for _ in range(7):
+    frame(dt=.5)
+assert app.runner.world.second_lit and not app.runner.world.first_lit
+assert not app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/far-lantern-first.png')
+for _ in range(7):
+    frame(dt=.5)
+assert app.homecoming_complete()
 app = App(save_path=save_path)
 frame()
 assert app.pair_active and app.source == pair_program
@@ -321,7 +334,7 @@ assert app.scroll > 0 and app.runner.error
 pygame.image.save(app.canvas, 'evidence/error-editor-focus.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
+print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> far-first alternative -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

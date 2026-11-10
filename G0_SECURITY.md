@@ -62,3 +62,8 @@ und verlustfrei geladen. Gesamtdateigrenze bleibt 65536 Bytes, je Text 4096 Zeic
 2026-11-10: move_left ergänzt nur einen erlaubten Aktionsnamen und die negative
 Bewegungsrichtung. Keine neue AST-Form, keine veränderten Limits. Kartenrand links
 und rechts geprüft; Schleifenvariable darf auch move_left nicht überschreiben.
+
+2026-11-10: Im Laternenpaar ist die Reihenfolge frei. Zwei unabhängige boolesche
+Weltzustände bilden die Aktivierungen ab; powered verlangt beide. Doppelte Aufnahme
+bleibt ein Fehler. Keine neue Parserform, kein Speicherformatwechsel; Weltzustände
+werden weiterhin nicht mit Spielerentwürfen geladen.

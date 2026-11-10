@@ -147,3 +147,9 @@ Anzeigeabsicht getrennt: Run/Step folgt Ausführung, Cursor/Klick folgt Editor.
 ## 2026-11-10 — Lernnachweis vorbereiten
 Kurzer Spieltestablauf ohne Musterlösung in README ergänzt. Keine erhobenen
 menschlichen Ergebnisse; technische Nachweise bleiben 189 Tests plus SDL-Smoke.
+
+## 2026-11-10 — Eigene Reihenfolge beim Laternenpaar
+Reihenfolgensperre ohne modellierte Weltabhängigkeit entfernt. Nahe/ferne Laterne
+zuerst sind gültig; beide Lichtzustände separat gerendert, beide Batterien sichtbar.
+RED 2, GREEN 191, SDL alternative Route plus Heimkehr/Neustart PASS. Alte erfolgreiche
+Programme unverändert gültig; nur bisher absichtlich abgewiesene Alternative zugelassen.

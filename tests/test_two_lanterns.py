@@ -20,13 +20,26 @@ def test_two_lanterns_accept_alternative_programs(code):
     assert r.world.powered and r.world.x == 7 and r.status == 'done'
 
 
-def test_second_before_first_fails_without_lighting_either():
+def test_far_lantern_can_be_lit_first_then_return_to_near_one():
     r = pair_runner()
-    r.load('move_right()\n'*6+'collect()')
+    r.load('move_right()\n'*6+'collect()\n'+'move_left()\n'*3+'collect()')
+    for _ in range(7): r.step()
+    assert r.world.second_lit and not r.world.first_lit and not r.world.powered
+    assert r.world.target_x == 4
+    for _ in range(4): r.step()
+    assert r.world.first_lit and r.world.second_lit and r.world.powered
+    assert r.status == 'done' and r.world.x == 4
+
+
+def test_far_lantern_cannot_be_counted_twice_and_reset_clears_it():
+    r = pair_runner()
+    r.load('move_right()\n'*6+'collect()\ncollect()')
     r.run()
-    for _ in range(7): r.tick()
-    assert r.status == 'error' and not r.world.first_lit and not r.world.powered
-    assert 'erste Laterne' in r.error
+    for _ in range(8): r.tick()
+    assert r.status == 'error' and r.world.second_lit and not r.world.first_lit
+    assert not r.world.powered and 'erste Laterne' in r.error
+    r.reset()
+    assert not r.world.first_lit and not r.world.second_lit
 
 
 def test_stop_reset_and_step_run_after_partial_success():

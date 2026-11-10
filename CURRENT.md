@@ -51,3 +51,13 @@ zu eigenem Hin-/Rückwegplan; keine zusätzliche Syntax vor Beobachtung des Lern
 Kurzer Menschentestablauf ohne Musterlösung jetzt in README.md: Vorhersage vor Step,
 eigener Heimweg, absichtlichen Umweg korrigieren, Entwurf nach Neustart prüfen.
 Nur Testanleitung erstellt, noch keine menschlichen Ergebnisse erhoben.
+
+## 2026-11-10 — Freie Reihenfolge statt künstlicher Sperre
+Ausgangspunkt 8e87fb8 sauber, Remote unverändert. Beide Laternen unabhängig
+aktivierbar; ferne zuerst ist mit Rückweg gültig. powered verlangt weiterhin beide.
+Zwei unabhängige Lichtzustände, beide Batterien von Anfang an sichtbar. Doppelte
+Aktivierung bleibt Fehler. Kein neues Save-Schema, keine neue Sprachform.
+Alten Test für erzwungene Reihenfolge bewusst durch neue Produktregel ersetzt:
+RED 2, GREEN 191 einschließlich unabhängig gerenderter ferner Laterne. SDL mit
+ferner Laterne zuerst, Rückweg, Heimkehr, Neustart und allen alten Aufgaben PASS.
+Belege evidence/free-order-*.txt; Screenshot geprüft. Spielspaß bleibt unbewiesen.

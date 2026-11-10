@@ -39,7 +39,8 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
    Schreibe deinen Plan selbst. Zurück / F7 erhält deinen bisherigen Entwurf.
 6. **Nächste Laterne / F8:** nach Dach-Erfolg den eigenen Plan an das fernere Ziel anpassen.
 7. **Zwei Laternen / F9:** nach Dachtransfer-Erfolg aus leerem Editor beide Lichter
-   mit einem Programm verbinden. Die erste Aktivierung ist nur ein Teilerfolg.
+   mit einem Programm verbinden. Du bestimmst die Reihenfolge; auch erst zur fernen
+   Laterne und dann zurück ist gültig. Eine Aktivierung allein ist nur ein Teilerfolg.
    Bewegung und `collect()` reichen; mehrere Programme sind gültig. F9 kehrt zur
    bisherigen Eigenlösung zurück. Alle fünf Entwürfe bleiben auch nach Neustart erhalten.
 8. **Freiwilliger Heimweg:** Erweitere deinen Zwei-Laternen-Plan so, dass Nox anschließend

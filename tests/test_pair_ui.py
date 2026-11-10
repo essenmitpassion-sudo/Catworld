@@ -110,3 +110,12 @@ def test_hidden_navigation_cannot_intercept_pair_entry_or_exit(app):
     assert app.pair_active
     click(app,'Laternenpaar')
     assert not app.pair_active
+
+
+def test_far_lantern_partial_success_renders_independently(app):
+    finish(app,NEW_CODE);app.activate('Laternenpaar')
+    finish(app,'move_right()\n'*6+'collect()')
+    app.draw()
+    assert app.runner.world.second_lit and not app.runner.world.first_lit
+    assert app.canvas.get_at((602,430))[:3] == pygame.Color('#ffe09c')[:3]
+    assert app.canvas.get_at((386,430))[:3] == pygame.Color('#27394d')[:3]

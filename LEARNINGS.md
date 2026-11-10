@@ -102,3 +102,9 @@ bei beendetem Programm, nicht beim bloßen Durchlaufen des Startfelds.
 Der Fehlerzustand ist nützliche Diagnose, aber keine Verpflichtung, dauerhaft auf
 diese Zeile zu scrollen. Explizite Navigation übernimmt den Ausschnitt, erneutes
 Run/Step folgt wieder der Ausführung. Fehlerdaten bleiben bis zur echten Änderung.
+
+## 2026-11-10 — Musterlösung ist keine Weltregel
+Die Reihenfolgensperre hatte keine physische oder spielerische Abhängigkeit.
+Mit Rückwärtsbewegung wurde sie zu einer unnötigen Ablehnung eines eigenen Plans.
+Unabhängige Lichtzustände erlauben beide Routen, ohne Ziel oder Budgets zu lockern.
+Anzeige und Batterien müssen die Alternative ebenso unterstützen wie die Simulation.
