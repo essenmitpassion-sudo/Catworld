@@ -22,6 +22,7 @@ class App:
         self.big = pygame.font.Font(None, 58)
         self.mono = pygame.font.SysFont('monospace', 20)
         self.sign_font = pygame.font.Font(None, 19)
+        self.follow_execution = False
         self.horizontal_scroll = 0
         self.viewport_editor = None
         self.edit_histories = {}  # Five bounded, session-local undo/redo pairs.
@@ -254,6 +255,8 @@ class App:
             self.recall_available = True
 
     def activate(self, name):
+        if name in ('Run', 'Step'):
+            self.follow_execution = True
         if name == 'Laternenpaar' or (self.pair_active and name in ('Dach', 'Dachtransfer', 'Abruf', 'Transfer')):
             self.toggle_pair()
             return
@@ -370,6 +373,7 @@ class App:
                     self.activate(name)
                     return
             if pygame.Rect(790, 210, 370, 310).collidepoint(pos):
+                self.follow_execution = False
                 lines = self.source.split('\n')
                 row = min(len(lines) - 1, max(0, int((pos[1] - 225) // 26) + self.scroll))
                 col = max(0, int((pos[0] - 830 + self.horizontal_scroll) // self.mono.size(' ')[0]))
@@ -393,6 +397,8 @@ class App:
             if event.mod & pygame.KMOD_CTRL and event.key in (pygame.K_z, pygame.K_y):
                 self.restore_edit(redo=event.key == pygame.K_y or bool(event.mod & pygame.KMOD_SHIFT))
                 return
+            if event.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN, pygame.K_HOME, pygame.K_END):
+                self.follow_execution = False
             self.cursor = min(self.cursor, len(self.source))
             if event.key == pygame.K_a and event.mod & pygame.KMOD_CTRL:
                 self.select_all = True
@@ -690,14 +696,15 @@ class App:
         pygame.draw.rect(self.canvas, '#1c2335', (780, 198, 400, 325), border_radius=8)
         lines = self.source.split('\n')
         cursor_row = self.source[:self.cursor].count('\n')
-        active_row = self.runner.line - 1 if self.runner.line is not None else cursor_row
+        active_line = self.runner.line if self.follow_execution else None
+        active_row = active_line - 1 if active_line is not None else cursor_row
         self.scroll = max(0, active_row - 9)
         if self.viewport_editor != self.editor_key():
             self.horizontal_scroll = 0
             self.viewport_editor = self.editor_key()
         col = len(self.source[:self.cursor].split('\n')[-1])
         cursor_pixel = self.mono.size(lines[cursor_row][:col])[0]
-        if self.runner.line is not None:
+        if active_line is not None:
             self.horizontal_scroll = 0
         else:
             self.horizontal_scroll = max(0, min(self.horizontal_scroll, cursor_pixel, self.mono.size(lines[cursor_row])[0] - 330))
@@ -711,7 +718,7 @@ class App:
             self.canvas.set_clip(pygame.Rect(830, 210, 340, 306))
             self.text(line, (830 - self.horizontal_scroll, y), CYAN, self.mono)
             self.canvas.set_clip(pygame.Rect(790, 210, 380, 306))
-        if self.focus and not self.select_all and self.runner.line is None:
+        if self.focus and not self.select_all and active_line is None:
             col = len(self.source[:self.cursor].split('\n')[-1])
             x = 830 + self.mono.size(lines[cursor_row][:col])[0] - self.horizontal_scroll
             y = 225 + (cursor_row - self.scroll) * 26

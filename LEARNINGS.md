@@ -97,3 +97,8 @@ Die Rückkehr nach beiden Aktivierungen nutzt nur Position und vorhandenen
 Weltzustand. Der bisherige Erfolg bleibt bestehen; Spieler erweitert seinen Plan
 freiwillig. Keine zusätzliche Mission/Editorhistorie nötig. Heimkehr zählt erst
 bei beendetem Programm, nicht beim bloßen Durchlaufen des Startfelds.
+
+## 2026-11-10 — Ausführungsmarker darf Editor nicht festhalten
+Der Fehlerzustand ist nützliche Diagnose, aber keine Verpflichtung, dauerhaft auf
+diese Zeile zu scrollen. Explizite Navigation übernimmt den Ausschnitt, erneutes
+Run/Step folgt wieder der Ausführung. Fehlerdaten bleiben bis zur echten Änderung.

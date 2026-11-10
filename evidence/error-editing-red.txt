@@ -1,0 +1,32 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______ test_cursor_navigation_after_error_is_not_locked_to_execution_line ______
+
+    def test_cursor_navigation_after_error_is_not_locked_to_execution_line():
+        pygame.init();a=App()
+        source='oops()\n'+'# note\n'*20
+        write(a,source);click(a,'Run');a.draw()
+        error=a.runner.error
+        assert a.scroll==0 and error
+        key(a,pygame.K_HOME);a.draw()
+>       assert a.scroll>0 and a.source==source
+E       assert (0 > 0)
+E        +  where 0 = <neonpaw.ui.app.App object at 0x7f913c6c33b0>.scroll
+
+tests/test_error_editing.py:17: AssertionError
+____ test_click_after_error_restores_caret_and_next_run_follows_error_again ____
+
+    def test_click_after_error_restores_caret_and_next_run_follows_error_again():
+        pygame.init();a=App()
+        write(a,'oops()\n# '+ 'x'*80);click(a,'Run');a.draw()
+        a.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(850,257)))
+        key(a,pygame.K_END);a.draw()
+>       assert a.horizontal_scroll>0
+E       assert 0 > 0
+E        +  where 0 = <neonpaw.ui.app.App object at 0x7f913c6c1970>.horizontal_scroll
+
+tests/test_error_editing.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_error_editing.py::test_cursor_navigation_after_error_is_not_locked_to_execution_line
+FAILED tests/test_error_editing.py::test_click_after_error_restores_caret_and_next_run_follows_error_again
+2 failed in 0.10s

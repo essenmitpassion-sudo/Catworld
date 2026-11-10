@@ -1,8 +1,9 @@
-# Nächste Aufgabe: Fehler gezielt im Plan korrigieren
-Rückwege und freiwilliger Heimweg sind fertig (187 Tests, voller SDL-Smoke).
-Nach Git-/Remote-Abgleich tatsächliches Verhalten beim Kartenrandfehler prüfen:
-Kann der Spieler die markierte fehlerhafte Zeile direkt anklicken und bearbeiten,
-ohne dass die alte Ausführungsmarkierung den Editor-Fokus weiter festhält?
-Wenn reproduzierbar, gezielt mit RED/GREEN korrigieren; sonst keine Doppelarbeit.
-Keine neue Mission oder Syntax. Vorhandene Spielpläne/History bewahren; volle
-Regression/SDL und externer Checkpoint. Menschliche Verständlichkeit separat prüfen.
+# Nächste Aufgabe: Lerntransfer beim eigenen Hin- und Rückweg überprüfen
+Rückwärtsbewegung, freiwilliger Heimweg und Fehler-Editor-Fokus sind implementiert.
+189 Tests und kompletter SDL-Smoke grün. Keine Doppelimplementierung.
+Nächster ausführbarer Schritt: einen kurzen reproduzierbaren Spieltestablauf in
+vorhandener README ergänzen: eigenes Laternenprogramm um Heimweg erweitern, nächste
+Aktion vor Step vorhersagen, einen absichtlichen Umweg ohne Reset korrigieren.
+Technische Beobachtungen von menschlichem Verständnis trennen; keinen FUN_PASS erfinden.
+Bei verfügbarer echter Rückmeldung genau den größten beobachteten Engpass beheben.
+Vorher Git-/Remote-Abgleich und Sicherung; keine weitere Editor- oder Levelverwaltung.

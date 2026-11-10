@@ -312,9 +312,16 @@ frame(pygame.event.Event(pygame.TEXTINPUT, text='import os'))
 click('Run')
 assert app.runner.status == 'error' and app.runner.world.x == 1
 pygame.image.save(app.canvas, 'evidence/current-error.png')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text='oops()\n' + '# eigener Plan\n' * 20))
+click('Run')
+assert app.runner.error and app.scroll == 0
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_HOME, mod=0))
+assert app.scroll > 0 and app.runner.error
+pygame.image.save(app.canvas, 'evidence/error-editor-focus.png')
 frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
-print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> quit')
+print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()

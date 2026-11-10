@@ -137,3 +137,9 @@ Rückweg-Commit 86aed28 vor Folgearbeit extern bestätigt. Bestehende Laternenau
 um freiwilligen Heimweg ergänzt, keine neue Speicherung oder Sondermission.
 RED 1, GREEN 187, SDL vollständiger Plan mit 2 Lichtern + Rückweg + Neustart PASS;
 Screenshot geprüft. Technische Wirkung belegt, menschliche Motivation offen.
+
+## 2026-11-10 — Nach einem Fehler wieder im Plan navigieren
+Nach extern gesichertem Heimweg fc994d1 zwei RED-Fälle reproduziert: vertikaler und
+horizontaler Ausschnitt folgten trotz Navigation weiterhin der Fehlerzeile.
+Anzeigeabsicht getrennt: Run/Step folgt Ausführung, Cursor/Klick folgt Editor.
+189 GREEN und vollständiger SDL-Smoke inklusive Fokuswechsel; Fehlertext bleibt.

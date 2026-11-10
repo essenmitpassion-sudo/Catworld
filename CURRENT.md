@@ -37,3 +37,13 @@ Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log
 3. Volle Tests/SDL, Commit + Bundle verify + Push/Remote prüfen; bei Limit Checkpoint.
 Recovery-Archive nicht überschrieben. /workspace/Catworld-backtracking.bundle geprüft.
 Keine bewusst offene WIP-Arbeit; echter Git-Status gilt vor diesem Dokument.
+
+## 2026-11-10 — Fehlerkorrektur ohne festgehaltenen Ausschnitt
+Heimweg-Checkpoint fc994d1958f40d96f5caa1357a20dd42ca071274 extern bestätigt.
+Weiterer reproduzierter UI-Fehler: Ausführungszeile hielt den Ausschnitt nach Fehler
+fest, obwohl Cursor navigiert wurde. Jetzt folgt Run/Step der Ausführung, bewusste
+Cursorbewegung/Klick dem Editor. Fehlermeldung und Fehlerzeile bleiben erhalten;
+keine Textänderung oder zusätzliche Undo-Einträge durch Navigation.
+RED 2, finale GREEN 189; voller SDL-Smoke inkl. Fehler→Cursor-Navigation PASS.
+Belege evidence/error-editing-*.txt. Nächster Schwerpunkt: gezielter Menschentest
+zu eigenem Hin-/Rückwegplan; keine zusätzliche Syntax vor Beobachtung des Lernpfads.
