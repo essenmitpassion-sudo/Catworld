@@ -155,3 +155,16 @@ Siehe `CURRENT.md`, `SAFETY_AND_EXECUTION.md` und `G0_SECURITY.md`.
 
 Langfristige Vorgaben: `PRODUCT.md`, `LONG_TERM_DESIGN.md`, `TUTORIAL_SYSTEM.md`.
 G0 ist technisch abgeschlossen; dieser Build verbindet Batterie, Transfer und Abruf zu einem kleinen Abschnitt mit sichtbarem Abschluss. Keine Stadt-, Flotten- oder Cloud-Spielsysteme.
+
+## Kurzer Spieltest: eigener Hin- und Rückweg (noch nicht menschlich validiert)
+
+Nach dem Zwei-Laternen-Erfolg, ohne Codebeispiel:
+1. Erkläre vor Step, wohin Nox als Nächstes geht und welche Laterne danach leuchtet.
+2. Erweitere deinen eigenen Plan um den Heimweg. Beide Lichter sollen an bleiben.
+3. Baue absichtlich einen kleinen Umweg ein und korrigiere ihn im Programm ohne Reset.
+4. Schließe das Spiel, öffne es erneut und prüfe, ob dein eigener Plan erhalten ist.
+
+Beobachtungen festhalten: Wurde der Rückweg selbst gefunden? Welche Stelle war
+unklar? War Step hilfreich? Wolltest du freiwillig eine andere Lösung ausprobieren?
+Hilfe darf genutzt werden; verwendete Stufe notieren. Ein erfolgreicher Run allein
+beweist kein Verständnis. Keine vorab gezeigte Musterlösung und keine Spaßbehauptung.

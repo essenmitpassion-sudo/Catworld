@@ -47,3 +47,7 @@ keine Textänderung oder zusätzliche Undo-Einträge durch Navigation.
 RED 2, finale GREEN 189; voller SDL-Smoke inkl. Fehler→Cursor-Navigation PASS.
 Belege evidence/error-editing-*.txt. Nächster Schwerpunkt: gezielter Menschentest
 zu eigenem Hin-/Rückwegplan; keine zusätzliche Syntax vor Beobachtung des Lernpfads.
+
+Kurzer Menschentestablauf ohne Musterlösung jetzt in README.md: Vorhersage vor Step,
+eigener Heimweg, absichtlichen Umweg korrigieren, Entwurf nach Neustart prüfen.
+Nur Testanleitung erstellt, noch keine menschlichen Ergebnisse erhoben.

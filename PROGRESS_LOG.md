@@ -143,3 +143,7 @@ Nach extern gesichertem Heimweg fc994d1 zwei RED-Fälle reproduziert: vertikaler
 horizontaler Ausschnitt folgten trotz Navigation weiterhin der Fehlerzeile.
 Anzeigeabsicht getrennt: Run/Step folgt Ausführung, Cursor/Klick folgt Editor.
 189 GREEN und vollständiger SDL-Smoke inklusive Fokuswechsel; Fehlertext bleibt.
+
+## 2026-11-10 — Lernnachweis vorbereiten
+Kurzer Spieltestablauf ohne Musterlösung in README ergänzt. Keine erhobenen
+menschlichen Ergebnisse; technische Nachweise bleiben 189 Tests plus SDL-Smoke.
