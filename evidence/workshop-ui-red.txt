@@ -1,0 +1,150 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+_________ test_workshop_unlocks_after_pair_and_preserves_own_solution __________
+
+app = <neonpaw.ui.app.App object at 0x7f1f01655d30>
+
+    def test_workshop_unlocks_after_pair_and_preserves_own_solution(app):
+        assert 'Werkstatt' not in app.visible_buttons()
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+        assert app.pair_active and not getattr(app, 'workshop_active', False)
+>       enter(app)
+
+tests/test_workshop_ui.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f1f01655d30>
+
+    def enter(app):
+        finish(app, PAIR_CODE)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+>       assert getattr(app, 'workshop_active', False)
+E       AssertionError: assert False
+E        +  where False = getattr(<neonpaw.ui.app.App object at 0x7f1f01655d30>, 'workshop_active', False)
+
+tests/test_workshop_ui.py:32: AssertionError
+___________ test_workshop_controls_error_recovery_and_world_response ___________
+
+app = <neonpaw.ui.app.App object at 0x7f1f01523ad0>
+
+    def test_workshop_controls_error_recovery_and_world_response(app):
+>       enter(app)
+
+tests/test_workshop_ui.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f1f01523ad0>
+
+    def enter(app):
+        finish(app, PAIR_CODE)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+>       assert getattr(app, 'workshop_active', False)
+E       AssertionError: assert False
+E        +  where False = getattr(<neonpaw.ui.app.App object at 0x7f1f01523ad0>, 'workshop_active', False)
+
+tests/test_workshop_ui.py:32: AssertionError
+___________ test_all_six_programs_survive_save_while_workshop_active ___________
+
+app = <neonpaw.ui.app.App object at 0x7f1f015295e0>
+
+    def test_all_six_programs_survive_save_while_workshop_active(app):
+>       enter(app)
+
+tests/test_workshop_ui.py:74: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f1f015295e0>
+
+    def enter(app):
+        finish(app, PAIR_CODE)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+>       assert getattr(app, 'workshop_active', False)
+E       AssertionError: assert False
+E        +  where False = getattr(<neonpaw.ui.app.App object at 0x7f1f015295e0>, 'workshop_active', False)
+
+tests/test_workshop_ui.py:32: AssertionError
+____________ test_workshop_hints_and_undo_stay_in_their_own_editor _____________
+
+app = <neonpaw.ui.app.App object at 0x7f1f0152a4e0>
+
+    def test_workshop_hints_and_undo_stay_in_their_own_editor(app):
+>       enter(app)
+
+tests/test_workshop_ui.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f1f0152a4e0>
+
+    def enter(app):
+        finish(app, PAIR_CODE)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+>       assert getattr(app, 'workshop_active', False)
+E       AssertionError: assert False
+E        +  where False = getattr(<neonpaw.ui.app.App object at 0x7f1f0152a4e0>, 'workshop_active', False)
+
+tests/test_workshop_ui.py:32: AssertionError
+_________ test_gate_and_switch_visibly_change_when_player_uses_toggle __________
+
+app = <neonpaw.ui.app.App object at 0x7f1f0152b680>
+
+    def test_gate_and_switch_visibly_change_when_player_uses_toggle(app):
+>       enter(app)
+
+tests/test_workshop_ui.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f1f0152b680>
+
+    def enter(app):
+        finish(app, PAIR_CODE)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+>       assert getattr(app, 'workshop_active', False)
+E       AssertionError: assert False
+E        +  where False = getattr(<neonpaw.ui.app.App object at 0x7f1f0152b680>, 'workshop_active', False)
+
+tests/test_workshop_ui.py:32: AssertionError
+____________ test_v4_save_loads_without_inventing_workshop_progress ____________
+
+app = <neonpaw.ui.app.App object at 0x7f1f01643800>
+
+    def test_v4_save_loads_without_inventing_workshop_progress(app):
+        state = app.draft_snapshot()
+        for key in ('workshop_active', 'workshop_unlocked', 'workshop', 'workshop_example'):
+            state.pop(key, None)
+        state['version'] = 4
+        drafts.save(app.save_path, state)
+        restored = App(save_path=app.save_path)
+>       assert hasattr(restored, 'workshop_unlocked')
+E       AssertionError: assert False
+E        +  where False = hasattr(<neonpaw.ui.app.App object at 0x7f1f01641670>, 'workshop_unlocked')
+
+tests/test_workshop_ui.py:126: AssertionError
+______ test_inconsistent_workshop_flags_rejected_without_overwriting_save ______
+
+app = <neonpaw.ui.app.App object at 0x7f1f0152d2e0>
+
+    def test_inconsistent_workshop_flags_rejected_without_overwriting_save(app):
+>       enter(app)
+
+tests/test_workshop_ui.py:132: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+app = <neonpaw.ui.app.App object at 0x7f1f0152d2e0>
+
+    def enter(app):
+        finish(app, PAIR_CODE)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+>       assert getattr(app, 'workshop_active', False)
+E       AssertionError: assert False
+E        +  where False = getattr(<neonpaw.ui.app.App object at 0x7f1f0152d2e0>, 'workshop_active', False)
+
+tests/test_workshop_ui.py:32: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_workshop_ui.py::test_workshop_unlocks_after_pair_and_preserves_own_solution
+FAILED tests/test_workshop_ui.py::test_workshop_controls_error_recovery_and_world_response
+FAILED tests/test_workshop_ui.py::test_all_six_programs_survive_save_while_workshop_active
+FAILED tests/test_workshop_ui.py::test_workshop_hints_and_undo_stay_in_their_own_editor
+FAILED tests/test_workshop_ui.py::test_gate_and_switch_visibly_change_when_player_uses_toggle
+FAILED tests/test_workshop_ui.py::test_v4_save_loads_without_inventing_workshop_progress
+FAILED tests/test_workshop_ui.py::test_inconsistent_workshop_flags_rejected_without_overwriting_save
+7 failed in 0.48s

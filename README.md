@@ -46,6 +46,12 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
 8. **Freiwilliger Heimweg:** Erweitere deinen Zwei-Laternen-Plan so, dass Nox anschließend
    zum Start zurückkehrt. `move_left()` ermöglicht Rückwege; die Lichter bleiben an.
    Der bisherige Zwei-Laternen-Erfolg bleibt auch ohne diesen Bonus gültig.
+9. **Werkstatt / F10:** Nach dem Laternenpaar öffnet sich ein neuer Abschnitt mit
+   eigenem leerem Editor. Ein Tor versperrt den Weg zur Batterie. Auf dem sichtbaren
+   Schalterfeld öffnet oder schliesst `toggle()` das Tor. Verbinde Schalter, Bewegung
+   und `collect()` zu deinem eigenen Ablauf. Freiwillig: Werkstatt versorgen,
+   zurückkehren, Tor schliessen und Nox heimbringen. F10 kehrt zu den Laternen
+   zurück; alle sechs Programme bleiben erhalten. F1 hilft nur auf Wunsch.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;
@@ -85,11 +91,13 @@ zwischen Bewegen und Aufnehmen einzeln. Ein collect am falschen Ort oder nach de
 Aufnehmen erklärt den Fehler; Reset stellt Batterie und Automaten wieder her.
 Am Ende der Gasse bleibt die Bewegung sicher begrenzt.
 
-Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`-, `move_left()`- und `collect()`-Aufrufe, Kommentare,
+Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`-, `move_left()`-, `collect()`- und `toggle()`-Aufrufe, Kommentare,
 Leerzeilen und Python-Anweisungssequenzen sowie begrenzte `for name in range(...)`-Schleifen.
 `range` akzeptiert ein bis drei ganzzahlige Literale von -64 bis 64; Schrittweite null
 ist ungültig. Höchstens 64 Schleifendurchläufe insgesamt und 64 ausgeführte Aktionen.
 Keine Verschachtelung, Variablenverwendung oder weiteren Python-Funktionen.
+`toggle()` wirkt nur auf dem Schalterfeld der Werkstatt. Das geschlossene Tor
+blockiert in beiden Richtungen; ein Fehler hält vor dem Tor und markiert die Codezeile.
 Step führt auch in Schleifen genau eine Aktion aus; Run setzt pausierte Versuche fort.
 Enter übernimmt die Einrückung, Tab/Shift+Tab rückt ein/aus. Kein vollständiger Python-Interpreter.
 
@@ -121,6 +129,9 @@ lokal gespeichert und nach einem Spielneustart wiederhergestellt. Die Welt start
 am Anfang; geladener Code läuft erst nach Run oder Step.
 Ein leeres Programm schaltet den Automaten nicht ein. Erfolg zeigt die Weltreaktion,
 beweist aber nicht, dass der Spieler die Reihenfolge selbst verstanden hat.
+
+Auch der Werkstattentwurf und seine Freischaltung werden lokal gespeichert.
+Speicherformat 5 lädt frühere Formate 1–4 weiter; geladener Code startet niemals von selbst.
 
 ## Eigene Programme bleiben erhalten
 

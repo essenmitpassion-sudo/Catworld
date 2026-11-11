@@ -1,19 +1,12 @@
-# Nächste Aufgabe: Einstieg und eigene Routen unabhängig prüfen
-Aktuell auf codex/masterplan-run-consistency: Masterplan bestätigt und abgeglichen;
-neue Versuche in allen Aufgaben konsistent, 209 Tests und SDL-Smoke PASS.
-Zuerst Git-Stand/Checkpoint prüfen; nicht versehentlich auf dem älteren
-g0/first-cat-action dieselbe Änderung erneut bauen.
+# Nächste Aufgabe: Werkstatt-Transfer mit verändertem Torzustand
+Werkstatt implementiert: 231 Tests, SDL-Smoke und unabhängiger Review PASS.
+Zuerst aktuellen Commit/Bundle/Remote prüfen und sichern; dann fortsetzen.
 
-Produktpriorität: README-Spieltest mit einem Anfänger durchführen. Ohne Musterlösung
-den ersten Code ergänzen, Ergebnis vor Step vorhersagen, eine eigene alternative
-Laternenroute schreiben und nach Neustart den Entwurf wiederfinden lassen.
-Hilfestufe, Missverständnisse und freiwillige zweite Versuche protokollieren.
-Menschliche Teilnahme lässt sich nicht durch agentische Tests ersetzen.
-
-Nächster unabhängig ausführbarer Technikschritt: Szenario-/Entwurfswechsel in
-App.draft_snapshot/restore_drafts, toggle_roof, toggle_roof_transfer und toggle_pair
-gegen vorhandene Tests lesen. Prüfen, ob wiederholtes Wechseln nach Stop/Fehler und
-anschliessendes Speichern/Laden den jeweils eigenen Code und Fortschritt erhält.
-Nur eine tatsächlich reproduzierte Lücke korrigieren. Kein pauschaler UI-Rewrite.
-Danach kleinste Geräteentscheidung aus MASTERPLAN_STATUS.md konkretisieren;
-keine neue Syntax oder Stadtarchitektur nur wegen des langen Masterplans.
+Kleiner nächster Lernschritt: im selben Werkstattszenario einen zunächst offenen
+Torweg anbieten. Vorhandener eigener Code bleibt unverändert. Blindes toggle()
+schliesst dann das Tor; mit Step beobachten und eigenen Plan anpassen. Kein
+zusätzlicher Editor, keine Kopie einer Musterlösung, keine Belohnung nur fürs Umschalten.
+Reset/Run beziehen sich auf den gewählten Ausgangszustand. Speicherung und
+Rückkehr müssen nachvollziehbar bleiben. RED→GREEN, SDL, sichern, weiter.
+Später erst Sensor/Bedingungen anbieten, wenn die neue Frage spielerisch sichtbar ist.
+Menschlicher Lerntransfer bleibt offen, blockiert technische Entwicklung nicht.

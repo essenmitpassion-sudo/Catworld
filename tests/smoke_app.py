@@ -285,6 +285,46 @@ pygame.image.save(app.canvas, 'evidence/far-lantern-first.png')
 for _ in range(7):
     frame(dt=.5)
 assert app.homecoming_complete()
+# Workshop: a new world interaction, not another longer walking route.
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+assert app.workshop_active and app.source == ''
+pygame.image.save(app.canvas, 'evidence/workshop-start.png')
+frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()\n'*4))
+for _ in range(4): click('Step')
+assert app.runner.status == 'error' and app.runner.world.x == 4
+pygame.image.save(app.canvas, 'evidence/workshop-blocked.png')
+workshop_code = 'for _ in range(2):\n    move_right()\ntoggle()\nfor _ in range(4):\n    move_right()\ncollect()'
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text=workshop_code))
+for _ in range(3): click('Step')
+assert app.runner.world.gate_open and app.runner.world.x == 3
+frame(dt=.5)
+pygame.image.save(app.canvas, 'evidence/workshop-open.png')
+click('Stop'); frame(dt=2)
+assert app.runner.world.gate_open and app.runner.world.x == 3
+click('Run')
+for _ in range(8): frame(dt=.5)
+assert app.runner.world.powered and app.runner.status == 'done'
+assert not app.workshop_secured()
+workshop_code += '\nfor _ in range(4):\n    move_left()\ntoggle()\nfor _ in range(2):\n    move_left()'
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text=workshop_code))
+click('Run')
+for _ in range(15): frame(dt=.5)
+assert app.workshop_secured()
+pygame.image.save(app.canvas, 'evidence/workshop-secured.png')
+for _ in range(3): click('Hilfe')
+assert app.source == workshop_code and app.used_example
+pygame.image.save(app.canvas, 'evidence/workshop-hint.png')
+app = App(save_path=save_path)
+frame()
+assert app.workshop_active and app.source == workshop_code and app.used_example
+assert app.runner.status == 'idle' and not app.runner.world.gate_open
+click('Werkstatt')
+assert app.source == pair_program and not app.workshop_active
+click('Werkstatt')
+assert app.source == workshop_code
+click('Werkstatt')
 app = App(save_path=save_path)
 frame()
 assert app.pair_active and app.source == pair_program
@@ -360,6 +400,7 @@ frame(pygame.event.Event(pygame.QUIT))
 assert not app.alive
 print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> late-error correction -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> far-first alternative -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
 print('Video driver:', pygame.display.get_driver())
+print('PASS: workshop gate error -> own toggle plan -> Stop/Run -> power -> optional secure home -> hints -> six drafts saved/restored')
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
 storage.cleanup()

@@ -12,6 +12,9 @@ class World:
     second_battery_x: int | None = None
     first_lit: bool = False
     second_lit: bool = False
+    switch_x: int | None = None
+    gate_x: int | None = None
+    gate_open: bool = False
 
     @property
     def target_x(self):
@@ -19,6 +22,12 @@ class World:
 
 
 def transition(world: World, action: str) -> World:
+    if action == 'toggle':
+        if world.switch_x is None or world.gate_x is None:
+            raise ValueError('Hier gibt es keinen Schalter. toggle() gehört zur Werkstatt.')
+        if world.x != world.switch_x:
+            raise ValueError('Gehe zum Schalterfeld. toggle() schaltet dort das Tor um.')
+        return replace(world, gate_open=not world.gate_open)
     if action == 'collect':
         if world.powered:
             if world.second_battery_x is not None:
@@ -44,4 +53,6 @@ def transition(world: World, action: str) -> World:
         raise ValueError('Hier ist der linke Rand. move_right() führt zurück auf den Weg.')
     if target >= world.width:
         raise ValueError('Hier endet die Gasse. move_left() führt zurück auf den Weg.')
+    if target == world.gate_x and not world.gate_open:
+        raise ValueError('Das Tor ist zu. Plane vorher toggle() auf dem Schalterfeld ein.')
     return replace(world, x=target, moves=world.moves + 1)

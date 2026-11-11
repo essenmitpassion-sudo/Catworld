@@ -1,0 +1,2 @@
+pygame-ce 2.5.7 (SDL 2.32.10, Python 3.12.14)
+PASS: 500 deterministic edit/run/stop/error/navigation/save/reload cycles; all six editors visited and preserved.

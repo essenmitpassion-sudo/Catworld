@@ -15,7 +15,7 @@ class DraftError(ValueError):
 def validate(state):
     expected = {'version', 'scenario', 'recall_active', 'recall_available',
                 'original', 'recall', 'original_example', 'recall_example'}
-    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2, 3, 4):
+    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2, 3, 4, 5):
         raise DraftError('Unbekannte Entwurfsversion.')
     if state['version'] >= 2:
         expected |= {'roof_active', 'roof', 'roof_example', 'roof_repetition_seen'}
@@ -23,6 +23,8 @@ def validate(state):
         expected |= {'roof_transfer_active', 'roof_transfer_unlocked', 'roof_transfer', 'roof_transfer_example'}
     if state['version'] >= 4:
         expected |= {'pair_active', 'pair_unlocked', 'pair', 'pair_example'}
+    if state['version'] >= 5:
+        expected |= {'workshop_active', 'workshop_unlocked', 'workshop', 'workshop_example'}
     if set(state) != expected:
         raise DraftError('Unbekanntes Entwurfsformat.')
     if type(state['scenario']) is not int or state['scenario'] not in (0, 1):
@@ -34,12 +36,16 @@ def validate(state):
         bool_keys += ('roof_transfer_active', 'roof_transfer_unlocked', 'roof_transfer_example')
     if state['version'] >= 4:
         bool_keys += ('pair_active', 'pair_unlocked', 'pair_example')
+    if state['version'] >= 5:
+        bool_keys += ('workshop_active', 'workshop_unlocked', 'workshop_example')
     for key in bool_keys:
         if type(state[key]) is not bool:
             raise DraftError('Ungültiger Entwurfsstatus.')
     text_keys = ('original', 'recall') + (('roof',) if state['version'] >= 2 else ()) + (('roof_transfer',) if state['version'] >= 3 else ())
     if state['version'] >= 4:
         text_keys += ('pair',)
+    if state['version'] >= 5:
+        text_keys += ('workshop',)
     for key in text_keys:
         if not isinstance(state[key], str) or len(state[key]) > MAX_SOURCE:
             raise DraftError('Programmtext fehlt oder ist zu lang.')
@@ -59,6 +65,10 @@ def validate(state):
         raise DraftError('Ungültiger Laternenpaarstatus.')
     if state.get('pair_unlocked') and not state.get('roof_transfer_unlocked'):
         raise DraftError('Laternenpaar ist noch gesperrt.')
+    if state.get('workshop_active') and not (state.get('workshop_unlocked') and state.get('pair_active')):
+        raise DraftError('Ungültiger Werkstattstatus.')
+    if state.get('workshop_unlocked') and not state.get('pair_unlocked'):
+        raise DraftError('Werkstatt ist noch gesperrt.')
     return state
 
 

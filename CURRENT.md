@@ -1,3 +1,30 @@
+# CURRENT — 2026-11-11 — Werkstatt spielbar
+
+Branch: codex/masterplan-run-consistency; Basis 69604d1. Der Owner verlangt
+fortgesetzte autonome Arbeit bis zur verfügbaren Grenze und regelmässige Sicherung.
+
+Neu: Nach dem Laternenpaar führt F10 in eine Werkstatt mit eigenem leeren Editor.
+Auf Feld 3 öffnet/schliesst toggle() das Tor auf Feld 5; Batterie auf Feld 7.
+Das geschlossene Tor blockiert beide Richtungen mit Fehlerzeile. Versorgung reicht
+als Erfolg; freiwillig heimkehren und Tor schliessen. Sechs Entwürfe, Undo je Editor,
+dreistufige optionale Hilfe, Speicherversion 5 mit Unterstützung für Versionen 1–4.
+Kein exec/eval, keine neue Python-Grammatik oder grössere Architekturänderung.
+
+Nachweise: 231 Tests PASS; voller SDL-Offscreen-Smoke PASS. Vorher Core RED 11,
+UI RED 7. 500 deterministische Wechsel/Fehler/Stop/Speicher-/Neustartzyklen PASS.
+Unabhängiger Review: 22 neue Tests und 62 zulässige v5-Flagkombinationen geprüft,
+keine Befunde. Menschlicher Spielspass/Lerntransfer und Windows bleiben offen.
+Belege evidence/workshop-*.txt/png. Screenshots geprüft; Reviewer keine Schreibzugriffe.
+
+Sicherung: vollständiges WIP-Archiv inkl. untracked Dateien/Assets unter
+/workspace/work/catworld-workshop-wip-2026-11-11.tar.gz; 226 Dateiinhalte per Hash geprüft.
+Fertiger Commit und Bundle folgen; SHA/Remote immer mit git prüfen.
+Nächster Schritt: Werkstatt unter verändertem anfänglichem Torzustand spielbar
+prüfen, damit die eigene Lösung an neue Bedingungen angepasst werden muss.
+Keine Freigabe-Warteschleife; bis dahin vorhandenes Paket sichern und weiterarbeiten.
+
+---
+
 # CURRENT — 2026-11-10 — Masterplan geprüft, Run wiederholbar
 
 Aktueller Arbeitsbranch: `codex/masterplan-run-consistency`.
