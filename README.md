@@ -52,6 +52,10 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
    und `collect()` zu deinem eigenen Ablauf. Freiwillig: Werkstatt versorgen,
    zurückkehren, Tor schliessen und Nox heimbringen. F10 kehrt zu den Laternen
    zurück; alle sechs Programme bleiben erhalten. F1 hilft nur auf Wunsch.
+10. **Starttor / F11:** In der Werkstatt kannst du einen neuen Versuch mit anfangs
+    offenem statt geschlossenem Tor beginnen. Dein Code bleibt stehen. Beobachte,
+    was `toggle()` jetzt bewirkt, und passe deinen Plan selbst an. Run und Reset
+    verwenden den gewählten Anfangszustand; auch nach Neustart bleibt die Auswahl.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;
@@ -131,7 +135,7 @@ Ein leeres Programm schaltet den Automaten nicht ein. Erfolg zeigt die Weltreakt
 beweist aber nicht, dass der Spieler die Reihenfolge selbst verstanden hat.
 
 Auch der Werkstattentwurf und seine Freischaltung werden lokal gespeichert.
-Speicherformat 5 lädt frühere Formate 1–4 weiter; geladener Code startet niemals von selbst.
+Speicherformat 6 lädt frühere Formate 1–5 weiter; geladener Code startet niemals von selbst.
 
 ## Eigene Programme bleiben erhalten
 

@@ -39,7 +39,7 @@ def test_workshop_unlocks_after_pair_and_preserves_own_solution(app):
     enter(app)
     assert app.source == '' and app.runner.world.gate_x == 5
     assert app.runner.world.switch_x == 3 and app.runner.world.battery_x == 7
-    assert set(app.visible_buttons()) == {'Run', 'Step', 'Stop', 'Reset', 'Hilfe', 'Werkstatt'}
+    assert set(app.visible_buttons()) == {'Run', 'Step', 'Stop', 'Reset', 'Hilfe', 'Werkstatt', 'Torstart'}
     assert app.editor_key() == 'workshop'
     write(app, LOOP_PLAN)
     click(app, 'Werkstatt')
@@ -118,7 +118,7 @@ def test_gate_and_switch_visibly_change_when_player_uses_toggle(app):
 
 def test_v4_save_loads_without_inventing_workshop_progress(app):
     state = app.draft_snapshot()
-    for key in ('workshop_active', 'workshop_unlocked', 'workshop', 'workshop_example'):
+    for key in ('workshop_active', 'workshop_unlocked', 'workshop', 'workshop_example', 'workshop_start_open'):
         state.pop(key, None)
     state['version'] = 4
     drafts.save(app.save_path, state)

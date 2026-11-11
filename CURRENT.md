@@ -1,3 +1,20 @@
+# CURRENT — 2026-11-11 — offener Torstart als Transfer
+
+Basis c047575 extern bestätigt, Bundle /workspace/work/catworld-workshop.bundle geprüft.
+Neu: F11 wählt in der Werkstatt den Anfangszustand. Code/Cursor/Undo bleiben;
+Run/Reset/Neustart verwenden die Auswahl. Version 6 lädt Versionen 1–5 weiter.
+Unverändert getoggelter Plan schliesst das anfangs offene Tor und scheitert sichtbar;
+Hinweis fordert Beobachtung der eigenen Zustandsänderung statt blind mehr Code.
+
+RED 3, GREEN 237; voller SDL-Smoke PASS. Review: 26 relevante Tests und
+12 Kombinationen von Startzustand/Runnerstatus PASS, keine Befunde.
+Menschliches Verständnis/Spielspass und Windows weiterhin nicht getestet.
+Belege evidence/workshop-transfer-*.txt/png. Sicherung dieses Pakets vor Ausbau.
+Nächste Entscheidung: begrenzten Tor-Sensor plus if ermöglichen, damit ein eigenes
+Programm auf beide Startzustände reagieren kann. Keine beliebige Python-Ausführung.
+
+---
+
 # CURRENT — 2026-11-11 — Werkstatt spielbar
 
 Branch: codex/masterplan-run-consistency; Basis 69604d1. Der Owner verlangt

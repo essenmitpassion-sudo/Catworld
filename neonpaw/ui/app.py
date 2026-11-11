@@ -29,6 +29,7 @@ class App:
         self.edit_histories = {}  # Bounded, session-local undo/redo per editor.
         self.workshop_active = False
         self.workshop_unlocked = False
+        self.workshop_start_open = False
         self.workshop_return = None
         self.workshop_draft = ('', 0, 0, False)
         self.pair_active = False
@@ -70,6 +71,7 @@ class App:
         self.buttons['Dachtransfer'] = pygame.Rect(40, 75, 340, 36)
         self.buttons['Dach'] = pygame.Rect(340, 28, 190, 36)
         self.buttons['Werkstatt'] = pygame.Rect(40, 75, 340, 36)
+        self.buttons['Torstart'] = pygame.Rect(420, 125, 320, 36)
         self.save_path = save_path
         self.storage_message = ''
         self.storage_error = False
@@ -97,7 +99,7 @@ class App:
                 transfer = current
             else:
                 roof = current
-        return dict(version=5, scenario=self.scenario, recall_active=self.recall_active,
+        return dict(version=6, scenario=self.scenario, recall_active=self.recall_active,
                     recall_available=self.recall_available, original=original, recall=recall,
                     original_example=original_example, recall_example=recall_example,
                     roof_active=self.roof_active, roof_repetition_seen=self.roof_repetition_seen,
@@ -109,6 +111,7 @@ class App:
                     pair=pair[0] if self.pair_active else self.pair_draft[0],
                     pair_example=pair[3] if self.pair_active else self.pair_draft[3],
                     workshop_active=self.workshop_active, workshop_unlocked=self.workshop_unlocked,
+                    workshop_start_open=self.workshop_start_open,
                     workshop=self.source if self.workshop_active else self.workshop_draft[0],
                     workshop_example=self.used_example if self.workshop_active else self.workshop_draft[3])
 
@@ -148,6 +151,7 @@ class App:
             self.source, self.cursor, self.hint_level, self.used_example = self.pair_draft
         self.workshop_unlocked = state.get('workshop_unlocked', False)
         self.workshop_active = state.get('workshop_active', False)
+        self.workshop_start_open = state.get('workshop_start_open', False)
         workshop_source = state.get('workshop', '')
         self.workshop_draft = (workshop_source, len(workshop_source), 0, state.get('workshop_example', False))
         if self.workshop_active:
@@ -178,7 +182,7 @@ class App:
 
     def initial_world(self):
         if self.workshop_active:
-            return World(battery_x=7, switch_x=3, gate_x=5)
+            return World(battery_x=7, switch_x=3, gate_x=5, gate_open=self.workshop_start_open)
         if self.pair_active:
             return World(battery_x=4, second_battery_x=7)
         roof_target = ROOF_TRANSFER_X if self.roof_transfer_active else ROOF_BATTERY_X
@@ -298,6 +302,14 @@ class App:
     def activate(self, name):
         if name in ('Run', 'Step'):
             self.follow_execution = True
+        if name == 'Torstart':
+            if self.workshop_active:
+                self.workshop_start_open = not self.workshop_start_open
+                self.runner = Runner(initial_world=self.initial_world())
+                self.loaded_source = None
+                self.elapsed = 0.0
+                self.hint_level = 0
+            return
         if name == 'Werkstatt' or (self.workshop_active and name in ('Laternenpaar', 'Dach', 'Dachtransfer', 'Abruf', 'Transfer')):
             self.toggle_workshop()
             return
@@ -392,6 +404,8 @@ class App:
         visible = {}
         pair_link = self.roof_active and self.pair_unlocked
         for name, rect in self.buttons.items():
+            if name == 'Torstart' and not self.workshop_active:
+                continue
             if self.workshop_active and name in ('Laternenpaar', 'Dach', 'Dachtransfer', 'Abruf', 'Transfer'):
                 continue
             if name == 'Werkstatt' and not (self.pair_active and self.workshop_unlocked):
@@ -437,7 +451,7 @@ class App:
                 return
             shortcuts = {pygame.K_F5: 'Run', pygame.K_F6: 'Step',
                          pygame.K_ESCAPE: 'Stop', pygame.K_F2: 'Reset',
-                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer', pygame.K_F4: 'Abruf', pygame.K_F7: 'Dach', pygame.K_F8: 'Dachtransfer', pygame.K_F9: 'Laternenpaar', pygame.K_F10: 'Werkstatt'}
+                         pygame.K_F1: 'Hilfe', pygame.K_F3: 'Transfer', pygame.K_F4: 'Abruf', pygame.K_F7: 'Dach', pygame.K_F8: 'Dachtransfer', pygame.K_F9: 'Laternenpaar', pygame.K_F10: 'Werkstatt', pygame.K_F11: 'Torstart'}
             if event.key in shortcuts:
                 self.activate(shortcuts[event.key])
                 return
@@ -642,7 +656,8 @@ class App:
         if not self.hint_level:
             return ()
         if self.workshop_active:
-            return workshop.HINTS[self.hint_level - 1]
+            hints = workshop.OPEN_HINTS if self.workshop_start_open else workshop.HINTS
+            return hints[self.hint_level - 1]
         hints = (ROOF_LOOP_HINTS if self.roof_repetition_seen else ROOF_WALK_HINTS) if self.roof_active else HINTS[self.scenario]
         if self.roof_active and self.roof_transfer_active:
             hints = ROOF_TRANSFER_HINTS
@@ -755,7 +770,7 @@ class App:
             hint = 'Das nächste Ziel liegt links von Nox.'
             instruction = 'move_left() geht ein Feld zurück.'
         if self.workshop_active:
-            hint, instruction = workshop.guidance(world, self.workshop_secured())
+            hint, instruction = workshop.guidance(world, self.workshop_secured(), self.workshop_start_open)
         if world.powered and self.runner.error:
             hint = 'Das Licht brennt. Danach kam ein Fehler.'
             instruction = 'Prüfe die markierte Zeile in deinem Plan.'
@@ -804,7 +819,9 @@ class App:
         for name, rect in self.visible_buttons().items():
             pygame.draw.rect(self.canvas, CYAN if name == 'Run' else '#303c56', rect, border_radius=5)
             caption = name
-            if name == 'Werkstatt':
+            if name == 'Torstart':
+                caption = 'Starttor: offen · F11' if self.workshop_start_open else 'Starttor: zu · F11'
+            elif name == 'Werkstatt':
                 caption = 'Zu den Laternen · F10' if self.workshop_active else 'Werkstatt · F10'
             elif name == 'Laternenpaar':
                 caption = 'Zur Eigenlösung · F9' if self.pair_active else 'Zwei Laternen · F9'

@@ -320,6 +320,28 @@ app = App(save_path=save_path)
 frame()
 assert app.workshop_active and app.source == workshop_code and app.used_example
 assert app.runner.status == 'idle' and not app.runner.world.gate_open
+# Same own plan, changed initial state: blindly toggling now closes the gate.
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+assert app.runner.world.gate_open and app.source == workshop_code
+pygame.image.save(app.canvas, 'evidence/workshop-transfer-start.png')
+click('Run')
+for _ in range(8): frame(dt=.5)
+assert app.runner.status == 'error' and app.runner.world.x == 4
+assert not app.runner.world.gate_open and not app.runner.world.powered
+pygame.image.save(app.canvas, 'evidence/workshop-transfer-error.png')
+workshop_code = 'for _ in range(6):\n    move_right()\ncollect()\nfor _ in range(4):\n    move_left()\ntoggle()\nfor _ in range(2):\n    move_left()'
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text=workshop_code))
+click('Run')
+for _ in range(14): frame(dt=.5)
+assert app.workshop_secured()
+pygame.image.save(app.canvas, 'evidence/workshop-transfer-secured.png')
+click('Reset')
+assert app.runner.world.gate_open and app.runner.world.x == 1
+app = App(save_path=save_path)
+frame()
+assert app.workshop_start_open and app.runner.world.gate_open
+assert app.runner.status == 'idle' and app.source == workshop_code
 click('Werkstatt')
 assert app.source == pair_program and not app.workshop_active
 click('Werkstatt')
@@ -401,6 +423,7 @@ assert not app.alive
 print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> late-error correction -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> far-first alternative -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit')
 print('Video driver:', pygame.display.get_driver())
 print('PASS: workshop gate error -> own toggle plan -> Stop/Run -> power -> optional secure home -> hints -> six drafts saved/restored')
+print('PASS: open-start transfer -> unchanged plan fails -> own correction -> secure home -> selected start restored without autorun')
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
 storage.cleanup()

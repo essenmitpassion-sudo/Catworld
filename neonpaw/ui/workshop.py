@@ -10,12 +10,22 @@ HINTS = (
      'for _ in range(4):', '    move_right()', 'collect()'),
 )
 
+OPEN_HINTS = (
+    ('Das Tor ist schon am Anfang offen.',
+     'Was würde dein bisheriger Schalterbefehl jetzt verändern?'),
+    ('toggle() wechselt den Zustand: offen wird zu, zu wird offen.',
+     'Welche Aktion braucht dein Weg bei diesem Start noch?'),
+    ('for _ in range(6):', '    move_right()', 'collect()'),
+)
 
-def guidance(world, secured):
+
+def guidance(world, secured, start_open=False):
     if secured:
         return 'Dein Plan versorgt und sichert die Werkstatt.', 'Probiere auf Wunsch einen anderen Ablauf.'
     if world.powered:
         return 'Die Werkstatt hat Strom. Dein Weg funktioniert!', 'Freiwillig: Tor schliessen und heimkehren.'
+    if start_open and not world.gate_open:
+        return 'Das anfangs offene Tor ist jetzt geschlossen.', 'Prüfe, was toggle() in deinem Plan bewirkt.'
     if world.x == world.switch_x:
         return 'Nox steht am Schalter. toggle() schaltet um.', 'Beobachte das Tor mit Step.'
     if world.gate_open:

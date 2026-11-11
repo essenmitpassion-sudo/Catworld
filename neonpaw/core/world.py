@@ -54,5 +54,5 @@ def transition(world: World, action: str) -> World:
     if target >= world.width:
         raise ValueError('Hier endet die Gasse. move_left() führt zurück auf den Weg.')
     if target == world.gate_x and not world.gate_open:
-        raise ValueError('Das Tor ist zu. Plane vorher toggle() auf dem Schalterfeld ein.')
+        raise ValueError('Das Tor ist zu. toggle() wechselt am Schalter zwischen offen und zu.')
     return replace(world, x=target, moves=world.moves + 1)

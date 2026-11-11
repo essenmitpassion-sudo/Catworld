@@ -15,7 +15,7 @@ class DraftError(ValueError):
 def validate(state):
     expected = {'version', 'scenario', 'recall_active', 'recall_available',
                 'original', 'recall', 'original_example', 'recall_example'}
-    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2, 3, 4, 5):
+    if not isinstance(state, dict) or type(state.get('version')) is not int or state['version'] not in (1, 2, 3, 4, 5, 6):
         raise DraftError('Unbekannte Entwurfsversion.')
     if state['version'] >= 2:
         expected |= {'roof_active', 'roof', 'roof_example', 'roof_repetition_seen'}
@@ -25,6 +25,8 @@ def validate(state):
         expected |= {'pair_active', 'pair_unlocked', 'pair', 'pair_example'}
     if state['version'] >= 5:
         expected |= {'workshop_active', 'workshop_unlocked', 'workshop', 'workshop_example'}
+    if state['version'] >= 6:
+        expected.add('workshop_start_open')
     if set(state) != expected:
         raise DraftError('Unbekanntes Entwurfsformat.')
     if type(state['scenario']) is not int or state['scenario'] not in (0, 1):
@@ -38,6 +40,8 @@ def validate(state):
         bool_keys += ('pair_active', 'pair_unlocked', 'pair_example')
     if state['version'] >= 5:
         bool_keys += ('workshop_active', 'workshop_unlocked', 'workshop_example')
+    if state['version'] >= 6:
+        bool_keys += ('workshop_start_open',)
     for key in bool_keys:
         if type(state[key]) is not bool:
             raise DraftError('Ungültiger Entwurfsstatus.')

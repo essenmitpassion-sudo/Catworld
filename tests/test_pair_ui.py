@@ -65,7 +65,8 @@ def test_partial_program_never_wins_by_repeated_run_and_hints_never_edit(app):
 def test_old_save_versions_migrate_without_losing_any_program(app,version):
     finish(app,NEW_CODE)
     state=app.draft_snapshot()
-    assert state['version'] == 5
+    assert state['version'] == 6
+    state.pop('workshop_start_open')
     for key in ('workshop_active','workshop_unlocked','workshop','workshop_example'): state.pop(key)
     for key in ('pair_active','pair_unlocked','pair','pair_example'): state.pop(key)
     if version < 3:

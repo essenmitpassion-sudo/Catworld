@@ -1,12 +1,9 @@
-# Nächste Aufgabe: Werkstatt-Transfer mit verändertem Torzustand
-Werkstatt implementiert: 231 Tests, SDL-Smoke und unabhängiger Review PASS.
-Zuerst aktuellen Commit/Bundle/Remote prüfen und sichern; dann fortsetzen.
-
-Kleiner nächster Lernschritt: im selben Werkstattszenario einen zunächst offenen
-Torweg anbieten. Vorhandener eigener Code bleibt unverändert. Blindes toggle()
-schliesst dann das Tor; mit Step beobachten und eigenen Plan anpassen. Kein
-zusätzlicher Editor, keine Kopie einer Musterlösung, keine Belohnung nur fürs Umschalten.
-Reset/Run beziehen sich auf den gewählten Ausgangszustand. Speicherung und
-Rückkehr müssen nachvollziehbar bleiben. RED→GREEN, SDL, sichern, weiter.
-Später erst Sensor/Bedingungen anbieten, wenn die neue Frage spielerisch sichtbar ist.
-Menschlicher Lerntransfer bleibt offen, blockiert technische Entwicklung nicht.
+# Nächste Aufgabe: eigener Plan für beide Torzustände
+Werkstatt und Startvariation fertig; 237 Tests, voller SDL-Smoke, Review ohne Befund.
+Nach bestätigtem Commit/Bundle/Remote weiter: gate_open() als begrenzten booleschen
+Sensor und oberste if gate_open()/if not gate_open()-Blöcke mit Aktionsaufrufen
+prüfen. Bedingung muss beim Erreichen gegen aktuellen Weltzustand ausgewertet werden,
+nicht beim Laden. Step höchstens eine Weltaktion, Stop/Reset weiter zuverlässig.
+Keine else/nested if, keine Variablen, kein exec/eval. F1 optional erklärt das
+Prinzip; derselbe eigene Plan soll beide F11-Varianten lösen können. Testen, sichern,
+weiter. Menschlicher Lernnachweis bleibt offen.

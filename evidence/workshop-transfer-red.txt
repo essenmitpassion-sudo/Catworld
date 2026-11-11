@@ -1,0 +1,55 @@
+FFF...                                                                   [100%]
+=================================== FAILURES ===================================
+_______ test_transfer_changes_start_state_without_editing_player_program _______
+
+app = <neonpaw.ui.app.App object at 0x7fc8af4331d0>
+
+    def test_transfer_changes_start_state_without_editing_player_program(app):
+        enter(app)
+        write(app, LOOP_PLAN)
+        history = list(app.edit_histories['workshop'][0])
+        vary(app)
+>       assert app.runner.world.gate_open and app.runner.world.x == 1
+E       assert (False)
+E        +  where False = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False).gate_open
+E        +    where World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False) = <neonpaw.code.runner.Runner object at 0x7fc8af458440>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7fc8af458440> = <neonpaw.ui.app.App object at 0x7fc8af4331d0>.runner
+
+tests/test_workshop_transfer.py:27: AssertionError
+______ test_transfer_reset_restarts_the_selected_world_and_can_secure_it _______
+
+app = <neonpaw.ui.app.App object at 0x7fc8afa20800>
+
+    def test_transfer_reset_restarts_the_selected_world_and_can_secure_it(app):
+        enter(app)
+        vary(app)
+        run(app, LOOP_PLAN)
+>       assert not app.runner.world.gate_open
+E       assert not True
+E        +  where True = World(x=7, width=9, moves=6, battery_x=7, powered=True, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=True).gate_open
+E        +    where World(x=7, width=9, moves=6, battery_x=7, powered=True, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=True) = <neonpaw.code.runner.Runner object at 0x7fc8af5e2330>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7fc8af5e2330> = <neonpaw.ui.app.App object at 0x7fc8afa20800>.runner
+
+tests/test_workshop_transfer.py:44: AssertionError
+_____ test_selected_start_survives_navigation_and_restart_without_autorun ______
+
+app = <neonpaw.ui.app.App object at 0x7fc8af4a9a00>
+
+    def test_selected_start_survives_navigation_and_restart_without_autorun(app):
+        enter(app)
+        vary(app)
+        write(app, OPEN_START_PLAN)
+        app.save_drafts()
+        restored = App(save_path=app.save_path)
+>       assert restored.runner.world.gate_open and restored.runner.status == 'idle'
+E       assert (False)
+E        +  where False = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False).gate_open
+E        +    where World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False) = <neonpaw.code.runner.Runner object at 0x7fc8af4aa540>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7fc8af4aa540> = <neonpaw.ui.app.App object at 0x7fc8af4aa060>.runner
+
+tests/test_workshop_transfer.py:60: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_workshop_transfer.py::test_transfer_changes_start_state_without_editing_player_program
+FAILED tests/test_workshop_transfer.py::test_transfer_reset_restarts_the_selected_world_and_can_secure_it
+FAILED tests/test_workshop_transfer.py::test_selected_start_survives_navigation_and_restart_without_autorun
+3 failed, 3 passed in 0.85s
