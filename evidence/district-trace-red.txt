@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_execution_reveals_error_line_until_player_moves_cursor __________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7f9e17a571a0>
+
+    def test_execution_reveals_error_line_until_player_moves_cursor(app):
+        write(app,'collect()\n'+'# mein Plan\n'*25)
+        app.draw();assert app.scroll>0
+        app.command('Run');app.update(.5);app.draw()
+>       assert app.runner.status=='error' and app.scroll==0
+E       AssertionError: assert ('error' == 'error'
+E         
+E           error and 13 == 0)
+E        +  where 13 = <neonpaw.district.app.DistrictApp object at 0x7f9e17a571a0>.scroll
+
+tests/test_district_ui.py:116: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_district_ui.py::test_execution_reveals_error_line_until_player_moves_cursor
+1 failed in 0.36s

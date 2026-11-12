@@ -1,13 +1,15 @@
 # Erster Spielertest — 10 Minuten
 
-Status: vorbereitet, noch nicht mit einem Menschen durchgeführt.
+Status: bisheriger Testaufbau. Owner-Feedback zum bisherigen Stand: „super langweilig,..nicht schön“.
+Keine beobachtete Testsitzung mit Gerät/Spieldauer dokumentiert.
+Der neue Richtungsprototyp und sein Testauftrag stehen in [AFTERLIGHT.md](AFTERLIGHT.md).
 Spielstand des Builds: 51dffbd (282 automatisierte Tests und SDL-Smoke bestanden).
 Ziel: Prüfen, ob der Einstieg verstanden wird und freiwillige Neugier entsteht.
 Keine neue Mechanik ist Voraussetzung für diesen Test.
 
 ## Start
 
-[Testbuild als ZIP herunterladen](https://github.com/essenmitpassion-sudo/Catworld/archive/refs/heads/codex/masterplan-run-consistency.zip),
+[Testbuild als ZIP herunterladen](https://github.com/essenmitpassion-sudo/Catworld/archive/a36bc1160ce5ab8a922b7b033cc41ad17a50d13a.zip),
 vollständig entpacken. Python 3.12 oder neuer ist erforderlich.
 Der erste Start installiert die Abhängigkeiten mit Internetzugang.
 

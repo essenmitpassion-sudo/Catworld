@@ -1,4 +1,12 @@
-# CATWORLD / NEONPAW — Licht für Nox
+# CATWORLD / NEONPAW
+
+**Neue Spielrichtung: [AFTERLIGHT — frei spielbarer Kanalbezirk](AFTERLIGHT.md).**
+Windows: `start_afterlight_windows.bat`. Energie umverteilen, Brücken öffnen,
+Garten und Katzenzuflucht beleben; räumliche Darstellung, direkt zugänglich.
+
+![AFTERLIGHT — der versorgte Bezirk](evidence/district-restored.png)
+
+## Bisheriger Build — Licht für Nox
 
 Nox sitzt vor einem dunklen Nacht-Automaten. Dein Programm bringt das Licht zurück.
 Ein kurzer Abschnitt: beobachten, selbst ergänzen, den zweiten Anschluss lösen und

@@ -113,9 +113,10 @@ def parse_action(stmt):
 
 
 class Runner:
-    def __init__(self, max_steps=64, initial_world=None):
+    def __init__(self, max_steps=64, initial_world=None, transition_fn=transition):
         self.initial_world = initial_world if initial_world is not None else World()
         self.max_steps = max_steps
+        self.transition = transition_fn
         self.reset()
 
     def reset(self):
@@ -188,7 +189,7 @@ class Runner:
             if not isinstance(action, GateCheck):
                 break
             self.line = line
-            if self.world.gate_x is None:
+            if getattr(self.world, 'gate_x', None) is None:
                 self.error = f'Zeile {line}: Hier gibt es kein Tor für gate_open().'
                 self.status = 'error'
                 return
@@ -209,7 +210,7 @@ class Runner:
             self.status = 'error'
             return
         try:
-            self.world = transition(self.world, action)
+            self.world = self.transition(self.world, action)
         except ValueError as exc:
             self.error = f'Zeile {self.line}: {exc}'
             self.status = 'error'

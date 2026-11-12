@@ -1,0 +1,11 @@
+Independent reviewer /root/review_restart, read-only:
+23 District tests PASS;88 existing Runner/language tests PASS.
+All442 reachable world states (moves normalized) can reach restored district.
+No world softlock or shared-runner execution security finding.
+Start/restored/help screenshots inspected; help blocks background input.
+Findings: Important corrupt file overwritten after load failure; Important quit
+closes despite failed save; Minor error/execution line outside visible editor.
+Integrator fixes: corrupt/oversize backup + stay open on save failure + bounded
+read/autosave attempt; trace follows execution until manual navigation.
+4 regression tests observed RED then GREEN. Full final suite327 PASS.
+No human enjoyment/learning claim; Windows native interaction NOT_TESTED.

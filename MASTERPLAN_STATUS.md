@@ -150,3 +150,15 @@ Nächster Prototyp: zusammenhängender Bezirk mit umverteilbarer knapper Energie
 Gebäudefunktionen und freier Reihenfolge; neue räumliche Darstellung. Bestehenden
 Build erhalten, keine Fortschrittsdaten migrieren oder ersetzen. Details im neuen
 Prototypplan. Wirkung auf Spielspass bleibt zu prüfen.
+
+## Konkrete Antwort auf den Befund — AFTERLIGHT
+M: separater spielbarer Bezirk umgesetzt, keine sieben Lektionen als Zugang.
+Umverteilbare Energie und zwei Gebäude öffnen zwei Wege; Akku erlaubt Ausbau;
+Zuflucht bringt Bewohner. Zusammenhängender Zustand zwischen Programmen,
+Rücknahme erleichtert Experimente. Neue isometrische Darstellung mit Kanal,
+Gebäuden, Gartenwachstum, Licht und Katzen. Alter Build bleibt lauffähig.
+M:327 Tests, beide SDL-Abläufe PASS; unabhängige Weltprüfung ohne Softlock.
+V: bessere Neugier, visuelle Attraktivität und Spieltiefe. Diese Hypothesen sind
+nach dem negativen Owner-Feedback erneut zu testen, nicht als erfüllt zu markieren.
+Nicht gelöst: langfristige Automatisierung, Wiederverwendung mehrerer Routinen,
+Lerntransfernachweis, abwechslungsreiche spätere Entdeckung.

@@ -2,3 +2,4 @@
 __pycache__/
 .pytest_cache/
 player-test-data/
+afterlight-data/

@@ -1,0 +1,49 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+__________ test_corrupt_original_is_backed_up_before_first_edit_save ___________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7ff8278727e0>
+
+    def test_corrupt_original_is_backed_up_before_first_edit_save(app):
+        original=b'\xff\xfe broken original'
+        app.save_path.write_bytes(original)
+        restored=DistrictApp(save_path=app.save_path)
+        write(restored,'# neuer Text');restored.update(.01)
+        backups=list(app.save_path.parent.glob('district.txt.damaged-*'))
+>       assert len(backups)==1 and backups[0].read_bytes()==original
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests/test_district_ui.py:90: AssertionError
+____ test_failed_exit_save_keeps_editor_open_and_does_not_retry_each_frame _____
+
+app = <neonpaw.district.app.DistrictApp object at 0x7ff82773ef30>
+
+    def test_failed_exit_save_keeps_editor_open_and_does_not_retry_each_frame(app):
+        write(app,'# ungesichert');app.save_path=app.save_path.parent
+        app.handle(pygame.event.Event(pygame.QUIT))
+>       assert app.alive and app.dirty and app.source=='# ungesichert'
+E       assert (False)
+E        +  where False = <neonpaw.district.app.DistrictApp object at 0x7ff82773ef30>.alive
+
+tests/test_district_ui.py:97: AssertionError
+_____________ test_oversize_draft_is_preserved_before_replacement ______________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7ff82773ff20>
+
+    def test_oversize_draft_is_preserved_before_replacement(app):
+        original='x'*5000
+        app.save_path.write_text(original)
+        restored=DistrictApp(save_path=app.save_path)
+        assert restored.source=='move_right()'
+        write(restored,'move_left()');restored.save()
+>       assert next(app.save_path.parent.glob('district.txt.damaged-*')).read_text()==original
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tests/test_district_ui.py:109: StopIteration
+=========================== short test summary info ============================
+FAILED tests/test_district_ui.py::test_corrupt_original_is_backed_up_before_first_edit_save
+FAILED tests/test_district_ui.py::test_failed_exit_save_keeps_editor_open_and_does_not_retry_each_frame
+FAILED tests/test_district_ui.py::test_oversize_draft_is_preserved_before_replacement
+3 failed, 7 deselected in 0.38s

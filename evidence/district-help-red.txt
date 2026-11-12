@@ -1,0 +1,19 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_help_pauses_world_and_blocks_hidden_editor_controls ___________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7f7539506990>
+
+    def test_help_pauses_world_and_blocks_hidden_editor_controls(app):
+        write(app,'move_right()\nmove_right()');app.command('Run')
+        app.command('Help');app.update(1)
+>       assert app.runner.world.x==1 and app.runner.status=='paused'
+E       assert (2 == 1)
+E        +  where 2 = District(x=2, y=3, energy=1, active=frozenset(), cell_collected=False, moves=1).x
+E        +    where District(x=2, y=3, energy=1, active=frozenset(), cell_collected=False, moves=1) = <neonpaw.code.runner.Runner object at 0x7f7539552180>.world
+E        +      where <neonpaw.code.runner.Runner object at 0x7f7539552180> = <neonpaw.district.app.DistrictApp object at 0x7f7539506990>.runner
+
+tests/test_district_ui.py:75: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_district_ui.py::test_help_pauses_world_and_blocks_hidden_editor_controls
+1 failed in 0.37s
