@@ -374,6 +374,42 @@ for expected_open in (True, False):
     for _ in range(8): frame(dt=.5)
     assert app.runner.world.powered and app.runner.status == 'done'
     frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+# Same player-authored bridge plan bypasses either gate state without toggling.
+from tests.test_workshop_routes import BRIDGE_PLAN, BRIDGE_HOME
+for expected_open in (True, False):
+    assert app.workshop_start_open == expected_open
+    frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+    frame(pygame.event.Event(pygame.TEXTINPUT, text=BRIDGE_PLAN))
+    click('Step'); frame(dt=.12)
+    click('Step'); frame(dt=.12)
+    assert (app.runner.world.x, app.runner.world.y) == (2, 1)
+    assert app.visual_y == 1
+    click('Stop'); frame(dt=1)
+    assert app.runner.world.y == 1
+    pygame.image.save(app.canvas, 'evidence/bridge-climbed.png')
+    click('Run')  # Stop starts a fresh attempt.
+    for _ in range(5): frame(dt=.5)
+    assert (app.runner.world.x, app.runner.world.y) == (5, 1)
+    assert app.runner.world.gate_open == expected_open
+    click('Pruefen')
+    assert [(r.success, r.actions) for r in app.plan_results] == [(True, 9), (True, 9)]
+    assert app.runner.world.y == 1 and app.runner.status == 'paused'
+    pygame.image.save(app.canvas, 'evidence/bridge-comparison.png')
+    click('Run')
+    for _ in range(5): frame(dt=.5)
+    assert app.runner.world.powered and app.runner.world.y == 0
+    assert app.runner.executed_steps == 9
+    frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+    frame(pygame.event.Event(pygame.TEXTINPUT, text=BRIDGE_PLAN + BRIDGE_HOME))
+    click('Run')
+    for _ in range(20): frame(dt=.5)
+    assert app.runner.status == 'done' and app.runner.world.powered
+    assert (app.runner.world.x, app.runner.world.y) == (1, 0)
+    assert app.workshop_secured() == (not expected_open)
+    pygame.image.save(app.canvas, 'evidence/bridge-home.png')
+    click('Torstart')
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text=workshop_code))
 for _ in range(3): click('Hilfe')
 assert app.source == workshop_code
 pygame.image.save(app.canvas, 'evidence/gate-condition-hint.png')
@@ -465,6 +501,7 @@ print('PASS: workshop gate error -> own toggle plan -> Stop/Run -> power -> opti
 print('PASS: open-start transfer -> unchanged plan fails -> own correction -> secure home -> selected start restored without autorun')
 print('PASS: identical adaptive code -> live if result -> Step/Run under both initial states -> optional condition help -> original code retained')
 print('PASS: plan comparison -> independent worlds -> real attempt paused/preserved -> no goal for unfinished code -> Undo invalidates comparison')
+print('PASS: two bridge starts -> climb -> Stop/retry -> above gate -> isolated comparison -> power in nine actions -> bridge home -> original plan retained')
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
 storage.cleanup()

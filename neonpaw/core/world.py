@@ -15,6 +15,9 @@ class World:
     switch_x: int | None = None
     gate_x: int | None = None
     gate_open: bool = False
+    y: int = 0
+    upper_tiles: tuple[int, ...] = ()
+    ladders: tuple[int, ...] = ()
 
     @property
     def target_x(self):
@@ -22,6 +25,15 @@ class World:
 
 
 def transition(world: World, action: str) -> World:
+    if action in ('move_up', 'move_down'):
+        if world.x not in world.ladders or world.x not in world.upper_tiles:
+            raise ValueError('Hier ist keine Leiter. Suche die Leiter am Ende des Stegs.')
+        target_y = 1 if action == 'move_up' else 0
+        if world.y == target_y:
+            raise ValueError('Nox ist bereits oben.' if target_y else 'Nox ist bereits unten.')
+        return replace(world, y=target_y, moves=world.moves + 1)
+    if world.y != 0 and action in ('toggle', 'collect'):
+        raise ValueError('Schalter und Batterie liegen unten. Steige an einer Leiter zum Boden ab.')
     if action == 'toggle':
         if world.switch_x is None or world.gate_x is None:
             raise ValueError('Hier gibt es keinen Schalter. toggle() gehört zur Werkstatt.')
@@ -53,6 +65,8 @@ def transition(world: World, action: str) -> World:
         raise ValueError('Hier ist der linke Rand. move_right() führt zurück auf den Weg.')
     if target >= world.width:
         raise ValueError('Hier endet die Gasse. move_left() führt zurück auf den Weg.')
-    if target == world.gate_x and not world.gate_open:
+    if world.y == 1 and target not in world.upper_tiles:
+        raise ValueError('Hier endet der Steg. Gehe zurück oder nutze move_down() an der Leiter.')
+    if world.y == 0 and target == world.gate_x and not world.gate_open:
         raise ValueError('Das Tor ist zu. toggle() wechselt am Schalter zwischen offen und zu.')
     return replace(world, x=target, moves=world.moves + 1)

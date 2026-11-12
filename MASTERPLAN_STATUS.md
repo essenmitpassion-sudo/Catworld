@@ -139,3 +139,14 @@ jetzt über PLAYER_TEST.md mit Startweg und Beobachtungskriterien vorbereitet.
 Keine weitere Mechanik vor dem Test erforderlich. Pareto: zuerst den realen
 Zugangs-/Verständnisengpass und freiwillige Neugier beobachten. Kein Anspruch
 vollständiger Masterprompt-Erfüllung; Fun/Learning bleiben Hypothesen.
+
+## Owner-Befund und Richtungswechsel — 2026-11-12
+O: „super langweilig,..nicht schön“. Kontext: bisheriger Build; konkrete Spielzeit,
+Gerät und betrachteter Abschnitt unbekannt. Kein erfundenes Testprotokoll.
+Masterprompt vollständig erneut gelesen. Abweichung: viele lineare Aufgaben und
+Bedienverbesserungen, wenig Weltentdeckung, Zielkonflikte und visuelle Qualität.
+Der Steg ist ein technisches Routenexperiment, keine Lösung dieses Produktbefunds.
+Nächster Prototyp: zusammenhängender Bezirk mit umverteilbarer knapper Energie,
+Gebäudefunktionen und freier Reihenfolge; neue räumliche Darstellung. Bestehenden
+Build erhalten, keine Fortschrittsdaten migrieren oder ersetzen. Details im neuen
+Prototypplan. Wirkung auf Spielspass bleibt zu prüfen.

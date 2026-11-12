@@ -3,7 +3,8 @@ from neonpaw.core.world import World
 
 def workshop_world(start_open=False):
     """Shared starting rules for playing and checking a workshop plan."""
-    return World(battery_x=7, switch_x=3, gate_x=5, gate_open=start_open)
+    return World(battery_x=7, switch_x=3, gate_x=5, gate_open=start_open,
+                 upper_tiles=(2, 3, 4, 5, 6), ladders=(2, 6))
 
 
 TITLE = 'ERSTER PFOTENSCHRITT'

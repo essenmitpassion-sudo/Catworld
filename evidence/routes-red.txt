@@ -1,0 +1,821 @@
+FFFFFFFFFFFFFF                                                           [100%]
+=================================== FAILURES ===================================
+____ test_two_routes_power_same_workshop_with_distinct_action_costs[False] _____
+
+start_open = False
+
+    @pytest.mark.parametrize('start_open', [False, True])
+    def test_two_routes_power_same_workshop_with_distinct_action_costs(start_open):
+        bridge = Runner(initial_world=workshop_world(start_open))
+>       finish(bridge, BRIDGE_PLAN)
+
+tests/test_workshop_routes.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_workshop.py:18: in finish
+    runner.load(source)
+neonpaw/code/runner.py:144: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:92: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.Expr object at 0x7f141734de50>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+            raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+        name = stmt.value.func.id
+        if name not in ACTIONS:
+            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+>           raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 2: Unbekannter Befehl move_up. Nutze einen Befehl aus deiner Hilfe.
+
+neonpaw/code/runner.py:109: ProgramError
+_____ test_two_routes_power_same_workshop_with_distinct_action_costs[True] _____
+
+start_open = True
+
+    @pytest.mark.parametrize('start_open', [False, True])
+    def test_two_routes_power_same_workshop_with_distinct_action_costs(start_open):
+        bridge = Runner(initial_world=workshop_world(start_open))
+>       finish(bridge, BRIDGE_PLAN)
+
+tests/test_workshop_routes.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_workshop.py:18: in finish
+    runner.load(source)
+neonpaw/code/runner.py:144: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:92: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.Expr object at 0x7f1417401590>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+            raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+        name = stmt.value.func.id
+        if name not in ACTIONS:
+            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+>           raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 2: Unbekannter Befehl move_up. Nutze einen Befehl aus deiner Hilfe.
+
+neonpaw/code/runner.py:109: ProgramError
+_____________ test_bridge_allows_return_over_closed_gate_and_reset _____________
+
+    def test_bridge_allows_return_over_closed_gate_and_reset():
+        runner = Runner(initial_world=workshop_world())
+>       finish(runner, BRIDGE_PLAN + BRIDGE_HOME)
+
+tests/test_workshop_routes.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_workshop.py:18: in finish
+    runner.load(source)
+neonpaw/code/runner.py:144: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:92: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.Expr object at 0x7f141734e650>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+            raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+        name = stmt.value.func.id
+        if name not in ACTIONS:
+            near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
+            suggestion = f' Meintest du {near[0]}()?' if near else ' Nutze einen Befehl aus deiner Hilfe.'
+>           raise ProgramError(f'Unbekannter Befehl {name[:32]}.{suggestion}', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 2: Unbekannter Befehl move_up. Nutze einen Befehl aus deiner Hilfe.
+
+neonpaw/code/runner.py:109: ProgramError
+_______________ test_plan_comparison_accepts_both_bridge_starts ________________
+
+    def test_plan_comparison_accepts_both_bridge_starts():
+>       assert [(r.success, r.actions) for r in check_workshop(BRIDGE_PLAN)] == [(True, 9), (True, 9)]
+E       assert [(False, 0), (False, 0)] == [(True, 9), (True, 9)]
+E         
+E         At index 0 diff: (False, 0) != (True, 9)
+E         Use -v to get more diff
+
+tests/test_workshop_routes.py:41: AssertionError
+_______ test_no_climbing_without_ladder_or_beyond_floor[world0-move_up] ________
+
+world = World(x=1, width=9, moves=0, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=None, gate_x=None, gate_open=False)
+action = 'move_up'
+
+    @pytest.mark.parametrize('world,action', [
+        (World(), 'move_up'), (workshop_world(), 'move_up'),
+        (replace(workshop_world(), x=2), 'move_down'),
+    ])
+    def test_no_climbing_without_ladder_or_beyond_floor(world, action):
+        with pytest.raises(ValueError, match='Leiter|oben|unten'):
+>           transition(world, action)
+
+tests/test_workshop_routes.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=1, width=9, moves=0, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=None, gate_x=None, gate_open=False)
+action = 'move_up'
+
+    def transition(world: World, action: str) -> World:
+        if action == 'toggle':
+            if world.switch_x is None or world.gate_x is None:
+                raise ValueError('Hier gibt es keinen Schalter. toggle() gehört zur Werkstatt.')
+            if world.x != world.switch_x:
+                raise ValueError('Gehe zum Schalterfeld. toggle() schaltet dort das Tor um.')
+            return replace(world, gate_open=not world.gate_open)
+        if action == 'collect':
+            if world.powered:
+                if world.second_battery_x is not None:
+                    raise ValueError('Beide Laternen leuchten bereits. Du kannst den Heimweg planen.')
+                raise ValueError('Die Batterie ist bereits im Automaten. Er leuchtet!')
+            if world.second_battery_x is not None:
+                if world.x == world.battery_x and not world.first_lit:
+                    return replace(world, first_lit=True, powered=world.second_lit)
+                if world.x == world.second_battery_x and not world.second_lit:
+                    return replace(world, second_lit=True, powered=world.first_lit)
+                if not world.first_lit and not world.second_lit:
+                    raise ValueError('Hier liegt keine Batterie. Wähle eines der beiden Leuchtfelder.')
+                goal = 'zweite Laterne' if world.first_lit else 'erste Laterne'
+                raise ValueError(f'Hier liegt keine ungenutzte Batterie. Erreiche die {goal} am Leuchtfeld.')
+            if world.x != world.target_x:
+                raise ValueError('Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.')
+            return replace(world, powered=True)
+        if action not in ('move_right', 'move_left'):
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:49: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = World(x=1, width=9, moves=0, battery_x=2, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=None, gate_x=None, gate_open=False)
+action = 'move_up'
+
+    @pytest.mark.parametrize('world,action', [
+        (World(), 'move_up'), (workshop_world(), 'move_up'),
+        (replace(workshop_world(), x=2), 'move_down'),
+    ])
+    def test_no_climbing_without_ladder_or_beyond_floor(world, action):
+>       with pytest.raises(ValueError, match='Leiter|oben|unten'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Leiter|oben|unten'
+E        Input: 'Unbekannte Weltaktion.'
+
+tests/test_workshop_routes.py:49: AssertionError
+_______ test_no_climbing_without_ladder_or_beyond_floor[world1-move_up] ________
+
+world = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+action = 'move_up'
+
+    @pytest.mark.parametrize('world,action', [
+        (World(), 'move_up'), (workshop_world(), 'move_up'),
+        (replace(workshop_world(), x=2), 'move_down'),
+    ])
+    def test_no_climbing_without_ladder_or_beyond_floor(world, action):
+        with pytest.raises(ValueError, match='Leiter|oben|unten'):
+>           transition(world, action)
+
+tests/test_workshop_routes.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+action = 'move_up'
+
+    def transition(world: World, action: str) -> World:
+        if action == 'toggle':
+            if world.switch_x is None or world.gate_x is None:
+                raise ValueError('Hier gibt es keinen Schalter. toggle() gehört zur Werkstatt.')
+            if world.x != world.switch_x:
+                raise ValueError('Gehe zum Schalterfeld. toggle() schaltet dort das Tor um.')
+            return replace(world, gate_open=not world.gate_open)
+        if action == 'collect':
+            if world.powered:
+                if world.second_battery_x is not None:
+                    raise ValueError('Beide Laternen leuchten bereits. Du kannst den Heimweg planen.')
+                raise ValueError('Die Batterie ist bereits im Automaten. Er leuchtet!')
+            if world.second_battery_x is not None:
+                if world.x == world.battery_x and not world.first_lit:
+                    return replace(world, first_lit=True, powered=world.second_lit)
+                if world.x == world.second_battery_x and not world.second_lit:
+                    return replace(world, second_lit=True, powered=world.first_lit)
+                if not world.first_lit and not world.second_lit:
+                    raise ValueError('Hier liegt keine Batterie. Wähle eines der beiden Leuchtfelder.')
+                goal = 'zweite Laterne' if world.first_lit else 'erste Laterne'
+                raise ValueError(f'Hier liegt keine ungenutzte Batterie. Erreiche die {goal} am Leuchtfeld.')
+            if world.x != world.target_x:
+                raise ValueError('Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.')
+            return replace(world, powered=True)
+        if action not in ('move_right', 'move_left'):
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:49: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+action = 'move_up'
+
+    @pytest.mark.parametrize('world,action', [
+        (World(), 'move_up'), (workshop_world(), 'move_up'),
+        (replace(workshop_world(), x=2), 'move_down'),
+    ])
+    def test_no_climbing_without_ladder_or_beyond_floor(world, action):
+>       with pytest.raises(ValueError, match='Leiter|oben|unten'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Leiter|oben|unten'
+E        Input: 'Unbekannte Weltaktion.'
+
+tests/test_workshop_routes.py:49: AssertionError
+______ test_no_climbing_without_ladder_or_beyond_floor[world2-move_down] _______
+
+world = World(x=2, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+action = 'move_down'
+
+    @pytest.mark.parametrize('world,action', [
+        (World(), 'move_up'), (workshop_world(), 'move_up'),
+        (replace(workshop_world(), x=2), 'move_down'),
+    ])
+    def test_no_climbing_without_ladder_or_beyond_floor(world, action):
+        with pytest.raises(ValueError, match='Leiter|oben|unten'):
+>           transition(world, action)
+
+tests/test_workshop_routes.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+world = World(x=2, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+action = 'move_down'
+
+    def transition(world: World, action: str) -> World:
+        if action == 'toggle':
+            if world.switch_x is None or world.gate_x is None:
+                raise ValueError('Hier gibt es keinen Schalter. toggle() gehört zur Werkstatt.')
+            if world.x != world.switch_x:
+                raise ValueError('Gehe zum Schalterfeld. toggle() schaltet dort das Tor um.')
+            return replace(world, gate_open=not world.gate_open)
+        if action == 'collect':
+            if world.powered:
+                if world.second_battery_x is not None:
+                    raise ValueError('Beide Laternen leuchten bereits. Du kannst den Heimweg planen.')
+                raise ValueError('Die Batterie ist bereits im Automaten. Er leuchtet!')
+            if world.second_battery_x is not None:
+                if world.x == world.battery_x and not world.first_lit:
+                    return replace(world, first_lit=True, powered=world.second_lit)
+                if world.x == world.second_battery_x and not world.second_lit:
+                    return replace(world, second_lit=True, powered=world.first_lit)
+                if not world.first_lit and not world.second_lit:
+                    raise ValueError('Hier liegt keine Batterie. Wähle eines der beiden Leuchtfelder.')
+                goal = 'zweite Laterne' if world.first_lit else 'erste Laterne'
+                raise ValueError(f'Hier liegt keine ungenutzte Batterie. Erreiche die {goal} am Leuchtfeld.')
+            if world.x != world.target_x:
+                raise ValueError('Hier liegt keine Batterie. Gehe zum markierten Feld; bei Bedarf Reset.')
+            return replace(world, powered=True)
+        if action not in ('move_right', 'move_left'):
+>           raise ValueError('Unbekannte Weltaktion.')
+E           ValueError: Unbekannte Weltaktion.
+
+neonpaw/core/world.py:49: ValueError
+
+During handling of the above exception, another exception occurred:
+
+world = World(x=2, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+action = 'move_down'
+
+    @pytest.mark.parametrize('world,action', [
+        (World(), 'move_up'), (workshop_world(), 'move_up'),
+        (replace(workshop_world(), x=2), 'move_down'),
+    ])
+    def test_no_climbing_without_ladder_or_beyond_floor(world, action):
+>       with pytest.raises(ValueError, match='Leiter|oben|unten'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'Leiter|oben|unten'
+E        Input: 'Unbekannte Weltaktion.'
+
+tests/test_workshop_routes.py:49: AssertionError
+_______ test_upper_path_has_real_edges_and_climbing_limits[2-move_left] ________
+
+x = 2, action = 'move_left'
+
+    @pytest.mark.parametrize('x,action', [(2, 'move_left'), (6, 'move_right'),
+                                           (3, 'move_down'), (2, 'move_up')])
+    def test_upper_path_has_real_edges_and_climbing_limits(x, action):
+>       world = replace(workshop_world(), x=x, y=1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 7, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+_______ test_upper_path_has_real_edges_and_climbing_limits[6-move_right] _______
+
+x = 6, action = 'move_right'
+
+    @pytest.mark.parametrize('x,action', [(2, 'move_left'), (6, 'move_right'),
+                                           (3, 'move_down'), (2, 'move_up')])
+    def test_upper_path_has_real_edges_and_climbing_limits(x, action):
+>       world = replace(workshop_world(), x=x, y=1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 7, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+_______ test_upper_path_has_real_edges_and_climbing_limits[3-move_down] ________
+
+x = 3, action = 'move_down'
+
+    @pytest.mark.parametrize('x,action', [(2, 'move_left'), (6, 'move_right'),
+                                           (3, 'move_down'), (2, 'move_up')])
+    def test_upper_path_has_real_edges_and_climbing_limits(x, action):
+>       world = replace(workshop_world(), x=x, y=1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 7, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+________ test_upper_path_has_real_edges_and_climbing_limits[2-move_up] _________
+
+x = 2, action = 'move_up'
+
+    @pytest.mark.parametrize('x,action', [(2, 'move_left'), (6, 'move_right'),
+                                           (3, 'move_down'), (2, 'move_up')])
+    def test_upper_path_has_real_edges_and_climbing_limits(x, action):
+>       world = replace(workshop_world(), x=x, y=1)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 7, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+_______ test_upper_path_cannot_interact_with_objects_on_ground[toggle-3] _______
+
+action = 'toggle', x = 3
+
+    @pytest.mark.parametrize('action,x', [('toggle', 3), ('collect', 3)])
+    def test_upper_path_cannot_interact_with_objects_on_ground(action, x):
+>       world = replace(workshop_world(), x=x, y=1, battery_x=x)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 3, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+______ test_upper_path_cannot_interact_with_objects_on_ground[collect-3] _______
+
+action = 'collect', x = 3
+
+    @pytest.mark.parametrize('action,x', [('toggle', 3), ('collect', 3)])
+    def test_upper_path_cannot_interact_with_objects_on_ground(action, x):
+>       world = replace(workshop_world(), x=x, y=1, battery_x=x)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=1, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 3, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+_____ test_closed_gate_blocks_ground_but_not_upper_path_in_both_directions _____
+
+    def test_closed_gate_blocks_ground_but_not_upper_path_in_both_directions():
+        for x, action in [(4, 'move_right'), (6, 'move_left')]:
+            ground = replace(workshop_world(), x=x)
+            with pytest.raises(ValueError, match='Tor'): transition(ground, action)
+>           upper = replace(ground, y=1)
+                    ^^^^^^^^^^^^^^^^^^^^
+
+tests/test_workshop_routes.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+obj = World(x=4, width=9, moves=0, battery_x=7, powered=False, second_battery_x=None, first_lit=False, second_lit=False, switch_x=3, gate_x=5, gate_open=False)
+changes = {'battery_x': 7, 'first_lit': False, 'gate_open': False, 'gate_x': 5, ...}
+f = Field(name='gate_open',type=<class 'bool'>,default=False,default_factory=<dataclasses._MISSING_TYPE object at 0x7f1417df4ad0>,init=True,repr=True,hash=None,compare=True,metadata=mappingproxy({}),kw_only=False,_field_type=_FIELD)
+
+    def replace(obj, /, **changes):
+        """Return a new object replacing specified fields with new values.
+    
+        This is especially useful for frozen classes.  Example usage::
+    
+          @dataclass(frozen=True)
+          class C:
+              x: int
+              y: int
+    
+          c = C(1, 2)
+          c1 = replace(c, x=3)
+          assert c1.x == 3 and c1.y == 2
+        """
+    
+        # We're going to mutate 'changes', but that's okay because it's a
+        # new dict, even if called with 'replace(obj, **my_changes)'.
+    
+        if not _is_dataclass_instance(obj):
+            raise TypeError("replace() should be called on dataclass instances")
+    
+        # It's an error to have init=False fields in 'changes'.
+        # If a field is not in 'changes', read its value from the provided obj.
+    
+        for f in getattr(obj, _FIELDS).values():
+            # Only consider normal fields or InitVars.
+            if f._field_type is _FIELD_CLASSVAR:
+                continue
+    
+            if not f.init:
+                # Error if this field is specified in changes.
+                if f.name in changes:
+                    raise ValueError(f'field {f.name} is declared with '
+                                     'init=False, it cannot be specified with '
+                                     'replace()')
+                continue
+    
+            if f.name not in changes:
+                if f._field_type is _FIELD_INITVAR and f.default is MISSING:
+                    raise ValueError(f"InitVar {f.name!r} "
+                                     'must be specified with replace()')
+                changes[f.name] = getattr(obj, f.name)
+    
+        # Create the new object, which calls __init__() and
+        # __post_init__() (if defined), using all of the init fields we've
+        # added and/or left in 'changes'.  If there are values supplied in
+        # changes that aren't fields, this will correctly raise a
+        # TypeError.
+>       return obj.__class__(**changes)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: World.__init__() got an unexpected keyword argument 'y'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py:1588: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_workshop_routes.py::test_two_routes_power_same_workshop_with_distinct_action_costs[False]
+FAILED tests/test_workshop_routes.py::test_two_routes_power_same_workshop_with_distinct_action_costs[True]
+FAILED tests/test_workshop_routes.py::test_bridge_allows_return_over_closed_gate_and_reset
+FAILED tests/test_workshop_routes.py::test_plan_comparison_accepts_both_bridge_starts
+FAILED tests/test_workshop_routes.py::test_no_climbing_without_ladder_or_beyond_floor[world0-move_up]
+FAILED tests/test_workshop_routes.py::test_no_climbing_without_ladder_or_beyond_floor[world1-move_up]
+FAILED tests/test_workshop_routes.py::test_no_climbing_without_ladder_or_beyond_floor[world2-move_down]
+FAILED tests/test_workshop_routes.py::test_upper_path_has_real_edges_and_climbing_limits[2-move_left]
+FAILED tests/test_workshop_routes.py::test_upper_path_has_real_edges_and_climbing_limits[6-move_right]
+FAILED tests/test_workshop_routes.py::test_upper_path_has_real_edges_and_climbing_limits[3-move_down]
+FAILED tests/test_workshop_routes.py::test_upper_path_has_real_edges_and_climbing_limits[2-move_up]
+FAILED tests/test_workshop_routes.py::test_upper_path_cannot_interact_with_objects_on_ground[toggle-3]
+FAILED tests/test_workshop_routes.py::test_upper_path_cannot_interact_with_objects_on_ground[collect-3]
+FAILED tests/test_workshop_routes.py::test_closed_gate_blocks_ground_but_not_upper_path_in_both_directions
+14 failed in 0.22s

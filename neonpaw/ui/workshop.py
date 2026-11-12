@@ -1,6 +1,8 @@
 """Workshop presentation only: actions and state live in core.world."""
 import pygame
 
+UPPER_OFFSET = 110
+
 ADAPTIVE_EXAMPLE = (
     'for _ in range(2):', '    move_right()',
     'if not gate_open():', '    toggle()',
@@ -8,8 +10,8 @@ ADAPTIVE_EXAMPLE = (
 )
 
 HINTS = (
-    ('Das Tor versperrt den Weg zur Batterie.',
-     'Welche Verbindung siehst du zwischen Schalter und Tor?'),
+    ('Unten liegt das Tor, oben führt ein längerer Steg vorbei.',
+     'An Leitern: move_up() hinauf, move_down() hinunter. Du wählst den Weg.'),
     ('toggle() schaltet am Schalter um; gate_open() liest den Torzustand.',
      'if not gate_open(): führt eingerückte Befehle nur bei geschlossenem Tor aus.'),
     ADAPTIVE_EXAMPLE,
@@ -28,14 +30,18 @@ def guidance(world, secured, start_open=False):
     if secured:
         return 'Dein Plan versorgt und sichert die Werkstatt.', 'Probiere auf Wunsch einen anderen Ablauf.'
     if world.powered:
-        return 'Die Werkstatt hat Strom. Dein Weg funktioniert!', 'Freiwillig: Tor schliessen und heimkehren.'
+        return 'Die Werkstatt hat Strom. Dein Weg funktioniert!', ('Freiwillig: Tor schliessen und heimkehren.' if world.gate_open else 'Freiwillig: Finde deinen Weg nach Hause.')
+    if world.y == 1:
+        return 'Nox geht über das Tor hinweg.', 'Am Stegende: move_down() zum Boden.'
+    if world.x in world.ladders:
+        return 'Hier führt eine Leiter zum Steg.', 'move_up() zum Steg. Oder unten weitergehen.'
     if start_open and not world.gate_open:
         return 'Das anfangs offene Tor ist jetzt geschlossen.', 'Prüfe, was toggle() in deinem Plan bewirkt.'
     if world.x == world.switch_x:
         return 'Nox steht am Schalter. toggle() schaltet um.', 'Beobachte das Tor mit Step.'
     if world.gate_open:
         return 'Das Tor ist offen. Der Weg ist jetzt frei.', 'Erreiche die Batterie und nutze collect().'
-    return 'Ein Tor versperrt den Weg zur Werkstatt.', 'Finde den Schalter. F1 hilft auf Wunsch.'
+    return 'Torweg oder längerer Steg: Du wählst.', 'Schalter oder Leiter? F1 hilft auf Wunsch.'
 
 
 def comparison_lines(results, font):
@@ -61,6 +67,18 @@ def comparison_lines(results, font):
 
 def draw_devices(scene, world, font):
     scene.fill('#182b36', (0, 108, 350, 78))
+    for x in world.upper_tiles:
+        tile_x = 13 + 36 * x
+        pygame.draw.rect(scene, '#344957', (tile_x, 192 - UPPER_OFFSET, 32, 30))
+        pygame.draw.line(scene, '#8eb4c6', (tile_x, 192 - UPPER_OFFSET),
+                         (tile_x + 31, 192 - UPPER_OFFSET), 2)
+    for x in world.ladders:
+        lx = 29 + 36 * x
+        for side in (-10, 10):
+            pygame.draw.line(scene, '#8eb4c6', (lx + side, 112), (lx + side, 214), 2)
+        for y in range(116, 214, 12):
+            pygame.draw.line(scene, '#8eb4c6', (lx - 10, y), (lx + 10, y), 2)
+    scene.blit(font.render('STEG', False, '#b4d5df'), (165, 57))
     switch = 29 + 36 * world.switch_x
     gate = 29 + 36 * world.gate_x
     machine = 29 + 36 * world.battery_x

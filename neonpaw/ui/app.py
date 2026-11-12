@@ -63,6 +63,7 @@ class App:
         self.scroll = 0
         self.elapsed = 0.0
         self.visual_x = float(self.runner.world.x)
+        self.visual_y = float(self.runner.world.y)
         self.scene_time = 0.0
         self.alive = True
         self.buttons = {name: pygame.Rect(790 + i * 95, 540, 85, 42)
@@ -192,6 +193,7 @@ class App:
         else:
             self.runner = Runner(initial_world=world)
         self.visual_x = float(self.runner.world.x)
+        self.visual_y = float(self.runner.world.y)
         self.loaded_source = None
         self.elapsed = 0.0
 
@@ -547,8 +549,11 @@ class App:
             self.elapsed = 0.0
         if self.runner.world.moves == 0:
             self.visual_x = float(self.runner.world.x)
+            self.visual_y = float(self.runner.world.y)
         else:
-            self.visual_x += (self.runner.world.x - self.visual_x) * min(1.0, max(0.0, dt) / 0.12)
+            blend = min(1.0, max(0.0, dt) / 0.12)
+            self.visual_x += (self.runner.world.x - self.visual_x) * blend
+            self.visual_y += (self.runner.world.y - self.visual_y) * blend
         self.save_drafts()
 
     def alley(self):
@@ -663,26 +668,30 @@ class App:
         # Original cat silhouette: ear triangles, outlined head, curled tail, bright eyes.
         if self.runner.world.moves == 0:
             self.visual_x = float(self.runner.world.x)
+            self.visual_y = float(self.runner.world.y)
         cx = round(29 + 36 * self.visual_x)
-        moving = abs(self.runner.world.x - self.visual_x) > 0.02
+        moving = (abs(self.runner.world.x - self.visual_x) > 0.02
+                  or abs(self.runner.world.y - self.visual_y) > 0.02)
+        cat = pygame.Surface(scene.get_size(), pygame.SRCALPHA)
         tail = 1 if int(self.scene_time * 2) % 2 else 0
         blink = self.scene_time % 3.8 > 3.65
-        pygame.draw.ellipse(scene, '#111a2c', (cx - 14, 213, 31, 7))
-        pygame.draw.lines(scene, '#77849d', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16 + tail, 189 - tail)], 5)
-        pygame.draw.lines(scene, '#0d1020', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16 + tail, 189 - tail)], 3)
-        pygame.draw.rect(scene, '#7a88a2', (cx - 9, 192, 20, 23))
-        pygame.draw.rect(scene, '#0b1020', (cx - 8, 193, 18, 21))
-        pygame.draw.polygon(scene, '#8794ad', [(cx - 11, 187), (cx - 11, 175), (cx - 3, 181), (cx + 5, 181), (cx + 12, 175), (cx + 13, 195), (cx - 11, 195)])
-        pygame.draw.polygon(scene, '#090f1c', [(cx - 10, 188), (cx - 10, 177), (cx - 3, 183), (cx + 5, 183), (cx + 11, 177), (cx + 12, 194), (cx - 10, 194)])
-        pygame.draw.rect(scene, CYAN, (cx - 6, 187 if blink else 186, 4, 1 if blink else 3))
-        pygame.draw.rect(scene, CYAN, (cx + 5, 187 if blink else 186, 4, 1 if blink else 3))
-        pygame.draw.rect(scene, PINK, (cx + 1, 191, 2, 2))
-        pygame.draw.rect(scene, '#080e1b', (cx - 9, 211 if moving else 212, 6, 5))
-        pygame.draw.rect(scene, '#080e1b', (cx + 6, 213 if moving else 212, 6, 5))
+        pygame.draw.ellipse(cat, '#111a2c', (cx - 14, 213, 31, 7))
+        pygame.draw.lines(cat, '#77849d', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16 + tail, 189 - tail)], 5)
+        pygame.draw.lines(cat, '#0d1020', False, [(cx - 8, 208), (cx - 18, 204), (cx - 20, 192), (cx - 16 + tail, 189 - tail)], 3)
+        pygame.draw.rect(cat, '#7a88a2', (cx - 9, 192, 20, 23))
+        pygame.draw.rect(cat, '#0b1020', (cx - 8, 193, 18, 21))
+        pygame.draw.polygon(cat, '#8794ad', [(cx - 11, 187), (cx - 11, 175), (cx - 3, 181), (cx + 5, 181), (cx + 12, 175), (cx + 13, 195), (cx - 11, 195)])
+        pygame.draw.polygon(cat, '#090f1c', [(cx - 10, 188), (cx - 10, 177), (cx - 3, 183), (cx + 5, 183), (cx + 11, 177), (cx + 12, 194), (cx - 10, 194)])
+        pygame.draw.rect(cat, CYAN, (cx - 6, 187 if blink else 186, 4, 1 if blink else 3))
+        pygame.draw.rect(cat, CYAN, (cx + 5, 187 if blink else 186, 4, 1 if blink else 3))
+        pygame.draw.rect(cat, PINK, (cx + 1, 191, 2, 2))
+        pygame.draw.rect(cat, '#080e1b', (cx - 9, 211 if moving else 212, 6, 5))
+        pygame.draw.rect(cat, '#080e1b', (cx + 6, 213 if moving else 212, 6, 5))
         if self.runner.world.powered:
-            scene.blit(self.sign_font.render('mrr', False, '#ffcf8a'), (cx - 11, 155))
+            cat.blit(self.sign_font.render('mrr', False, '#ffcf8a'), (cx - 11, 155))
         if not self.runner.world.moves:
-            scene.blit(self.sign_font.render('NOX', False, '#cad5ea'), (cx - 13, 151))
+            cat.blit(self.sign_font.render('NOX', False, '#cad5ea'), (cx - 13, 151))
+        scene.blit(cat, (0, -round(workshop.UPPER_OFFSET * self.visual_y)))
         viewport = self.world_display_rect()
         self.canvas.blit(pygame.transform.scale(scene, viewport.size), viewport.topleft)
 
@@ -740,12 +749,14 @@ class App:
     def homecoming_complete(self):
         return (self.pair_active and not self.workshop_active and self.runner.world.powered
                 and self.runner.world.x == self.runner.initial_world.x
+                and self.runner.world.y == self.runner.initial_world.y
                 and self.runner.status == 'done')
 
     def workshop_secured(self):
         return (self.workshop_active and self.runner.world.powered
                 and not self.runner.world.gate_open
                 and self.runner.world.x == self.runner.initial_world.x
+                and self.runner.world.y == self.runner.initial_world.y
                 and self.runner.status == 'done')
 
     def draw(self):
@@ -936,8 +947,8 @@ class App:
             objective = 'Nox ist daheim. Deine Laternen leuchten weiter.' if self.homecoming_complete() else ('Beide Ziele geschafft. Freiwillig: Plane den Heimweg zum Start.' if world.powered else 'Aktiviere beide Laternen in einem Ablauf. Die erste allein reicht noch nicht.')
         if self.workshop_active:
             objective = ('Tor zu, Werkstatt an, Nox daheim. Dein Ablauf hat alles verbunden.' if self.workshop_secured()
-                         else ('Werkstatt versorgt. Freiwillig: Kehre heim und schliesse das Tor.' if world.powered
-                               else 'Der Schalter verändert den Weg. Öffne das Tor und versorge die Werkstatt.'))
+                         else (('Werkstatt versorgt. Freiwillig: Kehre heim und schliesse das Tor.' if world.gate_open else 'Werkstatt versorgt, Tor zu. Freiwillig: Kehre heim.') if world.powered
+                               else 'Torweg oder Steg? Wähle deinen Weg und versorge die Werkstatt.'))
         if world.powered and self.runner.error:
             objective = 'Die Weltreaktion bleibt erhalten. Korrigiere den Fehler und teste deinen ganzen Plan.'
         self.text(objective, (40, 666), CYAN if world.moves else INK, self.small)

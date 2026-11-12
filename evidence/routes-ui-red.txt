@@ -1,0 +1,59 @@
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_________ test_step_animates_height_and_reset_returns_both_coordinates _________
+
+app = <neonpaw.ui.app.App object at 0x7ff74ee12b10>
+
+    def test_step_animates_height_and_reset_returns_both_coordinates(app):
+        climb(app)
+>       assert app.visual_y == 0
+               ^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'visual_y'. Did you mean: 'visual_x'?
+
+tests/test_workshop_routes_ui.py:19: AttributeError
+______ test_save_and_navigation_keep_bridge_program_but_restart_on_ground ______
+
+app = <neonpaw.ui.app.App object at 0x7ff74ee16720>
+
+    def test_save_and_navigation_keep_bridge_program_but_restart_on_ground(app):
+        climb(app)
+        app.update(.12); app.save_drafts()
+        restored = App(save_path=app.save_path)
+        assert restored.source == BRIDGE_PLAN and restored.runner.status == 'idle'
+>       assert restored.runner.world.y == 0 and restored.visual_y == 0
+                                                ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'visual_y'. Did you mean: 'visual_x'?
+
+tests/test_workshop_routes_ui.py:35: AttributeError
+______ test_bridge_and_return_can_secure_workshop_without_touching_switch ______
+
+app = <neonpaw.ui.app.App object at 0x7ff74ee17da0>
+
+    def test_bridge_and_return_can_secure_workshop_without_touching_switch(app):
+        enter(app); write(app, BRIDGE_PLAN + BRIDGE_HOME)
+        click(app, 'Run')
+        for _ in range(20): app.update(.5)
+        assert app.workshop_secured()
+        click(app, 'Step')
+>       assert (app.visual_x, app.visual_y) == (1, 0)
+                              ^^^^^^^^^^^^
+E       AttributeError: 'App' object has no attribute 'visual_y'. Did you mean: 'visual_x'?
+
+tests/test_workshop_routes_ui.py:48: AttributeError
+_____ test_route_guidance_teaches_ladders_without_forcing_switch_solution ______
+
+app = <neonpaw.ui.app.App object at 0x7ff74ee18710>
+
+    def test_route_guidance_teaches_ladders_without_forcing_switch_solution(app):
+        enter(app)
+        text = ' '.join(workshop.guidance(app.runner.world, False))
+>       assert 'Steg' in text
+E       AssertionError: assert 'Steg' in 'Ein Tor versperrt den Weg zur Werkstatt. Finde den Schalter. F1 hilft auf Wunsch.'
+
+tests/test_workshop_routes_ui.py:55: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_workshop_routes_ui.py::test_step_animates_height_and_reset_returns_both_coordinates
+FAILED tests/test_workshop_routes_ui.py::test_save_and_navigation_keep_bridge_program_but_restart_on_ground
+FAILED tests/test_workshop_routes_ui.py::test_bridge_and_return_can_secure_workshop_without_touching_switch
+FAILED tests/test_workshop_routes_ui.py::test_route_guidance_teaches_ladders_without_forcing_switch_solution
+4 failed in 0.57s

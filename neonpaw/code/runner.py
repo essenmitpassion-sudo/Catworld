@@ -8,7 +8,7 @@ MAX_SOURCE = 4096
 MAX_COMMANDS = 64
 MAX_NODES = 320
 MAX_DEPTH = 16
-ACTIONS = ('move_right', 'move_left', 'collect', 'toggle')
+ACTIONS = ('move_right', 'move_left', 'move_up', 'move_down', 'collect', 'toggle')
 
 
 @dataclass(frozen=True)
@@ -101,7 +101,7 @@ def parse_action(stmt):
         raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
     if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
             and isinstance(stmt.value.func, ast.Name)):
-        raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+        raise ProgramError('Nutze Weltbefehle wie move_right() oder collect() ohne Argumente.', stmt.lineno)
     name = stmt.value.func.id
     if name not in ACTIONS:
         near = get_close_matches(name, ACTIONS, n=1, cutoff=0.75)
