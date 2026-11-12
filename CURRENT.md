@@ -23,7 +23,9 @@ Menschlicher Langzeitspass/Lernen offen; positive visuelle Owner-Rückmeldung re
 
 ## Sicherung
 Ausfall vor Commit; nach Wiederverbindung Dateien unverändert vorgefunden.
-Inhaltsarchiv vor Bearbeitung hashgeprüft. Neues Wissen in CHARACTER_DIRECTION.md,
+Erster Archivvergleich fiel mit Dokumentänderungen zusammen und war ungültig.
+Endgültigen unveränderten Commitstand erneut archivieren und vergleichen.
+Neues Wissen in CHARACTER_DIRECTION.md,
 AGENTS.md, MASTERPLAN_STATUS.md/NEXT_TASK.md festgehalten. Änderungen inklusive
 Grafiken committen, vollständiges Bundle prüfen, pushen, Remote-SHA abgleichen.
 Aktuelles Paket nach Commit neu bauen; Manifest soll sauberen HEAD nennen.

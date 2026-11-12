@@ -54,7 +54,8 @@ Langzeitmotivation bleiben offen. Keine automatisierte Ausführung nach Sitzungs
 
 ## Wiederaufnahme nach Ausfall
 Die Umgebung fiel vor dem letzten Commit aus. Nach Wiederverbindung waren alle
-Änderungen und das ZIP erhalten. Vor weiterer Bearbeitung Inhaltsarchiv erstellt
-und jede enthaltene Datei mit dem aktuellen Inhalt verglichen. Aktueller Commit,
+Änderungen und das ZIP erhalten. Der erste Archivvergleich wurde durch parallel
+geänderte Dokumente ungültig; deshalb wird der endgültige Commitstand erneut
+archiviert und vollständig verglichen. Aktueller Commit,
 Bundle und Remote sind für die Wiederaufnahme massgeblich, nicht alte Chat-SHAs.
 Bei neuen Sitzungen zuerst AGENTS.md, CURRENT.md, NEXT_TASK.md und dieses Dokument.
