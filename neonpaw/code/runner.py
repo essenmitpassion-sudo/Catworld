@@ -125,6 +125,7 @@ class Runner:
         self.executed_steps = 0
         self.executed_lines = []
         self.condition_result = None
+        self.skipped_lines = set()
         self.line = None
         self.error = ''
         self.status = 'idle'
@@ -135,6 +136,7 @@ class Runner:
         self.executed_steps = 0
         self.executed_lines = []
         self.condition_result = None
+        self.skipped_lines = set()
         self.line = None
         self.error = ''
         self.status = 'idle'
@@ -192,6 +194,11 @@ class Runner:
                 return
             taken = self.world.gate_open == action.expected_open
             self.condition_result = (line, self.world.gate_open, taken)
+            if not taken:
+                self.skipped_lines.update(
+                    body_line for body_line, _ in self.commands[self.pc + 1:self.pc + 1 + action.skip]
+                    if body_line != line  # An inline if still evaluates this same source line.
+                )
             self.pc += 1 if taken else 1 + action.skip
         if self.pc >= len(self.commands):
             self.status = 'done'

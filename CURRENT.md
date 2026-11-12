@@ -1,3 +1,22 @@
+# CURRENT — 2026-11-12 — übersprungene Zweige sichtbar
+
+Basis37da8c7 extern bestätigt; Bundle /workspace/work/catworld-gate-condition.bundle
+geprüft. Branch codex/masterplan-run-consistency.
+Neu: nicht ausgeführte separate Aktionszeilen sind grau mit Strich links neben
+Zeilennummer. Inline-if wird nicht komplett als unausgeführt markiert. Trace bleibt
+für denselben Versuch, Edit/Undo/Reset/load löschen ihn. Kein neuer Modus/Syntax.
+RED6, Suite271 PASS, voller SDL-Smoke PASS, Screenshots geprüft. Unabhängiger Review:
+34 relevante Tests PASS, nur Markerüberlappung bei dreistelligen Nummern; Marker
+nach links verlegt, Darstellung der Zeilen103/104 geprüft. Keine übrigen Befunde.
+
+Vor Fortsetzung Commit/Bundle/Push prüfen. Nächster Pareto-Hebel: freiwilliger
+Planvergleich für beide vorhandenen Torstarts, mit genauer Fehlerzeile und ohne
+Veränderung der aktuellen Welt/eigenen Programme. Damit wird Robustheit direkt
+prüfbar, ohne zusätzliche Level, Syntax oder gespeicherte Modi.
+Menschliches Lernen/Spielspass und Windows/DPI weiter offen. Vorheriger Stand unten.
+
+---
+
 # CURRENT — 2026-11-12 — live ausgewertete Torbedingungen
 
 Branch codex/masterplan-run-consistency. Bestätigte Checkpoints: c047575 Werkstatt,

@@ -1,0 +1,116 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+____ test_only_unexecuted_separate_action_lines_are_marked_and_trace_resets ____
+
+    def test_only_unexecuted_separate_action_lines_are_marked_and_trace_resets():
+        r = Runner(initial_world=World(gate_x=5, switch_x=3))
+        r.load('if gate_open():\n    toggle()\n    move_left()\nmove_right()')
+        r.step()
+>       assert r.skipped_lines == {2, 3}
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'skipped_lines'
+
+tests/test_skipped_lines.py:15: AttributeError
+____ test_inline_condition_is_not_dimmed_as_if_it_had_never_been_evaluated _____
+
+    def test_inline_condition_is_not_dimmed_as_if_it_had_never_been_evaluated():
+        r = Runner(initial_world=World(gate_x=5, switch_x=3))
+        r.load('if gate_open(): toggle()')
+        r.step()
+        assert r.condition_result == (1, False, False) and r.executed_steps == 0
+>       assert r.skipped_lines == set()
+               ^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'skipped_lines'
+
+tests/test_skipped_lines.py:31: AttributeError
+_ test_skipped_toggle_has_a_distinct_rendered_style_without_changing_code[False] _
+
+app = <neonpaw.ui.app.App object at 0x7fb510ffef90>, opened = False
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb511143680>
+
+    @pytest.mark.parametrize('opened', [False, True])
+    def test_skipped_toggle_has_a_distinct_rendered_style_without_changing_code(app, opened, monkeypatch):
+        enter(app)
+        if opened:
+            app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+        rendered = []
+        original = app.text
+        def record(value, pos, color='#e5eafa', font=None):
+            rendered.append((value, pos, color))
+            return original(value, pos, color, font)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+        color = MUTED if opened else CYAN
+        assert ('    toggle()', (830, 303), color) in rendered
+        assert app.source == ADAPTIVE_PLAN
+>       assert app.runner.skipped_lines == ({4} if opened else set())
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'skipped_lines'
+
+tests/test_skipped_lines.py:51: AttributeError
+_ test_skipped_toggle_has_a_distinct_rendered_style_without_changing_code[True] _
+
+app = <neonpaw.ui.app.App object at 0x7fb5110077d0>, opened = True
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fb511007da0>
+
+    @pytest.mark.parametrize('opened', [False, True])
+    def test_skipped_toggle_has_a_distinct_rendered_style_without_changing_code(app, opened, monkeypatch):
+        enter(app)
+        if opened:
+            app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+        rendered = []
+        original = app.text
+        def record(value, pos, color='#e5eafa', font=None):
+            rendered.append((value, pos, color))
+            return original(value, pos, color, font)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+        color = MUTED if opened else CYAN
+>       assert ('    toggle()', (830, 303), color) in rendered
+E       AssertionError: assert ('    toggle()', (830, 303), '#9baac5') in [('NEONPAW', (40, 28), '#65f3dd'), ('07 / EIN TOR ZUR WERKSTATT', (42, 135), '#e5eafa'), ('PYTHON / DEIN EIGENES PROGR...g ist jetzt frei.', (790, 118), '#9baac5'), ('Erreiche die Batterie und nutze collect().', (790, 149), '#e5eafa'), ...]
+
+tests/test_skipped_lines.py:49: AssertionError
+_____________ test_edit_and_undo_clear_skipped_line_history[write] _____________
+
+app = <neonpaw.ui.app.App object at 0x7fb510fb0290>, edit = 'write'
+
+    @pytest.mark.parametrize('edit', ['write', 'undo'])
+    def test_edit_and_undo_clear_skipped_line_history(app, edit):
+        enter(app)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+        write(app, 'move_right()')
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+>       assert app.runner.skipped_lines == {4}
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'skipped_lines'
+
+tests/test_skipped_lines.py:61: AttributeError
+_____________ test_edit_and_undo_clear_skipped_line_history[undo] ______________
+
+app = <neonpaw.ui.app.App object at 0x7fb511007b60>, edit = 'undo'
+
+    @pytest.mark.parametrize('edit', ['write', 'undo'])
+    def test_edit_and_undo_clear_skipped_line_history(app, edit):
+        enter(app)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+        write(app, 'move_right()')
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+>       assert app.runner.skipped_lines == {4}
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Runner' object has no attribute 'skipped_lines'
+
+tests/test_skipped_lines.py:61: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_skipped_lines.py::test_only_unexecuted_separate_action_lines_are_marked_and_trace_resets
+FAILED tests/test_skipped_lines.py::test_inline_condition_is_not_dimmed_as_if_it_had_never_been_evaluated
+FAILED tests/test_skipped_lines.py::test_skipped_toggle_has_a_distinct_rendered_style_without_changing_code[False]
+FAILED tests/test_skipped_lines.py::test_skipped_toggle_has_a_distinct_rendered_style_without_changing_code[True]
+FAILED tests/test_skipped_lines.py::test_edit_and_undo_clear_skipped_line_history[write]
+FAILED tests/test_skipped_lines.py::test_edit_and_undo_clear_skipped_line_history[undo]
+6 failed in 0.77s

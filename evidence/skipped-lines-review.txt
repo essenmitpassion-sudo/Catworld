@@ -1,0 +1,4 @@
+Read-only review: 34 relevant tests PASS. No functional findings.
+Minor marker overlapped 3-digit line number: moved to left of number column, line103/104 rendered and inspected.
+Final suite271 PASS; full SDL smoke PASS before marker-only positioning correction.
+Human learning/fun and Windows not tested.

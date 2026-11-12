@@ -350,11 +350,13 @@ for expected_open in (True, False):
     assert app.workshop_start_open == expected_open
     for _ in range(3): click('Step')
     assert app.runner.condition_result == (3, expected_open, not expected_open)
+    assert app.runner.skipped_lines == ({4} if expected_open else set())
     frame(dt=.2)
     pygame.image.save(app.canvas, f'evidence/gate-condition-{expected_open}.png')
     frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
     frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()'))
     assert app.runner.condition_result is None
+    assert app.runner.skipped_lines == set()
     frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
     assert app.source == workshop_code and app.runner.condition_result is None
     click('Run')

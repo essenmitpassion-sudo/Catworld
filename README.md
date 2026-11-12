@@ -61,6 +61,10 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
     ausführen, wenn das Tor noch zu ist. Die eingerückten Aktionen werden sonst
     übersprungen. F1 erklärt dies auf Wunsch; dein Programm wird nie automatisch
     ersetzt. Unter dem Editor siehst du das Ergebnis der letzten Bedingungsprüfung.
+    Übersprungene Aktionszeilen erscheinen grau mit einem Strich neben der
+    Zeilennummer. Das ist die Spur des letzten Versuchs; Editieren, Undo und Reset
+    löschen sie. Eine Bedingung und Aktion auf derselben Textzeile werden nicht
+    komplett ausgegraut, weil die Bedingung dort tatsächlich geprüft wurde.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;

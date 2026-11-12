@@ -363,6 +363,7 @@ class App:
         self.runner.line = None
         self.runner.error = ''
         self.runner.condition_result = None
+        self.runner.skipped_lines.clear()
 
     def editor_key(self):
         if self.workshop_active:
@@ -805,11 +806,14 @@ class App:
         self.canvas.set_clip(pygame.Rect(790, 210, 380, 306))
         for row, line in enumerate(lines[self.scroll:self.scroll + 11], self.scroll):
             y = 225 + (row - self.scroll) * 26
+            skipped = row + 1 in self.runner.skipped_lines
             if self.select_all or self.runner.line == row + 1:
                 pygame.draw.rect(self.canvas, '#374563', (795, y - 2, 370, 26))
             self.text(str(row + 1), (798, y), MUTED, self.small)
+            if skipped:
+                pygame.draw.line(self.canvas, MUTED, (791, y + 11), (795, y + 11), 2)
             self.canvas.set_clip(pygame.Rect(830, 210, 340, 306))
-            self.text(line, (830 - self.horizontal_scroll, y), CYAN, self.mono)
+            self.text(line, (830 - self.horizontal_scroll, y), MUTED if skipped else CYAN, self.mono)
             self.canvas.set_clip(pygame.Rect(790, 210, 380, 306))
         if self.focus and not self.select_all and active_line is None:
             col = len(self.source[:self.cursor].split('\n')[-1])
