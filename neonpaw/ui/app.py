@@ -362,6 +362,7 @@ class App:
         self.runner.stop()
         self.runner.line = None
         self.runner.error = ''
+        self.runner.condition_result = None
 
     def editor_key(self):
         if self.workshop_active:
@@ -845,11 +846,16 @@ class App:
         if self.roof_active and self.runner.commands:
             count = sum(bool(line.strip()) for line in self.source.splitlines())
             progress = self.runner.line_progress
-            if progress is not None and progress[2] > 1:
+            if self.runner.condition_result is not None:
+                line, opened, taken = self.runner.condition_result
+                label = f"if Z{line}: {'ja' if taken else 'nein'} · Tor war {'offen' if opened else 'zu'}"
+            elif progress is not None and progress[2] > 1:
                 line, completed, total = progress
                 label = f'Zeile {line}: {completed}/{total} Aktionen ausgeführt'
+            elif self.runner.max_actions < len(self.runner.commands):
+                label = f'Aktionen: {self.runner.executed_steps} · maximal {self.runner.max_actions}'
             else:
-                label = f'Aktion {self.runner.pc}/{len(self.runner.commands)} · {count} Textzeilen'
+                label = f'Aktion {self.runner.executed_steps}/{self.runner.max_actions} · {count} Textzeilen'
             self.text(label, (790, 614), CYAN, self.small)
         statuses = {'idle': 'Startposition. Run startet; dein Code bleibt.', 'paused': 'Step: ein Befehl. Run setzt danach fort.',
                     'running': 'Läuft … Stop hält die Katze an.', 'stopped': 'Stop: Position bleibt. Neuer Run beginnt am Start.',

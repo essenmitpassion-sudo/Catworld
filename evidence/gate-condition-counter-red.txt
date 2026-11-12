@@ -1,0 +1,26 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_counter_before_condition_counts_world_actions_not_internal_checks ____
+
+app = <neonpaw.ui.app.App object at 0x7fd660ece990>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fd661252870>
+
+    def test_counter_before_condition_counts_world_actions_not_internal_checks(app, monkeypatch):
+        enter(app)
+        write(app, 'move_right()\nif gate_open():\n    move_right()')
+        click(app, 'Step')
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+>       assert any('Aktionen: 1 · maximal 2' in text for text in rendered)
+E       assert False
+E        +  where False = any(<generator object test_counter_before_condition_counts_world_actions_not_internal_checks.<locals>.<genexpr> at 0x7fd660d539f0>)
+
+tests/test_gate_condition_ui.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate_condition_ui.py::test_counter_before_condition_counts_world_actions_not_internal_checks
+1 failed, 5 deselected in 0.19s

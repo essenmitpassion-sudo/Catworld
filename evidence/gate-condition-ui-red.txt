@@ -1,0 +1,67 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_same_code_solves_both_variants_and_shows_condition_outcome[False] ____
+
+app = <neonpaw.ui.app.App object at 0x7f045b1256d0>, opened = False
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f045afa4530>
+
+    @pytest.mark.parametrize('opened', [False, True])
+    def test_same_code_solves_both_variants_and_shows_condition_outcome(app, opened, monkeypatch):
+        enter(app)
+        if opened:
+            app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+>       assert any(f"if Z3: {'nein' if opened else 'ja'}" in text for text in rendered)
+E       assert False
+E        +  where False = any(<generator object test_same_code_solves_both_variants_and_shows_condition_outcome.<locals>.<genexpr> at 0x7f045b027440>)
+
+tests/test_gate_condition_ui.py:22: AssertionError
+____ test_same_code_solves_both_variants_and_shows_condition_outcome[True] _____
+
+app = <neonpaw.ui.app.App object at 0x7f045afa5e80>, opened = True
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f045aff5520>
+
+    @pytest.mark.parametrize('opened', [False, True])
+    def test_same_code_solves_both_variants_and_shows_condition_outcome(app, opened, monkeypatch):
+        enter(app)
+        if opened:
+            app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+>       assert any(f"if Z3: {'nein' if opened else 'ja'}" in text for text in rendered)
+E       assert False
+E        +  where False = any(<generator object test_same_code_solves_both_variants_and_shows_condition_outcome.<locals>.<genexpr> at 0x7f045aef8110>)
+
+tests/test_gate_condition_ui.py:22: AssertionError
+_______ test_requested_example_teaches_a_plan_that_works_for_both_starts _______
+
+app = <neonpaw.ui.app.App object at 0x7f045aff5e50>
+
+    def test_requested_example_teaches_a_plan_that_works_for_both_starts(app):
+        enter(app)
+        for _ in range(3): click(app, 'Hilfe')
+        example = '\n'.join(app.hint_lines())
+>       assert 'if not gate_open():' in example
+E       AssertionError: assert 'if not gate_open():' in 'for _ in range(2):\n    move_right()\ntoggle()\nfor _ in range(4):\n    move_right()\ncollect()'
+
+tests/test_gate_condition_ui.py:33: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate_condition_ui.py::test_same_code_solves_both_variants_and_shows_condition_outcome[False]
+FAILED tests/test_gate_condition_ui.py::test_same_code_solves_both_variants_and_shows_condition_outcome[True]
+FAILED tests/test_gate_condition_ui.py::test_requested_example_teaches_a_plan_that_works_for_both_starts
+3 failed in 0.40s

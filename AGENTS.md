@@ -59,3 +59,11 @@ Der erneut hochgeladene Plan ist bytegleich mit `PRODUCT_MASTER_PROMPT.md`
 Neuer Auftrag: sorgfältig lesen, als verantwortlicher Lead damit arbeiten und den
 Stand vermerken. Aktuelle Bestandsaufnahme und priorisierte Umsetzung stehen in
 `MASTERPLAN_STATUS.md`; kein Neustart oder Doppelbau bereits vorhandener Funktionen.
+
+## Fortsetzungsauftrag (Owner, 2026-11-12)
+Nach getesteten und gesicherten Paketen selbstständig mit der nächsten sinnvollen
+Priorität weiterarbeiten, bis eine tatsächliche Ausführungs-/Kontext-/Berechtigungs-
+grenze erreicht ist. Ein Checkpoint ist kein automatischer Endpunkt. Pareto:
+Spielkern, sichtbare Codewirkung und echte Entscheidungen vor Feature-Menge oder
+isoliertem Feinschliff. Sich selbst gegen den Masterplan prüfen; keine autonome
+Arbeit nach Ende der aktiven Sitzung behaupten.

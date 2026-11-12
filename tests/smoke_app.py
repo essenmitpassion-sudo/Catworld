@@ -342,6 +342,29 @@ app = App(save_path=save_path)
 frame()
 assert app.workshop_start_open and app.runner.world.gate_open
 assert app.runner.status == 'idle' and app.source == workshop_code
+# One authored adaptive plan works under both initial states.
+workshop_code = 'for _ in range(2):\n    move_right()\nif not gate_open():\n    toggle()\nfor _ in range(4):\n    move_right()\ncollect()'
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+frame(pygame.event.Event(pygame.TEXTINPUT, text=workshop_code))
+for expected_open in (True, False):
+    assert app.workshop_start_open == expected_open
+    for _ in range(3): click('Step')
+    assert app.runner.condition_result == (3, expected_open, not expected_open)
+    frame(dt=.2)
+    pygame.image.save(app.canvas, f'evidence/gate-condition-{expected_open}.png')
+    frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
+    frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()'))
+    assert app.runner.condition_result is None
+    frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
+    assert app.source == workshop_code and app.runner.condition_result is None
+    click('Run')
+    for _ in range(8): frame(dt=.5)
+    assert app.runner.world.powered and app.runner.status == 'done'
+    frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F11, mod=0))
+for _ in range(3): click('Hilfe')
+assert app.source == workshop_code
+pygame.image.save(app.canvas, 'evidence/gate-condition-hint.png')
+click('Hilfe')
 click('Werkstatt')
 assert app.source == pair_program and not app.workshop_active
 click('Werkstatt')
@@ -424,6 +447,7 @@ print('PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo 
 print('Video driver:', pygame.display.get_driver())
 print('PASS: workshop gate error -> own toggle plan -> Stop/Run -> power -> optional secure home -> hints -> six drafts saved/restored')
 print('PASS: open-start transfer -> unchanged plan fails -> own correction -> secure home -> selected start restored without autorun')
+print('PASS: identical adaptive code -> live if result -> Step/Run under both initial states -> optional condition help -> original code retained')
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
 storage.cleanup()

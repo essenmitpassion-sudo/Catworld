@@ -1,5 +1,6 @@
 """Bounded interpreter for zero-argument world actions, not general Python."""
 import ast
+from dataclasses import dataclass
 from difflib import get_close_matches
 from neonpaw.core.world import World, transition
 
@@ -10,13 +11,20 @@ MAX_DEPTH = 16
 ACTIONS = ('move_right', 'move_left', 'collect', 'toggle')
 
 
+@dataclass(frozen=True)
+class GateCheck:
+    """A bounded forward branch, never an evaluated Python expression."""
+    expected_open: bool
+    skip: int
+
+
 class ProgramError(ValueError):
     def __init__(self, message, line=None):
         self.line = line
         super().__init__(f'Zeile {line}: {message}' if line else message)
 
 
-def parse(source: str) -> tuple[tuple[int, str], ...]:
+def parse(source: str) -> tuple[tuple[int, str | GateCheck], ...]:
     if len(source) > MAX_SOURCE:
         raise ProgramError('Dein Programm ist zu lang (maximal 4096 Zeichen).')
     try:
@@ -36,10 +44,26 @@ def parse(source: str) -> tuple[tuple[int, str], ...]:
         raise ProgramError('Maximal 64 Befehle pro Programm.')
     commands = []
     iterations = 0
+    action_count = 0
     for stmt in tree.body:
-        if isinstance(stmt, ast.For):
+        if isinstance(stmt, ast.If):
+            condition = stmt.test
+            expected_open = True
+            if isinstance(condition, ast.UnaryOp) and isinstance(condition.op, ast.Not):
+                expected_open = False
+                condition = condition.operand
+            if (stmt.orelse or not isinstance(condition, ast.Call)
+                    or not isinstance(condition.func, ast.Name)
+                    or condition.func.id != 'gate_open' or condition.args or condition.keywords):
+                raise ProgramError('Nutze if gate_open(): oder if not gate_open(): ohne else.', stmt.lineno)
+            # Validate every action, including branches that may never be taken.
+            body = [parse_action(child) for child in stmt.body]
+            commands.append((stmt.lineno, GateCheck(expected_open, len(body))))
+            commands.extend(body)
+            action_count += len(body)
+        elif isinstance(stmt, ast.For):
             if (not isinstance(stmt.target, ast.Name) or
-                    stmt.target.id in (*ACTIONS, 'range') or stmt.orelse):
+                    stmt.target.id in (*ACTIONS, 'range', 'gate_open') or stmt.orelse):
                 raise ProgramError('Einfache Schleifenvariable verwenden; kein for/else.', stmt.lineno)
             call = stmt.iter
             if (not isinstance(call, ast.Call) or not isinstance(call.func, ast.Name)
@@ -60,12 +84,14 @@ def parse(source: str) -> tuple[tuple[int, str], ...]:
             # Validate the body even for an empty range. No nesting, variable reads or effects.
             body = [parse_action(child) for child in stmt.body]
             iterations += count
-            if iterations > MAX_COMMANDS or len(commands) + count * len(body) > MAX_COMMANDS:
+            if iterations > MAX_COMMANDS or action_count + count * len(body) > MAX_COMMANDS:
                 raise ProgramError('Maximal 64 Wiederholungen und 64 Aktionen pro Programm.', stmt.lineno)
             commands.extend(body * count)
+            action_count += count * len(body)
         else:
             commands.append(parse_action(stmt))
-        if len(commands) > MAX_COMMANDS:
+            action_count += 1
+        if action_count > MAX_COMMANDS:
             raise ProgramError('Maximal 64 ausgeführte Aktionen pro Programm.', stmt.lineno)
     return tuple(commands)
 
@@ -96,6 +122,9 @@ class Runner:
         self.world = self.initial_world
         self.commands = ()
         self.pc = 0
+        self.executed_steps = 0
+        self.executed_lines = []
+        self.condition_result = None
         self.line = None
         self.error = ''
         self.status = 'idle'
@@ -103,6 +132,9 @@ class Runner:
     def load(self, source):
         self.commands = ()
         self.pc = 0
+        self.executed_steps = 0
+        self.executed_lines = []
+        self.condition_result = None
         self.line = None
         self.error = ''
         self.status = 'idle'
@@ -116,13 +148,17 @@ class Runner:
         self.status = 'paused'
 
     @property
+    def max_actions(self):
+        return sum(isinstance(action, str) for _, action in self.commands)
+
+    @property
     def line_progress(self):
         if self.line is None or not self.commands:
             return None
-        total = sum(line == self.line for line, _ in self.commands)
+        total = sum(line == self.line and isinstance(action, str) for line, action in self.commands)
         if not total:
             return None
-        completed = sum(line == self.line for line, _ in self.commands[:self.pc])
+        completed = self.executed_lines.count(self.line)
         return self.line, completed, total
 
     def run(self):
@@ -143,11 +179,25 @@ class Runner:
         self._advance()
 
     def _advance(self):
+        # Each guard moves forward, so even an all-false program is bounded by
+        # the validated instruction stream. Step still executes at most one action.
+        while self.pc < len(self.commands):
+            line, action = self.commands[self.pc]
+            if not isinstance(action, GateCheck):
+                break
+            self.line = line
+            if self.world.gate_x is None:
+                self.error = f'Zeile {line}: Hier gibt es kein Tor für gate_open().'
+                self.status = 'error'
+                return
+            taken = self.world.gate_open == action.expected_open
+            self.condition_result = (line, self.world.gate_open, taken)
+            self.pc += 1 if taken else 1 + action.skip
         if self.pc >= len(self.commands):
             self.status = 'done'
             return
         self.line, action = self.commands[self.pc]
-        if self.pc >= self.max_steps:
+        if self.executed_steps >= self.max_steps:
             self.error = f'Zeile {self.line}: Sicheres Schrittlimit erreicht.'
             self.status = 'error'
             return
@@ -158,5 +208,7 @@ class Runner:
             self.status = 'error'
             return
         self.pc += 1
+        self.executed_steps += 1
+        self.executed_lines.append(self.line)
         if self.pc == len(self.commands):
             self.status = 'done'

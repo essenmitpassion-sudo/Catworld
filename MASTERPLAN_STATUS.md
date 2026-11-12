@@ -119,3 +119,15 @@ Reliability = reproduzierbare Ausführung, Stop/Reset und intakte Speicherung.
 Keine gegenwärtige Zusage für Multiplayer, echte beliebige Python-Ausführung,
 automatische Levelgenerierung oder eine vollständige Stadt. Der nächste technische
 Arbeitsstand und die ausgeführten Checks stehen in CURRENT.md, nicht als Prognose hier.
+
+## Pareto-Abgleich 2026-11-12
+Werkstatt, veränderter Startzustand und begrenzter Sensor/if bauen auf einem kleinen
+Regelsatz auf: Code verändert den Zugang, liest Zustand und passt das Verhalten an.
+Erkenntnis: Bedienkorrekturen waren sinnvoll, dürfen aber nicht den Spielausbau
+ersetzen. Noch zu schmal: eindimensionaler Weg, vorgegebene Hauptziele, keine echte
+Ressourcenwahl. Die neue Syntax allein ist kein Beleg für langfristige Spieltiefe.
+Nächster kleiner Hebel: Nichtausführung eines if-Zweigs unmittelbar am eigenen Code
+zeigen; dann vorhandene Systeme auf einen echten Zielkonflikt prüfen, statt weitere
+Streckenlängen oder kosmetische Geräte als Innovation zu zählen. Kein kompletter
+Rebuild ohne Befund. Hypothesen weiter offen: Verständnis ohne Beispiel, freiwillige
+zweite Lösung, selbstständiger Transfer und Freude am erneuten Spielen.

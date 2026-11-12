@@ -1,21 +1,26 @@
 """Workshop presentation only: actions and state live in core.world."""
 import pygame
 
+ADAPTIVE_EXAMPLE = (
+    'for _ in range(2):', '    move_right()',
+    'if not gate_open():', '    toggle()',
+    'for _ in range(4):', '    move_right()', 'collect()',
+)
+
 HINTS = (
     ('Das Tor versperrt den Weg zur Batterie.',
      'Welche Verbindung siehst du zwischen Schalter und Tor?'),
-    ('Auf dem Schalterfeld: toggle() öffnet oder schliesst das Tor.',
-     'Plane den Schalterbesuch vor dem Weg zur Batterie.'),
-    ('for _ in range(2):', '    move_right()', 'toggle()',
-     'for _ in range(4):', '    move_right()', 'collect()'),
+    ('toggle() schaltet am Schalter um; gate_open() liest den Torzustand.',
+     'if not gate_open(): führt eingerückte Befehle nur bei geschlossenem Tor aus.'),
+    ADAPTIVE_EXAMPLE,
 )
 
 OPEN_HINTS = (
     ('Das Tor ist schon am Anfang offen.',
      'Was würde dein bisheriger Schalterbefehl jetzt verändern?'),
-    ('toggle() wechselt den Zustand: offen wird zu, zu wird offen.',
-     'Welche Aktion braucht dein Weg bei diesem Start noch?'),
-    ('for _ in range(6):', '    move_right()', 'collect()'),
+    ('gate_open() fragt: Ist das Tor gerade offen?',
+     'if not gate_open(): schaltet nur dann, wenn das Tor noch zu ist.'),
+    ADAPTIVE_EXAMPLE,
 )
 
 

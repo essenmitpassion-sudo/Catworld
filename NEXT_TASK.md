@@ -1,9 +1,8 @@
-# Nächste Aufgabe: eigener Plan für beide Torzustände
-Werkstatt und Startvariation fertig; 237 Tests, voller SDL-Smoke, Review ohne Befund.
-Nach bestätigtem Commit/Bundle/Remote weiter: gate_open() als begrenzten booleschen
-Sensor und oberste if gate_open()/if not gate_open()-Blöcke mit Aktionsaufrufen
-prüfen. Bedingung muss beim Erreichen gegen aktuellen Weltzustand ausgewertet werden,
-nicht beim Laden. Step höchstens eine Weltaktion, Stop/Reset weiter zuverlässig.
-Keine else/nested if, keine Variablen, kein exec/eval. F1 optional erklärt das
-Prinzip; derselbe eigene Plan soll beide F11-Varianten lösen können. Testen, sichern,
-weiter. Menschlicher Lernnachweis bleibt offen.
+# Nächste Aufgabe: übersprungene Zweige sichtbar machen
+Bedingungen und adaptive Lösung implementiert: 265 Tests, kompletter SDL-Smoke grün.
+Nach bestätigtem Commit/Bundle/Push: übersprungene Aktionszeilen nach falscher
+Bedingung am eigenen Code markieren. Kein automatisches Umschreiben; ein echter
+Trace, der bei Edit/Undo/Reset/Neustart verschwindet. Maximal 64 Aktionen, kein
+neuer Spielmodus. Begründung: kleinster Pareto-Hebel verbindet Entscheidung und
+sichtbar ausgebliebene Wirkung. RED→GREEN, SDL, sichern, weiter.
+Danach tatsächlichen Entscheidungsraum prüfen; neue Syntax/Content ist kein Selbstzweck.

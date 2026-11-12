@@ -1,0 +1,62 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___ test_editing_invalidates_condition_feedback_from_previous_program[write] ___
+
+app = <neonpaw.ui.app.App object at 0x7f31033384d0>, edit = 'write'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3103331ac0>
+
+    @pytest.mark.parametrize('edit', ['write', 'undo'])
+    def test_editing_invalidates_condition_feedback_from_previous_program(app, edit, monkeypatch):
+        enter(app)
+        write(app, 'move_right()')
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+        assert app.runner.condition_result is not None
+        if edit == 'undo':
+            app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
+        else:
+            write(app, 'move_left()')
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+>       assert not any(text.startswith('if Z') for text in rendered)
+E       assert not True
+E        +  where True = any(<generator object test_editing_invalidates_condition_feedback_from_previous_program.<locals>.<genexpr> at 0x7f31033d3e00>)
+
+tests/test_gate_condition_ui.py:62: AssertionError
+___ test_editing_invalidates_condition_feedback_from_previous_program[undo] ____
+
+app = <neonpaw.ui.app.App object at 0x7f310338b470>, edit = 'undo'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f31033893d0>
+
+    @pytest.mark.parametrize('edit', ['write', 'undo'])
+    def test_editing_invalidates_condition_feedback_from_previous_program(app, edit, monkeypatch):
+        enter(app)
+        write(app, 'move_right()')
+        write(app, ADAPTIVE_PLAN)
+        for _ in range(3): click(app, 'Step')
+        assert app.runner.condition_result is not None
+        if edit == 'undo':
+            app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
+        else:
+            write(app, 'move_left()')
+        rendered = []
+        original = app.text
+        def record(value, *args, **kwargs):
+            rendered.append(value)
+            return original(value, *args, **kwargs)
+        monkeypatch.setattr(app, 'text', record)
+        app.draw()
+>       assert not any(text.startswith('if Z') for text in rendered)
+E       assert not True
+E        +  where True = any(<generator object test_editing_invalidates_condition_feedback_from_previous_program.<locals>.<genexpr> at 0x7f3103294c70>)
+
+tests/test_gate_condition_ui.py:62: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_gate_condition_ui.py::test_editing_invalidates_condition_feedback_from_previous_program[write]
+FAILED tests/test_gate_condition_ui.py::test_editing_invalidates_condition_feedback_from_previous_program[undo]
+2 failed, 3 deselected in 0.43s

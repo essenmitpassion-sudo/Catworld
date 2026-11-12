@@ -56,6 +56,11 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
     offenem statt geschlossenem Tor beginnen. Dein Code bleibt stehen. Beobachte,
     was `toggle()` jetzt bewirkt, und passe deinen Plan selbst an. Run und Reset
     verwenden den gewählten Anfangszustand; auch nach Neustart bleibt die Auswahl.
+11. **Ein Plan für beide Starts:** `gate_open()` liest den aktuellen Torzustand.
+    Mit `if not gate_open():` kannst du auf dem Schalterfeld nur dann `toggle()`
+    ausführen, wenn das Tor noch zu ist. Die eingerückten Aktionen werden sonst
+    übersprungen. F1 erklärt dies auf Wunsch; dein Programm wird nie automatisch
+    ersetzt. Unter dem Editor siehst du das Ergebnis der letzten Bedingungsprüfung.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;
@@ -64,7 +69,7 @@ die Simulation bleibt unabhängig von diesen Darstellungsdetails.
 ## Spielen
 
 - **Run / F5:** führt deinen Code aus, ein Befehl alle 0,45 Sekunden.
-- **Step / F6:** führt genau einen Befehl aus; unterbricht laufenden Run.
+- **Step / F6:** führt höchstens einen Weltbefehl aus; unterbricht laufenden Run.
 - **Stop / Esc:** verwirft die laufende Ausführung, Position und Code bleiben.
 - **Reset / F2:** setzt das aktuelle Szenario und die Ausführung zurück; dein Code bleibt erhalten.
 - **Hilfe / F1:** optional Beobachtung → Denkhinweis → ausdrücklich angefordertes Codebeispiel.
@@ -99,10 +104,16 @@ Die unterstützte Python-Teilmenge umfasst parameterlose `move_right()`-, `move_
 Leerzeilen und Python-Anweisungssequenzen sowie begrenzte `for name in range(...)`-Schleifen.
 `range` akzeptiert ein bis drei ganzzahlige Literale von -64 bis 64; Schrittweite null
 ist ungültig. Höchstens 64 Schleifendurchläufe insgesamt und 64 ausgeführte Aktionen.
-Keine Verschachtelung, Variablenverwendung oder weiteren Python-Funktionen.
+Zusätzlich sind `if gate_open():` und `if not gate_open():` auf oberster Ebene
+erlaubt; ihr eingerückter Körper enthält Weltaufrufe. Die Bedingung liest den
+Weltzustand beim Erreichen der Zeile, nicht beim Laden des Programms. Kein
+`else`/`elif`, keine verschachtelten Schleifen/Bedingungen, Variablenverwendung
+oder weiteren Python-Funktionen. Auch übersprungene Zweige werden vorab geprüft.
 `toggle()` wirkt nur auf dem Schalterfeld der Werkstatt. Das geschlossene Tor
 blockiert in beiden Richtungen; ein Fehler hält vor dem Tor und markiert die Codezeile.
-Step führt auch in Schleifen genau eine Aktion aus; Run setzt pausierte Versuche fort.
+Step führt höchstens eine Weltaktion aus und überspringt nicht zutreffende
+Bedingungszweige; ein abschliessender falscher Zweig kann ohne Weltaktion enden.
+Run setzt pausierte Versuche fort.
 Enter übernimmt die Einrückung, Tab/Shift+Tab rückt ein/aus. Kein vollständiger Python-Interpreter.
 
 ## Vom Vormachen zum eigenen Programm

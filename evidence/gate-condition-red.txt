@@ -1,0 +1,265 @@
+FFFFFFF............F.F                                                   [100%]
+=================================== FAILURES ===================================
+_________ test_identical_own_plan_adapts_to_both_gate_states[False-8] __________
+
+opened = False, actions = 8
+
+    @pytest.mark.parametrize('opened, actions', [(False, 8), (True, 7)])
+    def test_identical_own_plan_adapts_to_both_gate_states(opened, actions):
+        r = runner(opened)
+>       run(r, ADAPTIVE_PLAN)
+
+tests/test_gate_condition.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate_condition.py:15: in run
+    r.load(source)
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c26d5dd0>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 3: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+__________ test_identical_own_plan_adapts_to_both_gate_states[True-7] __________
+
+opened = True, actions = 7
+
+    @pytest.mark.parametrize('opened, actions', [(False, 8), (True, 7)])
+    def test_identical_own_plan_adapts_to_both_gate_states(opened, actions):
+        r = runner(opened)
+>       run(r, ADAPTIVE_PLAN)
+
+tests/test_gate_condition.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate_condition.py:15: in run
+    r.load(source)
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c244a4d0>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 3: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+________ test_condition_reads_live_world_after_toggle_not_world_at_load ________
+
+    def test_condition_reads_live_world_after_toggle_not_world_at_load():
+        r = runner()
+>       run(r, 'move_right()\nmove_right()\ntoggle()\nif gate_open():\n    toggle()')
+
+tests/test_gate_condition.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate_condition.py:15: in run
+    r.load(source)
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c2469790>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 4: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+_____ test_step_skips_false_branch_then_executes_at_most_one_world_action ______
+
+    def test_step_skips_false_branch_then_executes_at_most_one_world_action():
+        r = runner(True)
+>       r.load(ADAPTIVE_PLAN)
+
+tests/test_gate_condition.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c243fbd0>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 3: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+______ test_false_last_branch_finishes_without_an_action_or_fake_progress ______
+
+    def test_false_last_branch_finishes_without_an_action_or_fake_progress():
+        r = runner()
+>       r.load('if gate_open():\n    toggle()')
+
+tests/test_gate_condition.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c26d6750>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 1: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+___________ test_error_in_taken_branch_points_to_actual_action_line ____________
+
+    def test_error_in_taken_branch_points_to_actual_action_line():
+        r = runner(True)
+>       run(r, 'if gate_open():\n    toggle()')
+
+tests/test_gate_condition.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate_condition.py:15: in run
+    r.load(source)
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c25dd4d0>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 1: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+_______________ test_sensor_without_gate_fails_on_condition_line _______________
+
+    def test_sensor_without_gate_fails_on_condition_line():
+        r = Runner()
+>       run(r, 'if not gate_open():\n    move_right()')
+
+tests/test_gate_condition.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate_condition.py:15: in run
+    r.load(source)
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c242c6d0>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 1: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+_ test_condition_does_not_expand_into_general_python[for gate_open in range(1):\n    move_right()] _
+
+source = 'for gate_open in range(1):\n    move_right()'
+
+    @pytest.mark.parametrize('source', ['if True:\n    toggle()',
+        'if gate_open(1):\n    toggle()', 'if gate_open(value=1):\n    toggle()',
+        'if not not gate_open():\n    toggle()',
+        'if world.gate_open():\n    toggle()',
+        'if gate_open() or True:\n    toggle()',
+        'if gate_open():\n    toggle()\nelse:\n    move_left()',
+        'for gate_open in range(1):\n    move_right()',
+        'for _ in range(2):\n    if gate_open():\n        toggle()'])
+    def test_condition_does_not_expand_into_general_python(source):
+>       with pytest.raises(ProgramError): parse(source)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'neonpaw.code.runner.ProgramError'>
+
+tests/test_gate_condition.py:90: Failed
+__ test_limits_count_real_actions_and_reject_oversized_branch_before_running ___
+
+    def test_limits_count_real_actions_and_reject_oversized_branch_before_running():
+        r = runner(True, max_steps=2)
+>       run(r, 'if not gate_open():\n    toggle()\nmove_right()\nmove_right()')
+
+tests/test_gate_condition.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_gate_condition.py:15: in run
+    r.load(source)
+neonpaw/code/runner.py:110: in load
+    self.commands = parse(source)
+                    ^^^^^^^^^^^^^
+neonpaw/code/runner.py:67: in parse
+    commands.append(parse_action(stmt))
+                    ^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+stmt = <ast.If object at 0x7f92c245abd0>
+
+    def parse_action(stmt):
+        if isinstance(stmt, ast.For):
+            raise ProgramError('Verschachtelte Schleifen sind hier noch nicht unterstützt.', stmt.lineno)
+        if not (isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call)
+                and isinstance(stmt.value.func, ast.Name)):
+>           raise ProgramError('Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.', stmt.lineno)
+E           neonpaw.code.runner.ProgramError: Zeile 1: Hier sind nur move_right(), move_left(), collect() und toggle() ohne Argumente erlaubt.
+
+neonpaw/code/runner.py:78: ProgramError
+=========================== short test summary info ============================
+FAILED tests/test_gate_condition.py::test_identical_own_plan_adapts_to_both_gate_states[False-8]
+FAILED tests/test_gate_condition.py::test_identical_own_plan_adapts_to_both_gate_states[True-7]
+FAILED tests/test_gate_condition.py::test_condition_reads_live_world_after_toggle_not_world_at_load
+FAILED tests/test_gate_condition.py::test_step_skips_false_branch_then_executes_at_most_one_world_action
+FAILED tests/test_gate_condition.py::test_false_last_branch_finishes_without_an_action_or_fake_progress
+FAILED tests/test_gate_condition.py::test_error_in_taken_branch_points_to_actual_action_line
+FAILED tests/test_gate_condition.py::test_sensor_without_gate_fails_on_condition_line
+FAILED tests/test_gate_condition.py::test_condition_does_not_expand_into_general_python[for gate_open in range(1):\n    move_right()]
+FAILED tests/test_gate_condition.py::test_limits_count_real_actions_and_reject_oversized_branch_before_running
+9 failed, 13 passed in 0.31s
