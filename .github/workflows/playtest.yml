@@ -1,0 +1,71 @@
+name: AFTERLIGHT playtest packages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/masterplan-run-consistency]
+    paths:
+      - 'neonpaw/**'
+      - 'launch_afterlight.py'
+      - 'start_afterlight*'
+      - 'requirements-*.txt'
+      - 'scripts/build_playtest.py'
+      - '.github/workflows/playtest.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: afterlight-package-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install pinned runtime and packager
+        run: python -m pip install -r requirements-build.txt
+      - name: Build verified source ZIP
+        run: python scripts/build_playtest.py dist/AFTERLIGHT-source.zip
+      - name: Build native Windows folder
+        run: >-
+          python -m PyInstaller --noconfirm --clean --windowed --onedir
+          --name NEONPAW-Afterlight
+          --add-data "neonpaw/district/assets;neonpaw/district/assets"
+          launch_afterlight.py
+      - name: Run the packaged executable in isolated self-test mode
+        shell: pwsh
+        run: |
+          $process = Start-Process -FilePath .\dist\NEONPAW-Afterlight\NEONPAW-Afterlight.exe -ArgumentList '--self-test', 'self-test' -Wait -PassThru
+          if ($process.ExitCode -ne 0) { throw 'Packaged executable failed' }
+          $report = Get-Content self-test/self-test.json | ConvertFrom-Json
+          if ($report.status -ne 'passed') { throw 'No passing self-test report' }
+      - name: Include player instructions
+        shell: pwsh
+        run: |
+          Copy-Item PLAY_NOW.txt dist/NEONPAW-Afterlight/PLAY_NOW-source-notes.txt
+          Copy-Item AFTERLIGHT.md dist/NEONPAW-Afterlight/AFTERLIGHT.md
+          'Entpacken, NEONPAW-Afterlight.exe starten. Python muss nicht installiert sein. F1 zeigt die Befehle. Nur Code wird lokal gespeichert; die Welt startet frisch.' | Set-Content dist/NEONPAW-Afterlight/START_HERE.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AFTERLIGHT-Windows-x64
+          path: dist/NEONPAW-Afterlight/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AFTERLIGHT-source
+          path: dist/AFTERLIGHT-source.zip
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: AFTERLIGHT-package-check
+          path: self-test/
+          retention-days: 14

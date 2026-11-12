@@ -1,0 +1,8 @@
+Independent read-only reviewer /root/review_restart:
+6 new tests PASS; diff check clean. No Critical/Important/Minor findings.
+Character selection preserves world and code; help still blocks background input.
+Nox atlas/start/portrait inspected; poses separated, dialogue inside panel.
+ZIP selection, asset paths, runtime dependencies and Windows CI recipe inspected.
+Additional independent unpacked execution blocked by disconnected exec transport
+before launch. Integrator's earlier unpacked smoke and clean runtime self-test PASS.
+No physical Windows, EXE availability, human enjoyment or learning claim.

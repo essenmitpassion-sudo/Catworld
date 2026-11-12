@@ -4,7 +4,7 @@
 Windows: `start_afterlight_windows.bat`. Energie umverteilen, Brücken öffnen,
 Garten und Katzenzuflucht beleben; räumliche Darstellung, direkt zugänglich.
 
-![AFTERLIGHT — der versorgte Bezirk](evidence/district-restored.png)
+![AFTERLIGHT — Nox und seine Nachbarn](evidence/playtest-characters.png)
 
 ## Bisheriger Build — Licht für Nox
 

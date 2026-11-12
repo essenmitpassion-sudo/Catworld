@@ -1,35 +1,29 @@
-# CURRENT — 2026-11-12 — AFTERLIGHT spielbarer Richtungsprototyp
+# CURRENT — 2026-11-12 — Charakterrichtung bestätigt und gesichert
 
-Branch: codex/masterplan-run-consistency. Basis0b4241c; endgültigen SHA per git log
-und git ls-remote prüfen. Masterprompt vollständig erneut gelesen; Owner-Kritik
-„super langweilig,..nicht schön“ ist Produktbefund, kein erfundenes Testprotokoll.
+Branch codex/masterplan-run-consistency. Letzten HEAD/Remote statt alter SHAs prüfen.
+Owner: Figuren höchste Priorität, cute/adorable/cool/charismatisch. Neue Richtung
+mit „ist super“ bestätigt. Dauerhafte Details: CHARACTER_DIRECTION.md.
 
-## Jetzt tatsächlich spielbar
-Separater Starter start_afterlight_windows.bat / python -m neonpaw.district.
-Isometrischer Kanalbezirk, eine umverteilbare Energieeinheit, drei Gebäude:
-Werkstatt öffnet Brücke, Garten zweiten Weg, Zuflucht bringt Katzen. Akku jenseits
-des Kanals gibt einmal2 Energie. Zwei gültige Zugänge, freie Reihenfolge, keine
-Lektionen davor. Run wirkt ab aktuellem Standort; Welt bleibt zwischen Programmen.
-Step/Stop, letzter Versuch zurück, Bezirk neu mit erhaltenem Text, Undo/Redo,
-begrenzter Editor, optionale Hilfe, unabhängiger lokaler Code-Speicher.
-Bestehendes Spiel und Saves bleiben erhalten. Dieselbe begrenzte Compiler-/Runner-
-Implementierung mit injizierbarer Welttransition; keine neue Python-Ausführung.
+## Neuer Stand
+AFTERLIGHT-Bezirk bleibt spielbar. Gemalte Hafenstadt, eigene Gebäudesprites,
+Nox/Miso/Lumi/Pixel mit Porträts und persönlichen Weltreaktionen. Nox:4 Posen,
+Blickrichtung, Gehen/Blinzeln. Bewohner verschwinden bei Energieumverteilung nicht.
+Alle Assets im Repository; Originalgenerierungen zusätzlich im Arbeitsbereich.
+Laufzeitstarter ohne pytest, Unix-Starter, kuratiertes ZIP-Buildskript mit
+Inhaltshashes und expliziter isolierter Paketprüfung. Keine alten Saves ersetzen.
 
-## Belege und Grenzen
-327 Tests PASS. Vollständiger alter SDL-Smoke und neuer District-SDL-Smoke PASS.
-Screenshotvergleich Start/versorgt/Hilfe geprüft. evidence/district-*.
-Unabhängiger Review:23 neue +88 alte Runner-/Sprachtests PASS;442 erreichbare
-Weltzustände ohne Softlock. Zwei Speicherfehler RED→GREEN behoben: Originaldatei
-bei Lesefehler sichern; bei fehlgeschlagenem Exit-Save Editor offen halten.
-Fehlerzeile ausserhalb Viewport ebenfalls RED→GREEN;4 neue Regressionstests.
+## Qualität und Grenzen
+333 Tests PASS. Entpacktes Paket per SDL-Smoke geprüft. Frische Umgebung mit nur
+pygame-ce installiert: Paket-Selbsttest PASS,4 Charaktere/4 Nox-Posen/3 Gebäude
+und Hintergrund geladen,20 Aktionen zur Gesamtversorgung, Code-Neustart korrekt.
+Unabhängiger Review6 neue Tests PASS, keine weiteren Befunde. Letzten zusätzlichen
+Reviewer-Paketstart verhinderte Exec-Ausfall; eigenen Paketstart davor belegt.
+Windows-Workflow vorbereitet, aber kein bestätigter Windows-Lauf/EXE-Download.
+Menschlicher Langzeitspass/Lernen offen; positive visuelle Owner-Rückmeldung real.
 
-Windows-Starter nicht auf Windows ausgeführt. Kein physischer Desktop-Test;
-kein nachgewiesener Spielspass oder Lerntransfer. Prototyp keine fertige Stadt:
-Welt startet beim Öffnen neu, nur Code wird gespeichert. Neue visuelle Richtung
-ist implementiert, ihre Qualität bleibt Gegenstand echter Rückmeldung.
-
-## Wiederaufnahme
-Zuerst git status / log / Remote vergleichen, Sicherungen prüfen. AFTERLIGHT.md
-enthält direkten Start und5–10-Minuten-Test. Nächste Priorität: tatsächliche
-Rückmeldung zum neuen Loop und zur neuen Darstellung; technische Beobachtung
-parallel möglich. Kein weiterer linearer Lektionsausbau als Ersatz für diesen Test.
+## Sicherung
+Ausfall vor Commit; nach Wiederverbindung Dateien unverändert vorgefunden.
+Inhaltsarchiv vor Bearbeitung hashgeprüft. Neues Wissen in CHARACTER_DIRECTION.md,
+AGENTS.md, MASTERPLAN_STATUS.md/NEXT_TASK.md festgehalten. Änderungen inklusive
+Grafiken committen, vollständiges Bundle prüfen, pushen, Remote-SHA abgleichen.
+Aktuelles Paket nach Commit neu bauen; Manifest soll sauberen HEAD nennen.

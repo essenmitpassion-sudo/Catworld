@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "human_playtest": false,
+  "assets_loaded": 3,
+  "characters_loaded": 4,
+  "nox_poses": 4,
+  "actions": 20,
+  "saved_draft_restored": true,
+  "renderer": "dummy"
+}

@@ -1,17 +1,16 @@
-# AFTERLIGHT: neuen Spielkern prüfen, dann gezielt verbessern
+# Nächste Aufgabe — bestätigte Figurenrichtung spielbar weiterführen
 
-Spielbar: start_afterlight_windows.bat oder python -m neonpaw.district.
-327 Tests, beide SDL-Smokes, unabhängiger Review und Speicher-/Tracefixes belegt.
-Bisherigen Build nicht überschreiben. Masterprompt und Owner-Negativfeedback
-weiter als Massstab, keine Fun-Erfolge aus Tests ableiten.
+Zuerst git status/log, Bundle und Remote prüfen; neue Charakter-/Grafikfassung
+nicht nochmals bauen. CHARACTER_DIRECTION.md enthält bestätigte Owner-Präferenzen.
 
-Nächste konkrete Schritte:
-1. Mit tatsächlichem Feedback prüfen: wird Energieumverteilung verstanden, entsteht
-   freiwilliges Experimentieren, wirkt die räumliche Darstellung ansprechender?
-2. Den ersten reproduzierbaren Engpass beheben. Keine vorgezeigte Komplettlösung.
-3. Technisch parallel begrenzt prüfen: Eingaben auf echtem Windows/DPI und Zugriff
-   auf den Starter; aktuell nicht möglich/nicht nachgewiesen. Keine erfundene Prüfung.
-4. Erst nach Befund über längere Automatisierung entscheiden. Gegenwärtiger Bezirk
-   ist bewusst klein; langfristige Meisterschaft und Entdeckung nicht gelöst.
+Spieltestzugang: start_afterlight_windows.bat bzw. sh start_afterlight.sh.
+Kuratiertes Paket: python scripts/build_playtest.py /workspace/work/AFTERLIGHT-playtest.zip.
+Höchste Priorität bleibt Nox und seine Nachbarn: Ausdruck, erkennbare Persönlichkeit,
+verständliche Reaktionen und Bindung zur Spielwelt vor weiterer Mechanikmenge.
 
-Fortsetzung autonom im bestehenden Auftrag; vorher Checkpoint/Remote verifizieren.
+Nächster realer Test: Wiedererkennung/Lesbarkeit der Figuren, Interesse an Bewohnern,
+freiwilliges Experimentieren mit dem Bezirk. Feedback gezielt umsetzen, keine
+Langzeitmotivation aus schönen Assets oder Testzahlen ableiten.
+Windows-Paketworkflow prüfen, sobald dessen Ergebnis zugänglich ist; bis dahin
+Python-Spielpaket und geprüfte Linux-Ausführung von unbestätigter EXE unterscheiden.
+Bestehenden Lernbuild, eigene Entwürfe und Sicherungsregeln erhalten.

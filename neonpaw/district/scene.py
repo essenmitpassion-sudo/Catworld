@@ -1,13 +1,47 @@
 """Hand-drawn isometric district. Rendering never changes simulation state."""
 import math
+from functools import lru_cache
+from pathlib import Path
 import pygame
 from .world import DEVICES, CROSSINGS, CELL, NAMES
+from . import characters
 
 INK = '#e0ebef'
 MUTED = '#8faab8'
 GOLD = '#f8c987'
 TEAL = '#75e1ca'
 ORIGIN = (394, 270)
+
+
+@lru_cache(maxsize=1)
+def load_art():
+    """Load/scale static assets once; missing art never prevents playing."""
+    folder=Path(__file__).with_name('assets')
+    result={'background':None,'sprites':{}}
+    try:
+        background=pygame.image.load(folder/'canal-night.png').convert()
+        background=pygame.transform.smoothscale(background,(900,610))
+        # Preserve foreground contrast while keeping the distant city luminous.
+        shade=pygame.Surface((900,610),pygame.SRCALPHA)
+        shade.fill((7,18,28,65));background.blit(shade,(0,0))
+        result['background']=background
+    except (OSError,pygame.error):
+        pass
+    try:
+        atlas=pygame.image.load(folder/'buildings.png').convert_alpha()
+        for i,name in enumerate(('workshop','garden','shelter')):
+            left=i*atlas.get_width()//3;right=(i+1)*atlas.get_width()//3
+            column=atlas.subsurface((left,0,right-left,atlas.get_height()))
+            rect=column.get_bounding_rect(min_alpha=12)
+            if not rect.width or not rect.height:continue
+            sprite=column.subsurface(rect)
+            ratio=min(100/sprite.get_width(),106/sprite.get_height())
+            sprite=pygame.transform.smoothscale(sprite,(max(1,round(sprite.get_width()*ratio)),max(1,round(sprite.get_height()*ratio))))
+            dim=sprite.copy();dim.fill((85,112,135,255),special_flags=pygame.BLEND_RGBA_MULT)
+            result['sprites'][name]={True:sprite,False:dim}
+    except (OSError,pygame.error):
+        pass
+    return result
 
 
 def project(x, y):
@@ -48,10 +82,23 @@ def cat(surface, pos, color='#151d2b', eyes=TEAL, scale=1, time=0):
     rect(color,(-9,-2,6,5));rect(color,(6,-2,6,5))
 
 
-def building(surface, name, center, active, font, time):
+def building(surface, name, center, active, font, time, actor=None):
     x,y=center; x-=15; y-=18
     light=TEAL if name=='garden' else GOLD
     if active: glow(surface,(x,y),light,75)
+    states=load_art()['sprites'].get(name)
+    if states:
+        sprite=states[active]
+        rect=sprite.get_rect(midbottom=(round(x),round(y+14)))
+        if actor and rect.collidepoint(actor[0],actor[1]-18):
+            sprite=sprite.copy();sprite.set_alpha(140)  # Nox remains visible behind foreground roofs.
+        surface.blit(sprite,rect)
+        pygame.draw.ellipse(surface,light if active else '#8aabb8',(center[0]-9,center[1]+6,18,9),2)
+        label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name],True,light if active else '#b1c1ca')
+        tag=label.get_rect(midbottom=(round(x),rect.top-5))
+        pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
+        surface.blit(label,tag)
+        return
     # Compact buildings occupy the back of their tile; the terminal stays in front.
     h=46 if name=='workshop' else 34
     polygon(surface,'#172939',[(x-30,y-12),(x,y+3),(x,y-h+3),(x-30,y-h-12)])
@@ -77,29 +124,24 @@ def building(surface, name, center, active, font, time):
         pygame.draw.line(surface,'#b88878',(x,y-h-24),(x+25,y-h-12),3)
     # A circular connection socket marks exactly where toggle() works.
     pygame.draw.ellipse(surface,light if active else '#6d8490',(x-9,y+18,18,9),2)
-    label=font.render(NAMES[name].upper(),True,light if active else '#b1c1ca')
+    label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name],True,light if active else '#b1c1ca')
     surface.blit(label,(x-label.get_width()/2,y-h-48))
 
 
-def draw(surface, world, visual, time, font, selected=None):
+def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox"):
     board=pygame.Rect(24,116,900,610)
     pygame.draw.rect(surface,'#112431',board,border_radius=22)
-    # Depth: a quiet skyline, reflected in the canal below the walkable district.
-    for row in range(board.height):
-        t=row/board.height
-        pygame.draw.line(surface,(int(16+7*t),int(32+14*t),int(49+10*t)),
-                         (board.left+20,board.top+row),(board.right-20,board.top+row))
-    for i in range(15):
-        x=54+i*58; h=35+(i*37)%75
-        pygame.draw.rect(surface,'#1e3446',(x,270-h,39,h))
-        for yy in range(280-h,255,16):
-            for xx in (x+9,x+25):
-                if (xx+yy)%4: pygame.draw.rect(surface,'#53616a',(xx,yy,4,6))
-    pygame.draw.circle(surface,'#dbc7a7',(819,177),24)
-    pygame.draw.circle(surface,'#122331',(810,170),23)
-    for i in range(25):
-        sx=75+(i*137)%770; sy=135+(i*29)%100
-        pygame.draw.circle(surface,'#58717f',(sx,sy),1)
+    background=load_art()['background']
+    if background is not None:
+        surface.blit(background,board)
+    else:
+        # Minimal readable fallback if a copied installation lacks its image assets.
+        for i in range(15):
+            x=54+i*58;h=35+(i*37)%75
+            pygame.draw.rect(surface,'#1e3446',(x,270-h,39,h))
+    # Keep title readable on every background, without hiding the district.
+    title_shade=pygame.Surface((470,82),pygame.SRCALPHA)
+    title_shade.fill((11,27,38,205));surface.blit(title_shade,(40,127))
     # Canal and islands are actual geometry, not a background screenshot.
     for diagonal in range(13):
         for x in range(8):
@@ -141,7 +183,9 @@ def draw(surface, world, visual, time, font, selected=None):
             if (x,y)==(1,3):
                 polygon(surface,'#8aadae',diamond(cx,cy,14,7),1)
             name=next((key for key,pos in DEVICES.items() if pos==(x,y)),None)
-            if name: building(surface,name,(cx,cy),name in world.active,font,time)
+            if name:
+                ax,ay=project(*visual)
+                building(surface,name,(cx,cy),name in world.active,font,time,(ax+12,ay+9))
             if (x,y)==CELL and not world.cell_collected:
                 glow(surface,(cx,cy-10),TEAL,42)
                 pygame.draw.rect(surface,'#a4efda',(cx-12,cy-23,24,24),border_radius=5)
@@ -149,10 +193,12 @@ def draw(surface, world, visual, time, font, selected=None):
                 pygame.draw.line(surface,'#b7fce5',(cx-4,cy-12),(cx+4,cy-12),2)
                 pygame.draw.line(surface,'#b7fce5',(cx,cy-16),(cx,cy-8),2)
                 label=font.render('AKKU +2',True,TEAL);surface.blit(label,(cx-30,cy-46))
-    # Residents make power visibly meaningful; no simulation reward is inferred.
-    if 'shelter' in world.active:
-        for p,color in [((0,1),'#b48972'),((1,0),'#c6c6b2'),((0,2),'#7c889b')]:
-            cx,cy=project(*p);cat(surface,(cx,cy+8),color,scale=.7,time=time)
+    # Neighbours remain inhabitants when power is reallocated, rather than vanishing.
+    for name,tile in characters.POSITIONS.items():
+        cx,cy=project(*tile)
+        if 'shelter' in world.active:glow(surface,(cx,cy),GOLD,34)
+        if not characters.draw(surface,name,(cx,cy+8),time):
+            cat(surface,(cx,cy+8),'#b48972',scale=.7,time=time)
     if 'garden' in world.active:
         for i in range(12):
             cx,cy=project(2,4)
@@ -161,12 +207,15 @@ def draw(surface, world, visual, time, font, selected=None):
             pygame.draw.circle(surface,'#d3da94',(round(px),round(py)),1)
     cx,cy=project(*visual)
     glow(surface,(cx+12,cy+5),TEAL,32)
-    cat(surface,(cx+12,cy+9),time=time)
+    moving=abs(world.x-visual[0])+abs(world.y-visual[1])>.025
+    if not characters.draw(surface,'nox',(cx+12,cy+9),time,moving,facing_left):
+        cat(surface,(cx+12,cy+9),time=time)
+    characters.portrait(surface,selected_character,world,font)
     # Coordinate / compass marks connect code directions to the isometric world.
-    for text,pos in [('x +',(800,605)),('y +',(740,650))]:
+    for text,pos in [('x +',(632,633)),('y +',(506,667))]:
         surface.blit(font.render(text,True,MUTED),pos)
-    pygame.draw.line(surface,'#75949c',(795,637),(828,653),2)
-    pygame.draw.line(surface,'#75949c',(795,637),(762,653),2)
-    surface.blit(font.render('move_right()',True,MUTED),(800,661))
-    surface.blit(font.render('move_down()',True,MUTED),(660,681))
+    pygame.draw.line(surface,'#75949c',(596,645),(629,661),2)
+    pygame.draw.line(surface,'#75949c',(596,645),(563,661),2)
+    surface.blit(font.render('move_right()',True,MUTED),(616,681))
+    surface.blit(font.render('move_down()',True,MUTED),(480,692))
     return board

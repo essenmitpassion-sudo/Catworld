@@ -1,0 +1,15 @@
+NEONPAW / AFTERLIGHT — SPIELTEST
+
+Windows: ZIP vollstaendig entpacken, start_afterlight_windows.bat doppelklicken.
+Python3.12+ erforderlich. Nur beim ersten Start: Internet fuer pygame-ce.
+Linux/macOS: im entpackten Ordner `sh start_afterlight.sh` (grafischer Desktop).
+
+Eine Energieeinheit. Drei Gebaeude. Du entscheidest, wo Licht und Leben beginnen.
+F1 zeigt die Befehle. Es gibt keine vorgeschriebene Route.
+Run wirkt ab Nox' aktuellem Standort. Versuch zurueck macht den letzten Lauf rueckgaengig.
+Bezirk neu setzt die Welt zurueck und erhaelt den Code.
+Eigener Code wird lokal gespeichert; die Welt startet beim Oeffnen frisch.
+
+Spiele5–10 Minuten. Was war unklar? Was wolltest du freiwillig ausprobieren?
+Wie wirken Grafik und Weltreaktionen? Feedback direkt im Chat.
+Details und Grenzen: AFTERLIGHT.md. Kein automatischer Datenversand.

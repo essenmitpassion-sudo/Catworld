@@ -1,0 +1,3 @@
+pygame-ce 2.5.7 (SDL 2.32.10, Python 3.12.14)
+PASS: real SDL events -> shelter / recover energy -> garden crossing -> battery -> three buildings -> rewind -> retry -> help -> reset -> Step/Run/Stop -> invalid code -> long editor/Undo -> resize -> saved draft/restart -> quit
+Rendering: offscreen; human enjoyment and physical Windows interaction: NOT_TESTED

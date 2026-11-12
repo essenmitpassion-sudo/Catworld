@@ -27,6 +27,14 @@ with TemporaryDirectory() as temporary:
             frame(dt=.4)
         assert app.runner.status=='done',app.runner.error
     frame()
+    from neonpaw.district import characters, scene
+    for name,tile in characters.POSITIONS.items():
+        cx,cy=scene.project(*tile)
+        before=app.runner.world
+        frame(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=(cx,cy-20)))
+        assert app.selected_character==name and app.runner.world==before
+    pygame.image.save(app.canvas,'district-neighbour.png')
+    app.selected_character='nox'
     pygame.image.save(app.canvas,'district-start.png')
     # The first meaningful choice can be the shelter, then energy can be recovered.
     run('move_up()\nmove_up()\ntoggle()')

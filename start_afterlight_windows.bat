@@ -6,12 +6,14 @@ if not exist .venv\Scripts\python.exe (
     py -3 -m venv .venv
     if errorlevel 1 goto error
 )
+.venv\Scripts\python.exe -c "import sys; sys.exit(0 if sys.version_info >= (3, 12) else 1)"
+if errorlevel 1 goto error
 .venv\Scripts\python.exe -c "import pygame" >nul 2>&1
 if errorlevel 1 (
-    .venv\Scripts\python.exe -m pip install -r requirements.txt
+    .venv\Scripts\python.exe -m pip install -r requirements-runtime.txt
     if errorlevel 1 goto error
 )
-.venv\Scripts\python.exe -m neonpaw.district
+.venv\Scripts\python.exe launch_afterlight.py
 if errorlevel 1 goto error
 exit /b 0
 :error

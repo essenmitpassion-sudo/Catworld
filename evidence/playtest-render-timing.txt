@@ -1,0 +1,1 @@
+Linux SDL dummy, 1440x900, 120 frames after asset warmup: median 4.90 ms; p95 9.30 ms. Not a physical Windows FPS claim.

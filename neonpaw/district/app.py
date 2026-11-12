@@ -6,7 +6,7 @@ import pygame
 from neonpaw.code.runner import Runner, ProgramError, MAX_SOURCE
 from neonpaw.ui.drafts import default_path
 from .world import District, transition, DEVICES, NAMES, CELL
-from . import scene
+from . import scene, characters
 
 SIZE=(1440,900)
 
@@ -44,6 +44,7 @@ class DistrictApp:
         self.visual=(1.0,3.0)
         self.time=0.;self.elapsed=0.
         self.alive=True;self.help=False;self.inspected=None
+        self.selected_character="nox";self.facing_left=False
         self.scroll=0;self.hscroll=0;self.follow_execution=False
         self.buttons={
             'Run':pygame.Rect(974,645,128,44),
@@ -143,6 +144,9 @@ class DistrictApp:
                     self.cursor=sum(len(s)+1 for s in lines[:row])+col
                     self.selected_all=False
                 elif 24<=mx<924 and 116<=my<726:
+                    person=characters.hit_test((mx,my),self.visual,scene.project)
+                    if person:
+                        self.selected_character=person;return
                     candidates=[(abs(mx-scene.project(x,y)[0])/46+abs(my-scene.project(x,y)[1])/23,(x,y))
                                 for x in range(8) for y in range(6)]
                     distance,position=min(candidates)
@@ -189,6 +193,8 @@ class DistrictApp:
         dt=max(0,dt);self.time+=dt;self.elapsed+=dt
         if self.elapsed>=.38:
             self.runner.tick();self.elapsed=0.
+        screen_delta=(self.runner.world.x-self.visual[0])-(self.runner.world.y-self.visual[1])
+        if abs(screen_delta)>.01:self.facing_left=screen_delta<0
         blend=min(1,dt/.13)
         self.visual=tuple(v+(target-v)*blend for v,target in zip(self.visual,(self.runner.world.x,self.runner.world.y)))
         if self.pending_save:self.save()
@@ -213,7 +219,8 @@ class DistrictApp:
         self.text('A F T E R L I G H T',(82,79),scene.GOLD,self.small)
         self.text('01 / DER KANALBEZIRK',(350,49),scene.MUTED,self.small)
         self.text('DEIN CODE. DEIN VIERTEL.',(650,49),scene.MUTED,self.small)
-        scene.draw(c,world,self.visual,self.time,self.small,self.inspected)
+        scene.draw(c,world,self.visual,self.time,self.small,self.inspected,
+                   facing_left=self.facing_left,selected_character=self.selected_character)
         self.text('Eine Stadt, die auf dich wartet.',(52,139),scene.INK,self.heading)
         self.text('Wähle, wo das Licht zuerst angeht.',(52,174),scene.MUTED,self.small)
         # Energy and live position remain readable outside the map.
@@ -274,7 +281,7 @@ class DistrictApp:
                     'done':'Plan beendet. Der Bezirk bleibt so — was probierst du als Nächstes?'}
             message=states[self.runner.status]
         self.wrapped(message,(974,755,412,70),'#efb3a5' if self.runner.error else scene.MUTED)
-        bottom='Drei Gebäude, eine Energie. Du kannst Strom jederzeit zurückholen.'
+        bottom='Eine Energie, drei Gebäude. Klicke die Katzen oder erkunde den Bezirk.'
         if world.restored: bottom='Der Bezirk lebt. Drei Gebäude versorgt — und Nox hat Nachbarn.'
         elif world.device: bottom=f'{NAMES[world.device]}: toggle() schaltet Strom ein oder holt ihn zurück.'
         elif (world.x,world.y)==CELL and not world.cell_collected: bottom='Ein alter Akku! collect() bringt zwei zusätzliche Energieeinheiten.'

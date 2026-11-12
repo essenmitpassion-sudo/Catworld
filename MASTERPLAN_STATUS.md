@@ -162,3 +162,10 @@ V: bessere Neugier, visuelle Attraktivität und Spieltiefe. Diese Hypothesen sin
 nach dem negativen Owner-Feedback erneut zu testen, nicht als erfüllt zu markieren.
 Nicht gelöst: langfristige Automatisierung, Wiederverwendung mehrerer Routinen,
 Lerntransfernachweis, abwechslungsreiche spätere Entdeckung.
+
+## Bestätigte visuelle/Charakterrichtung — 2026-11-12
+O: Charaktere höchste Priorität, cute/adorable/cool; neue Richtung „ist super“.
+Verbindliche Details und erworbenes Wissen: CHARACTER_DIRECTION.md. M:4 Figuren,
+Porträts, Nox-Posen, Weltreaktionen und hochwertige Assets tatsächlich eingebaut.
+§7 wird über Bewohner, eigene Entscheidungen und sichtbare Bedeutung adressiert,
+nicht über Retention-Tricks. Positive Richtung bestätigt; Langzeit-/Lernwirkung offen.

@@ -9,14 +9,14 @@ Dieser Prototyp prüft eine andere Spielidee; er ist noch kein fertiges Spiel.
 [ZIP herunterladen](https://github.com/essenmitpassion-sudo/Catworld/archive/refs/heads/codex/masterplan-run-consistency.zip),
 entpacken, unter Windows **start_afterlight_windows.bat** doppelklicken.
 Python 3.12+ erforderlich; Abhängigkeiten werden beim ersten Start installiert.
-Der Windows-Starter wurde hier nicht auf Windows ausgeführt.
+Der Windows-Starter wurde hier nicht auf Windows ausgeführt. Ein separater
+Windows-Build mit Paket-Selbsttest ist in `.github/workflows/playtest.yml` vorbereitet;
+eine verfügbare/getestete EXE wird erst nach bestätigtem Workflow-Ergebnis behauptet.
 
 Linux/macOS mit grafischem Desktop, im Projektordner:
 
 ```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-NEONPAW_DATA_DIR="$PWD/afterlight-data" .venv/bin/python -m neonpaw.district
+sh start_afterlight.sh
 ```
 
 Du hast eine Energieeinheit und drei dunkle Gebäude. Erkunde den Bezirk und
@@ -62,3 +62,25 @@ Spiele fünf bis zehn Minuten ohne vorgezeigte Lösung. Danach:
 Technische Tests und SDL-Ablauf sind Belege für Funktion, nicht für Freude oder
 Lernerfolg. Das negative Owner-Feedback zum bisherigen Build bleibt gültig;
 dieser Prototyp ist eine überprüfbare Antwort darauf, keine behauptete Widerlegung.
+
+## Grafik und Testpaket
+Gemalte Hafenstadt und drei eigene Gebäude-Sprites sind im Spiel enthalten.
+Hintergrund/Sprites werden einmal geladen und skaliert; begehbare Karte,
+Stromverteilung, Brücken und Akteure bleiben unabhängig davon simuliert.
+Abgeschaltete Gebäude sind abgedunkelt, versorgte leuchten. Nox bleibt durch
+transparente Vordergrunddächer sichtbar. Fehlende Bilder blockieren das Spiel nicht.
+
+`python scripts/build_playtest.py /pfad/AFTERLIGHT-source.zip` erstellt ein
+schlankes Paket ohne Tests, persönliche Spielstände, Git oder Entwicklungsumgebung.
+Das Manifest enthält Commitbasis und SHA-256 jedes Inhalts. Laufzeitinstallation
+benötigt nur pygame-ce; pytest gehört nicht in den Spielerstarter.
+`python launch_afterlight.py --self-test /pfad/bericht` prüft ausdrücklich ohne
+Benutzerdaten Grafikassets, vollständige Versorgung und Code-Neustart und erzeugt
+einen JSON-Bericht plus Screenshot. Das ist kein menschlicher Spieltest.
+
+## Nox und seine Nachbarn
+Nox, Miso, Lumi und Pixel haben eigene Silhouetten, Gesichter und Porträts.
+Klicke eine Katze an: Ihre Reaktion hängt vom Bezirk ab. Nox geht, wechselt die
+Blickrichtung und blinzelt. Die Bewohner bleiben auch ohne Zufluchtstrom sichtbar.
+Die neue Charakterrichtung wurde vom Owner positiv bewertet; Details stehen in
+CHARACTER_DIRECTION.md. Langzeitspielspass und Lernen bleiben zu prüfen.

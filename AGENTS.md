@@ -67,3 +67,12 @@ grenze erreicht ist. Ein Checkpoint ist kein automatischer Endpunkt. Pareto:
 Spielkern, sichtbare Codewirkung und echte Entscheidungen vor Feature-Menge oder
 isoliertem Feinschliff. Sich selbst gegen den Masterplan prüfen; keine autonome
 Arbeit nach Ende der aktiven Sitzung behaupten.
+
+## Bestätigte Charakterrichtung (Owner, 2026-11-12)
+Charaktere und Figuren haben höchste Priorität: cute/adorable, cool, charismatisch
+und stilvoll. Owner bewertet die neuen Nox/Miso/Lumi/Pixel mit „ist super“.
+CHARACTER_DIRECTION.md hält Quelle, konkrete Gestaltung, Umsetzung und Grenzen
+fest. Diese Richtung erhalten; keine neuen linearen Lektionen als Ersatz für
+Weltwirkung und Figurenpersönlichkeit. Positive Art-Rückmeldung ist kein Beleg
+für Langzeitspielspass oder Lerntransfer. Spieltestzugang und Sicherungen bleiben
+verbindlich. Vor Fortsetzung auch CHARACTER_DIRECTION.md lesen.
