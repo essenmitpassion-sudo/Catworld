@@ -1,6 +1,6 @@
-# CURRENT — 2026-11-12 — Planvergleich gesichert
+# CURRENT — 2026-11-12 — Erster Spielertest bereitgestellt
 
-Branch codex/masterplan-run-consistency. Basis e43f8d5 extern bestätigt.
+Branch codex/masterplan-run-consistency. Spielbuild 51dffbd extern bestätigt.
 Letzten Commit und Remote mit git log / git ls-remote prüfen.
 
 ## Tatsächlich spielbar
@@ -23,10 +23,13 @@ Lerntransfer und Windows/DPI nicht validiert; technische Tests beweisen diese ni
 ## Sicherung und Wiederaufnahme
 Alle fertigen Pakete seit 69604d1 einzeln committed und gepusht; Remote-SHAs jeweils
 bestätigt. Vollständige Git-Bundles unter /workspace/work/catworld-*.bundle geprüft.
-Dieses Paket ebenfalls vor Fortsetzung committen und als Bundle plus Inhaltsarchiv
-sichern; externen SHA abschliessend prüfen. Keine WIP-Arbeit bewusst zurücklassen.
+51dffbd: geprüftes Bundle und Inhaltsarchiv (269 Dateien), Remote-SHA bestätigt.
 
-Nächste Priorität: echten räumlichen Entscheidungsraum prüfen. Ein optionaler
+Neue Priorität: erster menschlicher Spielertest laut PLAYER_TEST.md. Separater
+Windows-Starter erhält persönliche Spielstände; Windows hier nicht getestet.
+Cloud-Desktop enabled/unknown; DISPLAY, cua/js und open_in_codex fehlen, daher
+kein sichtbares Spielfenster bestätigt. Menschliche Ergebnisse stehen aus.
+Zuerst beobachtete Zugangs-/Verständnisprobleme beheben. Danach Routenwahl prüfen. Ein optionaler
 oberer Weg könnte das Tor umgehen: mehr Bewegung, aber ohne Schalterbedingung;
 der adaptive Torweg bleibt kürzer. Erst Aufwand/Nutzen und vorhandene Regeln
 prüfen, kein pauschaler 2D-/Engine-Umbau und keine bloss kosmetische Alternative.

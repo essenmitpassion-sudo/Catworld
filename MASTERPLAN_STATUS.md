@@ -131,3 +131,11 @@ zeigen; dann vorhandene Systeme auf einen echten Zielkonflikt prüfen, statt wei
 Streckenlängen oder kosmetische Geräte als Innovation zu zählen. Kein kompletter
 Rebuild ohne Befund. Hypothesen weiter offen: Verständnis ohne Beispiel, freiwillige
 zweite Lösung, selbstständiger Transfer und Freude am erneuten Spielen.
+
+## Korrektur nach Owner-Rückmeldung — 2026-11-12
+Abschnitte 14 und 17 sind noch nicht erfüllt: kein menschlicher Spieltest belegt.
+Weitere technische Features hätten diese Lücke nicht geschlossen. Erster Test
+jetzt über PLAYER_TEST.md mit Startweg und Beobachtungskriterien vorbereitet.
+Keine weitere Mechanik vor dem Test erforderlich. Pareto: zuerst den realen
+Zugangs-/Verständnisengpass und freiwillige Neugier beobachten. Kein Anspruch
+vollständiger Masterprompt-Erfüllung; Fun/Learning bleiben Hypothesen.

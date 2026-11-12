@@ -11,6 +11,9 @@ den eigenen Plan ohne Vorlage schreiben.
 
 ## Start (Python 3.12 oder neuer)
 
+**Erster Spielertest:** [10-Minuten-Test und separater Test-Spielstand](PLAYER_TEST.md).
+Unter Windows dafür `player_test_windows.bat` verwenden.
+
 Windows: Python von python.org installieren (Python zum PATH hinzufügen),
 diesen Projektordner entpacken und `start_windows.bat` doppelklicken.
 Beim ersten Start werden pygame-ce und Testwerkzeuge installiert (Internet nötig).
