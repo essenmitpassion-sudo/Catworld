@@ -38,6 +38,27 @@ def guidance(world, secured, start_open=False):
     return 'Ein Tor versperrt den Weg zur Werkstatt.', 'Finde den Schalter. F1 hilft auf Wunsch.'
 
 
+def comparison_lines(results, font):
+    lines = []
+    for result in results:
+        start = 'offen' if result.start_open else 'zu'
+        outcome = 'VERSORGT' if result.success else 'PRÜFEN'
+        lines.append(f'Starttor {start}: {outcome} · {result.actions} Aktionen')
+        detail = result.message or 'Das Programm erreicht das Ziel ohne Ausführungsfehler.'
+        current = ''
+        for word in detail.split():
+            candidate = f'{current} {word}'.strip()
+            if current and font.size(candidate)[0] > 650:
+                lines.append(current)
+                current = word
+            else:
+                current = candidate
+        if current:
+            lines.append(current)
+    lines.append('Geprüft wurde dein Text. Die aktuelle Spielwelt bleibt erhalten.')
+    return tuple(lines)
+
+
 def draw_devices(scene, world, font):
     scene.fill('#182b36', (0, 108, 350, 78))
     switch = 29 + 36 * world.switch_x

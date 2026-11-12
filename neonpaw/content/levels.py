@@ -1,3 +1,11 @@
+from neonpaw.core.world import World
+
+
+def workshop_world(start_open=False):
+    """Shared starting rules for playing and checking a workshop plan."""
+    return World(battery_x=7, switch_x=3, gate_x=5, gate_open=start_open)
+
+
 TITLE = 'ERSTER PFOTENSCHRITT'
 OBJECTIVE = 'Erreiche das leuchtende Feld rechts von dir.'
 START_CODE = 'move_right()'

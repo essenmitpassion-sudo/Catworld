@@ -346,6 +346,14 @@ assert app.runner.status == 'idle' and app.source == workshop_code
 workshop_code = 'for _ in range(2):\n    move_right()\nif not gate_open():\n    toggle()\nfor _ in range(4):\n    move_right()\ncollect()'
 frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_a, mod=pygame.KMOD_CTRL))
 frame(pygame.event.Event(pygame.TEXTINPUT, text=workshop_code))
+# Voluntary comparison runs on separate worlds and pauses the current attempt.
+click('Run'); frame(dt=.5)
+comparison_world = app.runner.world
+frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+assert all(result.success for result in app.plan_results)
+assert app.runner.world == comparison_world and app.runner.status == 'paused'
+pygame.image.save(app.canvas, 'evidence/plan-check-passed.png')
+click('Reset')
 for expected_open in (True, False):
     assert app.workshop_start_open == expected_open
     for _ in range(3): click('Step')
@@ -357,8 +365,11 @@ for expected_open in (True, False):
     frame(pygame.event.Event(pygame.TEXTINPUT, text='move_right()'))
     assert app.runner.condition_result is None
     assert app.runner.skipped_lines == set()
+    frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+    assert not any(result.success for result in app.plan_results)
+    pygame.image.save(app.canvas, 'evidence/plan-check-unfinished.png')
     frame(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_z, mod=pygame.KMOD_CTRL))
-    assert app.source == workshop_code and app.runner.condition_result is None
+    assert app.source == workshop_code and app.runner.condition_result is None and app.plan_results is None
     click('Run')
     for _ in range(8): frame(dt=.5)
     assert app.runner.world.powered and app.runner.status == 'done'
@@ -453,6 +464,7 @@ print('Video driver:', pygame.display.get_driver())
 print('PASS: workshop gate error -> own toggle plan -> Stop/Run -> power -> optional secure home -> hints -> six drafts saved/restored')
 print('PASS: open-start transfer -> unchanged plan fails -> own correction -> secure home -> selected start restored without autorun')
 print('PASS: identical adaptive code -> live if result -> Step/Run under both initial states -> optional condition help -> original code retained')
+print('PASS: plan comparison -> independent worlds -> real attempt paused/preserved -> no goal for unfinished code -> Undo invalidates comparison')
 print('Physical desktop interaction / human usability: NOT_TESTED')
 pygame.quit()
 storage.cleanup()

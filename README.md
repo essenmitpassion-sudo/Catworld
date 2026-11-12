@@ -65,6 +65,12 @@ SDL-Oberfläche offscreen gerendert und über ihre Ereigniswarteschlange geprüf
     Zeilennummer. Das ist die Spur des letzten Versuchs; Editieren, Undo und Reset
     löschen sie. Eine Bedingung und Aktion auf derselben Textzeile werden nicht
     komplett ausgegraut, weil die Bedingung dort tatsächlich geprüft wurde.
+12. **Plan prüfen / F12:** Prüfe freiwillig deinen aktuellen Werkstattcode gegen
+    beide Anfangszustände. Der Vergleich zeigt Versorgung, Aktionszahl oder die
+    konkrete Fehlerzeile. Ein späterer Programmfehler zählt auch nach Versorgung
+    als unvollständiger Versuch. Die laufende Ausführung pausiert; Welt und eigener
+    Text bleiben erhalten. Run setzt fort, Editieren/Undo verwerfen alte Ergebnisse.
+    Die Prüfung verändert keine Freischaltungen und beweist nur diese zwei Fälle.
 
 Hilfen bleiben freiwillig. Tippfehler wie `move_rigth()` geben einen konkreten Hinweis,
 ändern den Text aber nicht. Nox bewegt sich animiert, blinzelt und reagiert auf Erfolg;

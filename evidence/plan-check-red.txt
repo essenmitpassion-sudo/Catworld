@@ -1,0 +1,146 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_______ test_check_distinguishes_one_state_solution_from_robust_solution _______
+
+    def test_check_distinguishes_one_state_solution_from_robust_solution():
+>       ordinary = checks(LOOP_PLAN)
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_plan_checks.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for _ in range(2):\n    move_right()\ntoggle()\nfor _ in range(4):\n    move_right()\ncollect()'
+
+    def checks(source):
+>       from neonpaw.code.checks import check_workshop
+E       ModuleNotFoundError: No module named 'neonpaw.code.checks'
+
+tests/test_plan_checks.py:10: ModuleNotFoundError
+__ test_empty_invalid_and_late_error_programs_are_not_certified_as_success[] ___
+
+source = ''
+
+    @pytest.mark.parametrize('source', ['', 'import os', ADAPTIVE_PLAN + '\ncollect()'])
+    def test_empty_invalid_and_late_error_programs_are_not_certified_as_success(source):
+>       result = checks(source)
+                 ^^^^^^^^^^^^^^
+
+tests/test_plan_checks.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = ''
+
+    def checks(source):
+>       from neonpaw.code.checks import check_workshop
+E       ModuleNotFoundError: No module named 'neonpaw.code.checks'
+
+tests/test_plan_checks.py:10: ModuleNotFoundError
+_ test_empty_invalid_and_late_error_programs_are_not_certified_as_success[import os] _
+
+source = 'import os'
+
+    @pytest.mark.parametrize('source', ['', 'import os', ADAPTIVE_PLAN + '\ncollect()'])
+    def test_empty_invalid_and_late_error_programs_are_not_certified_as_success(source):
+>       result = checks(source)
+                 ^^^^^^^^^^^^^^
+
+tests/test_plan_checks.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'import os'
+
+    def checks(source):
+>       from neonpaw.code.checks import check_workshop
+E       ModuleNotFoundError: No module named 'neonpaw.code.checks'
+
+tests/test_plan_checks.py:10: ModuleNotFoundError
+_ test_empty_invalid_and_late_error_programs_are_not_certified_as_success[for _ in range(2):\n    move_right()\nif not gate_open():\n    toggle()\nfor _ in range(4):\n    move_right()\ncollect()\ncollect()] _
+
+source = 'for _ in range(2):\n    move_right()\nif not gate_open():\n    toggle()\nfor _ in range(4):\n    move_right()\ncollect()\ncollect()'
+
+    @pytest.mark.parametrize('source', ['', 'import os', ADAPTIVE_PLAN + '\ncollect()'])
+    def test_empty_invalid_and_late_error_programs_are_not_certified_as_success(source):
+>       result = checks(source)
+                 ^^^^^^^^^^^^^^
+
+tests/test_plan_checks.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+source = 'for _ in range(2):\n    move_right()\nif not gate_open():\n    toggle()\nfor _ in range(4):\n    move_right()\ncollect()\ncollect()'
+
+    def checks(source):
+>       from neonpaw.code.checks import check_workshop
+E       ModuleNotFoundError: No module named 'neonpaw.code.checks'
+
+tests/test_plan_checks.py:10: ModuleNotFoundError
+___ test_comparison_is_deterministic_and_keeps_the_current_attempt_and_code ____
+
+app = <neonpaw.ui.app.App object at 0x7ff3ffbbeb10>
+
+    def test_comparison_is_deterministic_and_keeps_the_current_attempt_and_code(app):
+        enter(app)
+        write(app, ADAPTIVE_PLAN)
+        click(app, 'Run'); app.update(.5)
+        before = app.runner.world
+        snapshot = app.draft_snapshot()
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+>       assert getattr(app, 'plan_results', None) is not None
+E       AssertionError: assert None is not None
+E        +  where None = getattr(<neonpaw.ui.app.App object at 0x7ff3ffbbeb10>, 'plan_results', None)
+
+tests/test_plan_checks.py:37: AssertionError
+__________ test_comparison_never_survives_a_different_program[write] ___________
+
+app = <neonpaw.ui.app.App object at 0x7ff3ffbc3290>, edit = 'write'
+
+    @pytest.mark.parametrize('edit', ['write', 'undo'])
+    def test_comparison_never_survives_a_different_program(app, edit):
+        enter(app)
+        write(app, LOOP_PLAN); write(app, ADAPTIVE_PLAN)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+>       assert getattr(app, 'plan_results', None)
+E       AssertionError: assert None
+E        +  where None = getattr(<neonpaw.ui.app.App object at 0x7ff3ffbc3290>, 'plan_results', None)
+
+tests/test_plan_checks.py:55: AssertionError
+___________ test_comparison_never_survives_a_different_program[undo] ___________
+
+app = <neonpaw.ui.app.App object at 0x7ff3ffbc4260>, edit = 'undo'
+
+    @pytest.mark.parametrize('edit', ['write', 'undo'])
+    def test_comparison_never_survives_a_different_program(app, edit):
+        enter(app)
+        write(app, LOOP_PLAN); write(app, ADAPTIVE_PLAN)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+>       assert getattr(app, 'plan_results', None)
+E       AssertionError: assert None
+E        +  where None = getattr(<neonpaw.ui.app.App object at 0x7ff3ffbc4260>, 'plan_results', None)
+
+tests/test_plan_checks.py:55: AssertionError
+________ test_comparison_control_and_help_do_not_leak_outside_workshop _________
+
+app = <neonpaw.ui.app.App object at 0x7ff3ffbc5040>
+
+    def test_comparison_control_and_help_do_not_leak_outside_workshop(app):
+        assert 'Pruefen' not in app.visible_buttons()
+        before = app.runner.world
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+        assert app.runner.world == before
+        enter(app)
+        write(app, LOOP_PLAN)
+        app.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F12, mod=0))
+>       assert getattr(app, 'plan_results', None)
+E       AssertionError: assert None
+E        +  where None = getattr(<neonpaw.ui.app.App object at 0x7ff3ffbc5040>, 'plan_results', None)
+
+tests/test_plan_checks.py:71: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_plan_checks.py::test_check_distinguishes_one_state_solution_from_robust_solution
+FAILED tests/test_plan_checks.py::test_empty_invalid_and_late_error_programs_are_not_certified_as_success[]
+FAILED tests/test_plan_checks.py::test_empty_invalid_and_late_error_programs_are_not_certified_as_success[import os]
+FAILED tests/test_plan_checks.py::test_empty_invalid_and_late_error_programs_are_not_certified_as_success[for _ in range(2):\n    move_right()\nif not gate_open():\n    toggle()\nfor _ in range(4):\n    move_right()\ncollect()\ncollect()]
+FAILED tests/test_plan_checks.py::test_comparison_is_deterministic_and_keeps_the_current_attempt_and_code
+FAILED tests/test_plan_checks.py::test_comparison_never_survives_a_different_program[write]
+FAILED tests/test_plan_checks.py::test_comparison_never_survives_a_different_program[undo]
+FAILED tests/test_plan_checks.py::test_comparison_control_and_help_do_not_leak_outside_workshop
+8 failed in 0.63s

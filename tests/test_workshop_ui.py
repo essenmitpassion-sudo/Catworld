@@ -39,7 +39,7 @@ def test_workshop_unlocks_after_pair_and_preserves_own_solution(app):
     enter(app)
     assert app.source == '' and app.runner.world.gate_x == 5
     assert app.runner.world.switch_x == 3 and app.runner.world.battery_x == 7
-    assert set(app.visible_buttons()) == {'Run', 'Step', 'Stop', 'Reset', 'Hilfe', 'Werkstatt', 'Torstart'}
+    assert set(app.visible_buttons()) == {'Run', 'Step', 'Stop', 'Reset', 'Hilfe', 'Werkstatt', 'Torstart', 'Pruefen'}
     assert app.editor_key() == 'workshop'
     write(app, LOOP_PLAN)
     click(app, 'Werkstatt')
