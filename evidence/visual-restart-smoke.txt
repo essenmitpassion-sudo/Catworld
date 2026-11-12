@@ -1,0 +1,7 @@
+pygame-ce 2.5.7 (SDL 2.32.10, Python 3.12.14)
+PASS: SDL queue -> long-line undo -> backtracking/Stop/Reset -> own typo correction -> editor -> Run/Step/Stop/Reset -> collect -> late-error correction -> transfer -> unchanged-code refusal -> user edit -> power -> blank recall -> draft restoration -> recall solution -> roof repetition -> optional loop -> Step/Stop -> roof success -> roof transfer refusal -> own loop correction -> transfer restart -> undo/redo across editor switch -> two lanterns partial/complete -> optional homecoming -> far-first alternative -> pair restart -> all drafts restored -> disk save/restart -> optional hints -> reset -> errors -> editor focus recovery -> quit
+Video driver: offscreen
+PASS: workshop gate error -> own toggle plan -> Stop/Run -> power -> optional secure home -> hints -> six drafts saved/restored
+PASS: open-start transfer -> unchanged plan fails -> own correction -> secure home -> selected start restored without autorun
+PASS: identical adaptive code -> live if result -> Step/Run under both initial states -> optional condition help -> original code retained
+Physical desktop interaction / human usability: NOT_TESTED

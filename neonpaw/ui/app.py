@@ -157,7 +157,7 @@ class App:
         if self.workshop_active:
             self.workshop_return = (self.source, self.cursor, self.hint_level, self.used_example)
             self.source, self.cursor, self.hint_level, self.used_example = self.workshop_draft
-        self.runner = Runner(initial_world=self.initial_world())
+        self.restart_world(self.initial_world())
         self.storage_message = warning or 'Eigene Programme wieder da. Ausführen nur mit Run oder Step.'
         self._last_save_attempt = self.draft_snapshot()
 
@@ -180,6 +180,17 @@ class App:
     def text(self, value, pos, color=INK, font=None):
         self.canvas.blit((font or self.font).render(value, True, color), pos)
 
+    def restart_world(self, world=None):
+        # Simulation and animation must share the same origin before another
+        # action can arrive in this SDL event batch.
+        if world is None:
+            self.runner.reset()
+        else:
+            self.runner = Runner(initial_world=world)
+        self.visual_x = float(self.runner.world.x)
+        self.loaded_source = None
+        self.elapsed = 0.0
+
     def initial_world(self):
         if self.workshop_active:
             return World(battery_x=7, switch_x=3, gate_x=5, gate_open=self.workshop_start_open)
@@ -200,7 +211,7 @@ class App:
             target = self.workshop_draft
         self.workshop_active = not self.workshop_active
         self.source, self.cursor, self.hint_level, self.used_example = target
-        self.runner = Runner(initial_world=self.initial_world())
+        self.restart_world(self.initial_world())
         self.loaded_source = None
         self.select_all = False
         self.scroll = 0
@@ -218,7 +229,7 @@ class App:
             target = self.pair_draft
         self.pair_active = not self.pair_active
         self.source, self.cursor, self.hint_level, self.used_example = target
-        self.runner = Runner(initial_world=self.initial_world())
+        self.restart_world(self.initial_world())
         self.loaded_source = None
         self.select_all = False
         self.scroll = 0
@@ -238,7 +249,7 @@ class App:
             self.roof_return = editor
             self.source, self.cursor, self.hint_level, self.used_example = self.roof_transfer_draft if self.roof_transfer_active else self.roof_draft
         self.roof_active = not self.roof_active
-        self.runner = Runner(initial_world=self.initial_world())
+        self.restart_world(self.initial_world())
         self.loaded_source = None
         self.select_all = False
         self.scroll = 0
@@ -256,7 +267,7 @@ class App:
             target = self.roof_transfer_draft
         self.roof_transfer_active = not self.roof_transfer_active
         self.source, self.cursor, self.hint_level, self.used_example = target
-        self.runner = Runner(initial_world=self.initial_world())
+        self.restart_world(self.initial_world())
         self.loaded_source = None
         self.select_all = False
         self.scroll = 0
@@ -273,7 +284,7 @@ class App:
             self.saved_editor = editor
             self.source, self.cursor, self.hint_level, self.used_example = self.recall_draft
         self.recall_active = not self.recall_active
-        self.runner.reset()
+        self.restart_world()
         self.loaded_source = None
         self.select_all = False
         self.scroll = 0
@@ -305,7 +316,7 @@ class App:
         if name == 'Torstart':
             if self.workshop_active:
                 self.workshop_start_open = not self.workshop_start_open
-                self.runner = Runner(initial_world=self.initial_world())
+                self.restart_world(self.initial_world())
                 self.loaded_source = None
                 self.elapsed = 0.0
                 self.hint_level = 0
@@ -327,7 +338,7 @@ class App:
             return
         if name == 'Transfer':
             self.scenario = 1 - self.scenario
-            self.runner = Runner(initial_world=World(battery_x=BATTERY_POSITIONS[self.scenario]))
+            self.restart_world(World(battery_x=BATTERY_POSITIONS[self.scenario]))
             self.loaded_source = None
             self.hint_level = 0
             self.used_example = False
@@ -336,7 +347,7 @@ class App:
             self.used_example |= self.hint_level == 3
             return
         elif name == 'Reset':
-            self.runner.reset()
+            self.restart_world()
             self.loaded_source = None
         elif name == 'Stop':
             self.runner.stop()
@@ -345,7 +356,7 @@ class App:
                     self.runner.status in ('idle', 'done', 'stopped', 'error')):
                 # Every fresh attempt replays from the same world, including the intro.
                 # A paused/running unchanged program continues without a reset.
-                self.runner.reset()
+                self.restart_world()
                 try:
                     self.runner.load(self.source)
                 except ProgramError:

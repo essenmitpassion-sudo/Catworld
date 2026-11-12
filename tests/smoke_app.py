@@ -369,7 +369,10 @@ pygame.image.save(app.canvas, 'evidence/gate-condition-hint.png')
 click('Hilfe')
 click('Werkstatt')
 assert app.source == pair_program and not app.workshop_active
-click('Werkstatt')
+pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F10, mod=0))
+pygame.event.post(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_F6, mod=0))
+frame()
+assert app.runner.world.x == 2 and app.visual_x == 1.0
 assert app.source == workshop_code
 click('Werkstatt')
 app = App(save_path=save_path)

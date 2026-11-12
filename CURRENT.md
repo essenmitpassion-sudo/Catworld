@@ -1,3 +1,16 @@
+# CURRENT — 2026-11-12 — Animation folgt neuem Weltstart
+
+Basis9b6d54b extern bestätigt; Bundle catworld-skipped-lines.bundle geprüft.
+Bei visueller Selbstprüfung entdeckt: direktes Step im gleichen Ereignisbatch wie
+Neustart/Szenariowechsel animierte von alter Position. Neue gemeinsame restart_world
+setzt Simulation und Animationsursprung zusammen, bevor weitere Eingaben eintreffen.
+RED3, GREEN274, kompletter SDL-Smoke inkl. F10+F6 im selben Ereignisbatch PASS.
+Belege evidence/visual-restart-*.txt. Kein Schema-/Syntaxwechsel.
+Vor nächstem Paket Commit/Bundle/Push. Nächste Aufgabe weiterhin Planvergleich
+für beide Torstarts (NEXT_TASK.md); keine neue Freigabe erforderlich.
+
+---
+
 # CURRENT — 2026-11-12 — übersprungene Zweige sichtbar
 
 Basis37da8c7 extern bestätigt; Bundle /workspace/work/catworld-gate-condition.bundle
