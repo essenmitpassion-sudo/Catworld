@@ -125,13 +125,25 @@ class DistrictApp:
             self.runner.step()
             self.observe_world(before)
 
+    def viewport(self):
+        width,height=self.screen.get_size()
+        scale=min(width/SIZE[0],height/SIZE[1])
+        rect=pygame.Rect(0,0,max(1,round(SIZE[0]*scale)),max(1,round(SIZE[1]*scale)))
+        rect.center=(width//2,height//2)
+        return rect
+
+    def canvas_position(self,pos):
+        rect=self.viewport()
+        if not rect.collidepoint(pos):return None
+        return ((pos[0]-rect.x)*SIZE[0]/rect.width,(pos[1]-rect.y)*SIZE[1]/rect.height)
+
     def handle(self,event):
         if self.help and event.type not in (pygame.QUIT,pygame.VIDEORESIZE):
             if event.type==pygame.KEYDOWN and event.key in (pygame.K_F1,pygame.K_ESCAPE):
                 self.help=False
             elif event.type==pygame.MOUSEBUTTONDOWN and event.button==1:
-                pos=(event.pos[0]*SIZE[0]/self.screen.get_width(),event.pos[1]*SIZE[1]/self.screen.get_height())
-                if self.buttons['Help'].collidepoint(pos):self.help=False
+                pos=self.canvas_position(event.pos)
+                if pos is not None and self.buttons['Help'].collidepoint(pos):self.help=False
             return
         if event.type==pygame.QUIT:
             if self.dirty:self.save()
@@ -139,8 +151,9 @@ class DistrictApp:
         elif event.type==pygame.VIDEORESIZE:
             self.screen=pygame.display.set_mode(event.size,pygame.RESIZABLE)
         elif event.type==pygame.MOUSEBUTTONDOWN:
-            mx=event.pos[0]*SIZE[0]/self.screen.get_width()
-            my=event.pos[1]*SIZE[1]/self.screen.get_height()
+            pos=self.canvas_position(event.pos)
+            if pos is None:return
+            mx,my=pos
             if event.button==1:
                 for name,rect in self.buttons.items():
                     if rect.collidepoint(mx,my):self.command(name);return
@@ -331,7 +344,9 @@ class DistrictApp:
             for i,line in enumerate(lines):self.text(line,(262,295+i*29),scene.TEAL if i in (5,6) else scene.INK,self.font)
             self.text('F1 schliesst die Hilfe · Strg+A auswählen · Strg+Z/Y rückgängig/wiederholen · Strg+S sichern',
                       (262,654),scene.MUTED,self.small)
-        pygame.transform.smoothscale(c,self.screen.get_size(),self.screen)
+        rect=self.viewport()
+        self.screen.fill('#0c1724')
+        self.screen.blit(pygame.transform.smoothscale(c,rect.size),rect)
         pygame.display.flip()
 
 

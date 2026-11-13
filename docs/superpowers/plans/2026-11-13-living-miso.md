@@ -24,3 +24,10 @@ Reset/Rewind, Klick auf bewegten Bewohner, Runnerstate unverändert. Neues Atlas
 prüfen; SDL: zwei Energieprioritäten und Versuch ohne Energie; Baseline+Suite,
 Screenshot/Animation in zwei Fenstergrössen, entpacktes Paket, Review.
 Dann Commit/Bundle/Remote/Manifestbuild. Anschliessend Bewegung/Lesbarkeit prüfen.
+
+Umgesetzt: 341 Tests, SDL und Paket-Selbsttest; unabhängiger Review mit einem
+korrigierten Schildbefund. Checkpoint ffc3526 plus Bundle und bestätigter Push.
+Fortsetzung: freie Fenstergröße verzerrte Figuren. Optionen: feste Fenstergröße,
+proportionale Darstellung mit Rand, komplette responsive Neuaufteilung. Gewählt:
+proportionale Darstellung (geringstes Risiko, gesamte Karte und Editor bleiben).
+344 Tests PASS, unabhängige Eingabeprüfung bei vier Fenstergrößen, keine Befunde.

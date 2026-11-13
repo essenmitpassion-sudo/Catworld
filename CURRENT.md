@@ -16,3 +16,9 @@ V: sichtbare Bewohnerhandlung dürfte Codewirkung verständlicher machen.
 Offen: menschlicher Spiel-/Lerntest und native Windows-Ausführung.
 Nächste Arbeit nach Sicherung: Fensterseitenverhältnisse prüfen; Figuren dürfen
 beim Resize nicht gestaucht werden. Kein Scheduler oder Hintergrundlauf eingerichtet.
+
+Fortsetzung nach gesichertem Commit ffc3526: proportionale Fensterdarstellung
+statt Streckung. Gemeinsame Koordinatenabbildung für Katzen, Editor und Hilfe;
+Randflächen nehmen keine Klicks an. 344 Tests PASS, vollständiger SDL-Ablauf PASS.
+Unabhängiger Review: 22 relevante Tests plus vier Fenstergrößen, keine Befunde.
+Screenshots wide/tall und korrigierte Schilder aktualisiert, visuell angesehen.
