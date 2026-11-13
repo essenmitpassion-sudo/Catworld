@@ -1,0 +1,19 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_help_keeps_reply_available_until_player_returns _____________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7f1c24d93140>
+
+    def test_help_keeps_reply_available_until_player_returns(app):
+        app.runner.world=replace(app.runner.world,x=1,y=1)
+        write(app,'toggle()');app.command('Step')
+        reply=app.reaction
+        app.command('Help');app.update(10)
+>       assert app.reaction==reply
+E       AssertionError: assert None == ('miso', 'Ein warmes Zuhause. Genau mein Ding.')
+E        +  where None = <neonpaw.district.app.DistrictApp object at 0x7f1c24d93140>.reaction
+
+tests/test_character_reactions.py:49: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_character_reactions.py::test_help_keeps_reply_available_until_player_returns
+1 failed in 0.19s

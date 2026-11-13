@@ -94,3 +94,38 @@ def portrait(surface,name,world,font):
             surface.blit(font.render(line,True,'#c2d5dc'),(758,y));y+=19;line=word
         else:line=candidate
     if line:surface.blit(font.render(line,True,'#c2d5dc'),(758,y))
+
+
+def reaction(before,after):
+    """Respond to real world changes; rendering and selection have no side effects."""
+    if after.restored and not before.restored:
+        return 'nox','Licht. Nachbarn. Unser Viertel lebt!'
+    if after.cell_collected and not before.cell_collected:
+        return 'lumi','Du hast den Akku gefunden! Was wecken wir als Nächstes?'
+    for device,name,on,off in (
+        ('shelter','miso','Ein warmes Zuhause. Genau mein Ding.','Ich bleibe hier. Das Licht kommt bestimmt zurück.'),
+        ('garden','pixel','Eine Brücke aus Pflanzen! Das eröffnet neue Wege.','Die Ranken ruhen. Zeit für einen anderen Plan.'),
+        ('workshop','nox','Die Brücke ist offen. Was liegt wohl drüben?','Brücke zu. Unser nächster Weg gehört uns.'),
+    ):
+        if (device in before.active)!=(device in after.active):
+            return name,on if device in after.active else off
+    return None
+
+
+def reaction_card(surface,event,font):
+    """A non-modal reply above the map, leaving controls and selected portrait intact."""
+    if event is None:return
+    name,message=event
+    panel=pygame.Rect(530,128,378,100)
+    pygame.draw.rect(surface,'#163440',panel,border_radius=12)
+    pygame.draw.rect(surface,'#599384',panel,1,border_radius=12)
+    sprite=load_characters()['world'].get(name)
+    if sprite:surface.blit(sprite,sprite.get_rect(midbottom=(568,215)))
+    surface.blit(font.render(name.upper(),True,'#f8c987'),(608,140))
+    line='';y=164
+    for word in message.split():
+        candidate=(line+' '+word).strip()
+        if font.size(candidate)[0]>282 and line:
+            surface.blit(font.render(line,True,'#dfede9'),(608,y));y+=19;line=word
+        else:line=candidate
+    if line:surface.blit(font.render(line,True,'#dfede9'),(608,y))

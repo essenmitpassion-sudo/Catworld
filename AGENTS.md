@@ -76,3 +76,7 @@ fest. Diese Richtung erhalten; keine neuen linearen Lektionen als Ersatz für
 Weltwirkung und Figurenpersönlichkeit. Positive Art-Rückmeldung ist kein Beleg
 für Langzeitspielspass oder Lerntransfer. Spieltestzugang und Sicherungen bleiben
 verbindlich. Vor Fortsetzung auch CHARACTER_DIRECTION.md lesen.
+
+Fehlende Eingaben blockieren nur davon abhängige Teilaufgaben. Insbesondere:
+fehlender Referenzbild-Anhang ist kein Grund, autorisierte unabhängige Arbeit am
+Spiel auszusetzen (Owner erneuert Fortsetzungsauftrag am2026-11-13).

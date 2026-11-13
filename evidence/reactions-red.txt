@@ -1,0 +1,41 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____________ test_reactions_follow_meaningful_changes_not_movement _____________
+
+    def test_reactions_follow_meaningful_changes_not_movement():
+        before=District()
+>       assert characters.reaction(before,replace(before,x=2)) is None
+               ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'neonpaw.district.characters' has no attribute 'reaction'
+
+tests/test_character_reactions.py:9: AttributeError
+______________ test_step_reaction_keeps_chosen_portrait_and_code _______________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7f54b36e7680>
+
+    def test_step_reaction_keeps_chosen_portrait_and_code(app):
+        app.runner.world=replace(app.runner.world,x=1,y=1)
+        app.selected_character='lumi'
+        write(app,'toggle()');app.command('Step')
+>       assert app.reaction[0]=='miso'
+               ^^^^^^^^^^^^
+E       AttributeError: 'DistrictApp' object has no attribute 'reaction'
+
+tests/test_character_reactions.py:25: AttributeError
+______________ test_run_reacts_on_execution_and_rewind_clears_it _______________
+
+app = <neonpaw.district.app.DistrictApp object at 0x7f54b299e030>
+
+    def test_run_reacts_on_execution_and_rewind_clears_it(app):
+        app.runner.world=replace(app.runner.world,x=2,y=4)
+        write(app,'toggle()');app.command('Run')
+>       assert app.reaction is None
+               ^^^^^^^^^^^^
+E       AttributeError: 'DistrictApp' object has no attribute 'reaction'
+
+tests/test_character_reactions.py:35: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_character_reactions.py::test_reactions_follow_meaningful_changes_not_movement
+FAILED tests/test_character_reactions.py::test_step_reaction_keeps_chosen_portrait_and_code
+FAILED tests/test_character_reactions.py::test_run_reacts_on_execution_and_rewind_clears_it
+3 failed in 0.33s

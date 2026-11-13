@@ -1,0 +1,5 @@
+Independent reviewer /root/review_restart:3 new tests PASS; diff clean.
+All8 replies fit reaction card; no overlap with controls or playable tiles.
+Step/Run, expiry, Reset/Rewind, portrait selection consistent. No world/save changes.
+No relevant findings. Additional integrator accessibility regression after review:
+help preserves reply lifetime; observed RED then GREEN. Human enjoyment unverified.

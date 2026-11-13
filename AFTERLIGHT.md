@@ -84,3 +84,7 @@ Klicke eine Katze an: Ihre Reaktion hängt vom Bezirk ab. Nox geht, wechselt die
 Blickrichtung und blinzelt. Die Bewohner bleiben auch ohne Zufluchtstrom sichtbar.
 Die neue Charakterrichtung wurde vom Owner positiv bewertet; Details stehen in
 CHARACTER_DIRECTION.md. Langzeitspielspass und Lernen bleiben zu prüfen.
+
+Die Bewohner antworten jetzt direkt sichtbar auf Weltänderungen durch deinen Code.
+Ihre kurze Meldung blockiert weder Eingaben noch deine Porträtauswahl. Während
+geöffneter Hilfe bleibt sie erhalten; Reset/Versuch zurück löschen alte Meldungen.

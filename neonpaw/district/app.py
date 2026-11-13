@@ -45,6 +45,7 @@ class DistrictApp:
         self.time=0.;self.elapsed=0.
         self.alive=True;self.help=False;self.inspected=None
         self.selected_character="nox";self.facing_left=False
+        self.reaction=None;self.reaction_remaining=0.
         self.scroll=0;self.hscroll=0;self.follow_execution=False
         self.buttons={
             'Run':pygame.Rect(974,645,128,44),
@@ -106,6 +107,7 @@ class DistrictApp:
             self.runner=Runner(initial_world=world,transition_fn=transition)
             self.visual=(float(world.x),float(world.y))
             self.loaded_source=None;self.elapsed=0.;self.before=None
+            self.reaction=None;self.reaction_remaining=0.
             return
         if name not in ('Run','Step'): return
         self.follow_execution=True
@@ -115,7 +117,10 @@ class DistrictApp:
             except ProgramError: return
             self.loaded_source=self.source;self.elapsed=0.
         if name=='Run': self.runner.run()
-        else: self.runner.step()
+        else:
+            before=self.runner.world
+            self.runner.step()
+            self.observe_world(before)
 
     def handle(self,event):
         if self.help and event.type not in (pygame.QUIT,pygame.VIDEORESIZE):
@@ -189,10 +194,19 @@ class DistrictApp:
                 self.cursor=sum(len(s)+1 for s in lines[:row])+min(col,len(lines[row]))
                 self.selected_all=False
 
+    def observe_world(self,before):
+        event=characters.reaction(before,self.runner.world)
+        if event:
+            self.reaction=event;self.reaction_remaining=5.
+
     def update(self,dt):
         dt=max(0,dt);self.time+=dt;self.elapsed+=dt
+        if not self.help:self.reaction_remaining=max(0,self.reaction_remaining-dt)
+        if not self.reaction_remaining:self.reaction=None
         if self.elapsed>=.38:
+            before=self.runner.world
             self.runner.tick();self.elapsed=0.
+            self.observe_world(before)
         screen_delta=(self.runner.world.x-self.visual[0])-(self.runner.world.y-self.visual[1])
         if abs(screen_delta)>.01:self.facing_left=screen_delta<0
         blend=min(1,dt/.13)
@@ -291,6 +305,7 @@ class DistrictApp:
             bottom=f'Feld {self.inspected}: '+(f'{NAMES[named]} · Hier wirkt toggle().' if named else ('Akku · Hier wirkt collect().' if self.inspected==CELL else 'Plane deinen Weg mit den vier Bewegungsbefehlen.'))
         self.text(bottom,(32,861),scene.GOLD if world.restored else scene.MUTED,self.small)
         self.text(self.notice,(32,883),scene.MUTED,self.small)
+        characters.reaction_card(c,self.reaction,self.small)
         if self.help:
             shade=pygame.Surface(SIZE,pygame.SRCALPHA);shade.fill((5,13,23,180));c.blit(shade,(0,0))
             panel=pygame.Rect(220,192,1000,506)

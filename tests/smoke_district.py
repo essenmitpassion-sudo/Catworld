@@ -39,6 +39,8 @@ with TemporaryDirectory() as temporary:
     # The first meaningful choice can be the shelter, then energy can be recovered.
     run('move_up()\nmove_up()\ntoggle()')
     assert app.runner.world.active==frozenset({'shelter'}) and app.runner.world.energy==0
+    assert app.reaction[0]=='miso'
+    pygame.image.save(app.canvas,'district-reaction-miso.png')
     pygame.image.save(app.canvas,'district-shelter.png')
     run('toggle()')
     assert not app.runner.world.active and app.runner.world.energy==1
@@ -52,9 +54,12 @@ with TemporaryDirectory() as temporary:
     assert app.runner.world.active==frozenset({'garden','workshop'})
     run('move_left()\nmove_left()\nmove_up()\nmove_up()\ntoggle()')
     assert app.runner.world.restored and app.runner.world.energy==0
+    assert app.reaction[0]=='nox'
+    pygame.image.save(app.canvas,'district-reaction-nox.png')
     frame(dt=.1);pygame.image.save(app.canvas,'district-restored.png')
     # Rewind undoes the whole last attempt, including power distribution.
     click('Rewind')
+    assert app.reaction is None
     assert app.runner.world.active==frozenset({'garden','workshop'})
     click('Run')
     for _ in range(6):frame(dt=.4)
