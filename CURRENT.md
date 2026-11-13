@@ -22,3 +22,10 @@ statt Streckung. Gemeinsame Koordinatenabbildung für Katzen, Editor und Hilfe;
 Randflächen nehmen keine Klicks an. 344 Tests PASS, vollständiger SDL-Ablauf PASS.
 Unabhängiger Review: 22 relevante Tests plus vier Fenstergrößen, keine Befunde.
 Screenshots wide/tall und korrigierte Schilder aktualisiert, visuell angesehen.
+
+Dritte Fortsetzung: Misos Gespräch unterscheidet Hinweg, Ankunft und Rückweg;
+keine vorzeitige Ankunftsbehauptung mehr. 345 Tests PASS und Selbsttest PASS.
+Unabhängiger Review: 9 relevante Tests PASS, keine Befunde. Dialog-Screenshot
+geprüft. MASTERPLAN_STATUS.md enthält den aktuellen Vergleich der fünf Probleme.
+Paket e34ff35 zuvor entpackt gestartet und alle26 Dateihashes geprüft; nach dem
+aktuellen Commit wird der finale Build ebenso neu gebaut und verifiziert.

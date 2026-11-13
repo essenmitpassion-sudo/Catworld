@@ -48,3 +48,15 @@ def test_miso_has_four_transparent_animation_poses(app):
     frames=characters.load_characters()['miso']
     assert len(frames)==4
     assert all(frame.get_flags() & pygame.SRCALPHA for pair in frames for frame in pair)
+
+
+def test_miso_dialogue_describes_journey_and_arrival(app):
+    app.runner.world=replace(District(),active=frozenset({'shelter'}))
+    app.update(.5)
+    assert 'unterwegs' in characters.dialogue('miso',app.runner.world,app.residents.positions)
+    app.update(2)
+    assert characters.dialogue('miso',app.runner.world,app.residents.positions)=='Warm. Gut. Ich bleibe.'
+    app.runner.world=District();app.update(.5)
+    assert 'Kai' in characters.dialogue('miso',app.runner.world,app.residents.positions)
+    app.update(2)
+    assert characters.dialogue('miso',app.runner.world,app.residents.positions)=='Ein warmes Dach wäre schon was.'

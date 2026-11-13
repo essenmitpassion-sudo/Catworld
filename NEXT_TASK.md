@@ -1,6 +1,11 @@
-# Nächster Schritt
-Miso + proportionale Fensterdarstellung sind implementiert und geprüft.
-Frisches ZIP nach sauberem Commit bauen, Hashmanifest und entpackten Selbsttest
-prüfen. Danach Figurenhandlung weiter verbessern: zielabhängige Gespräche beim
-Gehen/Ankommen, damit Miso unterwegs nicht behauptet, schon im Warmen zu sitzen.
-Weltregeln und bestätigte Figurenidentität erhalten. Menschlicher Test bleibt offen.
+# Nächster ausführbarer Schritt
+Aktueller Stand: Miso bewegt sich abhängig vom Zufluchtstrom und spricht passend
+zum Hin-/Rückweg. Fenster erhalten Proportionen und korrekte Eingabekoordinaten.
+345 Tests PASS; technische SDL-/Paketprüfung und unabhängige Reviews bestanden.
+
+Nächste Produktpriorität: Lumi und Pixel mit einer kleinen eigenständigen Handlung
+auf Akku/Garten reagieren lassen. Vor Implementierung drei Varianten nach
+sichtbarem Nutzen/Aufwand vergleichen; keine neue Syntax oder Belohnungswährung
+nur für Feature-Menge. Aktuellen Git-/Remote-/Bundle-/Manifeststand zuerst prüfen.
+Menschlichen 5–10-Minuten-Spieltest mit dem ZIP ermöglichen, Feedback nicht erfinden.
+Fehlendes Owner-Referenzbild blockiert nur dessen originalgetreue Umwandlung.

@@ -126,7 +126,7 @@ def building(surface, name, center, active, font, time, actor=None):
     # A circular connection socket marks exactly where toggle() works.
     pygame.draw.ellipse(surface,light if active else '#6d8490',(x-9,y+18,18,9),2)
     label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name],True,light if active else '#b1c1ca')
-    surface.blit(label,(x-label.get_width()/2,y-h-48))
+    if name!='workshop':surface.blit(label,(x-label.get_width()/2,y-h-48))
 
 
 def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox", residents=None):
@@ -219,7 +219,7 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
     moving=abs(world.x-visual[0])+abs(world.y-visual[1])>.025
     if not characters.draw(surface,'nox',(cx+12,cy+9),time,moving,facing_left):
         cat(surface,(cx+12,cy+9),time=time)
-    characters.portrait(surface,selected_character,world,font)
+    characters.portrait(surface,selected_character,world,font,residents.positions if residents else None)
     # Coordinate / compass marks connect code directions to the isometric world.
     for text,pos in [('x +',(632,633)),('y +',(506,667))]:
         surface.blit(font.render(text,True,MUTED),pos)

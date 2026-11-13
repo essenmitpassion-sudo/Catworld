@@ -8,8 +8,12 @@ TRAITS={'nox':'Neugierig. Eigenwillig.', 'miso':'Gemütlich. Unbestechlich.',
         'lumi':'Mutig. Immer neugierig.', 'pixel':'Frech. Voller Ideen.'}
 
 
-def dialogue(name,world):
+def dialogue(name,world,positions=None):
     if name=='miso':
+        if positions is not None:
+            target=(0,1) if 'shelter' in world.active else (0,5)
+            if positions.get('miso')!=target:
+                return 'Da wird es warm. Bin unterwegs!' if 'shelter' in world.active else 'Dann schlendere ich zurück zum Kai.'
         return 'Warm. Gut. Ich bleibe.' if 'shelter' in world.active else 'Ein warmes Dach wäre schon was.'
     if name=='lumi':
         return 'Da drüben gibt es noch mehr!' if world.cell_collected else 'Was wohl hinter dem Kanal liegt?'
@@ -87,7 +91,7 @@ def hit_test(pos,visual,project,positions=None):
     return None
 
 
-def portrait(surface,name,world,font):
+def portrait(surface,name,world,font,positions=None):
     rect=pygame.Rect(746,452,160,252)
     pygame.draw.rect(surface,'#142c3a',rect,border_radius=16)
     pygame.draw.rect(surface,'#355562',rect,1,border_radius=16)
@@ -95,7 +99,7 @@ def portrait(surface,name,world,font):
     if sprite:surface.blit(sprite,sprite.get_rect(midbottom=(rect.centerx,604)))
     label=font.render(name.upper(),True,'#f8c987')
     surface.blit(label,label.get_rect(center=(rect.centerx,620)))
-    words=dialogue(name,world).split();line='';y=642
+    words=dialogue(name,world,positions).split();line='';y=642
     for word in words:
         candidate=(line+' '+word).strip()
         if font.size(candidate)[0]>136 and line:

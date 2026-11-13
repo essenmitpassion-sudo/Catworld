@@ -1,3 +1,26 @@
+# Aktueller Abgleich — 2026-11-13
+
+Neuer vollständiger Auftrag: AUTONOMOUS_MASTER_EXECUTION_2026-11-13.md.
+Basis tatsächlich geprüft: 438e7aa4, 337 Tests, spielbarer AFTERLIGHT-Build.
+Kein Neustart der Architektur. Bestätigte Figurenrichtung erhalten.
+
+| Beobachtetes Problem | Spielerwert / Aufwand / Risiko (V) | Entscheidung und Ergebnis (M) |
+|---|---|---|
+| Miso bleibt bei versorgter Zuflucht am Kai | hoch / mittel / gering | Reversibler Einzug, Rückweg, vier Posen umgesetzt |
+| Figuren werden bei unpassendem Fensterformat verzerrt | mittel / gering / gering | Proportionale Darstellung und gemeinsame Eingabekoordinaten umgesetzt |
+| Misos Text behauptet Ankunft während des Hinwegs | mittel / gering / gering | Text folgt sichtbarem Weg und Ankunft |
+| Weltentscheidung hat wenig langfristige Tiefe | hoch / hoch / mittel | Keine neue Regel ohne zusammenhängenden Spielnutzen; nächste produktbezogene Prüfung |
+| Kleine Figuren/Schilder überlagern sich | mittel / gering / gering | Werkstattschild versetzt; weitere Lesbarkeit im menschlichen Test prüfen |
+
+Verglichene Wege: Bewohnerhandlungen, zusätzliche Kanalentdeckung, reine UI-
+Inszenierung. Bewohnerhandlung zuerst: verbindet bestätigte Charakterpriorität
+mit bestehender Energieentscheidung ohne neue Syntax oder zusätzliche Währung.
+Danach nachgewiesene Resize-/Dialogprobleme behoben. Geprüfte Zwischenstände:
+ffc3526 und e34ff35, jeweils Commit/Bundle/Remote. Keine Erfolgsbehauptung über
+menschlichen Spielspaß, Langzeitmotivation oder Lerntransfer.
+
+Der folgende ältere Bericht bleibt als historischer Entscheidungsstand erhalten.
+
 # Masterplan — Bestandsaufnahme und Arbeitsentscheidungen
 
 Stand: 2026-11-10. Auftrag: als verantwortlicher Lead den vollständigen Plan lesen,
