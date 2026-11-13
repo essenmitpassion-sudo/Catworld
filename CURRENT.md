@@ -1,21 +1,18 @@
-# CURRENT — 2026-11-13 — Bewohner antworten sichtbar auf eigenen Code
+# CURRENT — 2026-11-13 — Miso zieht zur warmen Zuflucht
 
-Branch codex/masterplan-run-consistency; vorheriger Stand a44b2f3 gesichert.
-Neue Reaktionen: Zuflucht→Miso, Garten→Pixel, Akku→Lumi, Gesamtversorgung→Nox;
-auch Umverteilen/Abschalten erhält persönliche Rückmeldung. Meldung5s über der
-Welt, kein Inputblock und kein Überschreiben der gewählten Porträtfigur.
-Step und Run lösen nur bei tatsächlicher Weltänderung aus. Reset/Rewind löschen
-Meldungen. Geöffnete Hilfe pausiert die Anzeigedauer. Keine Welt-/Save-Migration.
-
-337 Tests PASS; SDL-Spielablauf und Paket-Selbsttest PASS; Screenshots geprüft.
-Unabhängiger Review3 neue Tests und alle8 Meldungslängen geprüft, keine relevanten
-Befunde. Zusätzlicher Hilfepausen-Test RED→GREEN. evidence/reactions-*.
-Keine menschliche Fun-/Lernbehauptung. Windows-Workflow-Abfrage erneut API Forbidden;
-EXE-Verfügbarkeit/Windows-Tests weiterhin unbestätigt.
-
-Die gewünschte originalgetreue Katze aus einer neuen Bildvorlage bleibt offen,
-weil der Bildanhang nicht angekommen ist. Das blockiert nur diese Bildbearbeitung,
-nicht die weitere autorisierte Projektarbeit. Bestätigte Figurenrichtung gilt.
-
-Checkpoint: neuen Commit/Bundle/Remote prüfen; Spielpaket danach neu bauen.
-CHARACTER_DIRECTION.md und AGENTS.md bleiben gültig. Keine Hintergrundautomatik.
+Basis 438e7aa4 (Remote-Masterauftrag übernommen). Vollständiger neuer Upload:
+AUTONOMOUS_MASTER_EXECUTION_2026-11-13.md. Umsetzung statt Neustart.
+M: 341 Tests bestanden; 4 neue Verhaltenstests zuerst rot, danach grün.
+M: SDL-Spielablauf mit Zuflucht, Rückweg, Gartenroute, Akku, Vollversorgung,
+Rewind/Reset und Draft-Neustart bestanden; Paket-Selbsttest bestanden.
+M: Miso läuft reversibel mit 2 Feldern/s zwischen Kai und Zuflucht, vier eigene
+Posen, passende Blickrichtung und mitbewegte Trefferfläche. Hilfe pausiert.
+Unveränderte Welt-/Runnerregeln; Originalporträts erhalten. Screenshots in evidence/miso-*.
+Neue Posen: image_gen aus bestehendem characters.png; unverändertes Original
+als assets/miso-poses.png gespeichert. Kein Ersatz für fehlende Owner-Bildvorlage.
+G: unabhängiger Review: 12 relevante Tests PASS; einziges Minor behoben:
+Werkstattschild unter das Gebäude versetzt, damit Miso es nicht verdeckt. O: Figuren haben höchste Priorität.
+V: sichtbare Bewohnerhandlung dürfte Codewirkung verständlicher machen.
+Offen: menschlicher Spiel-/Lerntest und native Windows-Ausführung.
+Nächste Arbeit nach Sicherung: Fensterseitenverhältnisse prüfen; Figuren dürfen
+beim Resize nicht gestaucht werden. Kein Scheduler oder Hintergrundlauf eingerichtet.

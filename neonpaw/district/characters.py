@@ -39,7 +39,7 @@ def fit(sprite,w,h):
 @lru_cache(maxsize=1)
 def load_characters():
     folder=Path(__file__).with_name('assets')
-    result={'portraits':{},'world':{},'nox':[]}
+    result={'portraits':{},'world':{},'nox':[],'miso':[]}
     try:
         atlas=pygame.image.load(folder/'characters.png').convert_alpha()
         for name,sprite in zip(('nox','miso','lumi','pixel'),crop_cells(atlas)):
@@ -49,6 +49,13 @@ def load_characters():
         for sprite in poses:
             frame=fit(sprite,64,72)
             result['nox'].append((frame,pygame.transform.flip(frame,True,False)))
+    except (OSError,pygame.error,ValueError):
+        pass
+    try:
+        poses=crop_cells(pygame.image.load(folder/'miso-poses.png').convert_alpha())
+        for sprite in poses:
+            frame=fit(sprite,64,66)
+            result['miso'].append((frame,pygame.transform.flip(frame,True,False)))
     except (OSError,pygame.error,ValueError):
         pass
     return result
@@ -61,8 +68,8 @@ def pose_index(time,moving):
 
 def draw(surface,name,position,time,moving=False,facing_left=False):
     art=load_characters()
-    if name=='nox' and len(art['nox'])==4:
-        sprite=art['nox'][pose_index(time,moving)][int(facing_left)]
+    if name in ('nox','miso') and len(art[name])==4:
+        sprite=art[name][pose_index(time,moving)][int(facing_left)]
     else:sprite=art['world'].get(name)
     if sprite is None:return False
     x,y=position
@@ -71,9 +78,10 @@ def draw(surface,name,position,time,moving=False,facing_left=False):
     return True
 
 
-def hit_test(pos,visual,project):
+def hit_test(pos,visual,project,positions=None):
     locations=[('nox',(project(*visual)[0]+12,project(*visual)[1]+9))]
-    locations.extend((name,project(*tile)) for name,tile in POSITIONS.items())
+    locations.extend((name,(project(*tile)[0],project(*tile)[1]+8))
+                     for name,tile in (POSITIONS if positions is None else positions).items())
     for name,(x,y) in locations:
         if pygame.Rect(round(x-30),round(y-65),60,72).collidepoint(pos):return name
     return None
@@ -103,7 +111,7 @@ def reaction(before,after):
     if after.cell_collected and not before.cell_collected:
         return 'lumi','Du hast den Akku gefunden! Was wecken wir als Nächstes?'
     for device,name,on,off in (
-        ('shelter','miso','Ein warmes Zuhause. Genau mein Ding.','Ich bleibe hier. Das Licht kommt bestimmt zurück.'),
+        ('shelter','miso','Ein warmes Zuhause. Genau mein Ding.','Dann warte ich wieder am Kai.'),
         ('garden','pixel','Eine Brücke aus Pflanzen! Das eröffnet neue Wege.','Die Ranken ruhen. Zeit für einen anderen Plan.'),
         ('workshop','nox','Die Brücke ist offen. Was liegt wohl drüben?','Brücke zu. Unser nächster Weg gehört uns.'),
     ):

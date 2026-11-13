@@ -41,9 +41,13 @@ with TemporaryDirectory() as temporary:
     assert app.runner.world.active==frozenset({'shelter'}) and app.runner.world.energy==0
     assert app.reaction[0]=='miso'
     pygame.image.save(app.canvas,'district-reaction-miso.png')
+    frame(dt=2)
+    assert app.residents.positions['miso']==(0,1)
     pygame.image.save(app.canvas,'district-shelter.png')
     run('toggle()')
     assert not app.runner.world.active and app.runner.world.energy==1
+    frame(dt=2)
+    assert app.residents.positions['miso']==(0,5)
     # Garden route works without using the workshop.
     run('move_right()\nfor _ in range(3):\n    move_down()\ntoggle()')
     assert app.runner.world.active==frozenset({'garden'})

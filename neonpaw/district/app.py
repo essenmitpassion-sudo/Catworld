@@ -7,6 +7,7 @@ from neonpaw.code.runner import Runner, ProgramError, MAX_SOURCE
 from neonpaw.ui.drafts import default_path
 from .world import District, transition, DEVICES, NAMES, CELL
 from . import scene, characters
+from .residents import Residents
 
 SIZE=(1440,900)
 
@@ -42,6 +43,7 @@ class DistrictApp:
         self.loaded_source=None
         self.before=None
         self.visual=(1.0,3.0)
+        self.residents=Residents(self.runner.world)
         self.time=0.;self.elapsed=0.
         self.alive=True;self.help=False;self.inspected=None
         self.selected_character="nox";self.facing_left=False
@@ -106,6 +108,7 @@ class DistrictApp:
             if world is None: return
             self.runner=Runner(initial_world=world,transition_fn=transition)
             self.visual=(float(world.x),float(world.y))
+            self.residents.reset(world)
             self.loaded_source=None;self.elapsed=0.;self.before=None
             self.reaction=None;self.reaction_remaining=0.
             return
@@ -149,7 +152,7 @@ class DistrictApp:
                     self.cursor=sum(len(s)+1 for s in lines[:row])+col
                     self.selected_all=False
                 elif 24<=mx<924 and 116<=my<726:
-                    person=characters.hit_test((mx,my),self.visual,scene.project)
+                    person=characters.hit_test((mx,my),self.visual,scene.project,self.residents.positions)
                     if person:
                         self.selected_character=person;return
                     candidates=[(abs(mx-scene.project(x,y)[0])/46+abs(my-scene.project(x,y)[1])/23,(x,y))
@@ -207,6 +210,7 @@ class DistrictApp:
             before=self.runner.world
             self.runner.tick();self.elapsed=0.
             self.observe_world(before)
+        if not self.help:self.residents.update(self.runner.world,dt)
         screen_delta=(self.runner.world.x-self.visual[0])-(self.runner.world.y-self.visual[1])
         if abs(screen_delta)>.01:self.facing_left=screen_delta<0
         blend=min(1,dt/.13)
@@ -234,7 +238,7 @@ class DistrictApp:
         self.text('01 / DER KANALBEZIRK',(350,49),scene.MUTED,self.small)
         self.text('DEIN CODE. DEIN VIERTEL.',(650,49),scene.MUTED,self.small)
         scene.draw(c,world,self.visual,self.time,self.small,self.inspected,
-                   facing_left=self.facing_left,selected_character=self.selected_character)
+                   facing_left=self.facing_left,selected_character=self.selected_character,residents=self.residents)
         self.text('Eine Stadt, die auf dich wartet.',(52,139),scene.INK,self.heading)
         self.text('Wähle, wo das Licht zuerst angeht.',(52,174),scene.MUTED,self.small)
         # Energy and live position remain readable outside the map.

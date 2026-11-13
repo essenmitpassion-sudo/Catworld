@@ -59,3 +59,8 @@ geänderte Dokumente ungültig; deshalb wird der endgültige Commitstand erneut
 archiviert und vollständig verglichen. Aktueller Commit,
 Bundle und Remote sind für die Wiederaufnahme massgeblich, nicht alte Chat-SHAs.
 Bei neuen Sitzungen zuerst AGENTS.md, CURRENT.md, NEXT_TASK.md und dieses Dokument.
+
+2026-11-13: Miso erhält vier eigene Posen (Sitzen, zwei Gehkontakte, Blinzeln),
+aus genehmigtem Figurenatlas mit image_gen abgeleitet. Originaldatei unverändert
+in neonpaw/district/assets/miso-poses.png. Porträt bleibt original. Reversible
+Bewohnerhandlung verbindet Zufluchtstrom mit sichtbarem Einzug/Rückweg.

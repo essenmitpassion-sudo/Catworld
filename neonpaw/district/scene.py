@@ -95,9 +95,10 @@ def building(surface, name, center, active, font, time, actor=None):
         surface.blit(sprite,rect)
         pygame.draw.ellipse(surface,light if active else '#8aabb8',(center[0]-9,center[1]+6,18,9),2)
         label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name],True,light if active else '#b1c1ca')
-        tag=label.get_rect(midbottom=(round(x),rect.top-5))
-        pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
-        surface.blit(label,tag)
+        tag=label.get_rect(midbottom=(round(x),rect.bottom+25 if name=='workshop' else rect.top-5))
+        if name!='workshop':
+            pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
+            surface.blit(label,tag)
         return
     # Compact buildings occupy the back of their tile; the terminal stays in front.
     h=46 if name=='workshop' else 34
@@ -128,7 +129,7 @@ def building(surface, name, center, active, font, time, actor=None):
     surface.blit(label,(x-label.get_width()/2,y-h-48))
 
 
-def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox"):
+def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox", residents=None):
     board=pygame.Rect(24,116,900,610)
     pygame.draw.rect(surface,'#112431',board,border_radius=22)
     background=load_art()['background']
@@ -193,11 +194,19 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
                 pygame.draw.line(surface,'#b7fce5',(cx-4,cy-12),(cx+4,cy-12),2)
                 pygame.draw.line(surface,'#b7fce5',(cx,cy-16),(cx,cy-8),2)
                 label=font.render('AKKU +2',True,TEAL);surface.blit(label,(cx-30,cy-46))
+    # Draw the workshop sign after foreground tiles, away from Miso's terrace.
+    wx,wy=project(*DEVICES['workshop'])
+    label=font.render('WERKSTATT',True,GOLD if 'workshop' in world.active else '#b1c1ca')
+    tag=label.get_rect(midtop=(wx-15,wy+6))
+    pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
+    surface.blit(label,tag)
     # Neighbours remain inhabitants when power is reallocated, rather than vanishing.
-    for name,tile in characters.POSITIONS.items():
+    for name,tile in (residents.positions if residents else characters.POSITIONS).items():
         cx,cy=project(*tile)
         if 'shelter' in world.active:glow(surface,(cx,cy),GOLD,34)
-        if not characters.draw(surface,name,(cx,cy+8),time):
+        if not characters.draw(surface,name,(cx,cy+8),time,
+                               bool(residents and name=="miso" and residents.moving),
+                               bool(residents and name=="miso" and residents.facing_left)):
             cat(surface,(cx,cy+8),'#b48972',scale=.7,time=time)
     if 'garden' in world.active:
         for i in range(12):
