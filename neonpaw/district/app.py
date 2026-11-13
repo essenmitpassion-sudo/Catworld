@@ -45,7 +45,7 @@ class DistrictApp:
         self.visual=(1.0,3.0)
         self.residents=Residents(self.runner.world)
         self.time=0.;self.elapsed=0.
-        self.alive=True;self.help=False;self.inspected=None
+        self.alive=True;self.help=False;self.showcase=False;self.inspected=None
         self.selected_character="nox";self.facing_left=False
         self.reaction=None;self.reaction_remaining=0.
         self.scroll=0;self.hscroll=0;self.follow_execution=False
@@ -97,6 +97,11 @@ class DistrictApp:
         else: self.edit(self.source[:self.cursor]+text+self.source[self.cursor:],self.cursor+len(text))
 
     def command(self,name):
+        if name=='Showcase':
+            self.showcase=not self.showcase
+            if self.showcase and self.runner.status=='running':self.runner.status='paused'
+            self.elapsed=0.
+            return
         if name=='Help':
             self.help=not self.help
             if self.help and self.runner.status=='running':self.runner.status='paused'
@@ -138,6 +143,16 @@ class DistrictApp:
         return ((pos[0]-rect.x)*SIZE[0]/rect.width,(pos[1]-rect.y)*SIZE[1]/rect.height)
 
     def handle(self,event):
+        if self.showcase and event.type not in (pygame.QUIT,pygame.VIDEORESIZE):
+            if event.type==pygame.KEYDOWN and event.key in (pygame.K_F2,pygame.K_ESCAPE):
+                self.showcase=False
+            elif event.type==pygame.MOUSEBUTTONDOWN and event.button==1:
+                pos=self.canvas_position(event.pos)
+                if pos is not None:
+                    if characters.SHOWCASE_CLOSE.collidepoint(pos):self.showcase=False
+                    for name,rect in characters.SHOWCASE_CARDS.items():
+                        if rect.collidepoint(pos):self.selected_character=name
+            return
         if self.help and event.type not in (pygame.QUIT,pygame.VIDEORESIZE):
             if event.type==pygame.KEYDOWN and event.key in (pygame.K_F1,pygame.K_ESCAPE):
                 self.help=False
@@ -155,6 +170,8 @@ class DistrictApp:
             if pos is None:return
             mx,my=pos
             if event.button==1:
+                if pygame.Rect(746,452,160,274).collidepoint(mx,my):
+                    self.command('Showcase');return
                 for name,rect in self.buttons.items():
                     if rect.collidepoint(mx,my):self.command(name);return
                 if 974<=mx<1390 and 228<=my<620:
@@ -184,7 +201,7 @@ class DistrictApp:
                     destination.append((self.source,self.cursor))
                     self.source,self.cursor=origin.pop();self.selected_all=False;self.changed()
                 return
-            shortcuts={pygame.K_F5:'Run',pygame.K_F6:'Step',pygame.K_ESCAPE:'Stop',pygame.K_F1:'Help'}
+            shortcuts={pygame.K_F5:'Run',pygame.K_F6:'Step',pygame.K_ESCAPE:'Stop',pygame.K_F1:'Help',pygame.K_F2:'Showcase'}
             if event.key in shortcuts:self.command(shortcuts[event.key]);return
             self.follow_execution=False
             if event.key==pygame.K_RETURN:
@@ -217,13 +234,13 @@ class DistrictApp:
 
     def update(self,dt):
         dt=max(0,dt);self.time+=dt;self.elapsed+=dt
-        if not self.help:self.reaction_remaining=max(0,self.reaction_remaining-dt)
+        if not (self.help or self.showcase):self.reaction_remaining=max(0,self.reaction_remaining-dt)
         if not self.reaction_remaining:self.reaction=None
         if self.elapsed>=.38:
             before=self.runner.world
             self.runner.tick();self.elapsed=0.
             self.observe_world(before)
-        if not self.help:self.residents.update(self.runner.world,dt)
+        if not (self.help or self.showcase):self.residents.update(self.runner.world,dt)
         screen_delta=(self.runner.world.x-self.visual[0])-(self.runner.world.y-self.visual[1])
         if abs(screen_delta)>.01:self.facing_left=screen_delta<0
         blend=min(1,dt/.13)
@@ -323,6 +340,7 @@ class DistrictApp:
         self.text(bottom,(32,861),scene.GOLD if world.restored else scene.MUTED,self.small)
         self.text(self.notice,(32,883),scene.MUTED,self.small)
         characters.reaction_card(c,self.reaction,self.small)
+        if self.showcase:characters.showcase(c,self.selected_character,world,self.small,self.residents.positions)
         if self.help:
             shade=pygame.Surface(SIZE,pygame.SRCALPHA);shade.fill((5,13,23,180));c.blit(shade,(0,0))
             panel=pygame.Rect(220,192,1000,506)

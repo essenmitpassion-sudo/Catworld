@@ -64,3 +64,10 @@ Bei neuen Sitzungen zuerst AGENTS.md, CURRENT.md, NEXT_TASK.md und dieses Dokume
 aus genehmigtem Figurenatlas mit image_gen abgeleitet. Originaldatei unverändert
 in neonpaw/district/assets/miso-poses.png. Porträt bleibt original. Reversible
 Bewohnerhandlung verbindet Zufluchtstrom mit sichtbarem Einzug/Rückweg.
+
+Owner-Korrektur 2026-11-13: frühere Figuren wirkten schöner/süsser/stilvoller.
+Geprüft: characters.png und nox-poses.png seit bestätigt 4420d7b bytegleich;
+kein Verlust der Originale. Darstellung zuvor nur58–72px. Überarbeitung:
+74–90px Weltfiguren, dezente Idle-Bewegung, F2/Porträt öffnet Crew-Nahansicht
+mit Originalgrafiken, persönlichem Text und pausiertem Programm. Keine Zustimmung
+zum neuen Ergebnis unterstellen; Owner-Kritik ist maßgeblich.

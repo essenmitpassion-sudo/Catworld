@@ -1,5 +1,6 @@
 """Character identity and cached sprites; no game rules or progress mutations."""
 from functools import lru_cache
+import math
 from pathlib import Path
 import pygame
 
@@ -43,22 +44,23 @@ def fit(sprite,w,h):
 @lru_cache(maxsize=1)
 def load_characters():
     folder=Path(__file__).with_name('assets')
-    result={'portraits':{},'world':{},'nox':[],'miso':[]}
+    result={'portraits':{},'closeups':{},'world':{},'nox':[],'miso':[]}
     try:
         atlas=pygame.image.load(folder/'characters.png').convert_alpha()
         for name,sprite in zip(('nox','miso','lumi','pixel'),crop_cells(atlas)):
             result['portraits'][name]=fit(sprite,132,144)
-            result['world'][name]=fit(sprite,58,66)
+            result['closeups'][name]=fit(sprite,192,280)
+            result['world'][name]=fit(sprite,74,84)
         poses=crop_cells(pygame.image.load(folder/'nox-poses.png').convert_alpha())
         for sprite in poses:
-            frame=fit(sprite,64,72)
+            frame=fit(sprite,80,90)
             result['nox'].append((frame,pygame.transform.flip(frame,True,False)))
     except (OSError,pygame.error,ValueError):
         pass
     try:
         poses=crop_cells(pygame.image.load(folder/'miso-poses.png').convert_alpha())
         for sprite in poses:
-            frame=fit(sprite,64,66)
+            frame=fit(sprite,80,84)
             result['miso'].append((frame,pygame.transform.flip(frame,True,False)))
     except (OSError,pygame.error,ValueError):
         pass
@@ -77,6 +79,7 @@ def draw(surface,name,position,time,moving=False,facing_left=False):
     else:sprite=art['world'].get(name)
     if sprite is None:return False
     x,y=position
+    if not moving:y-=math.sin(time*2+list(TRAITS).index(name))*1.2
     pygame.draw.ellipse(surface,(15,29,38),(x-18,y-3,36,10))
     surface.blit(sprite,sprite.get_rect(midbottom=(round(x),round(y+3))))
     return True
@@ -87,12 +90,12 @@ def hit_test(pos,visual,project,positions=None):
     locations.extend((name,(project(*tile)[0],project(*tile)[1]+8))
                      for name,tile in (POSITIONS if positions is None else positions).items())
     for name,(x,y) in locations:
-        if pygame.Rect(round(x-30),round(y-65),60,72).collidepoint(pos):return name
+        if pygame.Rect(round(x-40),round(y-88),80,99).collidepoint(pos):return name
     return None
 
 
 def portrait(surface,name,world,font,positions=None):
-    rect=pygame.Rect(746,452,160,252)
+    rect=pygame.Rect(746,452,160,274)
     pygame.draw.rect(surface,'#142c3a',rect,border_radius=16)
     pygame.draw.rect(surface,'#355562',rect,1,border_radius=16)
     sprite=load_characters()['portraits'].get(name)
@@ -106,6 +109,7 @@ def portrait(surface,name,world,font,positions=None):
             surface.blit(font.render(line,True,'#c2d5dc'),(758,y));y+=19;line=word
         else:line=candidate
     if line:surface.blit(font.render(line,True,'#c2d5dc'),(758,y))
+    surface.blit(font.render('Nah ansehen · F2',True,'#75e1ca'),(758,706))
 
 
 def reaction(before,after):
@@ -141,3 +145,41 @@ def reaction_card(surface,event,font):
             surface.blit(font.render(line,True,'#dfede9'),(608,y));y+=19;line=word
         else:line=candidate
     if line:surface.blit(font.render(line,True,'#dfede9'),(608,y))
+
+
+SHOWCASE_CLOSE=pygame.Rect(810,132,92,34)
+SHOWCASE_CARDS={name:pygame.Rect(44+i*216,206,204,470)
+                for i,name in enumerate(TRAITS)}
+ACCENTS={'nox':'#75e1ca','miso':'#f8c987','lumi':'#b9e5bf','pixel':'#c6b0f0'}
+
+
+def showcase(surface,selected,world,font,positions=None):
+    """Original approved artwork at readable scale; simulation is paused by app."""
+    panel=pygame.Rect(24,116,900,610)
+    pygame.draw.rect(surface,'#101f30',panel,border_radius=22)
+    surface.blit(font.render('DIE KATZEN VOM KANAL',True,'#f8c987'),(48,140))
+    surface.blit(font.render('Vier Persönlichkeiten. Ein Viertel voller Möglichkeiten.',True,'#a8bfcc'),(48,173))
+    pygame.draw.rect(surface,'#294454',SHOWCASE_CLOSE,border_radius=8)
+    surface.blit(font.render('Zurück',True,'#e0ebef'),(831,140))
+    art=load_characters()
+    for name,rect in SHOWCASE_CARDS.items():
+        accent=ACCENTS[name]
+        pygame.draw.rect(surface,'#203446' if name==selected else '#182a3a',rect,border_radius=18)
+        pygame.draw.rect(surface,accent if name==selected else '#30495c',rect,2 if name==selected else 1,border_radius=18)
+        pygame.draw.circle(surface,'#2a4050',(rect.centerx,350),87)
+        sprite=art['closeups'].get(name)
+        if sprite:surface.blit(sprite,sprite.get_rect(midbottom=(rect.centerx,470)))
+        label=font.render(name.upper(),True,accent)
+        surface.blit(label,label.get_rect(center=(rect.centerx,501)))
+        y=525
+        for phrase in TRAITS[name].split('. '):
+            label=font.render(phrase,True,'#b8ccd7')
+            surface.blit(label,label.get_rect(center=(rect.centerx,y)));y+=20
+        words=dialogue(name,world,positions).split();line='';y=581
+        for word in words:
+            candidate=(line+' '+word).strip()
+            if font.size(candidate)[0]>180 and line:
+                surface.blit(font.render(line,True,'#e0ebef'),(rect.x+12,y));y+=20;line=word
+            else:line=candidate
+        if line:surface.blit(font.render(line,True,'#e0ebef'),(rect.x+12,y))
+    surface.blit(font.render('Katze anklicken zum Auswählen · F2 / Esc zurück · Programm pausiert',True,'#9bb8c6'),(48,697))
