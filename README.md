@@ -21,3 +21,5 @@ Before starting, click two own agents to swap their positions. During play, choo
 Human enjoyment and repeat-play appeal are unmeasured. Automated results still suggest initiative bias; line pincers now occur in the tested policy batch. Human strategy diversity remains open. The game is a prototype, not a claim of solved balance. See CURRENT.md for exact evidence and the next change.
 
 The previous project is retained only in Git history, rooted at checkpoint `7175190acf5dec4c84bf00d1a1d22f36acb4c1d2`. Its game, teaching code, assets, old workflow and governance documents are removed from the current tree by the owner's explicit replacement instruction.
+
+Play the current owner-private release: https://veil-signal-duel.docile-eel-0528.chatgpt.site. The verified published implementation is f0c8b8a; later documentation/tooling commits can be ahead of that release. `node scripts/paired.mjs` runs both initiative assignments on the same 32 formations and validates every terminal replay. The remaining first-player bias is documented in CURRENT.md.

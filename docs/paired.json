@@ -1,0 +1,783 @@
+{
+  "method": "Same 32 seeded role formations, each with both initiative assignments, both sides using identical observation-only balanced policy; current +2 second-player compensation. Automated diagnostic, not human balance/fun proof.",
+  "engine_sha256": "d5d598ed5073c321357ab31b3ee603870579d289e59178d7b828f15f9607b193",
+  "ai_sha256": "029e48a6344d8e7b6ea984125c8a381068aed90291368251abc60648fddb908f",
+  "summary": {
+    "games": 64,
+    "starterWins": 40,
+    "secondWins": 24,
+    "draws": 0,
+    "meanPlies": 17.40625,
+    "pincers": 25
+  },
+  "runs": [
+    {
+      "seed": 1,
+      "starter": 0,
+      "winner": 1,
+      "plies": 15,
+      "pincers": 1,
+      "signal": [
+        2,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 1,
+      "starter": 1,
+      "winner": 1,
+      "plies": 24,
+      "pincers": 0,
+      "signal": [
+        6,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 2,
+      "starter": 0,
+      "winner": 0,
+      "plies": 22,
+      "pincers": 0,
+      "signal": [
+        8,
+        7
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 2,
+      "starter": 1,
+      "winner": 0,
+      "plies": 15,
+      "pincers": 0,
+      "signal": [
+        8,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 3,
+      "starter": 0,
+      "winner": 1,
+      "plies": 15,
+      "pincers": 0,
+      "signal": [
+        4,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 3,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        3,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 4,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 0,
+      "signal": [
+        8,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 4,
+      "starter": 1,
+      "winner": 0,
+      "plies": 23,
+      "pincers": 0,
+      "signal": [
+        8,
+        3
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 5,
+      "starter": 0,
+      "winner": 0,
+      "plies": 24,
+      "pincers": 1,
+      "signal": [
+        9,
+        6
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 5,
+      "starter": 1,
+      "winner": 0,
+      "plies": 15,
+      "pincers": 0,
+      "signal": [
+        8,
+        3
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 6,
+      "starter": 0,
+      "winner": 0,
+      "plies": 22,
+      "pincers": 1,
+      "signal": [
+        8,
+        6
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 6,
+      "starter": 1,
+      "winner": 0,
+      "plies": 13,
+      "pincers": 1,
+      "signal": [
+        8,
+        1
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 7,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        9,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 7,
+      "starter": 1,
+      "winner": 1,
+      "plies": 26,
+      "pincers": 0,
+      "signal": [
+        7,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 8,
+      "starter": 0,
+      "winner": 1,
+      "plies": 17,
+      "pincers": 1,
+      "signal": [
+        6,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 8,
+      "starter": 1,
+      "winner": 1,
+      "plies": 14,
+      "pincers": 0,
+      "signal": [
+        6,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 9,
+      "starter": 0,
+      "winner": 0,
+      "plies": 24,
+      "pincers": 0,
+      "signal": [
+        8,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 9,
+      "starter": 1,
+      "winner": 0,
+      "plies": 21,
+      "pincers": 1,
+      "signal": [
+        8,
+        4
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 10,
+      "starter": 0,
+      "winner": 1,
+      "plies": 23,
+      "pincers": 1,
+      "signal": [
+        6,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 10,
+      "starter": 1,
+      "winner": 1,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        2,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 11,
+      "starter": 0,
+      "winner": 0,
+      "plies": 26,
+      "pincers": 1,
+      "signal": [
+        9,
+        6
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 11,
+      "starter": 1,
+      "winner": 0,
+      "plies": 21,
+      "pincers": 0,
+      "signal": [
+        8,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 12,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 0,
+      "signal": [
+        8,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 12,
+      "starter": 1,
+      "winner": 1,
+      "plies": 14,
+      "pincers": 0,
+      "signal": [
+        2,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 13,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        9,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 13,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        6,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 14,
+      "starter": 0,
+      "winner": 1,
+      "plies": 19,
+      "pincers": 1,
+      "signal": [
+        4,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 14,
+      "starter": 1,
+      "winner": 1,
+      "plies": 18,
+      "pincers": 0,
+      "signal": [
+        3,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 15,
+      "starter": 0,
+      "winner": 0,
+      "plies": 20,
+      "pincers": 0,
+      "signal": [
+        8,
+        7
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 15,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        4,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 16,
+      "starter": 0,
+      "winner": 1,
+      "plies": 13,
+      "pincers": 0,
+      "signal": [
+        3,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 16,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        5,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 17,
+      "starter": 0,
+      "winner": 0,
+      "plies": 18,
+      "pincers": 1,
+      "signal": [
+        8,
+        3
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 17,
+      "starter": 1,
+      "winner": 1,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        2,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 18,
+      "starter": 0,
+      "winner": 0,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        9,
+        6
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 18,
+      "starter": 1,
+      "winner": 0,
+      "plies": 19,
+      "pincers": 1,
+      "signal": [
+        9,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 19,
+      "starter": 0,
+      "winner": 0,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        9,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 19,
+      "starter": 1,
+      "winner": 0,
+      "plies": 13,
+      "pincers": 0,
+      "signal": [
+        9,
+        1
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 20,
+      "starter": 0,
+      "winner": 0,
+      "plies": 20,
+      "pincers": 0,
+      "signal": [
+        8,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 20,
+      "starter": 1,
+      "winner": 0,
+      "plies": 15,
+      "pincers": 0,
+      "signal": [
+        8,
+        1
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 21,
+      "starter": 0,
+      "winner": 1,
+      "plies": 17,
+      "pincers": 0,
+      "signal": [
+        4,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 21,
+      "starter": 1,
+      "winner": 0,
+      "plies": 27,
+      "pincers": 0,
+      "signal": [
+        8,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 22,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        9,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 22,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        6,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 23,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        8,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 23,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        6,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 24,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        9,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 24,
+      "starter": 1,
+      "winner": 0,
+      "plies": 17,
+      "pincers": 0,
+      "signal": [
+        8,
+        5
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 25,
+      "starter": 0,
+      "winner": 0,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        8,
+        3
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 25,
+      "starter": 1,
+      "winner": 1,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        2,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 26,
+      "starter": 0,
+      "winner": 0,
+      "plies": 20,
+      "pincers": 0,
+      "signal": [
+        8,
+        6
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 26,
+      "starter": 1,
+      "winner": 0,
+      "plies": 15,
+      "pincers": 0,
+      "signal": [
+        8,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 27,
+      "starter": 0,
+      "winner": 0,
+      "plies": 14,
+      "pincers": 1,
+      "signal": [
+        9,
+        2
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 27,
+      "starter": 1,
+      "winner": 0,
+      "plies": 13,
+      "pincers": 0,
+      "signal": [
+        8,
+        4
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 28,
+      "starter": 0,
+      "winner": 1,
+      "plies": 15,
+      "pincers": 0,
+      "signal": [
+        0,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 28,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        2,
+        9
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 29,
+      "starter": 0,
+      "winner": 1,
+      "plies": 19,
+      "pincers": 0,
+      "signal": [
+        5,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 29,
+      "starter": 1,
+      "winner": 0,
+      "plies": 17,
+      "pincers": 1,
+      "signal": [
+        9,
+        6
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 30,
+      "starter": 0,
+      "winner": 0,
+      "plies": 20,
+      "pincers": 1,
+      "signal": [
+        8,
+        4
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 30,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 0,
+      "signal": [
+        6,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 31,
+      "starter": 0,
+      "winner": 0,
+      "plies": 16,
+      "pincers": 1,
+      "signal": [
+        9,
+        3
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 31,
+      "starter": 1,
+      "winner": 1,
+      "plies": 16,
+      "pincers": 1,
+      "signal": [
+        4,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 32,
+      "starter": 0,
+      "winner": 1,
+      "plies": 17,
+      "pincers": 1,
+      "signal": [
+        7,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    },
+    {
+      "seed": 32,
+      "starter": 1,
+      "winner": 1,
+      "plies": 26,
+      "pincers": 0,
+      "signal": [
+        5,
+        8
+      ],
+      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten."
+    }
+  ]
+}
