@@ -53,3 +53,10 @@ versorgte/abgeschaltete Gebäude. Fehler/Pausen werden nicht überlagert;
 Rewind entfernt das alte Ergebnis.355 Tests PASS, Paket-Selbsttest PASS.
 Screenshot evidence/run-world-feedback.png; Schriftzeichen in visueller Prüfung
 korrigiert (Systemfont konnte den Pfeil nicht darstellen). Keine Lernbehauptung.
+
+Fortgesetzt nach Remote-Checkpoint6d85c22138259fc56a327459d1a47a2d3d8bfb83:
+Review-Minor behoben: Nettoänderungen heissen ausdrücklich Gebäudeänderung;
+Doppeltoggle-Regressionsfall bestätigt weiterhin versorgte Werkstatt bei0 Änderung.
+Werkstattschild aus Nox' Terminalposition versetzt, Screenshot erneut geprüft.
+Final356 Tests PASS und Paket-Selbsttest PASS. evidence/pareto-final-tests.txt.
+Neue Featurearbeit erst nach Commit/Bundle/Remote/sauberem ZIP-Manifest fortsetzen.

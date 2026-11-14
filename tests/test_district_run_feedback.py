@@ -20,3 +20,12 @@ def test_feedback_does_not_replace_error_or_paused_status(app):
     assert app.run_result() is None
     write(app,'collect()');app.command('Run');app.update(.4)
     assert app.runner.error and app.run_result() is None
+
+
+def test_double_toggle_reports_change_not_total_powered_buildings(app):
+    write(app,'move_right()\nmove_right()\ntoggle()');app.command('Run')
+    for _ in range(3):app.update(.4)
+    write(app,'toggle()\ntoggle()');app.command('Run')
+    app.update(.4);app.update(.4)
+    assert 'workshop' in app.runner.world.active
+    assert 'Gebäudeänderung: 0 an, 0 aus' in app.run_result()

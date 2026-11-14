@@ -197,7 +197,7 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
     # Draw the workshop sign after foreground tiles, away from Miso's terrace.
     wx,wy=project(*DEVICES['workshop'])
     label=font.render('WERKSTATT',True,GOLD if 'workshop' in world.active else '#b1c1ca')
-    tag=label.get_rect(midtop=(wx-15,wy+6))
+    tag=label.get_rect(midtop=(wx+112,wy-27))
     pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
     surface.blit(label,tag)
     if selected is not None:

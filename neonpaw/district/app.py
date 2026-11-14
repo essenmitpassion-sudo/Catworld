@@ -270,7 +270,7 @@ class DistrictApp:
         on=len(after.active-before.active);off=len(before.active-after.active)
         return (f'({before.x},{before.y}) nach ({after.x},{after.y}) · '
                 f'Energie {before.energy} auf {after.energy} · '
-                f'Gebäude: {on} an, {off} aus. Dein nächster Plan?')
+                f'Gebäudeänderung: {on} an, {off} aus.')
 
     def destination_hint(self):
         if self.inspected is None:return None
