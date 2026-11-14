@@ -3,7 +3,7 @@ export const SIZE=5, PLY_LIMIT=120;
 const FORMATIONS=[[1,2,3],[0,2,4],[0,1,3],[1,3,4]];
 export const coordinate=i=>`${'ABCDE'[i%5]}${5-Math.floor(i/5)}`;
 export const positionKey=s=>s.board.map(x=>x+1).join('')+(s.turn===1?'i':'t');
-export function createGame({starter=1,formation=0}={}){
+export function createGame({starter=1,formation=2}={}){
  if(![1,-1].includes(starter)||!Number.isInteger(formation)||!FORMATIONS[formation])throw Error('Ungültige Startstellung.');
  const board=Array(25).fill(0);for(const x of FORMATIONS[formation]){board[20+x]=1;board[4-x]=-1;}
  const s={version:2,initial:{starter,formation},board,turn:starter,ply:0,status:'playing',winner:null,reason:null,last:null,history:[],positions:[]};s.positions=[positionKey(s)];return s;

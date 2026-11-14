@@ -1,25 +1,35 @@
-# VEIL — Das Signalduell
+# VERSATZ — Ein Schritt. Alles bewegt sich.
 
-An original hidden-information strategy prototype replacing the former Catworld learning game. Six agents per side; three cyclic hidden roles; public relay objectives; automatic line pincers; an observation-only computer opponent.
+Ein kompaktes Strategiespiel für zwei. Ziehe eine Figur ein Feld und verschiebe danach die komplette Zielreihe – einschließlich gegnerischer Figuren. Erreiche das andere Tor oder schlage alle Gegner.
 
-Build with Node 22+ and npm:
+Hotseat oder drei faire KI-Stufen; vollständige Zugvorschau; zweistufige Bewegung samt Randübergang; Rücknahme, Replay, Revanche und lokale Speicherung. Ohne Konto, Backend oder Laufzeit-Netzwerk.
+
+## Starten
+
+Node 22+:
 
 ```sh
 npm ci
 npm test
 npm run build
-npm run simulate
-npm run smoke
 ```
 
-Open `dist/VEIL.html` in a modern browser. It is standalone: no runtime network, account or backend. Build output also includes static `dist/index.html`. Browser tests use installed Chromium (`/usr/bin/chromium`, override `CHROMIUM_PATH`) and fulfill the exact built HTML at a test origin because this managed environment blocks file:// navigation. No preview server is started.
+Danach `dist/VERSATZ.html` herunterladen und im Browser öffnen. Die Datei enthält auch den KI-Worker und funktioniert ohne Server. Alternativ `npm run dev` und `http://localhost:3000` öffnen; `PORT` ändert den Port.
 
-Before starting, click two own agents to swap their positions. During play, choose an agent and an adjacent destination, or choose Echo and a marked enemy. Eight signal or elimination wins; all rules are available inside the game. New Duel changes the setup seed; Same Setup restarts that seed. Replay preserves historical hidden information. Reload resumes the complete authoritative action; invalid/denied storage cannot block play.
+Wähle Figur → markiertes Nachbarfeld → Verschieberichtung. Das Brett zeigt das vollständige Ergebnis, bevor du „Zug ausführen“ drückst. Oben ist Jade, unten Elfenbein. Du kannst deine Seite und das Startrecht wählen. „Zu zweit“ gibt beide Seiten auf demselben Gerät frei. Revanche wechselt das Startrecht. Seite/Modus/Aufstellung/Startrecht wechseln beginnt eine neue Partie.
 
-`src/engine.js` owns rules, observation projection and replay-backed state validation. `src/ai.js` consumes only observations and scores positioning, role probabilities, captures, pincers and relay denial. `src/main.js` owns UI and persistence. `scripts/simulate.mjs` creates deterministic complete-match examples, and `scripts/smoke.mjs` replays real win/loss matches through UI clicks.
+## Nachweise
 
-Human enjoyment and repeat-play appeal are unmeasured. Automated results still suggest initiative bias; line pincers now occur in the tested policy batch. Human strategy diversity remains open. The game is a prototype, not a claim of solved balance. See CURRENT.md for exact evidence and the next change.
+```sh
+npm run simulate          # 800 reproduzierbare terminale Partien
+npm run smoke             # vollständige Browser-Partien und Vorschau/Animation
+node scripts/balance.mjs # gezielter Formationsvergleich, 200 Partien
+```
 
-The previous project is retained only in Git history, rooted at checkpoint `7175190acf5dec4c84bf00d1a1d22f36acb4c1d2`. Its game, teaching code, assets, old workflow and governance documents are removed from the current tree by the owner's explicit replacement instruction.
+Chromium: `/usr/bin/chromium`, überschreibbar mit `CHROMIUM_PATH`. Die Browser-Suite nutzt den tatsächlich gebauten HTML-Inhalt an einem abgefangenen Test-Origin. Sie prüft keine Live-Veröffentlichung. GitHub CI baut dieselben Artefakte; der Workflow stellt HTML und Prüfdaten als Download bereit.
 
-Play the current owner-private release: https://veil-signal-duel.docile-eel-0528.chatgpt.site. The verified published implementation is f0c8b8a; later documentation/tooling commits can be ahead of that release. `node scripts/paired.mjs` runs both initiative assignments on the same 32 formations and validates every terminal replay. The remaining first-player bias is documented in CURRENT.md.
+Regeln: [RULES.md](RULES.md). Konzeptvergleich und kritische Befunde: [docs/DECISION.md](docs/DECISION.md). Exakte Turnierdaten: [docs/playtest.json](docs/playtest.json). Einstieg für die nächste Sitzung: [CURRENT.md](CURRENT.md), danach [NEXT_TASK.md](NEXT_TASK.md).
+
+**Forschungsprototyp:** 800 Turnierpartien plus 200 Formationsversuche beweisen keinen Spielspaß. Startvorteil bleibt abhängig von Aufstellung und Politik; auch die versetzte Voreinstellung ist nicht nachweislich ausbalanciert. Kein Startersieg innerhalb einer Suche über sieben Halbzüge ist kein Beweis gegen längere erzwungene Gewinne.
+
+Dieses Projekt ersetzt den früheren VEIL-Prototyp und davor das Catworld-Lernspiel entsprechend dem neuen Rebirth-Auftrag. Vollständige Historie vor dem Umbau: Commit `022f7f4`, lokaler Checkpoint `checkpoint/pre-rebirth-2026-11-15` und verifiziertes Git-Bundle in `work/pre-rebirth.bundle`. Die frühere Sites-Veröffentlichung zeigt weiterhin VEIL; sie ist keine Veröffentlichung von VERSATZ.

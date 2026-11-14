@@ -4,7 +4,7 @@ The new owner brief supersedes the previous VEIL-specific direction. Keep the sm
 
 ## Three complete candidate cores
 
-**VERSATZ.** 5×5, three equal pieces per side on B1/C1/D1 and B5/C5/D5. Move one piece one orthogonal square, capturing an enemy on entry; then slide the destination row left or right, wrapping pieces around. Own occupied squares cannot be entered; stepping itself never wraps. Win by occupying the opponent's central gate after your complete turn, or eliminating all enemies. Threefold board+turn repetition, no legal move, or 120 plies draws. The active player alone checks gate victory. No extra currency, power or tie-break score.
+**VERSATZ.** 5×5, three equal pieces per side; compact research start B1/C1/D1 and B5/C5/D5. The tested shipping default is A1/B1/D1 versus B5/D5/E5 (180-degree symmetric). Move one piece one orthogonal square, capturing an enemy on entry; then slide the destination row left or right, wrapping pieces around. Own occupied squares cannot be entered; stepping itself never wraps. Win by occupying the opponent's central gate after your complete turn, or eliminating all enemies. Threefold board+turn repetition, no legal move, or 120 plies draws. The active player alone checks gate victory. No extra currency, power or tie-break score.
 
 **NACHHALL (new alternative).** 5×5, three equal pieces each. On a turn first resolve your previously marked blast (remove any piece there), then move one piece one orthogonal empty square and mark one adjacent square. One public pending blast per side; the opponent gets one reply to evade or exploit it. Last surviving side wins; simultaneous last casualties, threefold full-state repetition, no legal action, or 100 plies draw. Counterplay: abandon the threatened square, threaten the attacker's escape, or force a sacrifice. Risk: two distinct resolution times and compulsory markers add explanation and visual bookkeeping.
 
@@ -30,3 +30,7 @@ Use existing Node24/esbuild/vanilla JS; no framework migration. Pure rules and i
 ## Proof and limits
 
 First validate literal rule fixtures plus an independently expressed reference transition. Then seeded random/heuristic/search tournaments, rotated and reflected starts, role-swapped pairings, bounded forced-opening search, repetition and timeout metrics. Browser clicks must complete hotseat and AI matches, verify preview versus committed board, reload/undo/rematch, keyboard, and mobile layout. No claim of human fun or solved balance. Preserve existing owner-private hosted VEIL unless an intentional matching release is published; GitHub and standalone VERSATZ are the requested deliverables.
+
+## Evidence-driven adjustment
+
+The compact deployment yielded 64/64 starter wins in the follow-up depth3 paired batch; the offset deployment yielded 19/64. Choose offset as the provisional default, retain compact as an explicit research setup, and do not call either balanced. Revanche switches initiative. Exact results are in docs/balance-exploration.json. No extra victory route or score compensation is added.

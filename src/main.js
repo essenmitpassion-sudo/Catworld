@@ -4,7 +4,7 @@ const $=id=>document.getElementById(id),names={1:'Elfenbein','-1':'Jade'};
 const REASONS={gate:'Das gegnerische Tor ist nach der Verschiebung besetzt.',elimination:'Alle gegnerischen Figuren sind geschlagen.',repetition:'Diese Stellung mit derselben Seite am Zug ist zum dritten Mal erreicht.',limit:'120 Halbzüge. Keine Entscheidung – Zeit für eine Revanche.',blocked:'Die nächste Seite hat keinen legalen Zug.'};
 const LEVELS={quick:{depth:1,nodeLimit:1500},tactical:{depth:3,nodeLimit:16000},deep:{depth:5,nodeLimit:65000}};
 let storage=true,saved=null;try{saved=JSON.parse(localStorage.getItem('versatz.v1'));}catch{storage=false;}
-let settings={mode:'ai',human:1,level:'tactical',starter:1,formation:0};
+let settings={mode:'ai',human:1,level:'tactical',starter:1,formation:2};
 if(saved?.settings){for(const key of Object.keys(settings)){const allowed={mode:['ai','local'],human:[1,-1],level:Object.keys(LEVELS),starter:[1,-1],formation:[0,1,2,3]};if(allowed[key].includes(saved.settings[key]))settings[key]=saved.settings[key];}}
 let game=validateSave(saved?.game)||createGame(settings),selected=null,destination=null,shift=-1,busy=false,thinking=false,worker=null,workerURL=null,epoch=0,viewIndex=null,message='',lastSearch=null;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -55,9 +55,9 @@ const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function perform(move){
  const before=game,tokenState=pieces(before),id=++epoch;const next=applyMove(game,move);const moving=tokenState.find(p=>p.cell===move.from),captured=tokenState.find(p=>p.cell===move.to);game=next;selected=null;destination=null;busy=true;thinking=false;message='';persist();render();drawTokens(tokenState);
  const mover=$('tokens').querySelector(`[data-token="${moving.id}"]`);if(captured)$('tokens').querySelector(`[data-token="${captured.id}"]`)?.classList.add('falling');
- await delay(reduced.matches?0:25);if(id!==epoch)return;place(mover,move.to);await delay(reduced.matches?0:145);if(id!==epoch)return;
+ await delay(reduced.matches?0:25);if(id!==epoch)return;place(mover,move.to);await delay(reduced.matches?0:215);if(id!==epoch)return;
  const row=Math.floor(move.to/5);for(const p of tokenState){if(p===captured)continue;const cell=p===moving?move.to:p.cell;if(Math.floor(cell/5)!==row)continue;const el=$('tokens').querySelector(`[data-token="${p.id}"]`),x=cell%5,newX=x+move.shift;
- if(newX<0||newX>4){const clone=el.cloneNode(true);clone.classList.add('ghost','wrap-copy');clone.removeAttribute('data-token');$('ghosts').append(clone);place(clone,row*5+(newX<0?9:-5));clone.style.setProperty('--x',newX<0?4:-1);clone.getBoundingClientRect();clone.style.setProperty('--x',(newX+5)%5);}
+ if(newX<0||newX>4){const clone=el.cloneNode(true);clone.classList.add('ghost','wrap-copy');clone.removeAttribute('data-token');$('ghosts').append(clone);clone.style.setProperty('--y',row);clone.style.setProperty('--x',newX<0?5:-1);clone.getBoundingClientRect();clone.style.setProperty('--x',(newX+5)%5);}
  el.style.setProperty('--x',newX);el.style.setProperty('--y',row);
  }
  await delay(reduced.matches?0:230);if(id!==epoch)return;busy=false;render();scheduleAI();
@@ -71,7 +71,7 @@ function scheduleAI(){
 }
 $('commit').addEventListener('click',()=>{if(humanTurn()&&destination!==null)perform({from:selected,to:destination,shift});});
 for(const [id,d] of [['shift-left',-1],['shift-right',1]])for(const event of ['click','focus','pointerenter'])$(id).addEventListener(event,()=>{if(humanTurn()&&destination!==null&&shift!==d){shift=d;render();}});
-function cancelSelection(){selected=null;destination=null;message='';render();}
+function cancelSelection(){if(!humanTurn())return;selected=null;destination=null;message='';render();}
 $('cancel').addEventListener('click',cancelSelection);document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('rules').open)cancelSelection();});
 $('new-game').addEventListener('click',()=>reset());$('rematch').addEventListener('click',()=>reset(true));
 $('undo').addEventListener('click',()=>{if(!game.history.length)return;cancelWork();let count=game.history.length-1;if(settings.mode==='ai'){while(count>0&&replay(game,count).turn!==settings.human)count--;}game=undo(game,count);selected=null;destination=null;message='Zug zurückgenommen.';persist();render();scheduleAI();});

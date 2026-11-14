@@ -1,0 +1,1896 @@
+{
+  "date": "2026-11-15",
+  "method": "depth3/nodeLimit16000, balanced policy, seeds listed, both starters. Additional three deployments are exploratory board fixtures, not selectable game modes.",
+  "currentFormations": [
+    {
+      "formation": 0,
+      "seed": 2000,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2000,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2001,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2001,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2002,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2002,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2003,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2003,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2004,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2004,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2005,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2005,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2006,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2006,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2007,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2007,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2008,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2008,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2009,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2009,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2010,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2010,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2011,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2011,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2012,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2012,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2013,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2013,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2014,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2014,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2015,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2015,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2016,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2016,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2017,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2017,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2018,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2018,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2019,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2019,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2020,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2020,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2021,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2021,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2022,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2022,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2023,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2023,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2024,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2024,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2025,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2025,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2026,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2026,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2027,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2027,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2028,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2028,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2029,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2029,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2030,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2030,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2031,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 0,
+      "seed": 2031,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2000,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2000,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2001,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 29
+    },
+    {
+      "formation": 2,
+      "seed": 2001,
+      "starter": -1,
+      "winner": 1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2002,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2002,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2003,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 29
+    },
+    {
+      "formation": 2,
+      "seed": 2003,
+      "starter": -1,
+      "winner": 1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2004,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2004,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2005,
+      "starter": 1,
+      "winner": -1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2005,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2006,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2006,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2007,
+      "starter": 1,
+      "winner": -1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2007,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2008,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2008,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2009,
+      "starter": 1,
+      "winner": -1,
+      "reason": "elimination",
+      "plies": 38
+    },
+    {
+      "formation": 2,
+      "seed": 2009,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2010,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2010,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2011,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 50
+    },
+    {
+      "formation": 2,
+      "seed": 2011,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2012,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2012,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2013,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2013,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2014,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2014,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2015,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2015,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2016,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2016,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2017,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2017,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2018,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2018,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2019,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2019,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 36
+    },
+    {
+      "formation": 2,
+      "seed": 2020,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2020,
+      "starter": -1,
+      "winner": 1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2021,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2021,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2022,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 50
+    },
+    {
+      "formation": 2,
+      "seed": 2022,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2023,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2023,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 46
+    },
+    {
+      "formation": 2,
+      "seed": 2024,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2024,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 59
+    },
+    {
+      "formation": 2,
+      "seed": 2025,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2025,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "formation": 2,
+      "seed": 2026,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 46
+    },
+    {
+      "formation": 2,
+      "seed": 2026,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2027,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2027,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 46
+    },
+    {
+      "formation": 2,
+      "seed": 2028,
+      "starter": 1,
+      "winner": -1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2028,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2029,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2029,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2030,
+      "starter": 1,
+      "winner": -1,
+      "reason": "elimination",
+      "plies": 28
+    },
+    {
+      "formation": 2,
+      "seed": 2030,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 20
+    },
+    {
+      "formation": 2,
+      "seed": 2031,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 21
+    },
+    {
+      "formation": 2,
+      "seed": 2031,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 28
+    }
+  ],
+  "additionalFixtures": [
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3000,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 49
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3000,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 24
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3001,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3001,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3002,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 41
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3002,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 24
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3003,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 55
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3003,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3004,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 49
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3004,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3005,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3005,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3006,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 37
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3006,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3007,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 49
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3007,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3008,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 25
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3008,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3009,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 49
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3009,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3010,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 37
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3010,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3011,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        2
+      ],
+      "seed": 3011,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 22
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3000,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3000,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 18
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3001,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 53
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3001,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3002,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3002,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 18
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3003,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3003,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3004,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3004,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3005,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3005,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3006,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3006,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3007,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3007,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3008,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 36
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3008,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3009,
+      "starter": 1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3009,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 33
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3010,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 23
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3010,
+      "starter": -1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 26
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3011,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 35
+    },
+    {
+      "xs": [
+        0,
+        1,
+        4
+      ],
+      "seed": 3011,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 33
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3000,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3000,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3001,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3001,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3002,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3002,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3003,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3003,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3004,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3004,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3005,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3005,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3006,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3006,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3007,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3007,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3008,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3008,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3009,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3009,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3010,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3010,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3011,
+      "starter": 1,
+      "winner": 1,
+      "reason": "gate",
+      "plies": 17
+    },
+    {
+      "xs": [
+        0,
+        2,
+        3
+      ],
+      "seed": 3011,
+      "starter": -1,
+      "winner": -1,
+      "reason": "gate",
+      "plies": 17
+    }
+  ]
+}

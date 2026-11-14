@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import * as E from '../src/engine.js';
 const fixture=(pieces,turn=1,ply=0)=>{const board=Array(25).fill(0);for(const [cell,side] of pieces)board[cell]=side;return {board,turn,ply,status:'playing',winner:null,reason:null};};
 const move=(from,to,shift)=>({from,to,shift});
+test('default deployment uses a tested off-centre formation without adding balancing currency',()=>{const s=E.createGame();assert.deepEqual(s.board.flatMap((p,i)=>p===1?[i]:[]),[20,21,23]);assert.deepEqual(s.board.flatMap((p,i)=>p===-1?[i]:[]),[1,3,4]);});
 test('starts a minimal three-against-three duel with both initiative assignments',()=>{
- for(const starter of [1,-1]){const s=E.createGame({starter});assert.equal(s.turn,starter);assert.equal(s.board.filter(x=>x===1).length,3);assert.equal(s.board.filter(x=>x===-1).length,3);assert.equal(s.board[22],1);assert.equal(s.board[2],-1);assert.equal(s.status,'playing');assert.equal(E.legalMoves(s).length,10);}
+ for(const starter of [1,-1]){const s=E.createGame({starter,formation:0});assert.equal(s.turn,starter);assert.equal(s.board.filter(x=>x===1).length,3);assert.equal(s.board.filter(x=>x===-1).length,3);assert.equal(s.board[22],1);assert.equal(s.board[2],-1);assert.equal(s.status,'playing');assert.equal(E.legalMoves(s).length,10);}
 });
 test('step does not wrap but destination row transports BOTH sides and wraps',()=>{
  const s=fixture([[10,1],[14,-1],[22,1],[2,-1]]),before=structuredClone(s);
@@ -23,12 +24,12 @@ test('gate victory is checked after the whole turn for its active side only',()=
  const carried=E.advance(fixture([[23,1],[16,-1],[0,-1]],-1),move(16,21,1));assert.equal(carried.board[24],1);assert.equal(carried.status,'won');assert.equal(carried.winner,-1);
 });
 test('rejects wrong side, diagonal, occupied, malformed, out-of-board and terminal moves',()=>{
- const s=E.createGame(),copy=structuredClone(s);
+ const s=E.createGame({formation:0}),copy=structuredClone(s);
  for(const m of [move(1,6,1),move(21,22,1),move(21,15,1),move(21,16,0),move(-1,0,1),move(21,16.5,1),null,{},move(21,26,1)])assert.throws(()=>E.applyMove(s,m));
  assert.deepEqual(s,copy);const done={...s,status:'draw',reason:'limit'};assert.deepEqual(E.legalMoves(done),[]);assert.throws(()=>E.applyMove(done,move(21,16,1)));
 });
 test('three occurrences include side-to-move; ply limit is a draw, never material adjudication',()=>{
- let s=E.createGame();s.board=Array(25).fill(0);s.board[21]=1;s.board[3]=-1;s.positions=[E.positionKey(s)];const cycle=[move(21,20,1),move(3,4,-1)];
+ let s=E.createGame({formation:0});s.board=Array(25).fill(0);s.board[21]=1;s.board[3]=-1;s.positions=[E.positionKey(s)];const cycle=[move(21,20,1),move(3,4,-1)];
  // Each horizontal step is undone by the opposite slide; all other home pieces drift.
  for(let i=0;i<20&&s.status==='playing';i++)s=E.applyMove(s,cycle[i%2]);
  assert.equal(s.status,'draw');assert.equal(s.reason,'repetition');assert.equal(s.ply,4);
