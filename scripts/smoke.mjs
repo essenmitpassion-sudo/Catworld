@@ -3,7 +3,7 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 await mkdir('work',{recursive:true});
 const html=await readFile('dist/VEIL.html','utf8'),examples=JSON.parse(await readFile('work/match-examples.json','utf8')),errors=[];
-assert(examples.win&&examples.loss,'simulations must provide actual win and loss matches');
+assert(examples.win&&examples.loss&&examples.pincer,'simulations must provide actual win and loss matches');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 async function open(seed,width=1280,denied=false){
  const context=await browser.newContext({viewport:{width,height:1050},deviceScaleFactor:2,reducedMotion:'reduce'});if(denied)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}}));
@@ -18,7 +18,7 @@ async function clickAction(page,state,action){
  else await page.locator(`[data-x="${action.x}"][data-y="${action.y}"]`).click();
 }
 try{
- for(const outcome of ['win','loss']){
+ for(const outcome of ['win','loss','pincer']){
   const example=examples[outcome],{page,context}=await open(example.seed);
   assert.equal(await page.locator('.opponent.masked').count(),6);assert.deepEqual(await page.locator('.opponent b').allTextContents(),['?','?','?','?','?','?']);assert.equal(await page.locator('[role="gridcell"]').count(),49);
   if(outcome==='win'){
@@ -29,15 +29,15 @@ try{
    await page.setViewportSize({width:390,height:1050});await page.screenshot({path:'work/setup-mobile.png',fullPage:true});await page.setViewportSize({width:1280,height:1050});
   }
   await page.locator('#start').click();
-  let humanTurns=0;
+  let humanTurns=0,pincerSeen=false;
   while((await stored(page)).phase!=='over'){
-   await ready(page);let s=await stored(page);if(s.phase==='over')break;
+   await ready(page);let s=await stored(page);if(s.last?.pincer){pincerSeen=true;assert.match(await page.locator('#log').innerText(),/Zange/);}if(s.phase==='over')break;
    const planned=example.moves[s.ply];assert.equal(planned.side,0,'browser must match the actual deterministic AI trace');
-   await clickAction(page,s,planned.action);humanTurns++;
+   await clickAction(page,s,planned.action);if((await stored(page)).last?.pincer){pincerSeen=true;assert.match(await page.locator('#log').innerText(),/Zange/);}humanTurns++;
    if(humanTurns===2&&outcome==='win'){const after=await stored(page);await page.reload();await ready(page);const resumed=await stored(page);assert(resumed.ply>=after.ply&&resumed.ply<=after.ply+1,'reload must preserve the action and at most complete its pending AI reply');}
    if(humanTurns>40)throw Error('UI match did not terminate');
   }
-  const ended=await stored(page);assert.equal(ended.winner,outcome==='win'?0:1);assert.equal(await page.locator('#result').isVisible(),true);assert.match(await page.locator('#result-title').textContent(),outcome==='win'?/gewonnen/:/Gegner gewinnt/);
+  const ended=await stored(page);assert.equal(ended.winner,example.winner);if(outcome==='pincer')assert(pincerSeen,'a complete pincer example must visibly execute the positional capture');assert.equal(await page.locator('#result').isVisible(),true);assert.match(await page.locator('#result-title').textContent(),example.winner===0?/gewonnen/:example.winner===1?/Gegner gewinnt/:/Remis/);
   await page.screenshot({path:`work/${outcome}.png`,fullPage:true});
   await page.locator('#watch').click();assert.equal(await page.locator('.opponent.masked').count(),6,'replay must show information as known then');await page.locator('#replay-range').fill(String(ended.history.length));assert.equal((await stored(page)).ply,ended.ply);await page.locator('#replay-close').click();assert.deepEqual(await stored(page),ended,'replay must never alter the real game');
   await page.locator('#new-game').click();const fresh=await stored(page);assert.notEqual(fresh.seed,example.seed);assert.equal(fresh.phase,'setup');assert.equal(fresh.ply,0);

@@ -1,1 +1,1 @@
-Secure the passing first playable checkpoint on the authorized GitHub default branch, verify remote SHA, then implement and test the closing-pincer experiment described in CURRENT.md. Do not add roles, currencies, online multiplayer or a framework.
+Verify the line-pincer/UI browser rerun, commit, push to the authorized GitHub default branch and Sites source, verify exact SHAs and publish the matching private browser build. Then collect first human-game feedback; prioritize the greatest observed confusion or dominant strategy, without adding mechanics by default.

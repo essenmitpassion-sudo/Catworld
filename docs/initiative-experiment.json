@@ -1,0 +1,26 @@
+{
+  "method": "Paired identical role formations with both starting sides; same observation-only policy. Experimental starting-signal offsets; not a human-balance proof.",
+  "results": [
+    {
+      "compensation": 0,
+      "games": 48,
+      "starterWins": 36,
+      "draws": 0,
+      "meanPlies": 18.625
+    },
+    {
+      "compensation": 1,
+      "games": 48,
+      "starterWins": 34,
+      "draws": 0,
+      "meanPlies": 18.208333333333332
+    },
+    {
+      "compensation": 2,
+      "games": 48,
+      "starterWins": 31,
+      "draws": 0,
+      "meanPlies": 17.5625
+    }
+  ]
+}

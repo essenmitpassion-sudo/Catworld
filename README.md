@@ -1,6 +1,6 @@
 # VEIL — Das Signalduell
 
-An original hidden-information strategy prototype replacing the former Catworld learning game. Six agents per side; three cyclic hidden roles; public relay objectives; positional pincers; an observation-only computer opponent.
+An original hidden-information strategy prototype replacing the former Catworld learning game. Six agents per side; three cyclic hidden roles; public relay objectives; automatic line pincers; an observation-only computer opponent.
 
 Build with Node 22+ and npm:
 
@@ -18,6 +18,6 @@ Before starting, click two own agents to swap their positions. During play, choo
 
 `src/engine.js` owns rules, observation projection and replay-backed state validation. `src/ai.js` consumes only observations and scores positioning, role probabilities, captures, pincers and relay denial. `src/main.js` owns UI and persistence. `scripts/simulate.mjs` creates deterministic complete-match examples, and `scripts/smoke.mjs` replays real win/loss matches through UI clicks.
 
-Human enjoyment and repeat-play appeal are unmeasured. Initial automated results still show initiative bias and a low pincer frequency. The game is a prototype, not a claim of solved balance. See CURRENT.md for exact evidence and the next change.
+Human enjoyment and repeat-play appeal are unmeasured. Automated results still suggest initiative bias; line pincers now occur in the tested policy batch. Human strategy diversity remains open. The game is a prototype, not a claim of solved balance. See CURRENT.md for exact evidence and the next change.
 
 The previous project is retained only in Git history, rooted at checkpoint `7175190acf5dec4c84bf00d1a1d22f36acb4c1d2`. Its game, teaching code, assets, old workflow and governance documents are removed from the current tree by the owner's explicit replacement instruction.

@@ -32,7 +32,12 @@ export function legalActions(view){
  }
  return actions.length?actions:[{type:'pass'}];
 }
-export function isPincer(pieces,attacker,defender){const dx=defender.x-attacker.x,dy=defender.y-attacker.y;return pieces.some(p=>p.id!==attacker.id&&p.side===attacker.side&&p.x===defender.x+dx&&p.y===defender.y+dy);}
+function nextOnRay(pieces,x,y,dx,dy){
+ for(let n=1;n<SIZE;n++){const px=x+dx*n,py=y+dy*n;if(px<0||px>=SIZE||py<0||py>=SIZE||WALLS.some(w=>w.x===px&&w.y===py))return null;const p=at(pieces,px,py);if(p)return p;}return null;
+}
+export function isPincer(pieces,attacker,defender){const dx=defender.x-attacker.x,dy=defender.y-attacker.y;const support=nextOnRay(pieces,defender.x,defender.y,dx,dy);return support?.side===attacker.side;}
+export function closingTargets(pieces,mover){return DIRS.map(([dx,dy])=>{const enemy=nextOnRay(pieces,mover.x,mover.y,dx,dy);if(!enemy||enemy.side===mover.side)return null;const support=nextOnRay(pieces,enemy.x,enemy.y,dx,dy);return support?.side===mover.side?enemy:null;}).filter(Boolean);}
+
 export function combat(attacker,defender,pincer){if(pincer)return'attacker';if(attacker===defender)return'both';return ROLES[attacker].beats===defender?'attacker':'defender';}
 function normalize(action,legal){return legal.find(a=>a.type===action?.type&&(a.type==='pass'||a.piece===action.piece&&(a.type==='move'?a.x===action.x&&a.y===action.y:a.target===action.target)));}
 function finish(s,winner,reason){s.phase='over';s.winner=winner;s.reason=reason;}
@@ -49,7 +54,7 @@ export function applyAction(input,action){
    s.fallen.push(...removed.map(u=>({...u,revealed:true})));s.pieces=s.pieces.filter(u=>!removed.some(r=>r.id===u.id));
    message=`${actor===0?'Du':'Gegner'}: ${ROLES[p.role].name} gegen ${ROLES[target.role].name} auf ${coordinate(target)}. ${pincer?'Zange: Angreifer gewinnt.':outcome==='both'?'Gleiche Rolle: beide fallen.':outcome==='attacker'?'Angreifer gewinnt.':'Verteidiger gewinnt.'}`;s.last.outcome=outcome;s.last.pincer=pincer;
   }else message=`${actor===0?'Du':'Gegner'}: ${coordinate(p)} → ${coordinate(valid)}.`;
-  if(s.pieces.some(u=>u.id===p.id)){p.x=valid.x;p.y=valid.y;}
+  if(s.pieces.some(u=>u.id===p.id)){p.x=valid.x;p.y=valid.y;const enclosed=closingTargets(s.pieces,p);if(enclosed.length){s.fallen.push(...enclosed.map(q=>({...q,revealed:true})));s.pieces=s.pieces.filter(q=>!enclosed.some(t=>t.id===q.id));s.last.pincer=true;s.last.trapped=enclosed.map(q=>q.id);message+=` Zange geschlossen: ${enclosed.map(q=>ROLES[q.role].name+' auf '+coordinate(q)).join(', ')} geschlagen.`;}}
  }else if(valid.type==='scan'){
   const t=s.pieces.find(p=>p.id===valid.target);p.revealed=true;t.revealed=true;s.last={type:'scan',piece:p.id,from:{x:p.x,y:p.y},to:{x:t.x,y:t.y}};
   message=`Echo: ${ROLES[p.role].name} auf ${coordinate(p)} und ${ROLES[t.role].name} auf ${coordinate(t)} sind jetzt offen.`;

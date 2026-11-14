@@ -1,8 +1,9 @@
-import {legalActions,ROLES,RELAYS,isPincer,combat,random,GOAL} from './engine.js';
+import {legalActions,ROLES,RELAYS,isPincer,closingTargets,combat,random,GOAL} from './engine.js';
 const distance=(a,b)=>Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
 const occupying=(pieces,side)=>RELAYS.filter(r=>pieces.some(p=>p.side===side&&p.x===r.x&&p.y===r.y)).length;
 function beliefs(v){const count={spark:2,ward:2,shade:2};for(const p of [...v.pieces,...v.fallen])if(p.side!==v.viewer&&p.role)count[p.role]=Math.max(0,count[p.role]-1);const total=Object.values(count).reduce((a,b)=>a+b,0);return Object.entries(count).map(([role,n])=>({role,p:total?n/total:1/3}));}
 function hash(v){let n=2166136261;for(const c of JSON.stringify([v.ply,v.viewer,v.pieces])){n^=c.charCodeAt(0);n=Math.imul(n,16777619);}return n>>>0;}
+function afterPincer(pieces,id){const mover=pieces.find(p=>p.id===id);if(!mover)return pieces;const removed=closingTargets(pieces,mover);return pieces.filter(p=>!removed.some(q=>q.id===p.id));}
 function boardValue(pieces,v,style){
  const own=pieces.filter(p=>p.side===v.viewer),enemy=pieces.filter(p=>p.side!==v.viewer);
  if(!own.length||!enemy.length)return own.length?10000:enemy.length?-10000:0;
@@ -31,10 +32,10 @@ export function chooseAction(view,style='balanced'){
    value=boardValue(copy,view,style)+(style==='cautious'?3.4:style==='aggressive'?1:2.1)+(distance(p,target)<=2?.7:0)-(p.revealed?0:.4);
   }else{
    const target=view.pieces.find(q=>q.x===action.x&&q.y===action.y);
-   if(!target){const copy=view.pieces.map(q=>q.id===p.id?{...q,x:action.x,y:action.y}:q);value=boardValue(copy,view,style);}
+   if(!target){const copy=view.pieces.map(q=>q.id===p.id?{...q,x:action.x,y:action.y}:q);value=boardValue(afterPincer(copy,p.id),view,style);}
    else{
     const pincer=isPincer(view.pieces,p,target),possibilities=target.role?[{role:target.role,p:1}]:unknown;value=0;
-    for(const belief of possibilities){const outcome=combat(p.role,belief.role,pincer);const copy=view.pieces.filter(q=>outcome==='both'?q.id!==p.id&&q.id!==target.id:outcome==='attacker'?q.id!==target.id:q.id!==p.id).map(q=>q.id===p.id?{...q,x:action.x,y:action.y,revealed:true}:q.id===target.id?{...q,role:belief.role,revealed:true}:q);value+=belief.p*boardValue(copy,view,style);}
+    for(const belief of possibilities){const outcome=combat(p.role,belief.role,pincer);const copy=view.pieces.filter(q=>outcome==='both'?q.id!==p.id&&q.id!==target.id:outcome==='attacker'?q.id!==target.id:q.id!==p.id).map(q=>q.id===p.id?{...q,x:action.x,y:action.y,revealed:true}:q.id===target.id?{...q,role:belief.role,revealed:true}:q);value+=belief.p*boardValue(afterPincer(copy,p.id),view,style);}
     if(pincer)value+=1;
    }
    const previous=view.recent.findLast(a=>a.type==='move'&&a.piece===p.id);if(previous&&previous.x===action.x&&previous.y===action.y)value-=.8;
