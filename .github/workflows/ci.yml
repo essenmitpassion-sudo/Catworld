@@ -1,4 +1,4 @@
-name: VEIL checks
+name: VERSATZ checks
 on:
   push:
   pull_request:

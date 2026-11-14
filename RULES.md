@@ -1,17 +1,16 @@
-# VEIL rules / version 1
+# VERSATZ · Regeln v1
 
-7×7; two fixed blocks at D3/D5; relays at B4/D4/F4. Each side deploys six agents: two Spark/Funke, two Ward/Schild, two Shade/Schatten. Roles are randomly arranged by a deterministic seed. Only your own and publicly revealed roles are visible. Human deployment can be rearranged by swapping own initial cells before Start. The seed alternates initiative; the second side receives two starting signal.
+5×5 Felder. Elfenbein startet unten, Jade oben, je drei gleichwertige Figuren. In der kompakten Aufstellung B/C/D; weitere symmetrische Aufstellungen sind vor einer Partie wählbar. Das Startrecht ist wählbar, Revanche wechselt es.
 
-One action per turn:
+Ein Zug hat genau zwei Teile:
 
-- Move one agent one orthogonal cell onto an empty square or attack an adjacent enemy. Own pieces and blocks cannot be entered.
-- Echo a hidden enemy on the same row/column within three squares. The first piece or block stops the ray. This reveals both the sender and target; it does not move them.
-- Pass only if neither of the above is legal.
+1. Eine eigene Figur ein Feld waagrecht oder senkrecht bewegen. Eigene Figuren blockieren. Ein Gegner auf dem Zielfeld wird sofort geschlagen. Der Schritt springt nicht über den Rand.
+2. Die gesamte **Zielreihe** ein Feld nach links oder rechts verschieben. Die aktive Seite entscheidet. Alle Figuren dieser Reihe fahren mit, auch gegnerische. Am Rand erscheinen sie auf der anderen Seite. Das Verschieben schlägt keine Figuren.
 
-Direct combat reveals both roles. Spark beats Ward, Ward beats Shade, Shade beats Spark. Equal roles remove both agents. The winner occupies/keeps the defender's square. An attack with friendly support on the clear line beyond the defender is a guaranteed pincer win.
+Erst nach dem vollständigen Zug prüfen: Die aktive Seite gewinnt, wenn sie das mittlere gegnerische Tor besetzt (Elfenbein: C5; Jade: C1) oder alle Gegner geschlagen hat. Ein Tor nur während des Schritts zu berühren reicht nicht. Transportierst du den Gegner in dessen Zieltor, gewinnt er erst am Ende seines nächsten eigenen Zuges, falls er dann noch dort steht. Ein beliebiger eigener Stein kann das Tor besetzen.
 
-Closing a line pincer during a move immediately captures an enclosed enemy: a ray from the moved agent meets one enemy and then a friendly support, with only empty cells between. Other pieces/blocks interrupt the ray. Several directions can capture simultaneously. A quiet move closing a pincer does not expose the mover's role; captured roles become public. Resolve direct combat first, then closures from the surviving moved agent.
+Dreifache identische Brettstellung mit derselben Seite am Zug ist Remis. Ebenso kein legaler Zug oder 120 Halbzüge. Tor-/Eliminationssieg auf dem 120. Halbzug geht vor. Keine Materialwertung, keine Pass-Züge.
 
-After an action, check elimination first: a sole surviving side wins; mutual final elimination draws. Otherwise begin the opponent's turn and add one signal per relay it holds. This gives the other side a full action to contest occupation before it scores. Reaching eight signal wins. Three identical states (positions, public reveals, scores, side to move) draw. At 80 actions higher signal wins, tied signal draws.
+Alle Informationen sind offen. Keine Zufallsereignisse während der Partie. Die KI nutzt denselben Regelkern und dieselben öffentlichen Stellungen. Schwierigkeitsgrade unterscheiden sich durch Suchhorizont und Rechenbudget, nicht durch Regeländerungen. „Bis 5 Halbzüge“ ist eine Obergrenze, keine Garantie bei ausgeschöpftem Budget.
 
-All movement, public reveals and capture effects are deterministic. No midgame dice. Unknown roles create uncertainty, not a hidden random roll. The computer receives `observe(game, side)` only. It cannot read the opponent's hidden roles or setup seed. Replays reconstruct legal actions and the information known at each action; viewing one never rewinds a live match.
+Vorschau verändert den Spielstand nicht. Rücknahme stellt die vollständige frühere Stellung inklusive Wiederholungszählern wieder her. Im KI-Modus wird bis zur letzten menschlichen Entscheidung zurückgenommen. Replay betrachtet die Historie, ohne sie zu verändern. Automatisches Speichern ist lokal im Browser; verweigerter Speicher verhindert das Spielen nicht.

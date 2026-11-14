@@ -1,48 +1,43 @@
 import {chromium} from '@playwright/test';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import {createGame,applyMove,legalMoves,positionKey} from '../src/engine.js';
+import {chooseMove} from '../src/ai.js';
 await mkdir('work',{recursive:true});
-const html=await readFile('dist/VEIL.html','utf8'),examples=JSON.parse(await readFile('work/match-examples.json','utf8')),errors=[];
-assert(examples.win&&examples.loss&&examples.pincer,'simulations must provide actual win and loss matches');
+const html=await readFile('dist/VERSATZ.html','utf8'),errors=[];
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-async function open(seed,width=1280,denied=false){
- const context=await browser.newContext({viewport:{width,height:1050},deviceScaleFactor:2,reducedMotion:'reduce'});if(denied)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}}));
- const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>r.request().url().startsWith('https://veil.test/')?r.fulfill({contentType:'text/html',body:html}):r.abort());await page.goto('https://veil.test/?seed='+seed);await page.locator('#pace').selectOption('fast');return {page,context};
-}
-const stored=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('veil.match')));
-const ready=page=>page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('veil.match'));return s.phase==='over'||s.phase==='playing'&&s.turn===0;});
-async function clickAction(page,state,action){
- if(action.type==='pass'){await page.locator('#pass').click();return;}
- const p=state.pieces.find(p=>p.id===action.piece);await page.locator(`[data-x="${p.x}"][data-y="${p.y}"]`).click();
- if(action.type==='scan'){await page.locator('#echo-mode').click();const t=state.pieces.find(p=>p.id===action.target);await page.locator(`[data-x="${t.x}"][data-y="${t.y}"]`).click();}
- else await page.locator(`[data-x="${action.x}"][data-y="${action.y}"]`).click();
-}
+async function open(width=1280,denied=false){const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});if(denied)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}}));const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>r.request().url().startsWith('https://versatz.test/')?r.fulfill({contentType:'text/html',body:html}):r.abort());await page.goto('https://versatz.test/');return {page,context};}
+const stored=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('versatz.v1')).game);
+async function ready(page){await page.waitForFunction(()=>!document.querySelector('#board').classList.contains('busy'));}
+async function play(page,s,m){await page.locator(`[data-cell="${m.from}"]`).click();await page.locator(`[data-cell="${m.to}"]`).click();await page.locator(m.shift===1?'#shift-right':'#shift-left').click();const preview=await page.locator('#preview-summary').innerText();assert(preview.length>0);await page.locator('#commit').click();await ready(page);}
+const results={matches:[],viewports:[],errors};
 try{
- for(const outcome of ['win','loss','pincer']){
-  const example=examples[outcome],{page,context}=await open(example.seed);
-  assert.equal(await page.locator('.opponent.masked').count(),6);assert.deepEqual(await page.locator('.opponent b').allTextContents(),['?','?','?','?','?','?']);assert.equal(await page.locator('[role="gridcell"]').count(),49);
-  if(outcome==='win'){
-   await page.locator('[data-x="0"][data-y="5"]').click();await page.locator('[data-x="1"][data-y="5"]').click();const setup=await stored(page);assert.equal(setup.deployment.find(p=>p.id==='0-0').x,1);await page.reload();assert.deepEqual(await stored(page),setup,'setup must survive reload');await page.locator('#retry').click();
-   await page.locator('#rules-button').click();assert.equal(await page.locator('#rules').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#rules').isVisible(),false);
-   await page.screenshot({path:'work/setup-desktop.png',fullPage:true});
-   for(const width of [320,390,768,1920]){await page.setViewportSize({width,height:1050});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`no overflow at ${width}`);}
-   await page.setViewportSize({width:390,height:1050});await page.screenshot({path:'work/setup-mobile.png',fullPage:true});await page.setViewportSize({width:1280,height:1050});
-  }
-  await page.locator('#start').click();
-  let humanTurns=0,pincerSeen=false;
-  while((await stored(page)).phase!=='over'){
-   await ready(page);let s=await stored(page);if(s.last?.pincer){pincerSeen=true;assert.match(await page.locator('#log').innerText(),/Zange/);}if(s.phase==='over')break;
-   const planned=example.moves[s.ply];assert.equal(planned.side,0,'browser must match the actual deterministic AI trace');
-   await clickAction(page,s,planned.action);if((await stored(page)).last?.pincer){pincerSeen=true;assert.match(await page.locator('#log').innerText(),/Zange/);}humanTurns++;
-   if(humanTurns===2&&outcome==='win'){const after=await stored(page);await page.reload();await ready(page);const resumed=await stored(page);assert(resumed.ply>=after.ply&&resumed.ply<=after.ply+1,'reload must preserve the action and at most complete its pending AI reply');}
-   if(humanTurns>40)throw Error('UI match did not terminate');
-  }
-  const ended=await stored(page);assert.equal(ended.winner,example.winner);if(outcome==='pincer')assert(pincerSeen,'a complete pincer example must visibly execute the positional capture');assert.equal(await page.locator('#result').isVisible(),true);assert.match(await page.locator('#result-title').textContent(),example.winner===0?/gewonnen/:example.winner===1?/Gegner gewinnt/:/Remis/);
-  await page.screenshot({path:`work/${outcome}.png`,fullPage:true});
-  await page.locator('#watch').click();assert.equal(await page.locator('.opponent.masked').count(),6,'replay must show information as known then');await page.locator('#replay-range').fill(String(ended.history.length));assert.equal((await stored(page)).ply,ended.ply);await page.locator('#replay-close').click();assert.deepEqual(await stored(page),ended,'replay must never alter the real game');
-  await page.locator('#new-game').click();const fresh=await stored(page);assert.notEqual(fresh.seed,example.seed);assert.equal(fresh.phase,'setup');assert.equal(fresh.ply,0);
-  await context.close();console.log(`Complete real UI ${outcome}, authoritative reload, historical fog replay and restart: PASS (${ended.ply} actions)`);
- }
- const {page,context}=await open(42,320,true);await page.locator('#start').click();await page.locator('[data-x="0"][data-y="5"]').click();await page.locator('[data-x="0"][data-y="4"]').click();assert.match(await page.locator('#save-status').textContent(),/SPEICHERT NICHT/);await context.close();
- assert.deepEqual(errors,[]);await writeFile('work/browser-result.json',JSON.stringify({win:true,loss:true,setupReload:true,midTurnReload:true,replayFog:true,restart:true,storageDenied:true,widths:[320,390,768,1920],pageErrors:errors},null,2));console.log('Privacy rendering, setup, native rules dialog, keyboard, 320–1920px, offline artifact and denied storage: PASS');
+ const {page,context}=await open();assert.equal(await page.locator('[role="gridcell"]').count(),25);
+ await page.locator('#mode').selectOption('local');
+ let s=createGame();assert.deepEqual(await stored(page),s);
+ const first={from:21,to:16,shift:1};await play(page,s,first);s=applyMove(s,first);assert.deepEqual(await stored(page),s);assert.equal(await page.locator('.token:not(.ghost)').count(),6);
+ await page.locator('#undo').click();assert.deepEqual(await stored(page),createGame());await page.reload();assert.deepEqual(await stored(page),createGame());
+ for(const width of [320,390,768,1440]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`overflow at ${width}`);results.viewports.push(width);if(width===390)await page.screenshot({path:'work/versatz-mobile.png',fullPage:true});}
+ await page.setViewportSize({width:1440,height:1050});await page.screenshot({path:'work/versatz-desktop.png',fullPage:true});
+ await page.locator('#rules-button').click();assert(await page.locator('#rules').isVisible());await page.keyboard.press('Escape');assert(!(await page.locator('#rules').isVisible()));
+ // A full match through real clicks by both local players, including all previews.
+ s=createGame();let captures=0,wraps=0;while(s.status==='playing'){const m=chooseMove(s,{depth:3,nodeLimit:15000,seed:3}).move;await play(page,s,m);s=applyMove(s,m);captures+=Number(s.last.capture!==null);wraps+=Number(s.last.to%5+s.last.shift<0||s.last.to%5+s.last.shift>4);assert.deepEqual(await stored(page),s);}
+ assert(await page.locator('#result').isVisible());assert.match(await page.locator('#result-title').innerText(),/gewinnt|Remis/);results.matches.push({mode:'local',plies:s.ply,winner:s.winner,reason:s.reason,captures,wraps});
+ await page.locator('#rematch').click();assert.equal((await stored(page)).initial.starter,-1);assert.equal((await stored(page)).ply,0);
+ // Real worker-driven AI game; the human side is driven only via UI clicks.
+ await page.locator('#mode').selectOption('ai');await page.locator('#human').selectOption('1');await page.locator('#level').selectOption('quick');await page.locator('#starter').selectOption('1');
+ while(true){await ready(page);s=await stored(page);if(s.status!=='playing')break;if(s.turn===1){const m=chooseMove(s,{depth:2,nodeLimit:4000,seed:9}).move;await play(page,s,m);}else await page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('versatz.v1')).game;return s.turn===1||s.status!=='playing';});}
+ results.matches.push({mode:'ai',plies:s.ply,winner:s.winner,reason:s.reason});assert(await page.locator('#result').isVisible());
+ await page.reload();assert.deepEqual(await stored(page),s);assert(await page.locator('#result').isVisible());
+ // Pending worker cancellation, settings reset, and undo on the computer's turn.
+ await page.locator('#new-game').click();s=await stored(page);const m=legalMoves(s)[0];await play(page,s,m);await page.locator('#undo').click();await page.waitForTimeout(200);assert.equal((await stored(page)).turn,1);assert.equal((await stored(page)).ply,0);
+ await page.locator('#human').selectOption('-1');await page.locator('#mode').selectOption('local');await page.waitForTimeout(100);assert.equal((await stored(page)).ply,0);
+ // A genuine repetition, executed from the public opening using legal horizontal shuffles.
+ await page.locator('#starter').selectOption('1');let draw=createGame();let seed=819;for(let attempt=0;attempt<100;attempt++){draw=createGame();while(draw.status==='playing'){const quiet=legalMoves(draw).filter(m=>Math.floor(m.from/5)===Math.floor(m.to/5));if(!quiet.length)break;seed=Math.imul(seed,1664525)+1013904223>>>0;draw=applyMove(draw,quiet[seed%quiet.length]);}if(draw.status==='draw')break;}assert.equal(draw.status,'draw');
+ for(const m of draw.history){const current=await stored(page);await play(page,current,m);}assert.match(await page.locator('#result-title').innerText(),/Remis/);results.matches.push({mode:'local-draw',plies:draw.ply,reason:draw.reason});
+ // Preview does not spend a turn; keyboard cancellation restores the real board.
+ await page.locator('#new-game').click();s=await stored(page);await page.locator('[data-cell="21"]').click();await page.locator('[data-cell="16"]').click();await page.locator('#shift-right').focus();assert.deepEqual(await stored(page),s);await page.keyboard.press('Escape');assert(await page.locator('#commit').isDisabled());
+ await context.close();
+ const denied=await open(390,true);await denied.page.locator('#mode').selectOption('local');await play(denied.page,createGame(),first);assert.match(await denied.page.locator('#storage-status').innerText(),/nicht gespeichert/);await denied.context.close();
+ assert.deepEqual(errors,[]);await writeFile('work/browser-results.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));
 }finally{await browser.close();}
