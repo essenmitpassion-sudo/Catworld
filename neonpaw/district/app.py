@@ -49,6 +49,8 @@ class DistrictApp:
         self.selected_character="nox";self.facing_left=False
         self.reaction=None;self.reaction_remaining=0.
         self.scroll=0;self.hscroll=0;self.follow_execution=False
+        self.destination_cards={name:pygame.Rect(24+i*306,746,288,96)
+                                for i,name in enumerate(DEVICES)}
         self.buttons={
             'Run':pygame.Rect(974,645,128,44),
             'Step':pygame.Rect(1112,645,128,44),
@@ -170,6 +172,10 @@ class DistrictApp:
             if pos is None:return
             mx,my=pos
             if event.button==1:
+                for name,rect in self.destination_cards.items():
+                    if rect.collidepoint(mx,my):
+                        self.inspected=DEVICES[name] if self.inspected!=DEVICES[name] else None
+                        return
                 if pygame.Rect(746,452,160,274).collidepoint(mx,my):
                     self.command('Showcase');return
                 for name,rect in self.buttons.items():
@@ -258,6 +264,20 @@ class DistrictApp:
             else:line=candidate
         if y+font.get_height()<=rect[1]+h:self.text(line,(x,y),color,font)
 
+    def destination_hint(self):
+        if self.inspected is None:return None
+        target=self.inspected;world=self.runner.world
+        name=next((NAMES[n] for n,p in DEVICES.items() if p==target),f'Feld {target}')
+        dx,dy=target[0]-world.x,target[1]-world.y
+        if not (dx or dy):
+            if world.device:return f'{name}: Du bist am Anschluss. toggle() verteilt den Strom.'
+            if target==CELL and not world.cell_collected:return 'Am Akku: collect() nimmt zwei Energieeinheiten auf.'
+            return f'{name}: Nox steht hier.'
+        offsets=[]
+        if dx:offsets.append(f'{abs(dx)} '+('rechts' if dx>0 else 'links'))
+        if dy:offsets.append(f'{abs(dy)} '+('runter' if dy>0 else 'hoch'))
+        return f'{name}: Abstand '+ ' · '.join(offsets)+' — Kanal und Brücken beachten.'
+
     def draw(self):
         c=self.canvas;world=self.runner.world
         c.fill('#0c1724')
@@ -281,8 +301,9 @@ class DistrictApp:
         # Three functional destinations; every one can be switched back off.
         captions={'workshop':'Öffnet die Kanalbrücke','garden':'Lässt einen zweiten Weg wachsen','shelter':'Gibt den Streunern ein Zuhause'}
         for i,name in enumerate(DEVICES):
-            rect=pygame.Rect(24+i*306,746,288,96)
+            rect=self.destination_cards[name]
             pygame.draw.rect(c,'#182e39',rect,border_radius=14)
+            if self.inspected==DEVICES[name]:pygame.draw.rect(c,scene.GOLD,rect,2,border_radius=14)
             active=name in world.active
             pygame.draw.circle(c,scene.TEAL if active else '#566a77',(rect.x+22,rect.y+24),5)
             self.text(NAMES[name],(rect.x+36,rect.y+13),scene.INK,self.font)
@@ -292,7 +313,7 @@ class DistrictApp:
         # A restrained terminal, integrated with the live-world intent.
         pygame.draw.rect(c,'#152735',(950,116,466,726),border_radius=20)
         self.text('DEIN PLAN',(974,139),scene.INK,self.heading)
-        self.text('Python · ab Nox’ aktuellem Standort',(974,178),scene.MUTED,self.small)
+        self.text(f'Python · nächster Lauf ab ({world.x}, {world.y})',(974,178),scene.MUTED,self.small)
         pygame.draw.line(c,'#304655',(974,211),(1390,211))
         editor=pygame.Rect(970,228,424,392)
         pygame.draw.rect(c,'#101e2c',editor,border_radius=10)
@@ -329,14 +350,12 @@ class DistrictApp:
                     'done':'Plan beendet. Der Bezirk bleibt so — was probierst du als Nächstes?'}
             message=states[self.runner.status]
         self.wrapped(message,(974,755,412,70),'#efb3a5' if self.runner.error else scene.MUTED)
-        bottom='Eine Energie, drei Gebäude. Klicke die Katzen oder erkunde den Bezirk.'
+        bottom='Wähle ein Gebäude unten: Anschluss finden, eigenen Weg programmieren.'
         if world.restored: bottom='Der Bezirk lebt. Drei Gebäude versorgt — und Nox hat Nachbarn.'
         elif world.device: bottom=f'{NAMES[world.device]}: toggle() schaltet Strom ein oder holt ihn zurück.'
         elif (world.x,world.y)==CELL and not world.cell_collected: bottom='Ein alter Akku! collect() bringt zwei zusätzliche Energieeinheiten.'
         elif world.cell_collected: bottom='Mehr Energie, mehr Möglichkeiten. Welche Gebäude möchtest du verbinden?'
-        if self.inspected:
-            named=next((n for n,p in DEVICES.items() if p==self.inspected),None)
-            bottom=f'Feld {self.inspected}: '+(f'{NAMES[named]} · Hier wirkt toggle().' if named else ('Akku · Hier wirkt collect().' if self.inspected==CELL else 'Plane deinen Weg mit den vier Bewegungsbefehlen.'))
+        if self.inspected is not None:bottom=self.destination_hint()
         self.text(bottom,(32,861),scene.GOLD if world.restored else scene.MUTED,self.small)
         self.text(self.notice,(32,883),scene.MUTED,self.small)
         characters.reaction_card(c,self.reaction,self.small)

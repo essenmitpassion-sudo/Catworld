@@ -36,6 +36,12 @@ with TemporaryDirectory() as temporary:
     pygame.image.save(app.canvas,'district-neighbour.png')
     app.selected_character='nox'
     pygame.image.save(app.canvas,'district-start.png')
+    # Optional destination aid preserves code and marks the live target.
+    original=app.source
+    frame(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,
+                            pos=app.destination_cards['shelter'].center))
+    assert app.inspected==(1,1) and app.source==original
+    assert '2 hoch' in app.destination_hint()
     # The first meaningful choice can be the shelter, then energy can be recovered.
     run('move_up()\nmove_up()\ntoggle()')
     assert app.runner.world.active==frozenset({'shelter'}) and app.runner.world.energy==0

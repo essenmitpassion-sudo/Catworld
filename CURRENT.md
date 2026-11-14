@@ -1,3 +1,11 @@
+# Neuer Checkpoint — 2026-11-14 — Ziele finden
+Basis67912ad. Pareto-Befund: Standortregel bereits dokumentiert, aber Zielkarten
+waren nicht interaktiv. Karten markieren jetzt Anschluss plus sichtbaren Ring;
+Abstand folgt Nox, keine automatische Route/Codeeinfügung. Editor zeigt Startort.
+353 Tests PASS, erweiterter SDL-Spielablauf PASS, Paket-Selbsttest PASS.
+Unabhängiger Review9 relevante Tests PASS, keine Befunde. Kein menschlicher
+Lern-/Spielspassnachweis. Sicherungsfolge Commit/Bundle/Remote vor Fortsetzung.
+
 # CURRENT — 2026-11-14 — Audit und verlässlicher Einstieg
 
 Basis d27a487; Remote vor Audit3a7501f. Nach Umgebungsneustart waren offene

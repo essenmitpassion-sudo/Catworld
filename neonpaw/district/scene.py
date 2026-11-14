@@ -200,6 +200,10 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
     tag=label.get_rect(midtop=(wx-15,wy+6))
     pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
     surface.blit(label,tag)
+    if selected is not None:
+        sx,sy=project(*selected)
+        pygame.draw.circle(surface,GOLD,(round(sx+12),round(sy+9)),
+                           round(12+math.sin(time*3)*2),2)
     # Neighbours remain inhabitants when power is reallocated, rather than vanishing.
     for name,tile in (residents.positions if residents else characters.POSITIONS).items():
         cx,cy=project(*tile)
