@@ -1,6 +1,6 @@
 # Nächster konkreter Schritt
-Nach geprüftem Lichtwechsel-Paket zunächst HEAD/Remote/Bundle/ZIP verifizieren.
-Nächste Pareto-Prüfung: Gebäudezustände im kleinen Fenster bei aus/ein erkennen;
-bei konkretem Kontrastproblem nur die relevante Darstellung korrigieren. Kein
-weiterer Effekt ohne nachgewiesenen visuellen Nutzen. Neues Owner-Feedback zum
-Hafenlook hat Vorrang. Menschliche Rückkehrmotivation nicht als getestet ausgeben.
+AN/AUS-Beschriftung und Anschlussform ergänzen weichen Lichtwechsel;359 Tests PASS.
+Zuerst aktuellen HEAD/Remote/Bundle/ZIP prüfen. Danach tatsächliche Spielhandlung
+priorisieren: Akkuentdeckung und Rückweg über beide Brücken aus Spielersicht
+prüfen. Nur reproduzierbare Orientierungslücken verbessern; keine endlose
+Grafik-Mikropolitur. Neues Owner-Feedback zu Harmonie/Charakteren hat Vorrang.

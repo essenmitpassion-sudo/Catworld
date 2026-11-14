@@ -1,3 +1,11 @@
+# Aktuell — Stromzustand lesbar, 2026-11-14
+Basisc5171f3. Kleines Fenster1000x625 geprüft: gemalte Fenster wirken selbst bei
+AUS warm. Deshalb kurzer AN/AUS-Status direkt am Gebäudenamen, Anschluss bei AN
+gefüllt statt nur umrandet. Gartenname versetzt, um Miso nicht zu überlagern.
+Weltregeln und weiches Licht unverändert.359 Tests PASS; SDL-Spielablauf und
+Paket-Selbsttest PASS. evidence/power-readable-off.png und -on.png geprüft.
+Kein menschlicher Verständlichkeitsnachweis. Sicherung Commit/Bundle/Remote/ZIP.
+
 # Aktuell — 2026-11-14 — Weiche Lichtwechsel
 Basis6041190. Gebäude und Lichtschein blenden in0,6s ein/aus; Umverteilung kann
 mitten im Übergang umkehren. Separate Präsentation in lighting.py, keine Änderung

@@ -125,9 +125,9 @@ def building(surface, name, center, active, font, time, actor=None, illumination
         if actor and rect.collidepoint(actor[0],actor[1]-18):
             sprite=sprite.copy();sprite.set_alpha(140)  # Nox remains visible behind foreground roofs.
         surface.blit(sprite,rect)
-        pygame.draw.ellipse(surface,light if active else '#8aabb8',(center[0]-9,center[1]+6,18,9),2)
-        label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name],True,light if active else '#b1c1ca')
-        tag=label.get_rect(midbottom=(round(x),rect.bottom+25 if name=='workshop' else rect.top-5))
+        pygame.draw.ellipse(surface,light if active else '#8aabb8',(center[0]-9,center[1]+6,18,9),0 if active else 2)
+        label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name]+(' · AN' if active else ' · AUS'),True,light if active else '#b1c1ca')
+        tag=label.get_rect(midbottom=(round(x-42 if name=='garden' else x),rect.bottom+25 if name=='workshop' else rect.top-5))
         if name!='workshop':
             pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
             surface.blit(label,tag)
@@ -157,7 +157,7 @@ def building(surface, name, center, active, font, time, actor=None, illumination
         pygame.draw.line(surface,'#b88878',(x,y-h-24),(x+25,y-h-12),3)
     # A circular connection socket marks exactly where toggle() works.
     pygame.draw.ellipse(surface,light if active else '#6d8490',(x-9,y+18,18,9),2)
-    label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name],True,light if active else '#b1c1ca')
+    label=font.render({'workshop':'WERKSTATT','garden':'GARTEN','shelter':'ZUFLUCHT'}[name]+(' · AN' if active else ' · AUS'),True,light if active else '#b1c1ca')
     if name!='workshop':surface.blit(label,(x-label.get_width()/2,y-h-48))
 
 
@@ -238,7 +238,7 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
             if index==1:glow(surface,(px,py-25),GOLD,30)
     # Draw the workshop sign after foreground tiles, away from Miso's terrace.
     wx,wy=project(*DEVICES['workshop'])
-    label=font.render('WERKSTATT',True,GOLD if 'workshop' in world.active else '#b1c1ca')
+    label=font.render('WERKSTATT'+(' · AN' if 'workshop' in world.active else ' · AUS'),True,GOLD if 'workshop' in world.active else '#b1c1ca')
     tag=label.get_rect(midtop=(wx+112,wy-27))
     pygame.draw.rect(surface,'#132635',tag.inflate(12,6),border_radius=5)
     surface.blit(label,tag)
