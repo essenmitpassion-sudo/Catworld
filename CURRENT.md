@@ -1,84 +1,17 @@
-# CURRENT — 2026-11-10 — Rückwege und freiwilliger Heimweg
+# VEIL / current handoff
 
-Ziel: Cyberpunk-Python-Lernspiel, kleine spielbare Batches, ein Integrator.
-Branch g0/first-cat-action. Ausgangspunkt a647738a879e78f2ad32db01530600f5883a2d9e.
-Extern bestätigter Rückweg-Checkpoint 86aed28b8e73bd2a7014a50c9436f3e706490939.
-Nachfolgender Abschlusscommit ergänzt optionalen Heimweg; SHA mit git log -1 prüfen.
+Repository: https://github.com/essenmitpassion-sudo/Catworld.git. Local /workspace/work/catworld, branch strategy/veil-prototype. Owner explicitly replaced the entire former learning game with an original strategy game. Do not resume the abandoned Android prompt or CHAINCORE work here. Latest directive is docs/DEVELOPMENT_DIRECTOR.md. Single integrator, no automatic background continuation.
 
-## Tatsächlich spielbar
-Bestehende sechs Lernabschnitte bis zum Laternenpaar; fünf gespeicherte Editorentwürfe.
-Undo/Redo, horizontale Nachführung, Hilfe ohne Weltüberdeckung und Zeilenfortschritt.
-Neu: move_left() für freie Rückwege in allen bestehenden Szenarien. Keine neue
-Python-Grammatik, nur zusätzlicher erlaubter parameterloser Aktionsname. Grenzen,
-Argumente, Schleifen-Shadowing und Ressourcenlimits getestet. Umwege sind gültig.
-Dachfortschritt nutzt aktuelle Position statt Gesamtbewegungen.
-Optional beim Laternenpaar: eigener Plan schaltet beide Lichter ein und führt Nox
-zur Startposition zurück. Titel „NOX IST ZUHAUSE“ erst bei beendetem Programm,
-beiden Lichtern und Startposition. Alter Erfolg bleibt gültig; kein neuer Editor,
-kein neues Save-Schema, kein automatisch eingefügter Code. Heim-Marker sichtbar.
+Baseline checkpoint 7175190acf5dec4c84bf00d1a1d22f36acb4c1d2: complete history verified in /workspace/work/catworld-before-replacement.bundle and catworld-backup.git. No old game is maintained in parallel. Default remote branch is still g0/first-cat-action; replace its contents by normal fast-forward, never force.
 
-## Tests und Grenzen
-RED Rückweg 5 failed/3 passed; GREEN 186. Heimweg RED 1; finale Suite 187 GREEN.
-SDL-Offscreen-Smoke: Umweg mit Linksbewegung, Stop/Reset, alle früheren Aufgaben,
-beide Laternen, freiwilliger Heimweg, Entwurfswiederherstellung. Screenshots geprüft.
-Belege evidence/backtracking-*.txt und homecoming-*.txt.
-Menschlicher Spielspaß/Lerntransfer, Windows/DPI und unabhängiger Audit bleiben offen.
-Keine bekannte reproduzierte Regression. Nur Test-CI, kein Entwicklungsscheduler.
+First playable prototype: 7×7, six agents per side, seeded hidden roles (two each), custom own setup swaps, move/capture or Echo, public role reveals, positional pincer override, three relays, 8-signal/elimination victory, 80-action cap/repetition draw, observation-only AI with three styles, complete validated local saves, exact-seed retry and historical-fog replay. The second player starts with 2 signal as a provisional initiative compensation.
 
-## Produktentscheidung / Wiederaufnahme
-Ressourcenwahl vertagt: bloß unterschiedliche Lichtfarben wären kein zusätzlicher
-Entscheidungsraum. Rückwege bieten mehr Freiheit mit minimalen Weltregeländerungen.
-Nächste priorisierte Aufgabe: Fehlerreaktion beim Überschreiten eines Kartenrands
-verbessern, damit Spieler die fehlerhafte Stelle direkt im Plan korrigieren können;
-aktuelle Fehlermeldung/Zeilenmarkierung zuerst prüfen, nichts doppelt implementieren.
-Erster Befehl: `cd /workspace/Catworld && git status --short --branch && git log -5 --oneline`
-1. Arbeit und Backups sichern, Remote/Reviews vergleichen.
-2. NEXT_TASK.md mit einer reproduzierbaren kleinen Verbesserung bearbeiten.
-3. Volle Tests/SDL, Commit + Bundle verify + Push/Remote prüfen; bei Limit Checkpoint.
-Recovery-Archive nicht überschrieben. /workspace/Catworld-backtracking.bundle geprüft.
-Keine bewusst offene WIP-Arbeit; echter Git-Status gilt vor diesem Dokument.
+Executed: 11/11 Node tests; standalone build; 48 deterministic full games (28 side-0 wins, 20 side-1, no draws; mean 17.29 actions; starter wins 34/48). Paired same-formation 24-seed initiative experiment: starter wins 36/48 at no compensation, 34/48 at +1, 31/48 at +2. No human fun or balance proof.
 
-## 2026-11-10 — Fehlerkorrektur ohne festgehaltenen Ausschnitt
-Heimweg-Checkpoint fc994d1958f40d96f5caa1357a20dd42ca071274 extern bestätigt.
-Weiterer reproduzierter UI-Fehler: Ausführungszeile hielt den Ausschnitt nach Fehler
-fest, obwohl Cursor navigiert wurde. Jetzt folgt Run/Step der Ausführung, bewusste
-Cursorbewegung/Klick dem Editor. Fehlermeldung und Fehlerzeile bleiben erhalten;
-keine Textänderung oder zusätzliche Undo-Einträge durch Navigation.
-RED 2, finale GREEN 189; voller SDL-Smoke inkl. Fehler→Cursor-Navigation PASS.
-Belege evidence/error-editing-*.txt. Nächster Schwerpunkt: gezielter Menschentest
-zu eigenem Hin-/Rückwegplan; keine zusätzliche Syntax vor Beobachtung des Lernpfads.
+Actual Chromium UI: full win in 22 actions and loss in 24, setup swap/reload, action+pending-AI reload, original historical masking during replay, restart, native rules dialog, denied storage, 320/390/768/1920px and no page errors. Desktop/mobile screenshots inspected. Tests fulfill built HTML at an intercepted origin, not the hosted production site. No servers were started.
 
-Kurzer Menschentestablauf ohne Musterlösung jetzt in README.md: Vorhersage vor Step,
-eigener Heimweg, absichtlichen Umweg korrigieren, Entwurf nach Neustart prüfen.
-Nur Testanleitung erstellt, noch keine menschlichen Ergebnisse erhoben.
+Critical design finding: 24 balanced bot games had 38 combats but zero pincers. Next high-impact experiment: closing a geometric pincer while moving captures the enclosed enemy immediately without exposing the moving role; retain the same roles rather than adding systems. Its failing fixture is staged in work/pincer-next.test.txt, outside the committed passing test suite. Implement this after securing the first playable checkpoint, then repeat rule/AI/browser checks and measure actual pincer use.
 
-## 2026-11-10 — Freie Reihenfolge statt künstlicher Sperre
-Ausgangspunkt 8e87fb8 sauber, Remote unverändert. Beide Laternen unabhängig
-aktivierbar; ferne zuerst ist mit Rückweg gültig. powered verlangt weiterhin beide.
-Zwei unabhängige Lichtzustände, beide Batterien von Anfang an sichtbar. Doppelte
-Aktivierung bleibt Fehler. Kein neues Save-Schema, keine neue Sprachform.
-Alten Test für erzwungene Reihenfolge bewusst durch neue Produktregel ersetzt:
-RED 2, GREEN 191 einschließlich unabhängig gerenderter ferner Laterne. SDL mit
-ferner Laterne zuerst, Rückweg, Heimkehr, Neustart und allen alten Aufgaben PASS.
-Belege evidence/free-order-*.txt; Screenshot geprüft. Spielspaß bleibt unbewiesen.
+Commands: npm test; npm run build; npm run simulate; npm run smoke. Installed Chromium and Node24. npm may need --cache /workspace/work/npm-cache due unwritable default npm cache. npm install already succeeded with that path. No external art/font dependencies.
 
-## 2026-11-10 — Weltziel und Programmfehler unterscheiden
-Checkpoint freie Routenwahl 4f70f5b8eaf638702230a3450ec43fd442541878 extern bestätigt.
-Reproduziert: collect aktiviert Licht, späteres collect scheitert, alte große
-Erfolgsmeldung blieb. Jetzt „LICHT AN · PROGRAMM PRÜFEN“ mit Fehlerhinweis; Weltzustand
-bleibt korrekt, eigener Code unverändert. Nach echter Korrektur normale Erfolgsmeldung.
-RED 1, finale GREEN 192; voller SDL-Smoke mit spätem Fehler/Korrektur und alternativen
-Laternenrouten PASS. Belege evidence/partial-success-*.txt, Screenshot geprüft.
-Kein menschlicher Lern-/Spaßnachweis. Nächste Aufgabe: Ausgabe-/Editor-Lesbarkeit bei
-maximal erlaubtem Programm prüfen, nur reproduzierbare Engpässe beheben.
-
-## 2026-11-10 — Lange Programme und präzise Mausklicks
-Checkpoint 2e8f0b9b78db62de40e1072eabd583fa96f19c7e extern bestätigt.
-80 Textzeilen / 60 Aktionen geprüft: 120 Offscreen-Frames median 4,46 ms,
-p95 7,89 ms, max 11,45 ms in dieser Cloud; kein Hardware-/Windows-Leistungsversprechen.
-Dabei reproduzierter Fehler: Klick in Editorpadding wählte unsichtbare Nachbarzeile.
-Auf sichtbare Zeilen begrenzt, bei drei Fenstergrößen geprüft. RED 6 failed/1 passed,
-GREEN 199; 4096-Zeichen-Programm mit 64 Aktionen sowie Stop/Reset geprüft.
-SDL-Smoke inklusive Klick nach Fehler und allen Spielabschnitten PASS.
-Belege evidence/editor-padding-*.txt. Nächste Prüfung: konsistente Run-Neustartregel
-im Einstieg gegenüber späteren Aufgaben, ohne pausiertes Step→Run zu verändern.
+GitHub permissions were inspected through the connected app; gh auth status confirms authenticated HTTPS operations. Commit and push this milestone, verify exact remote head with ls-remote. Publish a browser link only after a real successful deployment, keeping GitHub as the primary source. No live URL exists for VEIL yet. Source push is not deployment.
