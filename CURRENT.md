@@ -1,3 +1,18 @@
+# Aktuell — 2026-11-14 — Harmonischer Hafenlook
+Basis850656c. Owner kritisiert fehlende Harmonie, Priorität visueller Gesamtlook.
+Neue gemeinsame Materialien: gemaltes Steinpflaster, Petrolwasser, Holz-/Ranken-
+brücken, kleine Uferpflanzen/Laterne. Nachtblau/Salbei/Gold und ruhigere Kontraste;
+Serifentitel, Originalkatzen unverändert. Keine Welt-/Speicherregel geändert.
+ART_DIRECTION.md ist für AFTERLIGHT aktualisiert; alter Pixelentwurf historisch.
+356 Tests PASS; vollständiger SDL-Spielablauf und Paket-Selbsttest PASS.
+Pakettest lädt zusätzlich je4 Pflaster-, Kanal/Brücken- und Detailgrafiken.
+Review7 relevante Tests PASS; Minor Feldüberlagerung behoben: Bank nicht auf
+Spielfeld, Blumentöpfe an Aussenkante. Anfang/Vollversorgung/kleines Fenster
+visuell geprüft. evidence/harbor-look-*. Menschliche ästhetische Zustimmung und
+Wiederspielreiz NICHT nachgewiesen. Originalgrafiken und Rückkehrstand erhalten.
+Sicherungsfolge: Commit, geprüftes Bundle, Remote-SHA, sauberer ZIP-Build mit
+Dateihashes, entpackter Selbsttest. Nächste Aufgabe in NEXT_TASK.md.
+
 # Neuer Checkpoint — 2026-11-14 — Ziele finden
 Basis67912ad. Pareto-Befund: Standortregel bereits dokumentiert, aber Zielkarten
 waren nicht interaktiv. Karten markieren jetzt Anschluss plus sichtbaren Ring;

@@ -117,8 +117,8 @@ def hit_test(pos,visual,project,positions=None):
 
 def portrait(surface,name,world,font,positions=None):
     rect=pygame.Rect(746,452,160,274)
-    pygame.draw.rect(surface,'#142c3a',rect,border_radius=16)
-    pygame.draw.rect(surface,'#355562',rect,1,border_radius=16)
+    pygame.draw.rect(surface,'#20363a',rect,border_radius=16)
+    pygame.draw.rect(surface,'#4b605e',rect,1,border_radius=16)
     art=load_characters()
     sprite=art['happy_portraits'].get(name) if happy(name,world) else None
     if sprite is None:sprite=art['portraits'].get(name)
@@ -132,7 +132,7 @@ def portrait(surface,name,world,font,positions=None):
             surface.blit(font.render(line,True,'#c2d5dc'),(758,y));y+=19;line=word
         else:line=candidate
     if line:surface.blit(font.render(line,True,'#c2d5dc'),(758,y))
-    surface.blit(font.render('Nah ansehen · F2',True,'#75e1ca'),(758,706))
+    surface.blit(font.render('Nah ansehen · F2',True,'#a3cfbc'),(758,706))
 
 
 def reaction(before,after):
@@ -156,8 +156,8 @@ def reaction_card(surface,event,font):
     if event is None:return
     name,message=event
     panel=pygame.Rect(530,128,378,100)
-    pygame.draw.rect(surface,'#163440',panel,border_radius=12)
-    pygame.draw.rect(surface,'#599384',panel,1,border_radius=12)
+    pygame.draw.rect(surface,'#243d40',panel,border_radius=12)
+    pygame.draw.rect(surface,'#91b2a2',panel,1,border_radius=12)
     sprite=load_characters()['world'].get(name)
     if sprite:surface.blit(sprite,sprite.get_rect(midbottom=(568,215)))
     surface.blit(font.render(name.upper(),True,'#f8c987'),(608,140))
@@ -173,7 +173,7 @@ def reaction_card(surface,event,font):
 SHOWCASE_CLOSE=pygame.Rect(810,132,92,34)
 SHOWCASE_CARDS={name:pygame.Rect(44+i*216,206,204,470)
                 for i,name in enumerate(TRAITS)}
-ACCENTS={'nox':'#75e1ca','miso':'#f8c987','lumi':'#b9e5bf','pixel':'#c6b0f0'}
+ACCENTS={'nox':'#a3cfbc','miso':'#f8c987','lumi':'#b9e5bf','pixel':'#c6b0f0'}
 
 
 def showcase(surface,selected,world,font,positions=None):

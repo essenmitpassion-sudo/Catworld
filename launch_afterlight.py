@@ -21,7 +21,7 @@ def self_test(output):
         with tempfile.TemporaryDirectory(prefix='afterlight-check-') as folder:
             app=DistrictApp(save_path=Path(folder)/'draft.txt')
             art=load_art()
-            assert art['background'] is not None and len(art['sprites'])==3
+            assert art['background'] is not None and len(art['sprites'])==3 and len(art['paving'])==4 and len(art['details'])==4 and len(art['crossing_tiles'])==4
             cast=load_characters()
             assert len(cast['portraits'])==4 and len(cast['nox'])==4 and len(cast['miso'])==4 and len(cast['expressions'])==2
             x,y=project(*POSITIONS['miso'])
@@ -68,7 +68,7 @@ def self_test(output):
             restored=DistrictApp(save_path=app.save_path)
             assert restored.source==code and restored.runner.status=='idle'
             assert not restored.runner.world.restored
-            report.update(status='passed',assets_loaded=3,characters_loaded=4,nox_poses=4,miso_poses=4,expressive_neighbours=2,actions=app.runner.executed_steps,
+            report.update(status='passed',assets_loaded=3,paving_tiles=4,harbor_details=4,crossing_tiles=4,characters_loaded=4,nox_poses=4,miso_poses=4,expressive_neighbours=2,actions=app.runner.executed_steps,
                           saved_draft_restored=True,crew_pause_and_resume=True,crew_resize_selection=True,renderer=pygame.display.get_driver())
     finally:
         pygame.quit()

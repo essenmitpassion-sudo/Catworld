@@ -19,7 +19,7 @@ class DistrictApp:
         self.canvas=pygame.Surface(SIZE)
         self.font=pygame.font.Font(None,26)
         self.small=pygame.font.Font(None,21)
-        self.title=pygame.font.Font(None,54)
+        self.title=pygame.font.SysFont('serif',40)
         self.heading=pygame.font.Font(None,32)
         self.mono=pygame.font.SysFont('monospace',19)
         self.runner=Runner(initial_world=District(),transition_fn=transition)
@@ -291,16 +291,15 @@ class DistrictApp:
         c.fill('#0c1724')
         pygame.draw.circle(c,scene.TEAL,(47,55),17,2)
         scene.cat(c,(47,66),scale=.55,time=self.time)
-        self.text('NEONPAW',(79,30),scene.INK,self.title)
-        self.text('A F T E R L I G H T',(82,79),scene.GOLD,self.small)
-        self.text('01 / DER KANALBEZIRK',(350,49),scene.MUTED,self.small)
-        self.text('DEIN CODE. DEIN VIERTEL.',(650,49),scene.MUTED,self.small)
+        self.text('Afterlight',(79,27),scene.INK,self.title)
+        self.text('D I E   K A T Z E N   A M   K A N A L',(82,79),scene.GOLD,self.small)
+        self.text('Ein kleines Viertel. Deine Geschichte.',(430,49),scene.MUTED,self.small)
         scene.draw(c,world,self.visual,self.time,self.small,self.inspected,
                    facing_left=self.facing_left,selected_character=self.selected_character,residents=self.residents)
-        self.text('Eine Stadt, die auf dich wartet.',(52,139),scene.INK,self.heading)
-        self.text('Wähle, wo das Licht zuerst angeht.',(52,174),scene.MUTED,self.small)
+        self.text('Hier kann etwas Schönes wachsen.',(52,139),scene.INK,self.heading)
+        self.text('Ein warmes Zuhause beginnt mit deiner Idee.',(52,174),scene.MUTED,self.small)
         # Energy and live position remain readable outside the map.
-        pygame.draw.rect(c,'#203845',(52,630,255,66),border_radius=12)
+        pygame.draw.rect(c,'#263d40',(52,630,255,66),border_radius=12)
         self.text('FREIE ENERGIE',(68,641),scene.MUTED,self.small)
         for i in range(3):
             pygame.draw.rect(c,scene.GOLD if i<world.energy else '#38505a',(68+i*28,667,19,12),border_radius=3)
@@ -310,7 +309,7 @@ class DistrictApp:
         captions={'workshop':'Öffnet die Kanalbrücke','garden':'Lässt einen zweiten Weg wachsen','shelter':'Gibt den Streunern ein Zuhause'}
         for i,name in enumerate(DEVICES):
             rect=self.destination_cards[name]
-            pygame.draw.rect(c,'#182e39',rect,border_radius=14)
+            pygame.draw.rect(c,'#213538',rect,border_radius=14)
             if self.inspected==DEVICES[name]:pygame.draw.rect(c,scene.GOLD,rect,2,border_radius=14)
             active=name in world.active
             pygame.draw.circle(c,scene.TEAL if active else '#566a77',(rect.x+22,rect.y+24),5)
@@ -319,8 +318,9 @@ class DistrictApp:
             pos=DEVICES[name]
             self.text(f'({pos[0]}, {pos[1]})  ·  '+('VERSORGT' if active else '1 ENERGIE'),(rect.x+18,rect.y+72),scene.TEAL if active else scene.GOLD,self.small)
         # A restrained terminal, integrated with the live-world intent.
-        pygame.draw.rect(c,'#152735',(950,116,466,726),border_radius=20)
-        self.text('DEIN PLAN',(974,139),scene.INK,self.heading)
+        pygame.draw.rect(c,'#1b2c32',(950,116,466,726),border_radius=20)
+        pygame.draw.rect(c,'#405353',(950,116,466,726),1,border_radius=20)
+        self.text('Dein Plan',(974,139),scene.INK,self.heading)
         self.text(f'Python · nächster Lauf ab ({world.x}, {world.y})',(974,178),scene.MUTED,self.small)
         pygame.draw.line(c,'#304655',(974,211),(1390,211))
         editor=pygame.Rect(970,228,424,392)
@@ -346,7 +346,7 @@ class DistrictApp:
         c.set_clip(old_clip)
         labels={'Run':'Run  F5','Step':'Step  F6','Stop':'Stop  Esc','Rewind':'Versuch zurück','Reset':'Bezirk neu','Help':'Hilfe  F1'}
         for name,r in self.buttons.items():
-            pygame.draw.rect(c,scene.TEAL if name=='Run' else '#29404f',r,border_radius=8)
+            pygame.draw.rect(c,scene.TEAL if name=='Run' else '#30464a',r,border_radius=8)
             label=self.font.render(labels[name],True,'#10282e' if name=='Run' else scene.INK)
             c.blit(label,label.get_rect(center=r.center))
         message=self.runner.error

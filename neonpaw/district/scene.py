@@ -6,10 +6,10 @@ import pygame
 from .world import DEVICES, CROSSINGS, CELL, NAMES
 from . import characters
 
-INK = '#e0ebef'
-MUTED = '#8faab8'
+INK = '#eee8dc'
+MUTED = '#a7b7b5'
 GOLD = '#f8c987'
-TEAL = '#75e1ca'
+TEAL = '#a3cfbc'
 ORIGIN = (394, 270)
 
 
@@ -17,13 +17,13 @@ ORIGIN = (394, 270)
 def load_art():
     """Load/scale static assets once; missing art never prevents playing."""
     folder=Path(__file__).with_name('assets')
-    result={'background':None,'sprites':{}}
+    result={'background':None,'sprites':{},'paving':[],'details':[],'crossing_tiles':[]}
     try:
         background=pygame.image.load(folder/'canal-night.png').convert()
         background=pygame.transform.smoothscale(background,(900,610))
         # Preserve foreground contrast while keeping the distant city luminous.
         shade=pygame.Surface((900,610),pygame.SRCALPHA)
-        shade.fill((7,18,28,65));background.blit(shade,(0,0))
+        shade.fill((12,24,32,105));background.blit(shade,(0,0))
         result['background']=background
     except (OSError,pygame.error):
         pass
@@ -37,9 +37,27 @@ def load_art():
             sprite=column.subsurface(rect)
             ratio=min(100/sprite.get_width(),106/sprite.get_height())
             sprite=pygame.transform.smoothscale(sprite,(max(1,round(sprite.get_width()*ratio)),max(1,round(sprite.get_height()*ratio))))
-            dim=sprite.copy();dim.fill((85,112,135,255),special_flags=pygame.BLEND_RGBA_MULT)
+            dim=sprite.copy();dim.fill((139,153,159,255),special_flags=pygame.BLEND_RGBA_MULT)
             result['sprites'][name]={True:sprite,False:dim}
     except (OSError,pygame.error):
+        pass
+    try:
+        atlas=pygame.image.load(folder/'harbor-paving.png').convert_alpha()
+        for tile in characters.crop_cells(atlas):
+            result['paving'].append(pygame.transform.smoothscale(tile,(94,48)))
+    except (OSError,pygame.error,ValueError):
+        pass
+    try:
+        atlas=pygame.image.load(folder/'harbor-details.png').convert_alpha()
+        for tile,size in zip(characters.crop_cells(atlas),((56,64),(34,46),(68,48),(43,40))):
+            result['details'].append(characters.fit(tile,*size))
+    except (OSError,pygame.error,ValueError):
+        pass
+    try:
+        atlas=pygame.image.load(folder/'harbor-crossings.png').convert_alpha()
+        result['crossing_tiles']=[pygame.transform.smoothscale(tile,(94,48))
+                                  for tile in characters.crop_cells(atlas)]
+    except (OSError,pygame.error,ValueError):
         pass
     return result
 
@@ -52,7 +70,7 @@ def polygon(surface, color, points, width=0):
     pygame.draw.polygon(surface, color, [(round(x),round(y)) for x,y in points], width)
 
 
-def diamond(cx, cy, w=44, h=22):
+def diamond(cx, cy, w=46, h=23):
     return [(cx,cy-h),(cx+w,cy),(cx,cy+h),(cx-w,cy)]
 
 
@@ -131,7 +149,7 @@ def building(surface, name, center, active, font, time, actor=None):
 
 def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox", residents=None):
     board=pygame.Rect(24,116,900,610)
-    pygame.draw.rect(surface,'#112431',board,border_radius=22)
+    pygame.draw.rect(surface,'#182e34',board,border_radius=22)
     background=load_art()['background']
     if background is not None:
         surface.blit(background,board)
@@ -143,6 +161,8 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
     # Keep title readable on every background, without hiding the district.
     title_shade=pygame.Surface((470,82),pygame.SRCALPHA)
     title_shade.fill((11,27,38,205));surface.blit(title_shade,(40,127))
+    paving=load_art()['paving']
+    crossing_tiles=load_art()['crossing_tiles']
     # Canal and islands are actual geometry, not a background screenshot.
     for diagonal in range(13):
         for x in range(8):
@@ -151,23 +171,20 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
             cx,cy=project(x,y)
             water=x==4
             if water:
-                polygon(surface,'#163d51',diamond(cx,cy))
-                for off in (-9,3,12):
+                polygon(surface,'#173c44',diamond(cx,cy))
+                if crossing_tiles:surface.blit(crossing_tiles[0 if y%2 else 3],(cx-47,cy-24))
+                for off in (() if crossing_tiles else (-9,3,12)):
                     drift=math.sin(time+off+x+y)*3
                     pygame.draw.line(surface,'#2b5c70',(cx-15+drift,cy+off),(cx+9+drift,cy+off),1)
             else:
                 polygon(surface,'#172b39',[(cx-44,cy),(cx,cy+22),(cx,cy+36),(cx-44,cy+14)])
                 polygon(surface,'#203747',[(cx,cy+22),(cx+44,cy),(cx+44,cy+14),(cx,cy+36)])
-                polygon(surface,'#344d58' if (x+y)%2 else '#304751',diamond(cx,cy))
-                polygon(surface,'#46606a',diamond(cx,cy),1)
-                pygame.draw.line(surface,'#3d5660',(cx-20,cy+3),(cx+12,cy-13),1)
-            if not water and (x in (0,7) or y==5):
-                # Drain seams and small boundary lights leave the whole tile walkable.
-                pygame.draw.line(surface,'#75919a',(cx-34,cy+5),(cx-8,cy+18),2)
-                for off in (0,8,16):
-                    pygame.draw.line(surface,'#193340',(cx-28+off,cy+7+off//2),(cx-25+off,cy+3+off//2),1)
-                if world.active:
-                    pygame.draw.circle(surface,'#e9c691',(round(cx-32),round(cy+6)),2)
+                polygon(surface,'#5a625e',diamond(cx,cy))
+                if paving:surface.blit(paving[(x*3+y)%len(paving)],(cx-47,cy-24))
+                else:polygon(surface,'#72776d',diamond(cx,cy),1)
+            if not water and y==5 and x in (0,3,7):
+                pygame.draw.circle(surface,'#d2b78c' if world.active else '#6c7772',
+                                   (round(cx-30),round(cy+8)),2)
             if not water and x==5 and y in (0,3,5):
                 # Quayside mooring posts, set at the edge of navigable tiles.
                 pygame.draw.line(surface,'#344f5c',(cx-34,cy-1),(cx-34,cy-19),5)
@@ -177,7 +194,8 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
             if device in world.active:
                 color='#81ac8a' if device=='garden' else '#c4a279'
                 polygon(surface,color,diamond(cx,cy,43,19))
-                for off in range(-25,30,10):
+                if crossing_tiles:surface.blit(crossing_tiles[2 if device=='garden' else 1],(cx-47,cy-24))
+                for off in (() if crossing_tiles else range(-25,30,10)):
                     pygame.draw.line(surface,'#4c6d67' if device=='garden' else '#6b645d',
                                      (cx+off-10,cy-6),(cx+off+10,cy+6),2)
             if selected==(x,y): polygon(surface,GOLD,diamond(cx,cy),2)
@@ -194,6 +212,15 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
                 pygame.draw.line(surface,'#b7fce5',(cx-4,cy-12),(cx+4,cy-12),2)
                 pygame.draw.line(surface,'#b7fce5',(cx,cy-16),(cx,cy-8),2)
                 label=font.render('AKKU +2',True,TEAL);surface.blit(label,(cx-30,cy-46))
+    # Small edge ornaments share the buildings' materials; no simulation obstacles.
+    details=load_art()['details']
+    if len(details)==4:
+        for index,tile,offset in ((0,(7,0),(26,9)),(1,(7,3),(30,12)),
+                                  (3,(7,5),(36,5))):
+            px,py=project(*tile);px+=offset[0];py+=offset[1]
+            sprite=details[index]
+            surface.blit(sprite,sprite.get_rect(midbottom=(round(px),round(py))))
+            if index==1:glow(surface,(px,py-25),GOLD,30)
     # Draw the workshop sign after foreground tiles, away from Miso's terrace.
     wx,wy=project(*DEVICES['workshop'])
     label=font.render('WERKSTATT',True,GOLD if 'workshop' in world.active else '#b1c1ca')

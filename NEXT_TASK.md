@@ -1,8 +1,7 @@
-# Nächste konkrete Produktprüfung
-Zielkarten und Vorher-/Nachher-Rückmeldung sind implementiert.355 Tests PASS.
-Zuerst HEAD/Remote/Bundle/ZIP-Manifest vergleichen, lokalen Stand schützen.
-Nächste Pareto-Priorität: Lesbarkeit der Anschlussfelder und Gebäudeschilder bei
-Nox an jedem Terminal prüfen. Nicht blind neue Funktionen ergänzen; konkrete
-Überlagerung reproduzieren, minimal korrigieren, visuell und per SDL prüfen.
-Owner-Grafikfeedback bleibt höher priorisiert als neue Syntax. Menschlichen
-5–10-Minuten-Test ermöglichen, Spaß/Lerntransfer nicht aus Unit-Tests ableiten.
+# Nächster konkreter Schritt
+Hafenlook ist vereinheitlicht,356 Tests/SDL/Paket-Selbsttest bestanden.
+Zuerst Commit/Remote/Bundle/ZIP prüfen. Neues Owner-Grafikfeedback priorisieren.
+Nächste visuelle Prüfung: Übergänge von dunkel zu versorgt sollen weicher und
+lesbar sein; vorhandene harte Stromumschaltung beobachten, bevor zusätzliche
+Effekte gebaut werden. Keine neue Weltregel/Belohnungswährung für Grafikpolitur.
+Menschlichen Test zum Gesamtgefühl ermöglichen; nicht aus Unit-Tests ableiten.

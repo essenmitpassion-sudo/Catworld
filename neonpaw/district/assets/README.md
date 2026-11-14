@@ -18,3 +18,11 @@ Characters are non-anthropomorphic cats: cute, expressive, stylish, non-erotic.
 byte-identical to approved commit4420d7b. Expanded views use original portraits;
 positive world states may display matching new expressions. Miso's normal idle
 uses the original approved sprite; movement/blink uses his animation sheet.
+
+2026-11-14 unified harbor art, generated with image_gen using existing building
+and paving references. Original generated files copied unchanged into repository:
+harbor-paving.png: four flat isometric stone surfaces.
+harbor-crossings.png: water / timber bridge / living bridge / water (2x2).
+harbor-details.png: olive planter / lantern / bench / flower pots (2x2).
+Runtime fits tiles to the existing projection and caches them; optional assets
+fail independently to the procedural fallback. Bench retained but not placed.
