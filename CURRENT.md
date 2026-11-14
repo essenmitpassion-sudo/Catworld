@@ -45,3 +45,11 @@ Erweiterter Selbsttest PASS;4 relevante Paket-/Modaltests PASS.
 Beleg:evidence/crew-package-selftest.json. Finales ZIP wird nach sauberem Commit
 mit Hashmanifest gebaut und entpackt erneut geprüft; Paketpfad:
 /workspace/work/AFTERLIGHT-playtest.zip. Native Windows-Prüfung bleibt offen.
+
+Zielkarten-Checkpoint3f3c7acfdbfa803288540ff751b3bb391e9081d9 mit geprüftem
+Bundle und identischem Remote-SHA gesichert. Danach ohne Freigabestopp weiter:
+Erfolgreicher Lauf zeigt Vorher-/Nachher-Position, freie Energie und netto neu
+versorgte/abgeschaltete Gebäude. Fehler/Pausen werden nicht überlagert;
+Rewind entfernt das alte Ergebnis.355 Tests PASS, Paket-Selbsttest PASS.
+Screenshot evidence/run-world-feedback.png; Schriftzeichen in visueller Prüfung
+korrigiert (Systemfont konnte den Pfeil nicht darstellen). Keine Lernbehauptung.

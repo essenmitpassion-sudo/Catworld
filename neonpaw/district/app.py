@@ -264,6 +264,14 @@ class DistrictApp:
             else:line=candidate
         if y+font.get_height()<=rect[1]+h:self.text(line,(x,y),color,font)
 
+    def run_result(self):
+        if self.runner.status!='done' or self.before is None:return None
+        before=self.before;after=self.runner.world
+        on=len(after.active-before.active);off=len(before.active-after.active)
+        return (f'({before.x},{before.y}) nach ({after.x},{after.y}) · '
+                f'Energie {before.energy} auf {after.energy} · '
+                f'Gebäude: {on} an, {off} aus. Dein nächster Plan?')
+
     def destination_hint(self):
         if self.inspected is None:return None
         target=self.inspected;world=self.runner.world
@@ -348,7 +356,7 @@ class DistrictApp:
                     'paused':'Pausiert. Run setzt hier fort.',
                     'stopped':'Gestoppt. Ein neuer Run wirkt ab diesem Standort.',
                     'done':'Plan beendet. Der Bezirk bleibt so — was probierst du als Nächstes?'}
-            message=states[self.runner.status]
+            message=self.run_result() or states[self.runner.status]
         self.wrapped(message,(974,755,412,70),'#efb3a5' if self.runner.error else scene.MUTED)
         bottom='Wähle ein Gebäude unten: Anschluss finden, eigenen Weg programmieren.'
         if world.restored: bottom='Der Bezirk lebt. Drei Gebäude versorgt — und Nox hat Nachbarn.'
