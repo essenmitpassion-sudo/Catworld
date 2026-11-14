@@ -1,3 +1,12 @@
+# Aktuell — 2026-11-14 — Echter Downloadzugang
+Owner meldet: Workspace-ZIP-Link nicht herunterladbar. Geprüftes15,45MB-Paket
+(Buildf2d9f44,31 Dateihashes, entpackter Selbsttest PASS) unter downloads/ abgelegt,
+mit SHA256 und GitHub-Downloadanleitung. Release-API war Forbidden; Git-Push bleibt
+der verfügbare Weg. Kein öffentliches Hosting oder neue Freigabe eingerichtet.
+Bei privatem Repository ist GitHub-Anmeldung mit Repositoryzugriff nötig.
+Quellpaket mit Starter, Python3.12+ erforderlich, keine behauptete native EXE.
+Remote-Dateibytes nach Push erneut über Git lesen und SHA256 abgleichen.
+
 # Aktuell — Stromzustand lesbar, 2026-11-14
 Basisc5171f3. Kleines Fenster1000x625 geprüft: gemalte Fenster wirken selbst bei
 AUS warm. Deshalb kurzer AN/AUS-Status direkt am Gebäudenamen, Anschluss bei AN

@@ -1,3 +1,5 @@
+> **Spiel herunterladen:** [AFTERLIGHT-ZIP und Startanleitung](downloads/README.md). Dieser GitHub-Download ersetzt die nur lokal gültigen Workspace-Links.
+
 > **Entwicklungs-Einstieg:** [AGENTS.md](AGENTS.md) → [aktueller Stand](CURRENT.md) → [nächster Schritt](NEXT_TASK.md). Aktueller Spielzugang: [AFTERLIGHT](AFTERLIGHT.md), `launch_afterlight.py`; die unten beschriebene geführte Fassung bleibt verfügbar.
 
 # CATWORLD / NEONPAW
