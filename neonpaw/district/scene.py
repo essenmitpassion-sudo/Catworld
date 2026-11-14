@@ -100,6 +100,16 @@ def cat(surface, pos, color='#151d2b', eyes=TEAL, scale=1, time=0):
     rect(color,(-9,-2,6,5));rect(color,(6,-2,6,5))
 
 
+def blend_building(dark,lit,level):
+    """Interpolate colour on opaque copies, then restore the original silhouette."""
+    result=dark.copy();result.fill((0,0,0,255),special_flags=pygame.BLEND_RGBA_MAX)
+    overlay=lit.copy();overlay.fill((0,0,0,255),special_flags=pygame.BLEND_RGBA_MAX)
+    overlay.set_alpha(round(level*255));result.blit(overlay,(0,0))
+    mask=dark.copy();mask.fill((255,255,255),special_flags=pygame.BLEND_RGB_MAX)
+    result.blit(mask,(0,0),special_flags=pygame.BLEND_RGBA_MULT)
+    return result
+
+
 def building(surface, name, center, active, font, time, actor=None, illumination=None):
     x,y=center; x-=15; y-=18
     light=TEAL if name=='garden' else GOLD
@@ -110,9 +120,7 @@ def building(surface, name, center, active, font, time, actor=None, illumination
         if level<=0:sprite=states[False]
         elif level>=1:sprite=states[True]
         else:
-            sprite=states[False].copy()
-            overlay=states[True].copy();overlay.set_alpha(round(level*255))
-            sprite.blit(overlay,(0,0))
+            sprite=blend_building(states[False],states[True],level)
         rect=sprite.get_rect(midbottom=(round(x),round(y+14)))
         if actor and rect.collidepoint(actor[0],actor[1]-18):
             sprite=sprite.copy();sprite.set_alpha(140)  # Nox remains visible behind foreground roofs.

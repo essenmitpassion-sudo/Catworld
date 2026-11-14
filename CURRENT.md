@@ -86,3 +86,10 @@ Doppeltoggle-Regressionsfall bestätigt weiterhin versorgte Werkstatt bei0 Ände
 Werkstattschild aus Nox' Terminalposition versetzt, Screenshot erneut geprüft.
 Final356 Tests PASS und Paket-Selbsttest PASS. evidence/pareto-final-tests.txt.
 Neue Featurearbeit erst nach Commit/Bundle/Remote/sauberem ZIP-Manifest fortsetzen.
+
+Checkpoint5596f73de157da7af033499bf18a1ce6d3989ca6 remote bestätigt, Bundle und
+31 Paketdateihashes geprüft; entpackter Selbsttest PASS. Anschliessend Review-
+Minor korrigiert: RGB auf deckenden Kopien mischen, ursprüngliches Pixelalpha
+wiederherstellen. Verhindert kurz dichter werdende Kanten am Fade-Ende.
+Regressionsprüfung für Alpha133 bei1/50/99Prozent und unveränderte Cachebilder.
+Final359 Tests PASS und Paket-Selbsttest PASS. Separate Korrektursicherung folgt.

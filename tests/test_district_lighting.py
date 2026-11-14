@@ -28,3 +28,16 @@ def test_light_pauses_with_inspection_and_resets_to_restored_world(app):
     assert app.lighting.levels['shelter']==1
     app.command('Reset')
     assert all(value==0 for value in app.lighting.levels.values())
+
+
+def test_building_blend_preserves_transparent_edges_and_cached_sources(app):
+    import pygame
+    from neonpaw.district.scene import blend_building
+    dark=pygame.Surface((2,2),pygame.SRCALPHA);dark.fill((20,40,60,133))
+    light=pygame.Surface((2,2),pygame.SRCALPHA);light.fill((200,220,240,133))
+    before=(pygame.image.tobytes(dark,'RGBA'),pygame.image.tobytes(light,'RGBA'))
+    for level in (.01,.5,.99):
+        mixed=blend_building(dark,light,level)
+        assert mixed.get_at((0,0)).a==133
+        assert 20<=mixed.get_at((0,0)).r<=200
+    assert before==(pygame.image.tobytes(dark,'RGBA'),pygame.image.tobytes(light,'RGBA'))
