@@ -1,3 +1,16 @@
+# Implementiert vs. geplant — 2026-11-14
+
+AFTERLIGHT bietet Aufrufe, Reihenfolge, begrenzte for/range-Schleifen, Run/Step,
+Fehlerfeedback und reversible Versuche. Lernanlass: Energie priorisieren, Wege
+planen, Akku holen und Strom neu verteilen. Keine vorgeschriebene einzige Lösung.
+Die geführte Fassung enthält zusätzlich gestufte Hilfen, Abruf-/Transferaufgaben
+und einen begrenzten gate_open()-Bedingungskontext. Kein allgemeines Python.
+Variablen, eigene Funktionen, Container und die unten skizzierten späten Systeme
+sind Zukunftsplanung. Abschluss und grüne Tests beweisen keinen Lerntransfer.
+Menschlicher Test: nächste Aktion vorhersagen, eigene Route bauen, Fehler erklären,
+Prinzip auf anderen Weg übertragen. Beobachtung und Spielerantworten erst nach
+wirklichem Test erfassen; keine erfundenen Ergebnisse.
+
 # NEONPAW – competency map v3
 
 Learning is not measured only by finishing a mission. For each concept the player must (1) observe, (2) practice, (3) transfer to a changed problem, optionally (4) optimize. Player-written code is retained and reusable.

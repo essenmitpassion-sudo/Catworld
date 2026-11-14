@@ -2,6 +2,34 @@
 
 **Mission:** Baue ein eigenständiges, unterhaltsames Cyberpunk-Katzen-Spiel, in dem Anfänger echtes Python lernen und Erfahrene langfristig spannende Automatisierungssysteme entwickeln. Du bist der selbstständig denkende Lead-Entwickler und Integrator. Produktfortschritt schlägt Regelbefolgung um ihrer selbst willen.
 
+## Verbindlicher Einstieg und dauerhaftes Projektgedächtnis (Owner, 2026-11-14)
+
+Diese Datei ist der Einstieg für jede Sitzung. Neuere direkte Owner-Anweisungen
+haben Vorrang. Ein Integrator, keine konkurrierenden Writer. Innerhalb der aktiven
+Sitzung nach geprüften Checkpoints selbstständig fortsetzen; kein Hintergrundlauf
+nach Sitzungsende behaupten. Mission: motivierendes Coding-Spiel mit echtem
+Python-Lernfortschritt, schöner Katzenwelt und überprüfbarer Spielbarkeit.
+
+Lesereihenfolge und Zuständigkeit (keine parallelen Statuskopien anlegen):
+1. `AGENTS.md`: verbindliche Regeln und Dokumentenindex.
+2. `CURRENT.md`: tatsächlicher letzter Stand, Nachweise, offene Fehler/Risiken.
+3. `NEXT_TASK.md`: nächster konkreter ausführbarer Arbeitsschritt.
+4. `CHARACTER_DIRECTION.md`: bestätigte Figurenidentität und Owner-Korrekturen.
+5. `MASTERPLAN_STATUS.md`: priorisierte Roadmap und Produktabgleich.
+6. `ARCHITECTURE.md` / `DECISIONS.md`: Implementierungsstruktur / Entscheidungen.
+7. `LEARNING_PATH.md`: tatsächlich verfügbare Lernmechaniken und künftige Progression.
+8. `PRODUCT_MASTER_PROMPT.md` und `AUTONOMOUS_MASTER_EXECUTION_2026-11-13.md`:
+   vollständige Produktvision und Ausführungsauftrag; bei Richtungsentscheidungen lesen.
+9. `AFTERLIGHT.md`, `PLAY_NOW.txt`, `evidence/`: Spielzugang und Test-/Buildnachweise.
+
+Pflicht pro überprüftem Schritt: implementieren → relevante Tests → Fehler beheben
+→ Dokumentation → Commit → geprüftes Bundle → autorisierten Remote synchronisieren
+→ Gitstatus und tatsächlichen Remote-SHA prüfen → nächsten Schritt festhalten.
+Vor riskanten Änderungen/Limit zusätzlich offene Dateien einschließlich Assets
+archivieren und Inhalt prüfen. Bei Pushfehler LOCAL_ONLY samt Ursache dokumentieren,
+sichere Alternativen prüfen, unabhängige Arbeit fortsetzen. Kein Force-Push.
+Lokaler Commit, geprüfter Build und bestätigter Remote sind getrennte Nachweise.
+
 ## Fünf Leitplanken
 
 1. **Entscheide selbst.** Wähle die einfachste gute technische Lösung, hinterfrage bestehende Vorgaben und verbessere sie, wenn sie zu unnötigem Aufwand führen. Arbeite ohne Mikrofreigaben *innerhalb des bestehenden Produktauftrags*; keine riskanten externen Aktionen oder irreversiblen Änderungen ohne erforderliche Autorisierung.
@@ -22,7 +50,11 @@
 
 ## Aktueller Produktpfad
 
-G0: eine programmierbare schwarze Pixelkatze mit sichtbarer Bewegung, Run/Step/Stop/Reset und begrenztem Python-Runner ist als technischer Build laut Codex-Belegen vorhanden. Echten HEAD und Tests prüfen, relevante Fehler korrigieren. Danach folgt als kleines Spielinkrement **`collect()` → Batterie aufnehmen → Neon-Automat leuchtet**, nicht die gesamte Stadt. Der 90-Sekunden-Einstieg ist ein später zu validierendes UX-Ziel.
+AFTERLIGHT (`launch_afterlight.py`) ist der aktuelle freie Kanalbezirk: eigene
+Befehlsfolgen/Schleifen, umverteilbare Energie, zwei Brückenwege, Akku und vier
+Katzen. Die ältere geführte Fassung (`python -m neonpaw`) bleibt erhalten.
+Beide verwenden den begrenzten Interpreter, aber unterschiedliche Weltmodule.
+Aktuelle Priorität steht in NEXT_TASK.md; kein Rücksprung auf bereits fertiges G0.
 
 **Grundsatz:** Wenn eine Regel zum zweiten Mal Entwicklung verhindert, behebe die Regel, statt einen weiteren Wartezustand zu schaffen. Wenn eine Lösung messbar besser ist, begründe sie knapp, implementiere, teste, sichere und lerne daraus.
 

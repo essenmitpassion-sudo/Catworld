@@ -9,3 +9,6 @@
 - 2026-11-05 Design: Separate fun, learning, technical and security gates. Code tests cannot prove player delight.
 - 2026-11-05 Design: No open-ended scripting via raw exec, no arbitrary user Python permissions in MVP.
 - 2026-11-05 Design: Github handoff does not start Codex automatically; no permanent Desktop Commander dependency.
+
+- 2026-11-14 O: dauerhafte Entwicklungsdirektive: AGENTS.md ist verbindlicher Index; vorhandene Fachdateien pflegen, keine konkurrierenden Statusdokumente. Checkpointfolge Tests/Dokumentation/Commit/Backup/Remoteprüfung, danach autonome Fortsetzung innerhalb der Sitzung.
+- 2026-11-14 M: Originalatlas unverändert; grössere Weltfiguren und F2-Nahansicht zeigen bestätigte Gestaltung. Lumi-/Pixel-Ausdrücke ergänzen Originale; Misos normale Ruhepose nutzt wieder das ursprüngliche Bild.

@@ -1,3 +1,17 @@
+# Priorisierte Roadmap — 2026-11-14
+
+Verbindlicher Einstieg: AGENTS.md. Frühere Einträge darunter sind historische Abgleiche.
+1. P0 Sicherung: offenen Figurenstand und aktuellen Audit verifizieren, committen,
+   Bundle prüfen, Push und Remote-SHA bestätigen; kuratierten Build neu erzeugen.
+2. P1 Spieltestzugang: Crew-Nahansicht auch im ausgelieferten Paket prüfen,
+   Pause/Schliessen/Wiederaufnahme mit echtem Programm sichern.
+3. P1 Figuren/Game Feel: Originalcharme erhalten, Reaktionen direkt an eigene
+   Stromentscheidungen koppeln; Owner-Bewertung und Überlagerungen beachten.
+4. P2 Lernverständlichkeit: freiwilligen Planungs-/Vorhersageanlass prüfen,
+   ohne freie Wege durch eine Musterlösung zu ersetzen. Menschliche Daten fehlen.
+5. P3 spätere Tiefe: Variablen/Funktionen/kombinierbare Systeme erst bei klarer
+   Spielhandlung und begrenzter sicherer Ausführung; kein grosser Neustart.
+
 # Aktueller Abgleich — 2026-11-13
 
 Neuer vollständiger Auftrag: AUTONOMOUS_MASTER_EXECUTION_2026-11-13.md.

@@ -5,7 +5,7 @@ Python3.12+ erforderlich. Nur beim ersten Start: Internet fuer pygame-ce.
 Linux/macOS: im entpackten Ordner `sh start_afterlight.sh` (grafischer Desktop).
 
 Eine Energieeinheit. Drei Gebaeude. Du entscheidest, wo Licht und Leben beginnen.
-F1 zeigt die Befehle. Es gibt keine vorgeschriebene Route.
+F1 zeigt die Befehle. F2 oder das Portraet zeigt die Katzencrew in Nahansicht. Es gibt keine vorgeschriebene Route.
 Run wirkt ab Nox' aktuellem Standort. Versuch zurueck macht den letzten Lauf rueckgaengig.
 Bezirk neu setzt die Welt zurueck und erhaelt den Code.
 Eigener Code wird lokal gespeichert; die Welt startet beim Oeffnen frisch.

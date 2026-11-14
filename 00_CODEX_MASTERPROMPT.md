@@ -1,3 +1,5 @@
+> Historischer Startauftrag. Für aktuelle Sitzungen zuerst [AGENTS.md](AGENTS.md) lesen; dessen Dokumentenindex und neuere Owner-Aufträge ersetzen alte Gate-/G0-Beschränkungen hier.
+
 # CATWORLD — Einmaliger Codex-Startauftrag (v5)
 
 **WÄHLE IN CODEX: GPT-6 ASTRA · MEDIUM.** Bei fehlender Option: nächstes verfügbares starkes Codingmodell auf Medium. HIGH erst nach reproduziertem schwierigem Sicherheits-/Architekturproblem, siehe `MODEL_ROUTING.md`.

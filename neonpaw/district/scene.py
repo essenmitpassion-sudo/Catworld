@@ -206,7 +206,8 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
         if 'shelter' in world.active:glow(surface,(cx,cy),GOLD,34)
         if not characters.draw(surface,name,(cx,cy+8),time,
                                bool(residents and name=="miso" and residents.moving),
-                               bool(residents and name=="miso" and residents.facing_left)):
+                               bool(residents and name=="miso" and residents.facing_left),
+                               characters.happy(name,world)):
             cat(surface,(cx,cy+8),'#b48972',scale=.7,time=time)
     if 'garden' in world.active:
         for i in range(12):

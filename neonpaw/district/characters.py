@@ -44,7 +44,7 @@ def fit(sprite,w,h):
 @lru_cache(maxsize=1)
 def load_characters():
     folder=Path(__file__).with_name('assets')
-    result={'portraits':{},'closeups':{},'world':{},'nox':[],'miso':[]}
+    result={'portraits':{},'closeups':{},'world':{},'nox':[],'miso':[],'expressions':{},'happy_portraits':{},'happy_closeups':{}}
     try:
         atlas=pygame.image.load(folder/'characters.png').convert_alpha()
         for name,sprite in zip(('nox','miso','lumi','pixel'),crop_cells(atlas)):
@@ -64,7 +64,24 @@ def load_characters():
             result['miso'].append((frame,pygame.transform.flip(frame,True,False)))
     except (OSError,pygame.error,ValueError):
         pass
+    try:
+        poses=crop_cells(pygame.image.load(folder/'neighbour-expressions.png').convert_alpha())
+        for name,index in (('lumi',0),('pixel',2)):
+            result['expressions'][name]=[fit(sprite,74,84) for sprite in poses[index:index+2]]
+            result['happy_portraits'][name]=fit(poses[index+1],132,144)
+            result['happy_closeups'][name]=fit(poses[index+1],192,280)
+    except (OSError,pygame.error,ValueError):
+        pass
     return result
+
+
+def expression_index(name,time,celebrating=False):
+    phase=(time+(1.7 if name=='pixel' else 0))%5.2
+    return int(phase<.85 if celebrating else phase>4.95)
+
+
+def happy(name,world):
+    return (name=='lumi' and world.cell_collected) or (name=='pixel' and 'garden' in world.active)
 
 
 def pose_index(time,moving):
@@ -72,10 +89,14 @@ def pose_index(time,moving):
     return 3 if time%4.5>4.25 else 0
 
 
-def draw(surface,name,position,time,moving=False,facing_left=False):
+def draw(surface,name,position,time,moving=False,facing_left=False,celebrating=False):
     art=load_characters()
-    if name in ('nox','miso') and len(art[name])==4:
+    if name=='miso' and not moving and pose_index(time,False)==0:
+        sprite=art['world'].get(name)
+    elif name in ('nox','miso') and len(art[name])==4:
         sprite=art[name][pose_index(time,moving)][int(facing_left)]
+    elif name in art['expressions'] and expression_index(name,time,celebrating):
+        sprite=art['expressions'][name][1]
     else:sprite=art['world'].get(name)
     if sprite is None:return False
     x,y=position
@@ -98,7 +119,9 @@ def portrait(surface,name,world,font,positions=None):
     rect=pygame.Rect(746,452,160,274)
     pygame.draw.rect(surface,'#142c3a',rect,border_radius=16)
     pygame.draw.rect(surface,'#355562',rect,1,border_radius=16)
-    sprite=load_characters()['portraits'].get(name)
+    art=load_characters()
+    sprite=art['happy_portraits'].get(name) if happy(name,world) else None
+    if sprite is None:sprite=art['portraits'].get(name)
     if sprite:surface.blit(sprite,sprite.get_rect(midbottom=(rect.centerx,604)))
     label=font.render(name.upper(),True,'#f8c987')
     surface.blit(label,label.get_rect(center=(rect.centerx,620)))
@@ -167,7 +190,8 @@ def showcase(surface,selected,world,font,positions=None):
         pygame.draw.rect(surface,'#203446' if name==selected else '#182a3a',rect,border_radius=18)
         pygame.draw.rect(surface,accent if name==selected else '#30495c',rect,2 if name==selected else 1,border_radius=18)
         pygame.draw.circle(surface,'#2a4050',(rect.centerx,350),87)
-        sprite=art['closeups'].get(name)
+        sprite=art['happy_closeups'].get(name) if happy(name,world) else None
+        if sprite is None:sprite=art['closeups'].get(name)
         if sprite:surface.blit(sprite,sprite.get_rect(midbottom=(rect.centerx,470)))
         label=font.render(name.upper(),True,accent)
         surface.blit(label,label.get_rect(center=(rect.centerx,501)))
