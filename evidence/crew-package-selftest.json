@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "human_playtest": false,
+  "assets_loaded": 3,
+  "characters_loaded": 4,
+  "nox_poses": 4,
+  "miso_poses": 4,
+  "expressive_neighbours": 2,
+  "actions": 20,
+  "saved_draft_restored": true,
+  "crew_pause_and_resume": true,
+  "crew_resize_selection": true,
+  "renderer": "dummy"
+}

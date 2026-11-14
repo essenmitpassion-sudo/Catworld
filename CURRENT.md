@@ -26,3 +26,14 @@ unbestätigt. Owner bewertete letzte kleine Figurenansicht kritisch; neue Gestal
 noch nicht bestätigt. Welt speichert absichtlich nur Code, keinen District-Fortschritt.
 GitHub-Anmeldung war zuvor ausgefallen, Remote-Lesezugriff funktioniert heute wieder;
 Push erst nach überprüftem Ergebnis als gesichert melden. Kein Scheduler aktiv.
+
+Bestätigter Audit-Checkpoint:637e4f5a2fe7daab22c70b5cbb3dcd9c3ff28299,
+Remote-SHA identisch; Gitstatus sauber, vollständiges Git-Bundle geprüft unter
+/workspace/work/catworld-audit-2026-11-14.bundle. Frühere LOCAL_ONLY-Lücke behoben.
+Anschliessend ohne Freigabestopp Paketprüfung erweitert: laufendes Programm in
+F2-Nahansicht pausieren, Texteingabe/Step sperren, bei1600x900 Lumi auswählen,
+schliessen, Programm bis Vollversorgung fortsetzen, Entwurf neu laden.
+Erweiterter Selbsttest PASS;4 relevante Paket-/Modaltests PASS.
+Beleg:evidence/crew-package-selftest.json. Finales ZIP wird nach sauberem Commit
+mit Hashmanifest gebaut und entpackt erneut geprüft; Paketpfad:
+/workspace/work/AFTERLIGHT-playtest.zip. Native Windows-Prüfung bleibt offen.

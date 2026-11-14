@@ -13,7 +13,7 @@ def self_test(output):
     import pygame
     from neonpaw.district.app import DistrictApp
     from neonpaw.district.scene import load_art, project
-    from neonpaw.district.characters import load_characters, POSITIONS
+    from neonpaw.district.characters import load_characters, POSITIONS, SHOWCASE_CARDS, SHOWCASE_CLOSE
     output=Path(output);output.mkdir(parents=True,exist_ok=True)
     report={'status':'failed','human_playtest':False}
     pygame.init()
@@ -37,6 +37,28 @@ def self_test(output):
                           pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=app.buttons['Run'].center)]:
                 pygame.event.post(event)
             for event in pygame.event.get():app.handle(event)
+            # Exercise the delivered modal while a real program is running.
+            before=app.runner.world
+            resident_positions=dict(app.residents.positions)
+            app.handle(pygame.event.Event(pygame.KEYDOWN,key=pygame.K_F2,mod=0))
+            assert app.showcase and app.runner.status=='paused'
+            app.update(2)
+            app.handle(pygame.event.Event(pygame.TEXTINPUT,text='must not change code'))
+            app.handle(pygame.event.Event(pygame.KEYDOWN,key=pygame.K_F6,mod=0))
+            assert app.source==code and app.runner.world==before
+            assert app.residents.positions==resident_positions
+            app.handle(pygame.event.Event(pygame.VIDEORESIZE,size=(1600,900),w=1600,h=900))
+            viewport=app.viewport()
+            def click_canvas(point):
+                pos=(viewport.x+point[0]*viewport.width/1440,
+                     viewport.y+point[1]*viewport.height/900)
+                app.handle(pygame.event.Event(pygame.MOUSEBUTTONDOWN,button=1,pos=pos))
+            click_canvas(SHOWCASE_CARDS['lumi'].center)
+            assert app.selected_character=='lumi'
+            app.draw();pygame.image.save(app.screen,output/'packaged-crew.png')
+            click_canvas(SHOWCASE_CLOSE.center)
+            assert not app.showcase and app.runner.status=='paused'
+            app.handle(pygame.event.Event(pygame.KEYDOWN,key=pygame.K_F5,mod=0))
             for _ in range(64):
                 app.update(.4)
                 if app.runner.status!='running':break
@@ -47,7 +69,7 @@ def self_test(output):
             assert restored.source==code and restored.runner.status=='idle'
             assert not restored.runner.world.restored
             report.update(status='passed',assets_loaded=3,characters_loaded=4,nox_poses=4,miso_poses=4,expressive_neighbours=2,actions=app.runner.executed_steps,
-                          saved_draft_restored=True,renderer=pygame.display.get_driver())
+                          saved_draft_restored=True,crew_pause_and_resume=True,crew_resize_selection=True,renderer=pygame.display.get_driver())
     finally:
         pygame.quit()
         (output/'self-test.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
