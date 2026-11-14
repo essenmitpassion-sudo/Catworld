@@ -63,13 +63,15 @@ def self_test(output):
                 app.update(.4)
                 if app.runner.status!='running':break
             assert app.runner.status=='done' and app.runner.world.restored,app.runner.error
+            app.update(.6)
+            assert all(level==1 for level in app.lighting.levels.values())
             app.draw();pygame.image.save(app.canvas,output/'packaged-game.png')
             app.save()
             restored=DistrictApp(save_path=app.save_path)
             assert restored.source==code and restored.runner.status=='idle'
             assert not restored.runner.world.restored
             report.update(status='passed',assets_loaded=3,paving_tiles=4,harbor_details=4,crossing_tiles=4,characters_loaded=4,nox_poses=4,miso_poses=4,expressive_neighbours=2,actions=app.runner.executed_steps,
-                          saved_draft_restored=True,crew_pause_and_resume=True,crew_resize_selection=True,renderer=pygame.display.get_driver())
+                          lights_settled=True,saved_draft_restored=True,crew_pause_and_resume=True,crew_resize_selection=True,renderer=pygame.display.get_driver())
     finally:
         pygame.quit()
         (output/'self-test.json').write_text(json.dumps(report,indent=2),encoding='utf-8')

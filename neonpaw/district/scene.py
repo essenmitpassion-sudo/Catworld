@@ -74,11 +74,11 @@ def diamond(cx, cy, w=46, h=23):
     return [(cx,cy-h),(cx+w,cy),(cx,cy+h),(cx-w,cy)]
 
 
-def glow(surface, pos, color, radius=48):
+def glow(surface, pos, color, radius=48, strength=1):
     layer=pygame.Surface((radius*2,radius*2), pygame.SRCALPHA)
     rgb=pygame.Color(color)
     for r in range(radius,0,-4):
-        pygame.draw.circle(layer, (*rgb[:3],int(24*(1-r/radius))+2),(radius,radius),r)
+        pygame.draw.circle(layer, (*rgb[:3],int((24*(1-r/radius)+2)*strength)),(radius,radius),r)
     surface.blit(layer,(pos[0]-radius,pos[1]-radius))
 
 
@@ -100,13 +100,19 @@ def cat(surface, pos, color='#151d2b', eyes=TEAL, scale=1, time=0):
     rect(color,(-9,-2,6,5));rect(color,(6,-2,6,5))
 
 
-def building(surface, name, center, active, font, time, actor=None):
+def building(surface, name, center, active, font, time, actor=None, illumination=None):
     x,y=center; x-=15; y-=18
     light=TEAL if name=='garden' else GOLD
-    if active: glow(surface,(x,y),light,75)
+    level=float(active) if illumination is None else illumination
+    if level:glow(surface,(x,y),light,75,level)
     states=load_art()['sprites'].get(name)
     if states:
-        sprite=states[active]
+        if level<=0:sprite=states[False]
+        elif level>=1:sprite=states[True]
+        else:
+            sprite=states[False].copy()
+            overlay=states[True].copy();overlay.set_alpha(round(level*255))
+            sprite.blit(overlay,(0,0))
         rect=sprite.get_rect(midbottom=(round(x),round(y+14)))
         if actor and rect.collidepoint(actor[0],actor[1]-18):
             sprite=sprite.copy();sprite.set_alpha(140)  # Nox remains visible behind foreground roofs.
@@ -147,7 +153,7 @@ def building(surface, name, center, active, font, time, actor=None):
     if name!='workshop':surface.blit(label,(x-label.get_width()/2,y-h-48))
 
 
-def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox", residents=None):
+def draw(surface, world, visual, time, font, selected=None, facing_left=False, selected_character="nox", residents=None, lighting=None):
     board=pygame.Rect(24,116,900,610)
     pygame.draw.rect(surface,'#182e34',board,border_radius=22)
     background=load_art()['background']
@@ -204,7 +210,8 @@ def draw(surface, world, visual, time, font, selected=None, facing_left=False, s
             name=next((key for key,pos in DEVICES.items() if pos==(x,y)),None)
             if name:
                 ax,ay=project(*visual)
-                building(surface,name,(cx,cy),name in world.active,font,time,(ax+12,ay+9))
+                building(surface,name,(cx,cy),name in world.active,font,time,(ax+12,ay+9),
+                         lighting.levels[name] if lighting else None)
             if (x,y)==CELL and not world.cell_collected:
                 glow(surface,(cx,cy-10),TEAL,42)
                 pygame.draw.rect(surface,'#a4efda',(cx-12,cy-23,24,24),border_radius=5)

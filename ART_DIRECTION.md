@@ -42,3 +42,7 @@ Start mit einfachen selbst erstellten Pixel-Sprites und Palette, ohne Fremd-IP. 
 
 ## Nicht jetzt
 Keine dynamische Beleuchtungs-Engine, Partikelsystem, Cinematics, offene Stadt, teure Animationen oder freie Kameraführung.
+
+Lichtwechsel2026-11-14:0,6s reversible Überblendung der Gebäudegrafik und des
+Lichtscheins. Funktionszustände/Brücken/Anschlüsse sind sofort aktuell; Animation
+ist Präsentation und verzögert keine Aktion. Hilfe/Nahansicht pausieren sie.

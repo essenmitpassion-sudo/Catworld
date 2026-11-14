@@ -8,6 +8,7 @@ from neonpaw.ui.drafts import default_path
 from .world import District, transition, DEVICES, NAMES, CELL
 from . import scene, characters
 from .residents import Residents
+from .lighting import Lighting
 
 SIZE=(1440,900)
 
@@ -44,6 +45,7 @@ class DistrictApp:
         self.before=None
         self.visual=(1.0,3.0)
         self.residents=Residents(self.runner.world)
+        self.lighting=Lighting(self.runner.world)
         self.time=0.;self.elapsed=0.
         self.alive=True;self.help=False;self.showcase=False;self.inspected=None
         self.selected_character="nox";self.facing_left=False
@@ -116,6 +118,7 @@ class DistrictApp:
             self.runner=Runner(initial_world=world,transition_fn=transition)
             self.visual=(float(world.x),float(world.y))
             self.residents.reset(world)
+            self.lighting.reset(world)
             self.loaded_source=None;self.elapsed=0.;self.before=None
             self.reaction=None;self.reaction_remaining=0.
             return
@@ -246,7 +249,9 @@ class DistrictApp:
             before=self.runner.world
             self.runner.tick();self.elapsed=0.
             self.observe_world(before)
-        if not (self.help or self.showcase):self.residents.update(self.runner.world,dt)
+        if not (self.help or self.showcase):
+            self.residents.update(self.runner.world,dt)
+            self.lighting.update(self.runner.world,dt)
         screen_delta=(self.runner.world.x-self.visual[0])-(self.runner.world.y-self.visual[1])
         if abs(screen_delta)>.01:self.facing_left=screen_delta<0
         blend=min(1,dt/.13)
@@ -295,7 +300,7 @@ class DistrictApp:
         self.text('D I E   K A T Z E N   A M   K A N A L',(82,79),scene.GOLD,self.small)
         self.text('Ein kleines Viertel. Deine Geschichte.',(430,49),scene.MUTED,self.small)
         scene.draw(c,world,self.visual,self.time,self.small,self.inspected,
-                   facing_left=self.facing_left,selected_character=self.selected_character,residents=self.residents)
+                   facing_left=self.facing_left,selected_character=self.selected_character,residents=self.residents,lighting=self.lighting)
         self.text('Hier kann etwas Schönes wachsen.',(52,139),scene.INK,self.heading)
         self.text('Ein warmes Zuhause beginnt mit deiner Idee.',(52,174),scene.MUTED,self.small)
         # Energy and live position remain readable outside the map.

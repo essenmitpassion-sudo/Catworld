@@ -1,3 +1,14 @@
+# Aktuell — 2026-11-14 — Weiche Lichtwechsel
+Basis6041190. Gebäude und Lichtschein blenden in0,6s ein/aus; Umverteilung kann
+mitten im Übergang umkehren. Separate Präsentation in lighting.py, keine Änderung
+an Strom, Energie oder Brücken. Hilfe/Crew pausieren, Reset/Rewind synchronisieren.
+358 Tests PASS, SDL-Ablauf PASS, Paket-Selbsttest PASS. Zwei Verhaltenstests
+zuerst rot, danach grün. Übergangsbild evidence/lighting-transition.png geprüft.
+Pakettest prüft zusätzlich, dass alle drei Lampen nach Vollversorgung fertig
+aufgeblendet sind. Originalassets unverändert, Renderkopien schützen Bildcache.
+Keine Behauptung menschlicher ästhetischer Zustimmung. Commit/Bundle/Remote und
+entpackter Build werden vor Abschluss geprüft. Nächster Schritt:NEXT_TASK.md.
+
 # Aktuell — 2026-11-14 — Harmonischer Hafenlook
 Basis850656c. Owner kritisiert fehlende Harmonie, Priorität visueller Gesamtlook.
 Neue gemeinsame Materialien: gemaltes Steinpflaster, Petrolwasser, Holz-/Ranken-
