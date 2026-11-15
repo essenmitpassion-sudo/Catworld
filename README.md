@@ -1,25 +1,22 @@
-# VEIL — Das Signalduell
+# SIGNALBRUCH
 
-An original hidden-information strategy prototype replacing the former Catworld learning game. Six agents per side; three cyclic hidden roles; public relay objectives; automatic line pincers; an observation-only computer opponent.
+Ein kleines Strategiespiel über verzögerte Signale, autonome Siedlungen und gemeinsame Weichen. Du veränderst Wege und Zeitpunkte: Ein Signal unterwegs gehorcht noch dem alten Ziel, ein wartendes Signal kann umgeleitet oder für einen riskanten Gegenangriff übernommen werden.
 
-Build with Node 22+ and npm:
+Drei Aktionen: **Senden**, **Umleiten**, **Übernehmen**. Eine Partie Mensch gegen regelkonforme KI bis zum Ausfall einer Zentrale oder Remis nach 24 Netztakten. Die vollständigen Regeln stehen in [RULES.md](RULES.md) und direkt im Spiel. Automatisches Speichern, Neustart, wiederholbare Netze und ein unverändernder Verlauf sind vorhanden.
 
 ```sh
 npm ci
 npm test
 npm run build
 npm run simulate
+npm run paired
 npm run smoke
 ```
 
-Open `dist/VEIL.html` in a modern browser. It is standalone: no runtime network, account or backend. Build output also includes static `dist/index.html`. Browser tests use installed Chromium (`/usr/bin/chromium`, override `CHROMIUM_PATH`) and fulfill the exact built HTML at a test origin because this managed environment blocks file:// navigation. No preview server is started.
+Node 22+; hier Node 24. Öffne `dist/SIGNALBRUCH.html` für die vollständig eigenständige Offlinefassung; `dist/index.html` ist der gleiche Hosting-Build. Keine Laufzeitdienste, Konten, Fonts oder externen Assets. Browserprüfungen benötigen installiertes Chromium: `/usr/bin/chromium`, alternativ `CHROMIUM_PATH`. Sie bedienen den exakten Build an einer abgefangenen Testadresse, ohne Vorschau-Server.
 
-Before starting, click two own agents to swap their positions. During play, choose an agent and an adjacent destination, or choose Echo and a marked enemy. Eight signal or elimination wins; all rules are available inside the game. New Duel changes the setup seed; Same Setup restarts that seed. Replay preserves historical hidden information. Reload resumes the complete authoritative action; invalid/denied storage cannot block play.
+Spieladresse: https://veil-signal-duel.docile-eel-0528.chatgpt.site (bestehende private Site, historischer URL-Name). Den tatsächlich veröffentlichten Stand dokumentiert [CURRENT.md](CURRENT.md).
 
-`src/engine.js` owns rules, observation projection and replay-backed state validation. `src/ai.js` consumes only observations and scores positioning, role probabilities, captures, pincers and relay denial. `src/main.js` owns UI and persistence. `scripts/simulate.mjs` creates deterministic complete-match examples, and `scripts/smoke.mjs` replays real win/loss matches through UI clicks.
+`src/engine.js` enthält den deterministischen Regelkern, Zugvalidierung, Prognosen und Rekonstruktion gespeicherter Partien. `src/ai.js` nutzt ausschliesslich denselben öffentlichen Zustand und dieselben legalen Übergänge. `src/main.js` und `src/style.css` enthalten Darstellung, Eingabe und lokale Speicherung. Simulations- und Browsernachweise werden unter `work/signalbruch-*` erzeugt; aktuelle Berichte stehen in `docs/`.
 
-Human enjoyment and repeat-play appeal are unmeasured. Automated results still suggest initiative bias; line pincers now occur in the tested policy batch. Human strategy diversity remains open. The game is a prototype, not a claim of solved balance. See CURRENT.md for exact evidence and the next change.
-
-The previous project is retained only in Git history, rooted at checkpoint `7175190acf5dec4c84bf00d1a1d22f36acb4c1d2`. Its game, teaching code, assets, old workflow and governance documents are removed from the current tree by the owner's explicit replacement instruction.
-
-Play the current owner-private release: https://veil-signal-duel.docile-eel-0528.chatgpt.site. The verified published implementation is f0c8b8a; later documentation/tooling commits can be ahead of that release. `node scripts/paired.mjs` runs both initiative assignments on the same 32 formations and validates every terminal replay. The remaining first-player bias is documented in CURRENT.md.
+SIGNALBRUCH ersetzt das verworfene VEIL vollständig. Catworld und VEIL bleiben über Git rekonstruierbar; es gibt keinen parallelen Altspielmodus. Der aktuelle Auftrag steht in [docs/SIGNALBRUCH_MASTER.md](docs/SIGNALBRUCH_MASTER.md). Entscheidungen und Grenzen: [docs/DECISION.md](docs/DECISION.md). Technische Funktionsfähigkeit ist getestet. Menschlicher Spielspass, Wiederspielwert und die angestrebten 5–10 Minuten sind noch nicht gemessen. Die gepaarte Botsimulation zeigt weiterhin einen Startreihenfolge-Vorteil.

@@ -1,47 +1,26 @@
-import {legalActions,ROLES,RELAYS,isPincer,closingTargets,combat,random,GOAL} from './engine.js';
-const distance=(a,b)=>Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
-const occupying=(pieces,side)=>RELAYS.filter(r=>pieces.some(p=>p.side===side&&p.x===r.x&&p.y===r.y)).length;
-function beliefs(v){const count={spark:2,ward:2,shade:2};for(const p of [...v.pieces,...v.fallen])if(p.side!==v.viewer&&p.role)count[p.role]=Math.max(0,count[p.role]-1);const total=Object.values(count).reduce((a,b)=>a+b,0);return Object.entries(count).map(([role,n])=>({role,p:total?n/total:1/3}));}
-function hash(v){let n=2166136261;for(const c of JSON.stringify([v.ply,v.viewer,v.pieces])){n^=c.charCodeAt(0);n=Math.imul(n,16777619);}return n>>>0;}
-function afterPincer(pieces,id){const mover=pieces.find(p=>p.id===id);if(!mover)return pieces;const removed=closingTargets(pieces,mover);return pieces.filter(p=>!removed.some(q=>q.id===p.id));}
-function boardValue(pieces,v,style){
- const own=pieces.filter(p=>p.side===v.viewer),enemy=pieces.filter(p=>p.side!==v.viewer);
- if(!own.length||!enemy.length)return own.length?10000:enemy.length?-10000:0;
- const held=occupying(pieces,v.viewer),opponent=occupying(pieces,1-v.viewer);
- if(v.signal[1-v.viewer]+opponent>=GOAL)return -9000;
- let value=(own.length-enemy.length)*(style==='aggressive'?11:9)+held*8-opponent*9;
- for(const r of RELAYS){value-=Math.min(...own.map(p=>distance(p,r)))*1.05;value+=Math.min(...enemy.map(p=>distance(p,r)))*.3;}
- for(const p of own){
-  value-=Math.min(...RELAYS.map(r=>distance(p,r)))*.16;
-  const threats=enemy.filter(e=>distance(e,p)===1);
-  for(const e of threats){if(isPincer(pieces,e,p))value-=12;else if(e.role&&p.role&&combat(e.role,p.role,false)==='attacker')value-=5;else if(!e.role)value-=.85;}
-  if(!p.revealed)value+=.12;
+import {legalActions,applyAction,project,predictPacket,ownerOf,CONFIG} from './engine.js';
+const weights={tactical:{hq:12,town:2.2,buffer:.25},pressure:{hq:17,town:1.1,buffer:.12},network:{hq:9,town:4,buffer:.4}};
+function value(s,side,w){
+ if(s.phase==='over')return s.winner===null?0:s.winner===side?10000:-10000;
+ const own=s.nodes[side===0?0:8],enemy=s.nodes[side===0?8:0];let score=(own.integrity-enemy.integrity)*w.hq;
+ for(const n of s.nodes)if(n.kind==='town'){score+=n.influence*(side===0?1:-1)*w.town;const owner=ownerOf(n);if(owner!==null)score+=(owner===side?1:-1)*(1.4+n.buffer*w.buffer);}
+ for(const p of s.packets){const f=predictPacket(s,p);if(f.expired){score+=(p.side===side?-1:1)*p.power*.15;continue;}const target=s.nodes[f.target],sign=p.side===side?1:-1;
+  if(target.kind==='hq'){if(target.owner!==p.side)score+=sign*p.power*w.hq*.7/(1+f.eta*.35);else score+=0;}
+  else {const next=Math.max(-CONFIG.influence,Math.min(CONFIG.influence,target.influence+(p.side===0?p.power:-p.power)));score+=(next-target.influence)*(side===0?1:-1)*w.town/(1+f.eta*.3);}
  }
- return value;
+ return score;
 }
-/** Deliberately accepts an observation, never a full game state or hidden setup seed. */
-export function chooseAction(view,style='balanced'){
- if(view.viewer!==view.turn||view.phase!=='playing')throw Error('AI needs its own live observation.');
- const actions=legalActions(view),rng=random(hash(view)),unknown=beliefs(view),side=view.viewer;
- let best=actions[0],bestScore=-Infinity;
- for(const action of actions){
-  const p=view.pieces.find(p=>p.id===action.piece);let value;
-  if(action.type==='pass')value=boardValue(view.pieces,view,style)-10;
-  else if(action.type==='scan'){
-   const target=view.pieces.find(p=>p.id===action.target),copy=view.pieces.map(q=>q.id===p.id?{...q,revealed:true}:q);
-   value=boardValue(copy,view,style)+(style==='cautious'?3.4:style==='aggressive'?1:2.1)+(distance(p,target)<=2?.7:0)-(p.revealed?0:.4);
-  }else{
-   const target=view.pieces.find(q=>q.x===action.x&&q.y===action.y);
-   if(!target){const copy=view.pieces.map(q=>q.id===p.id?{...q,x:action.x,y:action.y}:q);value=boardValue(afterPincer(copy,p.id),view,style);}
-   else{
-    const pincer=isPincer(view.pieces,p,target),possibilities=target.role?[{role:target.role,p:1}]:unknown;value=0;
-    for(const belief of possibilities){const outcome=combat(p.role,belief.role,pincer);const copy=view.pieces.filter(q=>outcome==='both'?q.id!==p.id&&q.id!==target.id:outcome==='attacker'?q.id!==target.id:q.id!==p.id).map(q=>q.id===p.id?{...q,x:action.x,y:action.y,revealed:true}:q.id===target.id?{...q,role:belief.role,revealed:true}:q);value+=belief.p*boardValue(afterPincer(copy,p.id),view,style);}
-    if(pincer)value+=1;
-   }
-   const previous=view.recent.findLast(a=>a.type==='move'&&a.piece===p.id);if(previous&&previous.x===action.x&&previous.y===action.y)value-=.8;
+function evaluate(s,side,w){const current=value(s,side,w);if(s.phase==='over')return current;return current*.3+value(project(s,2),side,w)*.7;}
+/** All state is public. Search uses exactly the player's legal transitions. */
+export function chooseAction(state,style='tactical'){
+ if(state.phase!=='playing')throw Error('Keine laufende Partie');const side=state.turn,w=weights[style]??weights.tactical;
+ const options=legalActions(state).map((action,index)=>{const next=applyAction(state,action);return{action,next,index,score:evaluate(next,side,w)};}).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,8);
+ let best=options[0],score=-Infinity;
+ for(const option of options){let future=option.score;
+  if(option.next.phase==='playing'){
+   const replies=legalActions(option.next).map(a=>evaluate(applyAction(option.next,a),side,w));future=option.next.turn===side?Math.max(...replies):Math.min(...replies);
   }
-  value+=rng()*.12;
-  if(value>bestScore){bestScore=value;best=action;}
+  const combined=future*.8+option.score*.2;if(combined>score+1e-9){score=combined;best=option;}
  }
- return {...best};
+ return {...best.action};
 }

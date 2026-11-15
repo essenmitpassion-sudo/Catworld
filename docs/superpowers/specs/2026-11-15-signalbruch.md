@@ -1,0 +1,13 @@
+# SIGNALBRUCH / first playable hypothesis
+
+Binding latest brief: docs/SIGNALBRUCH_MASTER.md. The owner rejected VEIL and supplied this new project brief before SPUR implementation. SPUR's unimplemented design/tests are archived in ignored work/spur-design-snapshot; they are not a second game. Preserve existing build/test/Sites/GitHub identities.
+
+Three independently assessed cores and the choice are recorded in ../../DECISION.md: SIGNALBRUCH, Kippfeld (shared rotating pattern field) and Nachlass (future commitments with opponent compensation). The two alternatives were rejected before implementation. Prior-art links and limits are documented there. SPUR is historical and unimplemented.
+
+Nine nodes: two HQs, four autonomous settlements and three neutral shared relays. Undirected connections have public 1–3-tick delays. Each player acts once per round, then the network advances; initiative alternates each round. At most three actions: SEND from an owned settlement (spend 2 buffer to launch power 2; also sets its continuing output), REDIRECT a neutral relay output (locked until the next world tick), TAKE OVER an enemy unsealed packet currently waiting at a relay (cost 1 own HQ integrity, never its last point; one takeover per packet, then sealed). No hidden AI information.
+
+Settlements refill 1 buffer per network tick and automatically send power 1 when reaching 3. They retain their physical output after ownership changes. Influence ranges −2…+2; packet effects arriving at the same node are summed simultaneously, friendly strength reinforces, opposing strength can neutralize/flip a settlement. HQ integrity is 6; friendly strength returns harmlessly without repair, hostile strength damages. First destroyed HQ loses; simultaneous destruction draws. After 24 network ticks without a core result, draw. Packets have an 8-tick life to bound loops; stale routing can delay and waste instructions.
+
+A packet at a relay waits until the next network tick, giving both players their action window before it departs through that relay's current output. In-flight destinations are fixed until arrival. This is the timing/counterplay contract. Plans shown by the UI are conditional on no further intervention. No passive scoring or territory-point victory.
+
+Autonomy and delayed arrival are hypotheses to test. Risk: dominant central routing, takeover priority, passive queues, confusing alternating initiative and unwinnable loops. Start with one symmetric topology and seeded mirrored travel-time variants, no campaign/backend/inventory. Reuse JS/Node/esbuild and accessible SVG: the project is already a tested browser build; a TypeScript/Canvas rewrite would add no P0 advantage.

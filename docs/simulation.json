@@ -1,28 +1,30 @@
 {
   "summary": {
-    "games": 48,
-    "humanWins": 23,
-    "computerWins": 25,
+    "games": 24,
+    "humanWins": 6,
+    "computerWins": 18,
     "draws": 0,
-    "starterWins": 29,
-    "meanPlies": 17.854166666666668,
-    "maxPlies": 26,
-    "totalPincers": 17,
-    "meanEchoes": 3.6875,
+    "meanTicks": 12.583333333333334,
+    "maxDecisionMs": 19.003917,
+    "actions": {
+      "send": 194,
+      "redirect": 318,
+      "takeover": 92
+    },
     "byStyle": {
-      "balanced": {
-        "wins": 7,
-        "losses": 9,
+      "tactical": {
+        "wins": 2,
+        "losses": 6,
         "draws": 0
       },
-      "aggressive": {
-        "wins": 11,
-        "losses": 5,
+      "pressure": {
+        "wins": 2,
+        "losses": 6,
         "draws": 0
       },
-      "cautious": {
-        "wins": 5,
-        "losses": 11,
+      "network": {
+        "wins": 2,
+        "losses": 6,
         "draws": 0
       }
     }
@@ -30,771 +32,555 @@
   "runs": [
     {
       "seed": 1,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 24,
-      "signal": [
-        6,
-        8
-      ],
-      "pincers": 0,
-      "combats": 4,
-      "echoes": 4,
-      "starter": 1
-    },
-    {
-      "seed": 2,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        8,
-        7
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 3,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        3,
-        9
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 1
-    },
-    {
-      "seed": 4,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 14,
-      "signal": [
-        8,
-        2
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 5,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 15,
-      "signal": [
-        8,
+      "ticks": 13,
+      "actions": 26,
+      "starter": 1,
+      "hq": [
+        0,
         3
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 4,
-      "starter": 1
-    },
-    {
-      "seed": 6,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        8,
-        6
-      ],
-      "pincers": 1,
-      "combats": 3,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 7,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 26,
-      "signal": [
-        7,
-        9
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 5,
-      "starter": 1
-    },
-    {
-      "seed": 8,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 17,
-      "signal": [
-        6,
-        8
-      ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 9,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 21,
-      "signal": [
-        8,
-        4
-      ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 1
-    },
-    {
-      "seed": 10,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 23,
-      "signal": [
-        6,
-        8
-      ],
-      "pincers": 1,
-      "combats": 3,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 11,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 21,
-      "signal": [
-        8,
-        5
-      ],
-      "pincers": 0,
-      "combats": 3,
-      "echoes": 5,
-      "starter": 1
-    },
-    {
-      "seed": 12,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 14,
-      "signal": [
-        8,
-        2
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 13,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        6,
-        9
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 5,
-      "starter": 1
-    },
-    {
-      "seed": 14,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 19,
-      "signal": [
-        4,
-        9
-      ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 15,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        4,
-        9
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 3,
-      "starter": 1
-    },
-    {
-      "seed": 16,
-      "humanStyle": "balanced",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 13,
-      "signal": [
-        3,
-        8
-      ],
-      "pincers": 0,
-      "combats": 0,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 1,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 17,
-      "signal": [
-        8,
-        4
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 2,
-      "starter": 1
-    },
-    {
-      "seed": 2,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        8,
-        7
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 3,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 18,
-      "signal": [
-        4,
-        8
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 3,
-      "starter": 1
-    },
-    {
-      "seed": 4,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 14,
-      "signal": [
-        8,
-        2
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 5,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 13,
-      "signal": [
-        8,
-        2
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 2,
-      "starter": 1
-    },
-    {
-      "seed": 6,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        8,
-        6
-      ],
-      "pincers": 1,
-      "combats": 3,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 7,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 11,
-      "signal": [
-        8,
+      "owned": [
+        1,
+        0,
+        1,
         1
       ],
-      "pincers": 1,
-      "combats": 0,
-      "echoes": 3,
-      "starter": 1
-    },
-    {
-      "seed": 8,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 17,
-      "signal": [
-        6,
-        8
-      ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 9,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 21,
-      "signal": [
-        8,
-        3
-      ],
-      "pincers": 2,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 1
-    },
-    {
-      "seed": 10,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        8,
-        5
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 5,
-      "starter": 0
-    },
-    {
-      "seed": 11,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 20,
-      "signal": [
-        7,
-        8
-      ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 5,
-      "starter": 1
-    },
-    {
-      "seed": 12,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 14,
-      "signal": [
-        8,
-        2
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 13,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 18,
-      "signal": [
-        6,
-        9
-      ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 1
-    },
-    {
-      "seed": 14,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        9,
-        2
-      ],
-      "pincers": 1,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 15,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 13,
-      "signal": [
-        8,
-        3
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 1
-    },
-    {
-      "seed": 16,
-      "humanStyle": "aggressive",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 11,
-      "signal": [
-        0,
-        8
-      ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 2,
-      "starter": 0
-    },
-    {
-      "seed": 1,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 24,
-      "signal": [
-        6,
-        8
-      ],
-      "pincers": 0,
-      "combats": 4,
-      "echoes": 4,
-      "starter": 1
+      "takeovers": 3,
+      "redirects": 15,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 2,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        8,
-        7
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
       ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 3,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        3,
-        9
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
+      "winner": 0,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 1,
+      "hq": [
+        4,
+        0
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 1
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 13,
+      "sends": 7,
+      "reason": "Ostzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 4,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 14,
-      "signal": [
-        8,
-        2
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 3,
-      "starter": 0
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 5,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
       "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 15,
-      "signal": [
-        8,
-        3
+      "ticks": 12,
+      "actions": 24,
+      "starter": 1,
+      "hq": [
+        4,
+        0
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 4,
-      "starter": 1
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 13,
+      "sends": 7,
+      "reason": "Ostzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 6,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        8,
-        6
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
       ],
-      "pincers": 1,
-      "combats": 3,
-      "echoes": 4,
-      "starter": 0
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 7,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 24,
-      "signal": [
-        5,
-        9
+      "ticks": 13,
+      "actions": 26,
+      "starter": 1,
+      "hq": [
+        0,
+        3
       ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 5,
-      "starter": 1
+      "owned": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 3,
+      "redirects": 15,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
       "seed": 8,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "humanStyle": "tactical",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 17,
-      "signal": [
-        6,
-        8
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
       ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
-      "seed": 9,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "seed": 1,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        2,
-        8
+      "ticks": 13,
+      "actions": 26,
+      "starter": 1,
+      "hq": [
+        0,
+        1
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 5,
-      "starter": 1
+      "owned": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 10,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
-      "seed": 10,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "seed": 2,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 23,
-      "signal": [
-        6,
-        8
-      ],
-      "pincers": 1,
-      "combats": 3,
-      "echoes": 3,
-      "starter": 0
-    },
-    {
-      "seed": 11,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 22,
-      "signal": [
-        5,
-        8
-      ],
-      "pincers": 1,
-      "combats": 3,
-      "echoes": 4,
-      "starter": 1
-    },
-    {
-      "seed": 12,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 0,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        8,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
         2
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 4,
-      "starter": 0
-    },
-    {
-      "seed": 13,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
-        6,
-        9
+      "owned": [
+        0,
+        0,
+        1,
+        1
       ],
-      "pincers": 0,
-      "combats": 1,
-      "echoes": 5,
-      "starter": 1
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     },
     {
-      "seed": 14,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
-      "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 19,
-      "signal": [
+      "seed": 3,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
+      "winner": 0,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 1,
+      "hq": [
         4,
-        9
+        0
       ],
-      "pincers": 1,
-      "combats": 2,
-      "echoes": 4,
-      "starter": 0
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 13,
+      "sends": 7,
+      "reason": "Ostzentrale hat ihre Stabilität verloren."
     },
     {
-      "seed": 15,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "seed": 4,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 16,
-      "signal": [
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 5,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
+      "winner": 0,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 1,
+      "hq": [
         4,
-        9
+        0
       ],
-      "pincers": 0,
-      "combats": 2,
-      "echoes": 3,
-      "starter": 1
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 13,
+      "sends": 7,
+      "reason": "Ostzentrale hat ihre Stabilität verloren."
     },
     {
-      "seed": 16,
-      "humanStyle": "cautious",
-      "aiStyle": "balanced",
+      "seed": 6,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
       "winner": 1,
-      "reason": "8 Signal erreicht. Die Relais wurden über den Gegenzug gehalten.",
-      "plies": 13,
-      "signal": [
-        3,
-        8
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        2
       ],
-      "pincers": 0,
-      "combats": 0,
-      "echoes": 3,
-      "starter": 0
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 7,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 13,
+      "actions": 26,
+      "starter": 1,
+      "hq": [
+        0,
+        1
+      ],
+      "owned": [
+        1,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 10,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 8,
+      "humanStyle": "pressure",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        2
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 1,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 17,
+      "actions": 34,
+      "starter": 1,
+      "hq": [
+        0,
+        3
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 3,
+      "redirects": 21,
+      "sends": 10,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 2,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 3,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 0,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 1,
+      "hq": [
+        4,
+        0
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 13,
+      "sends": 7,
+      "reason": "Ostzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 4,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 5,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 0,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 1,
+      "hq": [
+        4,
+        0
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 13,
+      "sends": 7,
+      "reason": "Ostzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 6,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 7,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 17,
+      "actions": 34,
+      "starter": 1,
+      "hq": [
+        0,
+        3
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 3,
+      "redirects": 21,
+      "sends": 10,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
+    },
+    {
+      "seed": 8,
+      "humanStyle": "network",
+      "aiStyle": "tactical",
+      "winner": 1,
+      "ticks": 12,
+      "actions": 24,
+      "starter": 0,
+      "hq": [
+        0,
+        4
+      ],
+      "owned": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "takeovers": 4,
+      "redirects": 12,
+      "sends": 8,
+      "reason": "Westzentrale hat ihre Stabilität verloren."
     }
   ]
 }

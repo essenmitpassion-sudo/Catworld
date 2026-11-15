@@ -1,4 +1,4 @@
-name: VEIL checks
+name: SIGNALBRUCH checks
 on:
   push:
   pull_request:
@@ -17,6 +17,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run simulate
+      - run: npm run paired
       - run: npm run smoke
         env:
           CHROMIUM_PATH: /usr/bin/google-chrome
