@@ -13,7 +13,7 @@ npm run paired
 npm run smoke
 ```
 
-Node22+, hier24. Die Standalone-Datei `dist/SOG.html` funktioniert ohne Laufzeitdienste oder externe Assets. `dist/index.html` ist derselbe Hosting-Build. Browserprüfungen verwenden vorhandenes Chromium (`/usr/bin/chromium`, überschreibbar mit `CHROMIUM_PATH`) und bedienen den exakten Build an einer abgefangenen Testadresse. Kein Vorschau-Server erforderlich.
+Node 22+, hier 24. Die Standalone-Datei `dist/SOG.html` funktioniert ohne Laufzeitdienste oder externe Assets. `dist/index.html` ist derselbe Hosting-Build. Browserprüfungen verwenden vorhandenes Chromium (`/usr/bin/chromium`, überschreibbar mit `CHROMIUM_PATH`) und bedienen den exakten Build an einer abgefangenen Testadresse. Kein Vorschau-Server erforderlich.
 
 Reiner deterministischer Regelkern `src/engine.js`, öffentliche begrenzte KI `src/ai.js`, Darstellung/Eingabe/Speicher `src/main.js`. Keine neuen Abhängigkeiten. Die Oberfläche beginnt direkt mit dem Brett; Hilfe bleibt optional. Atomare Speicherung, abbrechbare Animation/KI, Rückgängig, Neustart und schreibgeschützter Verlauf sind vorhanden.
 
