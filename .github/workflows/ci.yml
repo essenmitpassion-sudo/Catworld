@@ -47,4 +47,4 @@ jobs:
             work/phase2/motion-feedback.json
             work/phase2/winning-feedback.png
             work/phase2/active-direction-mobile.png
-          retention-days: 30
+          retention-days: 7

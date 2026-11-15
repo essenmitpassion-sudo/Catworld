@@ -18,7 +18,11 @@
     "research:classic": "node scripts/intelligence.mjs",
     "research:endgames:v1": "node scripts/endgames.mjs",
     "smoke:active": "node scripts/active-turn-smoke.mjs",
-    "smoke:motion": "node scripts/motion-feedback-smoke.mjs"
+    "smoke:motion": "node scripts/motion-feedback-smoke.mjs",
+    "clean:check": "node scripts/clean.mjs",
+    "clean": "node scripts/clean.mjs --apply",
+    "pretest": "node scripts/clean.mjs --trim --apply",
+    "prebuild": "node scripts/clean.mjs --trim --apply"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

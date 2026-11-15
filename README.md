@@ -30,6 +30,7 @@ npm run build
 npm run smoke
 npm run smoke:counterplay
 npm run smoke:active
+npm run smoke:motion
 npm run simulate          # 800 aktuelle Profile
 npm run research          # 60 kontrollierte Regelmodell-Vergleiche
 npm run research:endgames # exakte Tempo-Beweise v1/v2
@@ -42,3 +43,7 @@ Regeln: [RULES.md](RULES.md). Aktuelle Entscheidung und Grenzen: [docs/PHASE_2.m
 **Forschungsprototyp:** Die neue Tempo-Regel erzeugt belegte taktische Gewinne, aber keine nachgewiesene Eröffnungsbalance oder menschlichen Spielspaß. Die bisherige kompakte Starterserie und die versetzte19/64-Serie gehören zu v1 und spezifischen Suchpolitiken. Historische Forschung bleibt getrennt reproduzierbar (`research:classic`, `research:endgames:v1`, `research:routes`); `research/rules-v1` ist reiner wissenschaftlicher Kontrollcode ohne Produktmodus.
 
 Dieses Projekt ersetzt VEIL und davor das Catworld-Lernspiel. Geschichte vor den aktiven Zügen: Commit34a7e57 und Checkpoint `checkpoint/pre-active-rules-34a7e57`. Vollständige Git-Historie bleibt erhalten. Die frühere Sites-Veröffentlichung zeigt weiterhin VEIL; VERSATZ wird hier als Repository/Standalone gepflegt.
+
+## Speicherpflege
+
+`npm run clean:check` zeigt den Löschplan; `npm run clean` entfernt bekannte Zwischenberichte, Screenshots, Protokolle und den lokalen Paketcache. Vorschau, aktuelles Wiederherstellungsbundle, Quellcode und Git-Historie bleiben erhalten. Vor Tests und Builds werden alte Testausgaben nach sieben Tagen und bekannte Ausgaben bei mehr als16 MiB automatisch bereinigt; der npm-Cache wird bei mehr als16 MiB geleert. Unbekannte Dateien werden bei Überschreitung gemeldet, nicht gelöscht. CI-Artefakte werden künftig sieben Tage aufbewahrt. Details: [docs/STORAGE.md](docs/STORAGE.md).
