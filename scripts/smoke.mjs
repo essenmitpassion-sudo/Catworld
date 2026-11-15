@@ -1,6 +1,7 @@
 import {chromium} from '@playwright/test';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import {createGame,applyMove} from '../src/engine.js';
 await mkdir('work',{recursive:true});
 const html=await readFile('dist/index.html','utf8'),examples=JSON.parse(await readFile('work/sog-examples.json','utf8')),errors=[];
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
@@ -54,6 +55,24 @@ try {
  await drawPage.waitForTimeout(650);assert.deepEqual(await stored(drawPage),draw.state,'terminal reload never schedules AI');
  await drawPage.locator('#watch').click();await drawPage.locator('#replay-range').fill('0');assert.equal(await drawPage.locator('.stone').count(),2);await drawPage.locator('#replay-close').click();assert.deepEqual(await stored(drawPage),draw.state);
  await drawPage.screenshot({path:'work/sog-draw.png',fullPage:true});await drawContext.close();console.log('Legal full-board draw save: restored and replayed; no AI-match claim');
+ // Independent review supplied this legal generated prefix; it is not an AI-match trace.
+ let double=createGame(35,1);for(const cell of [1,11,24,19,23,2,20,12,13,14,22,5,18,24,0,20,5])double=applyMove(double,cell);
+ const dual=await open(35,1,1280,{restore:double}),dp=dual.page;
+ await dp.locator('[data-cell="9"]').hover();assert.match(await dp.locator('#hint').textContent(),/Beide Farben/);
+ await dp.locator('[data-cell="9"]').click();const ended=await stored(dp);
+ assert.equal(ended.phase,'over');assert.equal(ended.reason,'double-line');assert.equal(ended.winner,null);
+ assert.deepEqual(ended.winning,[[[9,14,19,24]],[[8,13,18,23]]]);assert.equal(await dp.locator('.winning').count(),8);
+ await dp.waitForTimeout(650);assert.deepEqual(await stored(dp),ended);await dual.context.close();
+ const touch=await open(13,0,320),tp=touch.page;
+ await tp.locator('[data-cell="12"]').tap();assert.equal((await stored(tp)).ply,1);await tp.locator('#undo').tap();assert.equal((await stored(tp)).ply,0);
+ const cdp=await touch.context.newCDPSession(tp),box=await tp.locator('[data-cell="12"]').boundingBox(),point={x:box.x+box.width/2,y:box.y+box.height/2};
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});await tp.waitForTimeout(650);
+ assert.equal((await stored(tp)).ply,0);assert.equal(await tp.locator('.ghost').count(),3,'held touch shows shared attraction without committing');
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});assert.equal((await stored(tp)).ply,0);assert.equal(await tp.locator('.ghost').count(),0);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});await tp.waitForTimeout(100);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});assert.equal((await stored(tp)).ply,1);
+ await ready(tp);assert.equal((await stored(tp)).ply,2);assert.equal(await tp.locator('.ghost').count(),0);await touch.context.close();
+ console.log('Actual touch tap / held preview / cancel / release once; simultaneous-color draw placement: PASS');
  const normal=await open(13,0,1280,{reduced:false}),np=normal.page;
  const original=await np.locator('#stones .blue').elementHandle(),before=await original.boundingBox();
  await np.locator('[data-cell="12"]').hover();assert.equal(await np.locator('.ghost').count(),3);assert.match(await np.locator('#hint').textContent(),/1 blaue und 1 rote/);
@@ -66,5 +85,5 @@ try {
  console.log('Exact shared-pull preview / real normal-motion stones / feedback actor / cancel during motion: PASS');
  const {page,context}=await open(42,0,320,{denied:true});await page.locator('[data-cell="12"]').click();assert.match(await page.locator('#storage-note').textContent(),/Speicher/);await context.close();
  assert.deepEqual(errors,[]);
- await writeFile('work/sog-browser-result.json',JSON.stringify({immediateBoard:true,keyboard:true,undoPendingAI:true,pendingReload:true,win:true,loss:true,drawRestored:true,normalMotion:true,exactPreview:true,corruptStorage:true,legacyStoragePreserved:true,replayReadOnly:true,newMatch:true,deniedStorage:true,widths:[320,390,768,1440],errors},null,2)+'\n');
+ await writeFile('work/sog-browser-result.json',JSON.stringify({immediateBoard:true,keyboard:true,undoPendingAI:true,pendingReload:true,win:true,loss:true,drawRestored:true,normalMotion:true,exactPreview:true,actualTouch:true,touchHoldCancel:true,doubleLinePlacement:true,corruptStorage:true,legacyStoragePreserved:true,replayReadOnly:true,newMatch:true,deniedStorage:true,widths:[320,390,768,1440],errors},null,2)+'\n');
 } finally {await browser.close();}
