@@ -15,3 +15,10 @@ Spec: docs/superpowers/specs/2026-11-15-intelligence-design.md. Owner requests a
 - [x] Add a tiny empty-board solo-distance helper and separate research-only `route` evaluation. Keep default unchanged while testing.
 - [x] Compare equal-depth policies on different formations/prefixes/colors and independent material/race opponents. Keep no change merely because it beats one incumbent policy.
 - [x] If justified, update default assessment with preserved legacy comparison, replay verification and full browser matches; otherwise preserve only the research result/geometry explanation. Commit/push verified result and record the next useful action.
+
+## Targeted next increment: cyclic one-against-one endgames
+
+- [x] Reproduce recorded repeated1v1 games, validate all1,200 state transitions independently and prove attractor/rank consistency; observe failing exact-solver tests.
+- [x] Implement bounded1v1 retrograde solver, treating previously twice-visited future states as draws and respecting120-ply remaining time. Opt in only for stronger UI AI; keep baseline search comparisons available.
+- [x] Compare old cyclic traces with exact continuations and mixed-controller continuations, include actual repetition histories and capped games. No claim for3v3 balance.
+- [x] Play the previously looping saved match through real UI to a win, retain all existing unit/browser/animation checks, review exact draw assumptions, commit/push and record limits/next action.

@@ -24,6 +24,13 @@
       "plies": 12,
       "winner": -1,
       "reason": "elimination"
+    },
+    {
+      "mode": "resumed-previously-looping-endgame",
+      "prefixPlies": 21,
+      "finalPly": 33,
+      "winner": 1,
+      "reason": "elimination"
     }
   ],
   "errors": [],

@@ -11,7 +11,7 @@ Erst nach dem vollständigen Zug prüfen: Die aktive Seite gewinnt, wenn sie das
 
 Dreifache identische Brettstellung mit derselben Seite am Zug ist Remis. Ebenso kein legaler Zug oder 120 Halbzüge. Tor-/Eliminationssieg auf dem 120. Halbzug geht vor. Keine Materialwertung, keine Pass-Züge.
 
-Alle Informationen sind offen. Keine Zufallsereignisse während der Partie. Die KI nutzt denselben Regelkern und dieselben öffentlichen Stellungen. Schwierigkeitsgrade unterscheiden sich durch Suchhorizont und Rechenbudget, nicht durch Regeländerungen. „Bis 5 Halbzüge“ ist eine Obergrenze, keine Garantie bei ausgeschöpftem Budget.
+Alle Informationen sind offen. Keine Zufallsereignisse während der Partie. Die KI nutzt denselben Regelkern und dieselben öffentlichen Stellungen. Schwierigkeitsgrade unterscheiden sich durch Suchhorizont und Rechenbudget, nicht durch Regeländerungen. Die reguläre Suche ist begrenzt; Taktisch und Weitblick berechnen Eins-gegen-eins-Endspiele vollständig, einschließlich bisheriger Wiederholungen und verbleibendem Zuglimit.
 
 Vorschau verändert den Spielstand nicht. Rücknahme stellt die vollständige frühere Stellung inklusive Wiederholungszählern wieder her. Im KI-Modus wird bis zur letzten menschlichen Entscheidung zurückgenommen. Replay betrachtet die Historie, ohne sie zu verändern. Automatisches Speichern ist lokal im Browser; verweigerter Speicher verhindert das Spielen nicht.
 

@@ -1,0 +1,15 @@
+import{createGame,applyMove,positionKey}from'../src/engine.js';import{solveOneVsOne}from'../src/endgame.js';import{chooseMove as legacy}from'./lib/baseline-ai-v1.mjs';import{auditTranscript}from'./lib/audit.mjs';import{readFile,writeFile}from'node:fs/promises';import{createHash}from'node:crypto';import assert from'node:assert/strict';
+const source=JSON.parse(await readFile('docs/intelligence.json')),cases=[];
+for(const id of[24,25]){const g=source.games.find(g=>g.id===id);let s=createGame(g.initial);for(const move of g.history){s=applyMove(s,move);if(s.board.filter(Boolean).length===2){cases.push({id,seed:g.seed,prefix:s,original:g});break;}}}
+const matches=[];
+for(const c of cases)for(const [ivory,jade]of[['legacy','legacy'],['exact','exact'],['exact','legacy'],['legacy','exact']]){
+ let s=c.prefix;const initialSolve=solveOneVsOne(s);while(s.status==='playing'){const policy=s.turn===1?ivory:jade,move=policy==='exact'?solveOneVsOne(s).move:legacy(s,{depth:4,nodeLimit:90000,seed:c.seed+s.ply}).move;s=applyMove(s,move);}
+ const independent=auditTranscript(createGame(s.initial),s.history);for(const key of['board','status','winner','reason'])assert.deepEqual(independent[key],s[key]);
+ if(ivory==='legacy'&&jade==='legacy')assert.deepEqual(s.history,c.original.history,'legacy control must reproduce the actual prior cycle');
+ if(ivory==='exact'&&jade==='exact'){assert.equal(s.ply-c.prefix.ply,12);assert.equal(s.winner,c.prefix.turn===1?-1:1);}
+ matches.push({case:c.id,initial:s.initial,prefixPlies:c.prefix.ply,ivory,jade,initialSolve,finalPlies:s.ply,winner:s.winner,reason:s.reason,history:s.history});
+}
+const distribution={states:0,wins:0,losses:0,draws:0,maxMate:0};
+for(let ivory=0;ivory<25;ivory++)for(let jade=0;jade<25;jade++)if(ivory!==jade)for(const turn of[1,-1]){const s=createGame();s.board=Array(25).fill(0);s.board[ivory]=1;s.board[jade]=-1;s.turn=turn;s.positions=[positionKey(s)];const r=solveOneVsOne(s);distribution.states++;distribution[r.outcome==='win'?'wins':r.outcome==='loss'?'losses':'draws']++;distribution.maxMate=Math.max(distribution.maxMate,r.distance);}
+const hashes={};for(const path of['src/engine.js','src/ai.js','src/endgame.js','scripts/endgames.mjs'])hashes[path]=createHash('sha256').update(await readFile(path)).digest('hex');
+const report={date:'2026-11-15',base:'d2c5315',scope:'Exact one-against-one only. All1200 structurally distinct piece-position/turn arrangements; some are not reachable nonterminal starts. No3v3 balance conclusion.',history:'Successors previously visited twice are draw edges. Decisive ranks decrease under every legal defense, so no newly repeated key can occur on a decisive strategy. Higher-material history is irrelevant because material cannot increase. Mate rank is capped by remaining120-ply time.',hashes,distribution,matches};await writeFile('docs/endgames.json',JSON.stringify(report,null,2));console.log(JSON.stringify({distribution,matches:matches.map(m=>({...m,history:undefined}))},null,2));

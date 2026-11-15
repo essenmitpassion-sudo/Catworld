@@ -28,10 +28,11 @@ jobs:
           name: VERSATZ-playable-and-evidence
           path: |
             dist/VERSATZ.html
-            docs/playtest.json
+            docs/playtest-current.json
             docs/browser-results.json
             work/browser-results.json
             work/counterplay-browser.json
             docs/intelligence.json
             docs/tactical-cases.json
+            docs/endgames.json
           retention-days: 30

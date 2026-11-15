@@ -1,5 +1,6 @@
 import {advance,legalMoves,positionKey} from './engine.js';
 import {gateDistance} from './routes.js';
+import {solveOneVsOne} from './endgame.js';
 const WIN=100000;
 /** Evaluation is a hypothesis. Exact wins/captures come from the same public rules. */
 export function evaluate(s,side,style='balanced'){
@@ -9,9 +10,10 @@ export function evaluate(s,side,style='balanced'){
  return score;
 }
 /** Iterative alpha-beta; no transposition cache because repetition is path-dependent. */
-export function chooseMove(game,{depth=3,nodeLimit=25000,style='balanced',seed=0}={}){
+export function chooseMove(game,{depth=3,nodeLimit=25000,style='balanced',seed=0,endgame=false}={}){
  const actions=legalMoves(game);if(!actions.length)return {move:null,score:evaluate(game,game.turn,style),nodes:0,completedDepth:0,prunedEquivalentMoves:0};
  depth=Math.max(1,Math.min(7,Math.floor(depth)||1));nodeLimit=Math.max(1,Math.floor(nodeLimit)||1);
+ if(endgame&&nodeLimit>=1200){const solved=solveOneVsOne(game);if(solved){const sign=solved.outcome==='win'?1:solved.outcome==='loss'?-1:0;return {move:solved.move,score:sign*(WIN-game.ply-solved.distance),nodes:solved.states,completedDepth:0,prunedEquivalentMoves:0,endgame:{exact:true,outcome:solved.outcome,distance:solved.distance}};}}
  const counts=new Map();for(const k of game.positions||[positionKey(game)])counts.set(k,(counts.get(k)||0)+1);
  let prunedEquivalentMoves=0;
  let nodes=0,best=actions[0],bestScore=-Infinity,completedDepth=0;const STOP=Symbol('budget');

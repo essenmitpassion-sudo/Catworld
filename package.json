@@ -13,7 +13,8 @@
     "benchmark": "node scripts/search-benchmark.mjs",
     "smoke:counterplay": "node scripts/counterplay-smoke.mjs",
     "tactics": "node scripts/tactical-cases.mjs",
-    "research:routes": "node scripts/route-experiment.mjs"
+    "research:routes": "node scripts/route-experiment.mjs",
+    "research:endgames": "node scripts/endgames.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

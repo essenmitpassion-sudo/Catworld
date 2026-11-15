@@ -21,7 +21,7 @@ Wähle Figur → markiertes Nachbarfeld → Verschieberichtung. Das Brett zeigt 
 ## Nachweise
 
 ```sh
-npm run simulate          # 800 reproduzierbare terminale Partien
+npm run simulate          # 800 aktuelle Profile → docs/playtest-current.json
 npm run smoke             # vollständige Browser-Partien und Vorschau/Animation
 node scripts/balance.mjs # historischer Formationsvergleich, 200 Partien
 npm run research        # 68 kontrollierte Horizont-/Bewertungs-/Gegenspielpartien
@@ -38,3 +38,6 @@ Regeln: [RULES.md](RULES.md). Konzeptvergleich und kritische Befunde: [docs/DECI
 Dieses Projekt ersetzt den früheren VEIL-Prototyp und davor das Catworld-Lernspiel entsprechend dem neuen Rebirth-Auftrag. Vollständige Historie vor dem Umbau: Commit `022f7f4`, lokaler Checkpoint `checkpoint/pre-rebirth-2026-11-15` und verifiziertes Git-Bundle in `work/pre-rebirth.bundle`. Die frühere Sites-Veröffentlichung zeigt weiterhin VEIL; sie ist keine Veröffentlichung von VERSATZ.
 
 Die Folgeuntersuchung erklärt, weshalb eine neue Formation allein keine belegte Balancekorrektur wäre: Suchhorizont und gleich bewertete Zugalternativen kehren die Bot-Ergebnisse um. [docs/INTELLIGENCE.md](docs/INTELLIGENCE.md) dokumentiert Ursachen, Produktänderungen und Grenzen. Die alte 1.000-Partien-Evidenz gehört zum Stand `d46be8b`; neue Berichte nennen Baseline und Hashes ausdrücklich.
+
+
+Taktisch und Weitblick berechnen Eins-gegen-eins-Endspiele jetzt vollständig unter den vorhandenen Wiederholungs- und Zuglimitregeln. Zwei früher bis Halbzug74 pendelnde Beispielpartien enden bei korrektem Gegenspiel bereits bei33. Das löst keine Mehrfigurenstellung und beweist keine Eröffnungsbalance. `npm run research:endgames` reproduziert die kontrollierten Fortsetzungen; [docs/endgames.json](docs/endgames.json) enthält ihre vollständigen Historien. Aktuelle800-Profil-Ergebnisse: [docs/playtest-current.json](docs/playtest-current.json). Die optional getestete geometrische Wegbewertung wurde wegen des negativen Tiefen-Gegenbefunds nicht zum Standard gemacht.
