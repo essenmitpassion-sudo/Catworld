@@ -1,0 +1,60 @@
+{
+  "scope": "First divergence of two exact depth3 implementations with the same position evaluation, different tie ordering; shared baseline prefix.",
+  "cases": [
+    {
+      "formation": 2,
+      "initial": {
+        "starter": 1,
+        "formation": 2
+      },
+      "prefix": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        }
+      ],
+      "ply": 4,
+      "legacy": {
+        "move": {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        "score": 44,
+        "nodes": 933,
+        "completedDepth": 3
+      },
+      "reference": {
+        "move": {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        "score": 44,
+        "nodes": 933,
+        "completedDepth": 3
+      },
+      "independentlyReevaluated": {
+        "aValue": 44,
+        "bValue": 44
+      },
+      "conclusion": "Same complete depth3 minimax value, different equally scored move. Subsequent self-play outcomes cannot establish which is actually best."
+    }
+  ]
+}

@@ -8,7 +8,11 @@
     "build": "node scripts/build.mjs",
     "simulate": "node scripts/simulate.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "dev": "node scripts/serve.mjs"
+    "dev": "node scripts/serve.mjs",
+    "research": "node scripts/intelligence.mjs",
+    "benchmark": "node scripts/search-benchmark.mjs",
+    "smoke:counterplay": "node scripts/counterplay-smoke.mjs",
+    "tactics": "node scripts/tactical-cases.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

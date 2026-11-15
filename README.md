@@ -2,7 +2,7 @@
 
 Ein kompaktes Strategiespiel für zwei. Ziehe eine Figur ein Feld und verschiebe danach die komplette Zielreihe – einschließlich gegnerischer Figuren. Erreiche das andere Tor oder schlage alle Gegner.
 
-Hotseat oder drei faire KI-Stufen; vollständige Zugvorschau; zweistufige Bewegung samt Randübergang; Rücknahme, Replay, Revanche und lokale Speicherung. Ohne Konto, Backend oder Laufzeit-Netzwerk.
+Hotseat oder drei faire KI-Stufen; vollständige Zugvorschau mit konkreter sofortiger Gewinnantwort; zweistufige Bewegung samt Randübergang; Rücknahme, Replay, Revanche und lokale Speicherung. Ohne Konto, Backend oder Laufzeit-Netzwerk.
 
 ## Starten
 
@@ -23,7 +23,10 @@ Wähle Figur → markiertes Nachbarfeld → Verschieberichtung. Das Brett zeigt 
 ```sh
 npm run simulate          # 800 reproduzierbare terminale Partien
 npm run smoke             # vollständige Browser-Partien und Vorschau/Animation
-node scripts/balance.mjs # gezielter Formationsvergleich, 200 Partien
+node scripts/balance.mjs # historischer Formationsvergleich, 200 Partien
+npm run research        # 68 kontrollierte Horizont-/Bewertungs-/Gegenspielpartien
+npm run benchmark       # identische Suchtiefe und begrenztes Budget vergleichen
+npm run smoke:counterplay # konkrete Taktiken, Tastatur und alle KI-Stufen
 ```
 
 Chromium: `/usr/bin/chromium`, überschreibbar mit `CHROMIUM_PATH`. Die Browser-Suite nutzt den tatsächlich gebauten HTML-Inhalt an einem abgefangenen Test-Origin. Sie prüft keine Live-Veröffentlichung. GitHub CI baut dieselben Artefakte; der Workflow stellt HTML und Prüfdaten als Download bereit.
@@ -33,3 +36,5 @@ Regeln: [RULES.md](RULES.md). Konzeptvergleich und kritische Befunde: [docs/DECI
 **Forschungsprototyp:** 800 Turnierpartien plus 200 Formationsversuche beweisen keinen Spielspaß. Startvorteil bleibt abhängig von Aufstellung und Politik; auch die versetzte Voreinstellung ist nicht nachweislich ausbalanciert. Kein Startersieg innerhalb einer Suche über sieben Halbzüge ist kein Beweis gegen längere erzwungene Gewinne.
 
 Dieses Projekt ersetzt den früheren VEIL-Prototyp und davor das Catworld-Lernspiel entsprechend dem neuen Rebirth-Auftrag. Vollständige Historie vor dem Umbau: Commit `022f7f4`, lokaler Checkpoint `checkpoint/pre-rebirth-2026-11-15` und verifiziertes Git-Bundle in `work/pre-rebirth.bundle`. Die frühere Sites-Veröffentlichung zeigt weiterhin VEIL; sie ist keine Veröffentlichung von VERSATZ.
+
+Die Folgeuntersuchung erklärt, weshalb eine neue Formation allein keine belegte Balancekorrektur wäre: Suchhorizont und gleich bewertete Zugalternativen kehren die Bot-Ergebnisse um. [docs/INTELLIGENCE.md](docs/INTELLIGENCE.md) dokumentiert Ursachen, Produktänderungen und Grenzen. Die alte 1.000-Partien-Evidenz gehört zum Stand `d46be8b`; neue Berichte nennen Baseline und Hashes ausdrücklich.

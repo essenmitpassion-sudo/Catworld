@@ -1,0 +1,31 @@
+{
+  "cases": [
+    "read-only-projection / revise-step-preserves-piece",
+    "keyboard-selection / tab-preserves-direction / enter-commit",
+    "losing-direction / legal-direction-counter / actual-loss / exact-undo",
+    "another-piece-delivers-gate-win",
+    "capture-and-opponent-transport"
+  ],
+  "matches": [
+    {
+      "level": "quick",
+      "plies": 17,
+      "winner": 1,
+      "reason": "elimination"
+    },
+    {
+      "level": "tactical",
+      "plies": 14,
+      "winner": -1,
+      "reason": "elimination"
+    },
+    {
+      "level": "deep",
+      "plies": 12,
+      "winner": -1,
+      "reason": "elimination"
+    }
+  ],
+  "errors": [],
+  "mobileBoardAndConfirmVisibleTogether": true
+}
