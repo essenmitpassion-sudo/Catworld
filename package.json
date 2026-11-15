@@ -17,7 +17,8 @@
     "research:endgames": "node scripts/endgames-v2.mjs",
     "research:classic": "node scripts/intelligence.mjs",
     "research:endgames:v1": "node scripts/endgames.mjs",
-    "smoke:active": "node scripts/active-turn-smoke.mjs"
+    "smoke:active": "node scripts/active-turn-smoke.mjs",
+    "smoke:motion": "node scripts/motion-feedback-smoke.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.1",

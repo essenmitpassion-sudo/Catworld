@@ -26,6 +26,9 @@ jobs:
       - run: npm run smoke:active
         env:
           CHROMIUM_PATH: /usr/bin/google-chrome
+      - run: npm run smoke:motion
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
       - uses: actions/upload-artifact@v4
         with:
           name: VERSATZ-playable-and-evidence
@@ -41,4 +44,7 @@ jobs:
             docs/phase2-comparison.json
             docs/phase2-tactics.json
             work/phase2/active-browser.json
+            work/phase2/motion-feedback.json
+            work/phase2/winning-feedback.png
+            work/phase2/active-direction-mobile.png
           retention-days: 30

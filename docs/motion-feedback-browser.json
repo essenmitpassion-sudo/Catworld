@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "acting-player-during-motion / next-player-after-motion / committed-save",
+    "win-save-committed / result-after-motion / winner-light / final-gate-highlight",
+    "undo-during-win-animation-cancels-old-feedback",
+    "reload-during-win-animation-restores-committed-result"
+  ],
+  "errors": []
+}

@@ -8,7 +8,7 @@ RULES.md now v2. Same5×5/3 pieces/orthogonal step-capture then cyclic target-ro
 
 src/engine.js serializes version3. Browser uses versatz.v2; previous versatz.v1 state is preserved intact and only its valid settings seed a clearly announced fresh game. Old rules are not a product mode. Pure frozen controls in research/rules-v1 support reproducible historic/model comparisons without browser imports.
 
-UI chooses first actually legal shift, disables/explains empty direction, guards synthetic clicks. Review board remains read-only, revise preserves piece, focus/hover do not choose directions. Exact preview explains capture/transport/end-square and immediate enemy win, never calls absence safe. Worker AI levels unchanged regular1/3/5 search plus exact1v1 for tactical/deep; solver automatically regenerates graph through current legality and respects real history/time. Undo/replay/save/cancel behavior retained. Standalone dist/VERSATZ.html ~53kB, no runtime network/backend.
+UI chooses first actually legal shift, disables/explains empty direction, guards synthetic clicks. Review board remains read-only, revise preserves piece, focus/hover do not choose directions. Exact preview explains capture/transport/end-square and immediate enemy win, never calls absence safe. Worker AI levels unchanged regular1/3/5 search plus exact1v1 for tactical/deep; solver automatically regenerates graph through current legality and respects real history/time. Undo/replay/save/cancel behavior retained. Normal-motion feedback now stays with the mover until step/slide ends; result then appears, winner light is correct and winning gate remains marked. Logical save still commits immediately; in-flight undo cancels stale feedback and reload restores committed result. Standalone dist/VERSATZ.html ~53kB, no runtime network/backend.
 
 ## Evidence and limits
 
@@ -26,8 +26,10 @@ Browser: full local21 gate, quick-opponent11 elimination, human-Jade/default15 l
 
 ## Commands / delivery
 
-npm test; npm run build; npm run smoke; npm run smoke:counterplay; npm run smoke:active; npm run simulate; npm run research; npm run research:endgames. Node22+, npm ci (here --cache /workspace/Catworld/work/npm-cache when needed). Optional npm run dev port3000. CI artifacts source/standalone only; remote CI readback previously Forbidden, no success claim without evidence.
+npm test; npm run build; npm run smoke; npm run smoke:counterplay; npm run smoke:active; npm run smoke:motion; npm run simulate; npm run research; npm run research:endgames. Node22+, npm ci (here --cache /workspace/Catworld/work/npm-cache when needed). Optional npm run dev port3000. CI artifacts source/standalone only; remote CI readback previously Forbidden, no success claim without evidence.
 
 Historical reports in docs/INTELLIGENCE.md refer to v1. Reproduce with research:classic, research:endgames:v1 or explicit classic tools; do not treat them as v2 results. Hosting remains old owner-private VEIL. No Site/audience changes. Projectless output path /codex/browser/... is read-only on this host; do not fabricate a chat artifact link or repeat that failed copy.
 
-Next: finish active-turn checkpoint, then improve the most important actually observed interaction issue and verify it. Current observation to test: turn labels advance to next player during the prior player's still-running step/slide. This can make animation ownership unclear despite physically correct motion. Keep rule/formation/evaluation fixed while addressing it. No background continuation promise.
+Active-turn checkpoint7e4700d is pushed and SHA-verified on both authorized branches. The subsequent game-feel increment reproduces/fixes animation ownership and premature results; normal-motion tests cover regular action, victory, in-flight undo and reload. Independent read-only review found no important issue. Final browser reports include docs/motion-feedback-browser.json. Existing model reports remain applicable because this increment changes presentation only.
+
+Next: inspect the remaining multi-piece repetitions with actual movement, starting from the13 repetition draws in playtest-current.json. Find whether a defender has an independently verified non-losing exit before considering another rule/evaluator change. Longer forced openings and human first-match enjoyment remain open. No background continuation promise.
