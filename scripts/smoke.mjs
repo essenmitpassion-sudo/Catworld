@@ -7,7 +7,7 @@ await mkdir('work',{recursive:true});
 const html=await readFile('dist/VERSATZ.html','utf8'),errors=[];
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 async function open(width=1280,denied=false,motion='reduce'){const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:motion});if(denied)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}}));const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>r.request().url().startsWith('https://versatz.test/')?r.fulfill({contentType:'text/html',body:html}):r.abort());await page.goto('https://versatz.test/');return {page,context};}
-const stored=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('versatz.v1')).game);
+const stored=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('versatz.v2')).game);
 async function ready(page){await page.waitForFunction(()=>!document.querySelector('#board').classList.contains('busy'));}
 async function play(page,s,m){await page.locator(`[data-cell="${m.from}"]`).click();await page.locator(`[data-cell="${m.to}"]`).click();await page.locator(m.shift===1?'#shift-right':'#shift-left').click();const preview=await page.locator('#preview-summary').innerText();assert(preview.length>0);const shown=await page.locator('#tokens .token').evaluateAll(els=>els.map(el=>({cell:Number(el.dataset.position),side:el.classList.contains('ivory')?1:-1})).sort((a,b)=>a.cell-b.cell));const expected=applyMove(s,m).board.flatMap((side,cell)=>side?[{cell,side}]:[]);assert.deepEqual(shown,expected,'preview must show the exact final board, including every transported opponent');await page.locator('#commit').click();await ready(page);}
 const results={matches:[],viewports:[],errors};
@@ -26,7 +26,7 @@ try{
  await page.locator('#rematch').click();assert.equal((await stored(page)).initial.starter,-1);assert.equal((await stored(page)).ply,0);
  // Real worker-driven AI game; the human side is driven only via UI clicks.
  await page.locator('#mode').selectOption('ai');await page.locator('#human').selectOption('1');await page.locator('#level').selectOption('quick');await page.locator('#starter').selectOption('1');
- while(true){await ready(page);s=await stored(page);if(s.status!=='playing')break;if(s.turn===1){const m=chooseMove(s,{depth:2,nodeLimit:4000,seed:9}).move;await play(page,s,m);}else await page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('versatz.v1')).game;return s.turn===1||s.status!=='playing';});}
+ while(true){await ready(page);s=await stored(page);if(s.status!=='playing')break;if(s.turn===1){const m=chooseMove(s,{depth:2,nodeLimit:4000,seed:9}).move;await play(page,s,m);}else await page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('versatz.v2')).game;return s.turn===1||s.status!=='playing';});}
  results.matches.push({mode:'ai',plies:s.ply,winner:s.winner,reason:s.reason});assert(await page.locator('#result').isVisible());
  await page.reload();assert.deepEqual(await stored(page),s);assert(await page.locator('#result').isVisible());
  // A full match on the revised default deployment, with the human playing Jade.

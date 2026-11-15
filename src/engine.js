@@ -1,4 +1,4 @@
-/** VERSATZ rules v1. No DOM, randomness or AI. Board: 0 empty, +1 ivory, -1 teal. */
+/** VERSATZ rules v2. No DOM, randomness or AI. Board: 0 empty, +1 ivory, -1 teal. */
 export const SIZE=5, PLY_LIMIT=120;
 const FORMATIONS=[[1,2,3],[0,2,4],[0,1,3],[1,3,4]];
 export const coordinate=i=>`${'ABCDE'[i%5]}${5-Math.floor(i/5)}`;
@@ -6,15 +6,21 @@ export const positionKey=s=>s.board.map(x=>x+1).join('')+(s.turn===1?'i':'t');
 export function createGame({starter=1,formation=2}={}){
  if(![1,-1].includes(starter)||!Number.isInteger(formation)||!FORMATIONS[formation])throw Error('Ungültige Startstellung.');
  const board=Array(25).fill(0);for(const x of FORMATIONS[formation]){board[20+x]=1;board[4-x]=-1;}
- const s={version:2,initial:{starter,formation},board,turn:starter,ply:0,status:'playing',winner:null,reason:null,last:null,history:[],positions:[]};s.positions=[positionKey(s)];return s;
+ const s={version:3,initial:{starter,formation},board,turn:starter,ply:0,status:'playing',winner:null,reason:null,last:null,history:[],positions:[]};s.positions=[positionKey(s)];return s;
 }
 function valid(s,m){
  if(s.status!=='playing'||!m||!Number.isInteger(m.from)||!Number.isInteger(m.to)||m.from<0||m.from>24||m.to<0||m.to>24||![1,-1].includes(m.shift)||s.board[m.from]!==s.turn||s.board[m.to]===s.turn)return false;
- return Math.abs(m.from%5-m.to%5)+Math.abs(Math.floor(m.from/5)-Math.floor(m.to/5))===1;
+ if(Math.abs(m.from%5-m.to%5)+Math.abs(Math.floor(m.from/5)-Math.floor(m.to/5))!==1)return false;
+ if(Math.floor(m.from/5)===Math.floor(m.to/5)){
+  const row=Math.floor(m.to/5)*5,from=m.from%5,to=m.to%5;let changed=false;
+  for(let x=0;x<5;x++){const origin=(x-m.shift+5)%5,value=origin===from?0:origin===to?s.turn:s.board[row+origin];if(value!==s.board[row+x]){changed=true;break;}}
+  if(!changed&&s.board[s.turn===1?2:22]!==s.turn&&s.board.includes(-s.turn))return false;
+ }
+ return true;
 }
 export function legalMoves(s){
  if(s.status!=='playing')return [];const moves=[];
- for(let from=0;from<25;from++)if(s.board[from]===s.turn){for(const delta of [-5,-1,1,5]){const to=from+delta;const m={from,to,shift:-1};if(valid(s,m)){moves.push(m,{from,to,shift:1});}}}return moves;
+ for(let from=0;from<25;from++)if(s.board[from]===s.turn){for(const delta of [-5,-1,1,5]){const to=from+delta;for(const shift of[-1,1]){const m={from,to,shift};if(valid(s,m))moves.push(m);}}}return moves;
 }
 /** Complete a step/capture, THEN slide; only the active side can win on its turn. */
 export function advance(s,m){
@@ -41,7 +47,7 @@ export function replay(s,count=s.history.length){
 export const undo=(s,count=Math.max(0,s.history.length-1))=>replay(s,count);
 export function validateSave(raw){
  try{
-  if(!raw||raw.version!==2||!Array.isArray(raw.history)||raw.history.length>PLY_LIMIT||JSON.stringify(raw).length>50000)return null;
+  if(!raw||raw.version!==3||!Array.isArray(raw.history)||raw.history.length>PLY_LIMIT||JSON.stringify(raw).length>50000)return null;
   const reconstructed=replay(raw);for(const k of Object.keys(reconstructed))if(JSON.stringify(raw[k])!==JSON.stringify(reconstructed[k]))return null;
   return reconstructed;
  }catch{return null;}

@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "v1-save-preserved / v2-new-game-notice",
+    "corrupt-json-recovery",
+    "one-legal-direction / automatic-choice / disabled-intent / exact-undo",
+    "native-tempo-trap-completed"
+  ],
+  "errors": []
+}

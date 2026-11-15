@@ -26,9 +26,9 @@
       "reason": "elimination"
     },
     {
-      "mode": "resumed-previously-looping-endgame",
-      "prefixPlies": 21,
-      "finalPly": 33,
+      "mode": "new-tempo-endgame",
+      "prefixPlies": 16,
+      "finalPly": 29,
       "winner": 1,
       "reason": "elimination"
     }

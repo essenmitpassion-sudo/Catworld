@@ -1,0 +1,9145 @@
+{
+  "date": "2026-11-15",
+  "base": "34a7e57",
+  "hashes": {
+    "src/engine.js": "352ea0d9add3e4664e4b0a2fda785ae1b4447441886891bb52b418a2fb40996e",
+    "src/ai.js": "ae04124c78a0620ebfa4e02945e26f7cafae3689075a116a12ec2b18ff601345",
+    "src/endgame.js": "bedb13572e330eb44ae9b777a6fbc4be2a1fac60834a1761298dd28904ab5dc2",
+    "research/rules-v1/engine.js": "d006e190cb1e8377cffcce132d08619137e5bb587fefead0e1255898794d6692",
+    "research/rules-v1/ai.js": "ae04124c78a0620ebfa4e02945e26f7cafae3689075a116a12ec2b18ff601345",
+    "research/rules-v1/endgame.js": "bedb13572e330eb44ae9b777a6fbc4be2a1fac60834a1761298dd28904ab5dc2",
+    "scripts/phase2.mjs": "e3bff687714ba0893f3dad189472f060f89471a833394384588a373a0fae087b",
+    "scripts/lib/variant-oracle.mjs": "8e6bc87f58c0efe9699b6456301656e6232dfd6340ef23db5298ab769b6773f6"
+  },
+  "openingProofs": [
+    {
+      "formation": 0,
+      "horizon": 7,
+      "result": "no-forced-starter-win-within-seven",
+      "visited": 25747
+    },
+    {
+      "formation": 2,
+      "horizon": 7,
+      "result": "no-forced-starter-win-within-seven",
+      "visited": 28742
+    }
+  ],
+  "distribution": {
+    "classic": {
+      "win": 696,
+      "loss": 282,
+      "draw": 222
+    },
+    "active": {
+      "win": 762,
+      "loss": 326,
+      "draw": 112
+    },
+    "changed": 110
+  },
+  "scope": "Bounded prototypes. Same model used by both players/search/endgame. Native openings and fresh-history counterfactual midgames reported separately. No human enjoyment evidence.",
+  "summary": {
+    "baseline native-opening": {
+      "games": 14,
+      "startingSideWins": 7,
+      "otherSideWins": 5,
+      "draws": 2,
+      "meanPlies": 24.571428571428573,
+      "emptyTurns": 17,
+      "emptyWinningTurns": 0,
+      "captures": 51,
+      "sharedTransports": 166,
+      "meanLegalActions": 12.948532056500758,
+      "meanUniqueSuccessors": 11.887514469389286,
+      "uniqueTraces": 12
+    },
+    "baseline fresh-midgame": {
+      "games": 6,
+      "startingSideWins": 0,
+      "otherSideWins": 0,
+      "draws": 6,
+      "meanPlies": 4,
+      "emptyTurns": 24,
+      "emptyWinningTurns": 0,
+      "captures": 0,
+      "sharedTransports": 0,
+      "meanLegalActions": 13,
+      "meanUniqueSuccessors": 11.166666666666666,
+      "uniqueTraces": 6
+    },
+    "active native-opening": {
+      "games": 14,
+      "startingSideWins": 9,
+      "otherSideWins": 4,
+      "draws": 1,
+      "meanPlies": 24.214285714285715,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "captures": 50,
+      "sharedTransports": 175,
+      "meanLegalActions": 11.151040799461546,
+      "meanUniqueSuccessors": 11.151040799461546,
+      "uniqueTraces": 11
+    },
+    "active fresh-midgame": {
+      "games": 6,
+      "startingSideWins": 0,
+      "otherSideWins": 0,
+      "draws": 6,
+      "meanPlies": 17.333333333333332,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "captures": 4,
+      "sharedTransports": 30,
+      "meanLegalActions": 9.312865497076023,
+      "meanUniqueSuccessors": 9.312865497076023,
+      "uniqueTraces": 3
+    },
+    "resonance native-opening": {
+      "games": 14,
+      "startingSideWins": 10,
+      "otherSideWins": 2,
+      "draws": 2,
+      "meanPlies": 19.571428571428573,
+      "emptyTurns": 13,
+      "emptyWinningTurns": 0,
+      "captures": 28,
+      "sharedTransports": 122,
+      "meanLegalActions": 14.565380124728623,
+      "meanUniqueSuccessors": 13.675148568546065,
+      "uniqueTraces": 11
+    },
+    "resonance fresh-midgame": {
+      "games": 6,
+      "startingSideWins": 4,
+      "otherSideWins": 0,
+      "draws": 2,
+      "meanPlies": 5.666666666666667,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "captures": 4,
+      "sharedTransports": 16,
+      "meanLegalActions": 12.436363636363637,
+      "meanUniqueSuccessors": 11.503030303030302,
+      "uniqueTraces": 3
+    }
+  },
+  "games": [
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 17,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 230,
+      "uniqueSuccessors": 207,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "f1582150e55f9cdf64e2277ba0a04e7b8f444d94f7951e0110982c63495ddd74",
+      "history": [
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 3,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 17,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 230,
+      "uniqueSuccessors": 207,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "54af86e5839281015280725ee75ce5ab170aaca2e6ef64cf18ac17b6c3e597f1",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 43,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 230,
+      "uniqueSuccessors": 207,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "892ec86637068063b96aca1d7b68a90bb12225f1aefca8b2d2a8d3e2b9348514",
+      "history": [
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 43,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 230,
+      "uniqueSuccessors": 207,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "871b154cbac624e9ee891403d4c83851a1ae63b113f18f63f0e2c517858072c8",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 17,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 34,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 26,
+      "legalActions": 588,
+      "uniqueSuccessors": 567,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 32
+      },
+      "traceHash": "a2dca52324223d16b29ae1695d3db339c24caae5f6048a17d83d77ca42a51d8e",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 14,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 17,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 29,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 454,
+      "uniqueSuccessors": 395,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 27
+      },
+      "traceHash": "e5acfed7b0b0ffde63100ec919a5ebff7e08dd9146a38f12b153365e96e3269e",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 23,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": 1
+        },
+        {
+          "from": 24,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 43,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 20,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 284,
+      "uniqueSuccessors": 262,
+      "depths": {
+        "0": 3,
+        "3": 17
+      },
+      "traceHash": "b588b73a87672a97651f90da4284454082b3b1f2a907bb605ff35c836e6f34f0",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 43,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 28,
+      "winner": 1,
+      "reason": "elimination",
+      "captures": 3,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 480,
+      "uniqueSuccessors": 426,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 26
+      },
+      "traceHash": "440afedeff419b89fbb3a5507225ba72d09ece15a7fed0776455bd4e0f1afb0a",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 97,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 22,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 4,
+      "emptyTurns": 5,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 274,
+      "uniqueSuccessors": 266,
+      "depths": {
+        "0": 6,
+        "4": 16
+      },
+      "traceHash": "0247434c79357c2750f5100240d8f1a664ad21b4de90df22f007d918f19eb431",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 97,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 33,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 4,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 12,
+      "legalActions": 348,
+      "uniqueSuccessors": 338,
+      "depths": {
+        "0": 17,
+        "4": 16
+      },
+      "traceHash": "dabd7c652bc537b47674034ba0248d1f371b032a7bf7d18c7147a3e7c161f384",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "race",
+        "capture"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 20,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 284,
+      "uniqueSuccessors": 262,
+      "depths": {
+        "0": 3,
+        "3": 17
+      },
+      "traceHash": "dc0d72066ffce892faa0c7b53107cf3181f59e1171db0f0129bef0582988b03f",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "capture",
+        "race"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 20,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 284,
+      "uniqueSuccessors": 262,
+      "depths": {
+        "0": 3,
+        "3": 17
+      },
+      "traceHash": "dc0d72066ffce892faa0c7b53107cf3181f59e1171db0f0129bef0582988b03f",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "race",
+        "capture"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 27,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 294,
+      "uniqueSuccessors": 268,
+      "depths": {
+        "0": 12,
+        "3": 15
+      },
+      "traceHash": "1fa8fa7626f8c31d622c77a5ac72b428870267830681b6654d9aa6420204b04d",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": 1
+        },
+        {
+          "from": 24,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "capture",
+        "race"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 27,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 294,
+      "uniqueSuccessors": 268,
+      "depths": {
+        "0": 12,
+        "3": 15
+      },
+      "traceHash": "1fa8fa7626f8c31d622c77a5ac72b428870267830681b6654d9aa6420204b04d",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": 1
+        },
+        {
+          "from": 24,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "fresh-midgame",
+      "id": 26,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 4,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 4,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 0,
+      "legalActions": 48,
+      "uniqueSuccessors": 40,
+      "depths": {
+        "4": 4
+      },
+      "traceHash": "6cb81d35a068bd1c74aad9c0806c8d5169198c0feef208fd40ee0147905251b7",
+      "history": [
+        {
+          "from": 1,
+          "to": 0,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "fresh-midgame",
+      "id": 26,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 4,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 4,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 0,
+      "legalActions": 48,
+      "uniqueSuccessors": 40,
+      "depths": {
+        "4": 4
+      },
+      "traceHash": "6d78a81e10fb01f3d5bfbd74f842d88c7c0f96760c20d111f3dcfae0ac095dbb",
+      "history": [
+        {
+          "from": 20,
+          "to": 21,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "fresh-midgame",
+      "id": 27,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "plies": 4,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 4,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 0,
+      "legalActions": 48,
+      "uniqueSuccessors": 40,
+      "depths": {
+        "4": 4
+      },
+      "traceHash": "860353319848bd0c0da88c8e6ec4374fc46e558003296a85bb28e24851767ca9",
+      "history": [
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "fresh-midgame",
+      "id": 27,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "plies": 4,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 4,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 0,
+      "legalActions": 48,
+      "uniqueSuccessors": 40,
+      "depths": {
+        "4": 4
+      },
+      "traceHash": "872d91e071c455c1c86e8bc9498f4bf4a1fa00fd515cf650e0bc423cfddc9efa",
+      "history": [
+        {
+          "from": 24,
+          "to": 23,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "fresh-midgame",
+      "id": 30,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 4,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 4,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 0,
+      "legalActions": 60,
+      "uniqueSuccessors": 54,
+      "depths": {
+        "4": 4
+      },
+      "traceHash": "62588ae9f49051e4de503f27821027218a85a24f69f120a0e0f673bda258d611",
+      "history": [
+        {
+          "from": 10,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "kind": "fresh-midgame",
+      "id": 30,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 4,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 4,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 0,
+      "legalActions": 60,
+      "uniqueSuccessors": 54,
+      "depths": {
+        "4": 4
+      },
+      "traceHash": "3e971c59a311fa4cd9a6686098edcc8cdee5e605c1ea21634b6610b63415bd65",
+      "history": [
+        {
+          "from": 10,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 17,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 191,
+      "uniqueSuccessors": 191,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "f1582150e55f9cdf64e2277ba0a04e7b8f444d94f7951e0110982c63495ddd74",
+      "history": [
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 3,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 17,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 191,
+      "uniqueSuccessors": 191,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "54af86e5839281015280725ee75ce5ab170aaca2e6ef64cf18ac17b6c3e597f1",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 43,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 191,
+      "uniqueSuccessors": 191,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "892ec86637068063b96aca1d7b68a90bb12225f1aefca8b2d2a8d3e2b9348514",
+      "history": [
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 43,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 21,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 191,
+      "uniqueSuccessors": 191,
+      "depths": {
+        "0": 3,
+        "3": 18
+      },
+      "traceHash": "871b154cbac624e9ee891403d4c83851a1ae63b113f18f63f0e2c517858072c8",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 17,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 34,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 26,
+      "legalActions": 555,
+      "uniqueSuccessors": 555,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 32
+      },
+      "traceHash": "a2dca52324223d16b29ae1695d3db339c24caae5f6048a17d83d77ca42a51d8e",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 14,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 17,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 29,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 15,
+      "legalActions": 371,
+      "uniqueSuccessors": 371,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 27
+      },
+      "traceHash": "78b7b384252c4c7baa8ef07886733951c9fe95539c35723a5a61bb48b11bf542",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 23,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 43,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 18,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 220,
+      "uniqueSuccessors": 220,
+      "depths": {
+        "0": 3,
+        "3": 15
+      },
+      "traceHash": "4e8346b786aee093e2d80b341f9139166102e91cb6040e4ab380af0192bc4f0b",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 43,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 25,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 1,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 12,
+      "legalActions": 380,
+      "uniqueSuccessors": 380,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 23
+      },
+      "traceHash": "b7184c7e3cdf7f6ab7b3b5575273c7051adc457251d2ee3f7864eefb820d9417",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 19,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 97,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 29,
+      "winner": 1,
+      "reason": "elimination",
+      "captures": 5,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 279,
+      "uniqueSuccessors": 279,
+      "depths": {
+        "0": 13,
+        "4": 16
+      },
+      "traceHash": "9c46255fcbd1d6286623faa12e16978534194822f9f6b646e1ef63cae8865d1a",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 0,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": -1
+        },
+        {
+          "from": 0,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 97,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 30,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 305,
+      "uniqueSuccessors": 305,
+      "depths": {
+        "0": 14,
+        "4": 16
+      },
+      "traceHash": "28555cb8874a17ea91e85f890d2d15fd3048dbefbde44e8464d4288aad39dc94",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "race",
+        "capture"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 18,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 220,
+      "uniqueSuccessors": 220,
+      "depths": {
+        "0": 3,
+        "3": 15
+      },
+      "traceHash": "4e8346b786aee093e2d80b341f9139166102e91cb6040e4ab380af0192bc4f0b",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "capture",
+        "race"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 18,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 10,
+      "legalActions": 220,
+      "uniqueSuccessors": 220,
+      "depths": {
+        "0": 3,
+        "3": 15
+      },
+      "traceHash": "4e8346b786aee093e2d80b341f9139166102e91cb6040e4ab380af0192bc4f0b",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 12,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "race",
+        "capture"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 27,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 16,
+      "legalActions": 256,
+      "uniqueSuccessors": 256,
+      "depths": {
+        "0": 12,
+        "3": 15
+      },
+      "traceHash": "66deb1450224965a31b86d87b593f1c5a48ae7e60a5b2f40b40c78c8b24da082",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 21,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "capture",
+        "race"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 27,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 4,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 16,
+      "legalActions": 256,
+      "uniqueSuccessors": 256,
+      "depths": {
+        "0": 12,
+        "3": 15
+      },
+      "traceHash": "66deb1450224965a31b86d87b593f1c5a48ae7e60a5b2f40b40c78c8b24da082",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 12,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 21,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "fresh-midgame",
+      "id": 26,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 19,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 5,
+      "legalActions": 173,
+      "uniqueSuccessors": 173,
+      "depths": {
+        "4": 19
+      },
+      "traceHash": "59ac5b86fda72f2760e8e4b88be2caa57f2110c1a339243cb2a15bd74c3ada0a",
+      "history": [
+        {
+          "from": 1,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "fresh-midgame",
+      "id": 26,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 19,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 5,
+      "legalActions": 173,
+      "uniqueSuccessors": 173,
+      "depths": {
+        "4": 19
+      },
+      "traceHash": "59ac5b86fda72f2760e8e4b88be2caa57f2110c1a339243cb2a15bd74c3ada0a",
+      "history": [
+        {
+          "from": 1,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "fresh-midgame",
+      "id": 27,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "plies": 12,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 2,
+      "legalActions": 106,
+      "uniqueSuccessors": 106,
+      "depths": {
+        "4": 12
+      },
+      "traceHash": "22d12aa7b795dc3f9eb448c94408374f5c6b22793ad2305ace4f6e2b4e6a8c52",
+      "history": [
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "fresh-midgame",
+      "id": 27,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "plies": 12,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 2,
+      "legalActions": 106,
+      "uniqueSuccessors": 106,
+      "depths": {
+        "4": 12
+      },
+      "traceHash": "22d12aa7b795dc3f9eb448c94408374f5c6b22793ad2305ace4f6e2b4e6a8c52",
+      "history": [
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "fresh-midgame",
+      "id": 30,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 21,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 210,
+      "uniqueSuccessors": 210,
+      "depths": {
+        "4": 21
+      },
+      "traceHash": "8b3cef7dc9accfb4df887da3edf79cc0c41ccf00c6674eb04a17901c4e95ec51",
+      "history": [
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "active",
+      "kind": "fresh-midgame",
+      "id": 30,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 21,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 210,
+      "uniqueSuccessors": 210,
+      "depths": {
+        "4": 21
+      },
+      "traceHash": "8b3cef7dc9accfb4df887da3edf79cc0c41ccf00c6674eb04a17901c4e95ec51",
+      "history": [
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 17,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 18,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 1,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 268,
+      "uniqueSuccessors": 245,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 16
+      },
+      "traceHash": "b0d25b18bc7cbc65c7f4c9aac9a1d3746587d96a1143f6b0b5d7e4d26dd38850",
+      "history": [
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 14,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 17,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 22,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 12,
+      "legalActions": 328,
+      "uniqueSuccessors": 292,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 20
+      },
+      "traceHash": "2bfbc64c1804eea4c19a64a9e69d9c71f839c56d19c056b01069e3d32cd7965e",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 3,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 43,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 15,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 9,
+      "legalActions": 224,
+      "uniqueSuccessors": 208,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 13
+      },
+      "traceHash": "f58882309a4f286a05dc347b431600e1a4aba569e598e8404f99e718c3b21fbb",
+      "history": [
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 3,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 0,
+      "seed": 43,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0
+      ],
+      "plies": 19,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 8,
+      "legalActions": 278,
+      "uniqueSuccessors": 251,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 17
+      },
+      "traceHash": "872724f5bde1921cb1eebecb6d7d7644c99314e7e92ab732b50b53503160f318",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 2,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 22,
+          "to": 23,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 24,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 17,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 17,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 6,
+      "legalActions": 252,
+      "uniqueSuccessors": 241,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 15
+      },
+      "traceHash": "9e0eb3d95dd8da23a350e09be2796c8b61c21469eca8947950b98d4969b98c6c",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 0,
+          "to": 1,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 17,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 17,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 6,
+      "legalActions": 252,
+      "uniqueSuccessors": 241,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 15
+      },
+      "traceHash": "b5f85a630b82c16e5bc9a2675b06de9d850f47aa1dc12a64f2890bc800ddca3b",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 10,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 18,
+          "to": 23,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 20,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 24,
+          "to": 23,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 43,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 17,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 6,
+      "legalActions": 252,
+      "uniqueSuccessors": 241,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 15
+      },
+      "traceHash": "4feb7f713efd3945137bd4f1b4a019174df1b0fae7d6f1653fe655f4e5b6d2f2",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 0,
+          "to": 1,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 43,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 23,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 3,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 9,
+      "legalActions": 284,
+      "uniqueSuccessors": 268,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 21
+      },
+      "traceHash": "ba1a07b84b241b685643955f131b73a4a4fcfc93c21327ded00e8915a409fcd6",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 97,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 23,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 384,
+      "uniqueSuccessors": 364,
+      "depths": {
+        "4": 23
+      },
+      "traceHash": "763b9bcb14ef7736d6cf9abe1198bf69b9fb2b41c684802da1bbef892b13b0ef",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 19,
+          "to": 24,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": -1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 8,
+          "to": 7,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 8,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 97,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 23,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 14,
+      "legalActions": 384,
+      "uniqueSuccessors": 364,
+      "depths": {
+        "4": 23
+      },
+      "traceHash": "e075c25cf1d05fd3fb23e61de914ba58d1aaaf17160a6ba8bd6ce4f2f6f7a753",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 10,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 11,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 0,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 20,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 15,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 16,
+          "to": 17,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 16,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "race",
+        "capture"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 17,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 6,
+      "legalActions": 252,
+      "uniqueSuccessors": 241,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 15
+      },
+      "traceHash": "cbea2f0384f4e7c06e11b9fd36088eb61479296275e08b2f18f744483ab5c48c",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 0,
+          "to": 1,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": 1,
+      "initialTurn": 1,
+      "depth": 3,
+      "styles": [
+        "capture",
+        "race"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 17,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 1,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 6,
+      "legalActions": 252,
+      "uniqueSuccessors": 241,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 15
+      },
+      "traceHash": "cbea2f0384f4e7c06e11b9fd36088eb61479296275e08b2f18f744483ab5c48c",
+      "history": [
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": 1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 14,
+          "to": 9,
+          "shift": 1
+        },
+        {
+          "from": 10,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 9,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": -1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 0,
+          "to": 1,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "race",
+        "capture"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 23,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 3,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 9,
+      "legalActions": 284,
+      "uniqueSuccessors": 268,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 21
+      },
+      "traceHash": "ba1a07b84b241b685643955f131b73a4a4fcfc93c21327ded00e8915a409fcd6",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "native-opening",
+      "id": null,
+      "formation": 2,
+      "seed": 131,
+      "starter": -1,
+      "initialTurn": -1,
+      "depth": 3,
+      "styles": [
+        "capture",
+        "race"
+      ],
+      "board": [
+        0,
+        -1,
+        0,
+        -1,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0
+      ],
+      "plies": 23,
+      "winner": -1,
+      "reason": "gate",
+      "captures": 3,
+      "emptyTurns": 2,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 9,
+      "legalActions": 284,
+      "uniqueSuccessors": 268,
+      "depths": {
+        "1": 1,
+        "2": 1,
+        "3": 21
+      },
+      "traceHash": "ba1a07b84b241b685643955f131b73a4a4fcfc93c21327ded00e8915a409fcd6",
+      "history": [
+        {
+          "from": 4,
+          "to": 9,
+          "shift": -1
+        },
+        {
+          "from": 20,
+          "to": 15,
+          "shift": 1
+        },
+        {
+          "from": 8,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 11,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 21,
+          "to": 22,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 23,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 9,
+          "to": 14,
+          "shift": 1
+        },
+        {
+          "from": 15,
+          "to": 10,
+          "shift": 1
+        },
+        {
+          "from": 13,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 12,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 14,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 19,
+          "to": 18,
+          "shift": -1
+        },
+        {
+          "from": 13,
+          "to": 18,
+          "shift": 1
+        },
+        {
+          "from": 18,
+          "to": 13,
+          "shift": -1
+        },
+        {
+          "from": 16,
+          "to": 21,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "fresh-midgame",
+      "id": 26,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 5,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 5,
+      "legalActions": 62,
+      "uniqueSuccessors": 58,
+      "depths": {
+        "4": 5
+      },
+      "traceHash": "f81a3ad3c642e28260bca5a509d02905f5af8d848587d5e794ad8510fed45c90",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "fresh-midgame",
+      "id": 26,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 5,
+      "winner": null,
+      "reason": "repetition",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 5,
+      "legalActions": 62,
+      "uniqueSuccessors": 58,
+      "depths": {
+        "4": 5
+      },
+      "traceHash": "f81a3ad3c642e28260bca5a509d02905f5af8d848587d5e794ad8510fed45c90",
+      "history": [
+        {
+          "from": 1,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 7,
+          "shift": 1
+        },
+        {
+          "from": 5,
+          "to": 6,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "fresh-midgame",
+      "id": 27,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "plies": 11,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 2,
+      "legalActions": 98,
+      "uniqueSuccessors": 87,
+      "depths": {
+        "0": 5,
+        "4": 6
+      },
+      "traceHash": "2a7566d0503e3e159d952a1bc36b30c81bb50192931ebb249e06b2c385848a7d",
+      "history": [
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 0,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "fresh-midgame",
+      "id": 27,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "plies": 11,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 2,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 2,
+      "legalActions": 98,
+      "uniqueSuccessors": 87,
+      "depths": {
+        "0": 5,
+        "4": 6
+      },
+      "traceHash": "2a7566d0503e3e159d952a1bc36b30c81bb50192931ebb249e06b2c385848a7d",
+      "history": [
+        {
+          "from": 7,
+          "to": 8,
+          "shift": 1
+        },
+        {
+          "from": 0,
+          "to": 5,
+          "shift": -1
+        },
+        {
+          "from": 7,
+          "to": 8,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": -1
+        },
+        {
+          "from": 24,
+          "to": 19,
+          "shift": 1
+        },
+        {
+          "from": 17,
+          "to": 16,
+          "shift": 1
+        },
+        {
+          "from": 7,
+          "to": 2,
+          "shift": -1
+        },
+        {
+          "from": 17,
+          "to": 12,
+          "shift": -1
+        },
+        {
+          "from": 1,
+          "to": 0,
+          "shift": -1
+        },
+        {
+          "from": 11,
+          "to": 6,
+          "shift": -1
+        },
+        {
+          "from": 4,
+          "to": 3,
+          "shift": -1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "fresh-midgame",
+      "id": 30,
+      "formation": 2,
+      "seed": 43,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 1,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 1,
+      "legalActions": 16,
+      "uniqueSuccessors": 15,
+      "depths": {
+        "1": 1
+      },
+      "traceHash": "ce3382a122936b5a9253064b93949df6876a79ba80efb21eacb5dadff83afe50",
+      "history": [
+        {
+          "from": 1,
+          "to": 0,
+          "shift": 1
+        }
+      ]
+    },
+    {
+      "variant": "resonance",
+      "kind": "fresh-midgame",
+      "id": 30,
+      "formation": 2,
+      "seed": 97,
+      "starter": null,
+      "initialTurn": 1,
+      "depth": 4,
+      "styles": [
+        "balanced",
+        "balanced"
+      ],
+      "board": [
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 1,
+      "winner": 1,
+      "reason": "gate",
+      "captures": 0,
+      "emptyTurns": 0,
+      "emptyWinningTurns": 0,
+      "sharedTransports": 1,
+      "legalActions": 16,
+      "uniqueSuccessors": 15,
+      "depths": {
+        "1": 1
+      },
+      "traceHash": "ce3382a122936b5a9253064b93949df6876a79ba80efb21eacb5dadff83afe50",
+      "history": [
+        {
+          "from": 1,
+          "to": 0,
+          "shift": 1
+        }
+      ]
+    }
+  ]
+}

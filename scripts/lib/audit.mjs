@@ -8,13 +8,13 @@ export function auditTranscript(initial,history){
  const boardOf=()=>{const board=Array(25).fill(0);for(const p of actors)board[p.y*5+p.x]=p.side;return board;};
  const key=()=>JSON.stringify([boardOf(),turn]),counts=new Map([[key(),1]]);
  for(const move of history){
-  if(status!=='playing')throw Error('Transcript continues after terminal outcome');
+  if(status!=='playing')throw Error('Transcript continues after terminal outcome');const before=boardOf();
   if(!move||!Number.isInteger(move.from)||!Number.isInteger(move.to)||move.from<0||move.from>24||move.to<0||move.to>24||![1,-1].includes(move.shift))throw Error('Malformed action');
   const piece=actors.find(p=>p.y*5+p.x===move.from),target=actors.find(p=>p.y*5+p.x===move.to),x=move.to%5,y=Math.floor(move.to/5);
   if(!piece||piece.side!==turn||target?.side===turn||Math.abs(piece.x-x)+Math.abs(piece.y-y)!==1)throw Error('Illegal action');
   if(target)actors.splice(actors.indexOf(target),1);piece.x=x;piece.y=y;
   for(const p of actors)if(p.y===y){p.x+=move.shift;if(p.x===-1)p.x=4;else if(p.x===5)p.x=0;}
-  const acting=turn;turn=-turn;ply++;
+  const acting=turn,won=!actors.some(p=>p.side===-acting)||actors.some(p=>p.side===acting&&p.x===2&&p.y===(acting===1?0:4));if(!won&&boardOf().every((p,i)=>p===before[i]))throw Error('Empty turn');turn=-turn;ply++;
   if(!actors.some(p=>p.side===-acting)){status='won';winner=acting;reason='elimination';}
   else if(actors.some(p=>p.side===acting&&p.x===2&&p.y===(acting===1?0:4))){status='won';winner=acting;reason='gate';}
   else if(ply>=120){status='draw';reason='limit';}

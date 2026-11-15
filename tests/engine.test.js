@@ -29,10 +29,10 @@ test('rejects wrong side, diagonal, occupied, malformed, out-of-board and termin
  assert.deepEqual(s,copy);const done={...s,status:'draw',reason:'limit'};assert.deepEqual(E.legalMoves(done),[]);assert.throws(()=>E.applyMove(done,move(21,16,1)));
 });
 test('three occurrences include side-to-move; ply limit is a draw, never material adjudication',()=>{
- let s=E.createGame({formation:0});s.board=Array(25).fill(0);s.board[21]=1;s.board[3]=-1;s.positions=[E.positionKey(s)];const cycle=[move(21,20,1),move(3,4,-1)];
- // Each horizontal step is undone by the opposite slide; all other home pieces drift.
- for(let i=0;i<20&&s.status==='playing';i++)s=E.applyMove(s,cycle[i%2]);
- assert.equal(s.status,'draw');assert.equal(s.reason,'repetition');assert.equal(s.ply,4);
+ let s=E.createGame({formation:0});s.board=Array(25).fill(0);s.board[21]=1;s.board[3]=-1;s.positions=[E.positionKey(s)];const cycle=[move(21,22,1),move(3,2,-1),move(23,22,-1),move(1,2,1)];
+ // Both pieces really move out and back; no empty turn is needed to test repetition.
+ for(let i=0;i<20&&s.status==='playing';i++)s=E.applyMove(s,cycle[i%4]);
+ assert.equal(s.status,'draw');assert.equal(s.reason,'repetition');assert.equal(s.ply,8);
  const limited=E.advance(fixture([[10,1],[24,-1]],1,119),move(10,11,1));assert.equal(limited.status,'draw');assert.equal(limited.reason,'limit');
  assert.notEqual(E.positionKey({...s,turn:1}),E.positionKey({...s,turn:-1}));
 });

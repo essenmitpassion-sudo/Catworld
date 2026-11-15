@@ -1,18 +1,20 @@
-# VERSATZ · Regeln v1
+# VERSATZ · Regeln v2
 
-5×5 Felder. Elfenbein startet unten, Jade oben, je drei gleichwertige Figuren. In der kompakten Aufstellung B/C/D; weitere symmetrische Aufstellungen sind vor einer Partie wählbar. Das Startrecht ist wählbar, Revanche wechselt es.
+5×5 Felder. Elfenbein startet unten, Jade oben, je drei gleichwertige Figuren. Die vorläufige Standardaufstellung ist A1/B1/D1 gegen B5/D5/E5. Weitere symmetrische Aufstellungen und das Startrecht sind wählbar. Revanche wechselt das Startrecht.
 
-Ein Zug hat genau zwei Teile:
+Ein Zug hat zwei Teile:
 
-1. Eine eigene Figur ein Feld waagrecht oder senkrecht bewegen. Eigene Figuren blockieren. Ein Gegner auf dem Zielfeld wird sofort geschlagen. Der Schritt springt nicht über den Rand.
-2. Die gesamte **Zielreihe** ein Feld nach links oder rechts verschieben. Die aktive Seite entscheidet. Alle Figuren dieser Reihe fahren mit, auch gegnerische. Am Rand erscheinen sie auf der anderen Seite. Das Verschieben schlägt keine Figuren.
+1. Eine eigene Figur ein Feld waagrecht oder senkrecht bewegen. Eigene Figuren blockieren. Ein Gegner auf dem Zielfeld wird zuerst geschlagen. Der Schritt springt nicht über den Rand.
+2. Die gesamte **Zielreihe** ein Feld nach links oder rechts verschieben. Alle Figuren dieser Reihe fahren mit, auch gegnerische. Am Rand erscheinen sie auf der anderen Seite. Beim Verschieben wird niemand geschlagen.
 
-Erst nach dem vollständigen Zug prüfen: Die aktive Seite gewinnt, wenn sie das mittlere gegnerische Tor besetzt (Elfenbein: C5; Jade: C1) oder alle Gegner geschlagen hat. Ein Tor nur während des Schritts zu berühren reicht nicht. Transportierst du den Gegner in dessen Zieltor, gewinnt er erst am Ende seines nächsten eigenen Zuges, falls er dann noch dort steht. Ein beliebiger eigener Stein kann das Tor besetzen.
+**Kein Leerzug:** Nach dem vollständigen Zug muss sich die Brettstellung verändern. Ein Zug, der sofort gewinnt, bleibt erlaubt. Die ziehende Figur darf am Ausgangspunkt enden, wenn andere Figuren mitreisen oder ein Gegner geschlagen wurde. Eine Richtung, die nur einen wirkungslosen Zug erzeugen würde, ist nicht wählbar.
 
-Dreifache identische Brettstellung mit derselben Seite am Zug ist Remis. Ebenso kein legaler Zug oder 120 Halbzüge. Tor-/Eliminationssieg auf dem 120. Halbzug geht vor. Keine Materialwertung, keine Pass-Züge.
+Erst nach beiden Teilen prüfen: Die aktive Seite gewinnt, wenn sie das mittlere gegnerische Tor besetzt (Elfenbein C5, Jade C1) oder alle Gegner geschlagen hat. Ein beliebiger eigener Stein kann das Tor besetzen. Eine Torberührung vor dem Versatz reicht nicht. Transportierst du den Gegner in dessen Zieltor, gewinnt er erst am Ende seines nächsten eigenen Zuges, falls er dann noch dort steht; auch ein unverändertes Brett darf dabei den sofortigen Torsieg abschließen.
 
-Alle Informationen sind offen. Keine Zufallsereignisse während der Partie. Die KI nutzt denselben Regelkern und dieselben öffentlichen Stellungen. Schwierigkeitsgrade unterscheiden sich durch Suchhorizont und Rechenbudget, nicht durch Regeländerungen. Die reguläre Suche ist begrenzt; Taktisch und Weitblick berechnen Eins-gegen-eins-Endspiele vollständig, einschließlich bisheriger Wiederholungen und verbleibendem Zuglimit.
+Dreifache gleiche Brettstellung mit derselben Seite am Zug, kein legaler Zug oder120 Halbzüge ergeben Remis. Tor-/Eliminationssieg auf dem120. Halbzug geht vor. Keine Materialwertung und keine Pass-Aktion.
 
-Vorschau verändert den Spielstand nicht. Rücknahme stellt die vollständige frühere Stellung inklusive Wiederholungszählern wieder her. Im KI-Modus wird bis zur letzten menschlichen Entscheidung zurückgenommen. Replay betrachtet die Historie, ohne sie zu verändern. Automatisches Speichern ist lokal im Browser; verweigerter Speicher verhindert das Spielen nicht.
+Alle Informationen sind offen. Beide Seiten und die KI folgen denselben Regeln. Taktisch und Weitblick berechnen Eins-gegen-eins-Endspiele einschließlich vorhandener Wiederholungen und verbleibendem Zuglimit vollständig. Größere Stellungen haben begrenzte Suche; Entspannt bleibt eine einfache legale Suche.
 
-Die Vorschau zeigt zusätzlich eine konkrete sofortige gegnerische Gewinnantwort, falls eine existiert. Das ist eine exakte Ein-Zug-Prüfung, keine Sicherheitsgarantie. Auch ohne sofortige Gewinnantwort können spätere Drohungen bestehen. Das Vorschau-Brett ist schreibgeschützt; „Anderes Feld“ behält die gewählte Figur bei und lässt dich den Schritt neu wählen. Die Verschieberichtung wird ausschließlich durch Anklicken oder Aktivieren der Richtungsschaltfläche geändert, nicht durch Hover oder bloßen Tastaturfokus. Beide Hotseat-Seiten erhalten dieselbe Hilfe.
+Die Vorschau zeigt das gesamte Ergebnis und eine konkrete sofortige gegnerische Gewinnantwort, falls vorhanden. Keine Warnung bedeutet nur keine sofortige Gewinnantwort; spätere Drohungen sind möglich. Das Vorschau-Brett ist schreibgeschützt, „Anderes Feld“ behält die Figur bei. Richtungen ändern sich durch Aktivierung, nicht durch Hover oder bloßen Fokus. Ist nur eine Richtung legal, wird sie vorausgewählt und die andere als Leerzug erklärt.
+
+Rücknahme stellt die vollständige frühere Stellung samt Wiederholungen wieder her; im KI-Modus bis zur letzten menschlichen Entscheidung. Replay verändert die laufende Partie nicht. Neue Spielstände nutzen eine getrennte lokale Ablage; alte v1-Partien bleiben unverändert erhalten und werden nicht unter neuen Regeln fortgesetzt. Speichersperren verhindern das Spielen nicht.

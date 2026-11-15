@@ -1,0 +1,15 @@
+# Phase2: turns that matter
+
+Owner instruction: docs/PHASE_2_DIRECTIVE.md. Baseline34a7e57. No restart, existing1v1 correctness and intent-preserving preview retained. Environment startup initially canceled, then restored; original pasted directive downloaded/read, clean branch confirmed.
+
+Specific open problem: recorded multi-piece games26/27/30 end by alternating complete moves that do not change the board. This is a disguised pass even though the written rules say no pass. Do not assume every draw is a defect or turn the aggregate win rate into a fairness target.
+
+Three approaches:
+
+1. **Evolution / active turn:** A completed turn must change board occupancy or win the game. Opposite shift after a horizontal step remains valid when it transports others; a purely empty action is rejected. The win exception preserves an already transported gate occupant's existing ability to finish its own turn. Hypothesis: removing empty waits creates counterplay and tempo traps without another piece/action type. Risk: genuine waiting defenses disappear, zugzwang/start bias could worsen. Needs new independent legality checks, rule version/safe saves, endgame regeneration, and clear unavailable-direction feedback if adopted.
+2. **Innovation / resonance:** After the step/capture, a row containing both colors moves two squares instead of one. Same two directions, dynamic shared-row tension; removing/carrying an opponent changes the row's future response. Hypothesis: entering contested rows enables new combinations and discourages simple races. Risk: a conditional movement distance and capture-order interactions reduce clarity; isolated empty turns remain. Do not adopt merely because the variant produces more activity.
+3. **Radical / opposing steering:** Active player chooses step, opponent chooses shift. Creates robust destination threats/forks and direct opposition control. Risk: two decisions per turn, a much weaker single-piece gate attack, potentially long blockade play, new adversarial two-stage AI/UI. Reject as the first build unless the compact model demonstrably fails: it works against the brief's fast alternating turns.
+
+Research first: bounded prototype modules under work/phase2. Compare baseline/active/resonance with same search style, depth/budget, opposite starters, reflected positions and color assignments, independent transition oracle, unique trace counts, full histories. Include actual looping boards as explicitly fresh-history midgame fixtures and native opening games. Do not compare an adapted policy only against an unadapted old one.
+
+Choose exactly one rule/product approach after data; ship no permanent mode selector. If both variants fail, retain rules and implement the most valuable proven counterplay/puzzle interaction from the examined positions instead. A changed ruleset must have an explicit save version; old data remains labeled historical. Each verified product increment needs full UI matches/normal animation/mobile and a non-force verified push, then continue to the next observed bottleneck.

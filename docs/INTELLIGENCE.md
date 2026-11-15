@@ -1,3 +1,5 @@
+> Historical rules-v1 report through34a7e57. Current rules-v2 development and evidence: [PHASE_2.md](PHASE_2.md). References to prior tactical fixtures concern that Git revision.
+
 # Gameplay intelligence · 2026-11-15
 
 Ausgangspunkt d46be8b, Auftrag `NEXT_DEVELOPMENT_DIRECTIVE.md`. Regeln und Aufstellung bleiben in diesem Inkrement unverändert. Die versetzte Aufstellung wird nicht erneut als Balancekorrektur verkauft.
@@ -45,7 +47,7 @@ Die KI überspringt nun identische Folgestellungen innerhalb desselben Elternkno
 
 Neben den vier bestehenden vollständigen Matches weitere vollständige Partien gegen alle drei echten Worker-KI-Stufen: Entspannt17 Halbzüge/Elfenbeinsieg, Taktisch14/Jadesieg, Weitblick12/Jadesieg. Reale UI-Eingaben prüfen beide Richtungen des dokumentierten Konters, tatsächlichen Verlust, exakte Rücknahme, Transport-Sieg, Schlag+Transport, Tastaturbestätigung und Reload der Endstellung. Menschen wurden durch automatisierte Eingaben ersetzt; es gab keine menschlichen Testpersonen.
 
-Quellen: `intelligence.json`, `tie-audit.json`, `search-benchmark.json`, `counterplay-browser.json`. Reproduktion: `npm run research`, `node scripts/tie-audit.mjs`, `npm run benchmark`, `npm run smoke:counterplay`. Berichtete Suchknoten haben zwischen unterschiedlichen Suchimplementierungen verschiedene Definitionen; nur der kontrollierte Vorher-/Nachher-Benchmark vergleicht dieselbe Zählweise.
+Quellen: `intelligence.json`, `tie-audit.json`, `search-benchmark.json`, `counterplay-browser.json`. Reproduktion: `npm run research:classic`, `node scripts/tie-audit.mjs`, `npm run benchmark`, `npm run smoke:counterplay`. Berichtete Suchknoten haben zwischen unterschiedlichen Suchimplementierungen verschiedene Definitionen; nur der kontrollierte Vorher-/Nachher-Benchmark vergleicht dieselbe Zählweise.
 
 
 ## Weitergearbeitet nach Checkpoint0f2f366: Torwege
@@ -73,4 +75,4 @@ Acht kontrollierte Fortsetzungen aus den beiden echten Anfangshistorien reproduz
 
 Taktisch und Weitblick nutzen den Löser, sobald nur eine Figur je Seite übrig ist; Entspannt bleibt begrenzte Suche. Die dokumentierten normalen Suchhorizonte gelten für größere Materialzahlen. Es wurden keine Regeln, Torpositionen oder Figuren geändert. Im tatsächlichen Browser wurde die gespeicherte Partie bei21 mit bestmöglicher menschlicher Jade-Verteidigung über reale Eingaben bis zum korrekten Elfenbeinsieg bei33 gespielt. Die sieben vollständigen bisherigen Matches und alle Animations-/Vorschau-/Mobilprüfungen bleiben grün. Insgesamt32 Node-Tests.
 
-Die aktuelle allgemeine800-Profil-Stichprobe endet weiterhin76-mal remis. Der gezielte Endspiel-Fix beseitigt also die nachgewiesene Fehleinschätzung, ohne dass daraus eine niedrigere globale Remisrate behauptet wird. Mehrfiguren-Pendeln und menschliche Spannung bleiben offen. Reproduktion: `npm run research:endgames`; vollständige Quellenfingerprints und Verläufe in `docs/endgames.json`. `docs/playtest-current.json` nutzt jetzt tatsächlich die Endspieloptionen der ausgelieferten starken Profile; `docs/playtest.json` bleibt historisch.
+Die aktuelle allgemeine800-Profil-Stichprobe endet weiterhin76-mal remis. Der gezielte Endspiel-Fix beseitigt also die nachgewiesene Fehleinschätzung, ohne dass daraus eine niedrigere globale Remisrate behauptet wird. Mehrfiguren-Pendeln und menschliche Spannung bleiben offen. Reproduktion: `npm run research:endgames:v1`; vollständige Quellenfingerprints und Verläufe in `docs/endgames.json`. `docs/playtest-current.json` nutzt jetzt tatsächlich die Endspieloptionen der ausgelieferten starken Profile; `docs/playtest.json` bleibt historisch.

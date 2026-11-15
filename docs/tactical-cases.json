@@ -1,8 +1,8 @@
 {
   "rules": "unchanged VERSATZ v1",
   "budget": {
-    "positions": 26,
-    "transitions": 469,
+    "positions": 30,
+    "transitions": 426,
     "limit": 120000
   },
   "cases": {
@@ -212,8 +212,8 @@
           "shift": 1
         },
         {
-          "from": 11,
-          "to": 12,
+          "from": 1,
+          "to": 0,
           "shift": -1
         },
         {
@@ -258,8 +258,28 @@
         },
         {
           "from": 7,
-          "to": 6,
+          "to": 2,
           "shift": 1
+        },
+        {
+          "from": 0,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
         },
         {
           "from": 21,
@@ -280,8 +300,8 @@
       "witnesses": [
         {
           "reply": {
-            "from": 7,
-            "to": 2,
+            "from": 1,
+            "to": 0,
             "shift": -1
           },
           "win": {
@@ -297,7 +317,7 @@
         },
         {
           "reply": {
-            "from": 7,
+            "from": 1,
             "to": 2,
             "shift": 1
           },
@@ -314,7 +334,7 @@
         },
         {
           "reply": {
-            "from": 7,
+            "from": 1,
             "to": 6,
             "shift": -1
           },
@@ -331,76 +351,8 @@
         },
         {
           "reply": {
-            "from": 7,
+            "from": 1,
             "to": 6,
-            "shift": 1
-          },
-          "win": {
-            "move": {
-              "from": 15,
-              "to": 20,
-              "shift": -1
-            },
-            "reason": "gate",
-            "goal": 22,
-            "landing": 24
-          }
-        },
-        {
-          "reply": {
-            "from": 7,
-            "to": 8,
-            "shift": -1
-          },
-          "win": {
-            "move": {
-              "from": 15,
-              "to": 20,
-              "shift": -1
-            },
-            "reason": "gate",
-            "goal": 22,
-            "landing": 24
-          }
-        },
-        {
-          "reply": {
-            "from": 7,
-            "to": 8,
-            "shift": 1
-          },
-          "win": {
-            "move": {
-              "from": 15,
-              "to": 20,
-              "shift": -1
-            },
-            "reason": "gate",
-            "goal": 22,
-            "landing": 24
-          }
-        },
-        {
-          "reply": {
-            "from": 7,
-            "to": 12,
-            "shift": -1
-          },
-          "win": {
-            "move": {
-              "from": 15,
-              "to": 20,
-              "shift": -1
-            },
-            "reason": "gate",
-            "goal": 22,
-            "landing": 24
-          }
-        },
-        {
-          "reply": {
-            "from": 7,
-            "to": 12,
             "shift": 1
           },
           "win": {
@@ -456,13 +408,13 @@
           },
           "win": {
             "move": {
-              "from": 1,
-              "to": 0,
+              "from": 15,
+              "to": 10,
               "shift": -1
             },
             "reason": "gate",
             "goal": 22,
-            "landing": 4
+            "landing": 14
           }
         },
         {
@@ -490,13 +442,13 @@
           },
           "win": {
             "move": {
-              "from": 1,
-              "to": 0,
+              "from": 15,
+              "to": 10,
               "shift": -1
             },
             "reason": "gate",
             "goal": 22,
-            "landing": 4
+            "landing": 14
           }
         },
         {
@@ -581,8 +533,8 @@
           "shift": 1
         },
         {
-          "from": 11,
-          "to": 12,
+          "from": 1,
+          "to": 0,
           "shift": -1
         },
         {
@@ -627,8 +579,28 @@
         },
         {
           "from": 7,
-          "to": 6,
+          "to": 2,
           "shift": 1
+        },
+        {
+          "from": 0,
+          "to": 5,
+          "shift": 1
+        },
+        {
+          "from": 3,
+          "to": 4,
+          "shift": 1
+        },
+        {
+          "from": 6,
+          "to": 1,
+          "shift": 1
+        },
+        {
+          "from": 1,
+          "to": 2,
+          "shift": -1
         },
         {
           "from": 21,
@@ -646,14 +618,14 @@
           "shift": -1
         },
         {
-          "from": 7,
-          "to": 2,
-          "shift": -1
+          "from": 21,
+          "to": 16,
+          "shift": 1
         }
       ],
       "move": {
-        "from": 15,
-        "to": 20,
+        "from": 16,
+        "to": 21,
         "shift": -1
       },
       "goal": 22

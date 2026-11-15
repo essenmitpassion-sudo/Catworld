@@ -9,7 +9,7 @@ test('oracle catches a terminal gate win before an appended opponent action',()=
 test('recorded three-ply tactic covers every independently enumerated reply and wins on each branch',async()=>{
  const {readFile}=await import('node:fs/promises'),c=JSON.parse(await readFile('docs/tactical-cases.json','utf8')).cases.forcedThreePly;
  const start=c.prefix.reduce((s,m)=>applyMove(s,m),createGame(c.initial)),next=applyMove(start,c.move),independent=[];
- for(let y=0;y<5;y++)for(let x=0;x<5;x++)if(next.board[y*5+x]===next.turn)for(const [dx,dy]of [[0,1],[0,-1],[1,0],[-1,0]]){const nx=x+dx,ny=y+dy;if(nx<0||nx>4||ny<0||ny>4||next.board[ny*5+nx]===next.turn)continue;for(const shift of[-1,1])independent.push(JSON.stringify({from:y*5+x,to:ny*5+nx,shift}));}
+ for(let y=0;y<5;y++)for(let x=0;x<5;x++)if(next.board[y*5+x]===next.turn)for(const [dx,dy]of [[0,1],[0,-1],[1,0],[-1,0]]){const nx=x+dx,ny=y+dy;if(nx<0||nx>4||ny<0||ny>4||next.board[ny*5+nx]===next.turn)continue;for(const shift of[-1,1]){const m={from:y*5+x,to:ny*5+nx,shift};try{audit.auditTranscript(next,[m]);independent.push(JSON.stringify(m));}catch{}}}
  assert.deepEqual(new Set(c.witnesses.map(w=>JSON.stringify(w.reply))),new Set(independent));
  for(const witness of c.witnesses){const final=applyMove(applyMove(next,witness.reply),witness.win.move),oracle=audit.auditTranscript(createGame(c.initial),final.history);assert.equal(final.winner,start.turn);assert.equal(oracle.winner,start.turn);assert.equal(oracle.status,'won');}
 });

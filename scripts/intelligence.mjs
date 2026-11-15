@@ -1,8 +1,8 @@
-import {createGame,applyMove,legalMoves,validateSave,replay} from '../src/engine.js';
+import {createGame,applyMove,legalMoves,validateSave,replay} from '../research/rules-v1/engine.js';
 import {chooseMove,evaluate} from './lib/baseline-ai-v1.mjs';
-import {immediateWins,previewMove} from '../src/tactics.js';
-import {auditTranscript,transformGame,traceIdentity,opening,summarize} from './lib/audit.mjs';
-import {chooseReference} from './lib/reference-search.mjs';
+import {immediateWins,previewMove} from '../research/rules-v1/tactics.js';
+import {auditTranscript,transformGame,traceIdentity,opening,summarize} from '../research/rules-v1/audit.mjs';
+import {chooseReference} from '../research/rules-v1/reference-search.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';import {createHash} from 'node:crypto';import assert from 'node:assert/strict';
 const games=[],groups={},tactics=[];let serial=0;
 const hash=v=>createHash('sha256').update(JSON.stringify(v)).digest('hex');
@@ -47,5 +47,5 @@ for(const formation of [0,2])for(const starter of [1,-1])await match('random-gre
 for(const group of new Set(games.map(g=>g.group)))groups[group]=summarize(games.filter(g=>g.group===group));
 // Bounded AND/OR proof search. Returning false at the horizon is only "not won within horizon".
 function proof(formation,maxDepth=9,limit=250000){let nodes=0;const root=createGame({formation}),attacker=root.turn,STOP=Symbol();const layers=[];function visit(s,d){if(++nodes>limit)throw STOP;if(s.status==='won')return s.winner===attacker;if(s.status!=='playing'||!d)return false;const actions=legalMoves(s);if(s.turn===attacker){for(const m of actions)if(visit(applyMove(s,m),d-1))return true;return false;}for(const m of actions)if(!visit(applyMove(s,m),d-1))return false;return true;}for(let d=7;d<=maxDepth;d+=2){try{layers.push({plies:d,result:visit(root,d)?'forced-starter-win':'no-starter-win-within-horizon'});}catch(e){if(e!==STOP)throw e;layers.push({plies:d,result:'unknown-budget-exhausted'});break;}}return {formation,nodes:Math.min(nodes,limit),limit,layers};}
-const proofs=[proof(0),proof(2)],hashes={};for(const path of ['src/engine.js','src/ai.js','src/tactics.js','scripts/intelligence.mjs','scripts/lib/audit.mjs','scripts/lib/reference-search.mjs','scripts/lib/baseline-ai-v1.mjs'])hashes[path]=createHash('sha256').update(await readFile(path)).digest('hex');
+const proofs=[proof(0),proof(2)],hashes={};for(const path of ['research/rules-v1/engine.js','research/rules-v1/ai.js','research/rules-v1/tactics.js','scripts/intelligence.mjs','scripts/lib/audit.mjs','scripts/lib/reference-search.mjs','scripts/lib/baseline-ai-v1.mjs'])hashes[path]=createHash('sha256').update(await readFile(path)).digest('hex');
 const report={date:'2026-11-15',base:'d46be8b',aiBaseline:'Frozen scripts/lib/baseline-ai-v1.mjs from d46be8b; production AI may be newer.',rulesUnchanged:true,method:'Small controlled horizon/evaluation/opening/counterplay experiments. Full histories independently checked. Rotated/reflected duplicates identified explicitly; seed does not itself mean a new independent opening.',limitations:['No perfect-play balance claim.','Reported search nodes have implementation-specific definitions and are not directly comparable across policies.','Reference policies use canonical color-relative tie breaks, so paired rotations are correlated negative controls, not independent samples.','Guarded policy combines an exact immediate-loss filter with one-ply ranking; its strength is not a human-learning result.','Openings are randomized legal prefixes and may already favor one side.','Depth/budget totals and exact source hashes are logged.'],hashes,groups,proofs,games,tactics};await writeFile('docs/intelligence.json',JSON.stringify(report,null,2));console.log('SUMMARY',JSON.stringify({groups,proofs}));

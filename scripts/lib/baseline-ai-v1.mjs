@@ -1,4 +1,4 @@
-import {advance,legalMoves,positionKey} from '../../src/engine.js';
+import {advance,legalMoves,positionKey} from '../../research/rules-v1/engine.js';
 const WIN=100000;
 /** Evaluation is a hypothesis. Exact wins/captures come from the same public rules. */
 export function evaluate(s,side,style='balanced'){
