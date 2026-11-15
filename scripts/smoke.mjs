@@ -1,32 +1,70 @@
-import {chromium} from '@playwright/test';import {readFile,mkdir,writeFile} from 'node:fs/promises';import assert from 'node:assert/strict';
-await mkdir('work',{recursive:true});const html=await readFile('dist/SIGNALBRUCH.html','utf8'),examples=JSON.parse(await readFile('work/signalbruch-examples.json','utf8')),errors=[],covered=new Set();
-assert(examples.win&&examples.loss&&examples.takeover,'real full-match fixtures must include both outcomes and interception');
+import {chromium} from '@playwright/test';
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+await mkdir('work',{recursive:true});
+const html=await readFile('dist/index.html','utf8'),examples=JSON.parse(await readFile('work/sog-examples.json','utf8')),errors=[];
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-async function open(seed,width=1280,denied=false){const context=await browser.newContext({viewport:{width,height:1050},deviceScaleFactor:2,reducedMotion:'reduce'});if(denied)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}}));const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.route('**/*',r=>r.request().url().startsWith('https://signalbruch.test/')?r.fulfill({contentType:'text/html',body:html}):r.abort());await page.goto('https://signalbruch.test/?seed='+seed);await page.locator('#pace').selectOption('fast');return{page,context};}
-const stored=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('signalbruch.match')));
-const ready=page=>page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('signalbruch.match'));return s.phase==='over'||s.phase==='playing'&&s.turn===0;});
-async function action(page,a){await page.locator('#mode-'+a.type).click();if(a.type==='send'){await page.locator(`[data-node="${a.source}"]`).click();await page.locator(`[data-node="${a.to}"]`).click();}else if(a.type==='redirect'){await page.locator(`[data-node="${a.relay}"]`).click();await page.locator(`[data-node="${a.to}"]`).click();}else await page.locator(`[data-packet="${a.packet}"]`).click();covered.add(a.type);}
-try{
- for(const kind of ['win','loss','takeover']){
-  const e=examples[kind],{page,context}=await open(e.seed);assert.equal(await page.locator('[data-node]').count(),9);assert.equal(await page.title(),'SIGNALBRUCH — Der Weg der Entscheidung');
-  if(kind==='win'){
-   await page.locator('#rules-button').click();assert.equal(await page.locator('#rules').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#rules').isVisible(),false);
-   for(const width of [320,390,768,1920]){await page.setViewportSize({width,height:1050});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`no overflow at ${width}`);const box=await page.locator('[data-node="4"]').boundingBox();assert(box.width>=40,'relay hit target must remain usable');}
-   await page.setViewportSize({width:320,height:1050});await page.screenshot({path:'work/signalbruch-mobile.png',fullPage:true});await page.setViewportSize({width:1280,height:1050});await page.screenshot({path:'work/signalbruch-desktop.png',fullPage:true});
-  }
-  await page.locator('#start').click();let human=0;
-  while((await stored(page)).phase!=='over'){
-   await ready(page);const s=await stored(page);if(s.phase==='over')break;const planned=e.moves[s.ply];assert.equal(planned.side,0,'UI must follow the actual deterministic opponent trace');
-   await action(page,planned.action);human++;
-   if(kind==='win'&&human===3){const saved=await stored(page);await page.reload();await ready(page);const resumed=await stored(page);assert(resumed.ply>=saved.ply&&resumed.ply<=saved.ply+2);assert.deepEqual(resumed.history.slice(0,saved.ply),saved.history,'reload must preserve the exact completed action');}
-   if(kind==='win'&&human===5)await page.screenshot({path:'work/signalbruch-live.png',fullPage:true});
-   assert(human<=24);
-  }
-  const end=await stored(page);assert.equal(end.winner,e.winner);assert.equal(await page.locator('#result').isVisible(),true);assert.deepEqual([end.nodes[0].integrity,end.nodes[8].integrity],e.hq);assert(end.tick<=24);await page.screenshot({path:`work/signalbruch-${kind}.png`,fullPage:true});
-  await page.locator('#watch').click();assert.equal(await page.locator('.packet').count(),0,'initial replay has no future signals');await page.locator('#replay-range').fill(String(end.ply));assert.deepEqual(await stored(page),end);await page.locator('#replay-close').click();assert.deepEqual(await stored(page),end);
-  await page.locator('#new-game').click();const fresh=await stored(page);assert.notEqual(fresh.seed,end.seed);assert.equal(fresh.phase,'setup');assert.equal(fresh.tick,0);await context.close();console.log(`Complete real UI ${kind} / both-action ticks / reload / replay / restart: PASS (${end.tick} net ticks)`);
+const stored=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('sog.match')));
+async function open(seed=3,starter=0,width=1280,{denied=false,reduced=true,corrupt=false,restore=null}={}) {
+ const context=await browser.newContext({viewport:{width,height:850},deviceScaleFactor:1,reducedMotion:reduced?'reduce':'no-preference',hasTouch:width<500});
+ if(denied)await context.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('denied');}}));
+ if(restore)await context.addInitScript(value=>localStorage.setItem('sog.match',JSON.stringify(value)),restore);
+ if(corrupt)await context.addInitScript(()=>{localStorage.setItem('sog.match','{broken');localStorage.setItem('signalbruch.match','legacy-preserved');});
+ const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
+ await page.route('**/*',r=>r.request().url().startsWith('https://sog.test/')?r.fulfill({contentType:'text/html',body:html}):r.abort());
+ await page.goto(`https://sog.test/?seed=${seed}&starter=${starter}`);return{page,context};
+}
+const ready=page=>page.waitForFunction(()=>{const s=JSON.parse(localStorage.getItem('sog.match'));return s&&(s.phase==='over'||s.turn===0);});
+try {
+ const corrupt=await open(3,0,320,{corrupt:true});
+ assert.equal(await corrupt.page.locator('#storage-note').textContent(),'','bad JSON must not claim storage is unavailable');
+ assert.match(await corrupt.page.locator('#hint').textContent(),/beschädigt/);
+ assert.equal(await corrupt.page.evaluate(()=>localStorage.getItem('signalbruch.match')),'legacy-preserved');
+ assert.equal((await stored(corrupt.page)).ply,0);await corrupt.context.close();
+ const first=await open(3,0,320);let p=first.page;
+ assert.equal(await p.locator('[data-cell]').count(),25,'initial board must be immediately playable');
+ assert.equal(await p.locator('#start').count(),0,'no Start/tutorial gate');
+ assert.equal(await p.locator('#rules').getAttribute('open'),null,'rules are optional and closed');
+ const goal=await p.locator('#goal').textContent();assert.match(goal,/Vier/);
+ for(const width of [320,390,768,1440]) {
+  await p.setViewportSize({width,height:850});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  const b=await p.locator('#board').boundingBox(),cell=await p.locator('[data-cell="12"]').boundingBox();assert(b.y+b.height<850,'entire board before scroll');assert(cell.width>=44,'usable touch target');
  }
- assert.deepEqual([...covered].sort(),['redirect','send','takeover']);
- const {page,context}=await open(42,320,true);await page.locator('#start').click();await page.locator('#mode-send').click();await page.locator('[data-node="1"]').click();await page.locator('[data-node="3"]').click();assert.match(await page.locator('#save-status').textContent(),/SPEICHERT NICHT/);await context.close();
- assert.deepEqual(errors,[]);await writeFile('work/signalbruch-browser-result.json',JSON.stringify({win:true,loss:true,takeover:true,allThreeHumanActions:true,pendingTickReload:true,replay:true,restart:true,storageDenied:true,widths:[320,390,768,1920],errors},null,2));console.log('All three human action types, conditional forecasts, responsive portrait map, native rules, denied storage and no runtime errors: PASS');
-}finally{await browser.close();}
+ await p.setViewportSize({width:320,height:700});await p.screenshot({path:'work/sog-mobile.png',fullPage:true});
+ await p.locator('[data-cell="12"]').focus();await p.keyboard.press('Enter');assert.equal((await stored(p)).history[0],12);
+ await p.locator('#undo').click();assert.equal((await stored(p)).ply,0);await p.waitForTimeout(800);assert.equal((await stored(p)).ply,0,'undo cancels pending AI');
+ await p.locator('[data-cell="10"]').click();const pending=await stored(p);assert.equal(pending.ply,1);await p.reload();await ready(p);const resumed=await stored(p);assert.equal(resumed.ply,2);assert.equal(resumed.history[0],10);await first.context.close();
+ console.log('Immediate board / no gate / responsive first click / keyboard / pending AI undo + reload: PASS');
+ for(const kind of ['win','loss']) {
+  const e=examples[kind];assert(e,`complete ${kind} fixture required`);const {page,context}=await open(e.seed,e.starter);let pulls=0,enemyPulls=0;
+  while((await stored(page)).phase!=='over') {
+   await ready(page);const s=await stored(page);if(s.phase==='over')break;
+   const cell=e.state.history[s.ply];assert.equal(s.turn,0);await page.locator(`[data-cell="${cell}"]`).click();
+   const committed=await stored(page);pulls+=committed.last.pulls.length;enemyPulls+=committed.last.pulls.filter(p=>p.side===1).length;
+   if(kind==='win'&&committed.ply>=5&&pulls)await page.screenshot({path:'work/sog-live.png',fullPage:true});
+  }
+  const end=await stored(page);assert.equal(end.winner,e.winner);assert.deepEqual(end.board,e.state.board);assert.equal(await page.locator('#result').isVisible(),true);
+  await page.screenshot({path:`work/sog-${kind}.png`,fullPage:true});
+  await page.locator('#watch').click();await page.locator('#replay-range').fill('0');assert.equal(await page.locator('.stone').count(),2,'only the two starting stones appear in initial replay');assert.deepEqual(await stored(page),end);
+  await page.locator('#replay-close').click();assert.deepEqual(await stored(page),end);await page.locator('#new-game').click();const fresh=await stored(page);assert.notEqual(fresh.seed,end.seed);assert.equal(fresh.phase,'playing');
+  await context.close();console.log(`Complete actual UI ${kind}: PASS (${end.ply} actions, human pulled ${enemyPulls} enemy stones)`);
+ }
+ const draw=examples.draw,{page:drawPage,context:drawContext}=await open(draw.seed,draw.starter,1280,{restore:draw.state});
+ assert.equal((await stored(drawPage)).phase,'over');assert.equal(await drawPage.locator('#result').isVisible(),true);assert.match(await drawPage.locator('#status').textContent(),/Unentschieden/);
+ await drawPage.waitForTimeout(650);assert.deepEqual(await stored(drawPage),draw.state,'terminal reload never schedules AI');
+ await drawPage.locator('#watch').click();await drawPage.locator('#replay-range').fill('0');assert.equal(await drawPage.locator('.stone').count(),2);await drawPage.locator('#replay-close').click();assert.deepEqual(await stored(drawPage),draw.state);
+ await drawPage.screenshot({path:'work/sog-draw.png',fullPage:true});await drawContext.close();console.log('Legal full-board draw save: restored and replayed; no AI-match claim');
+ const normal=await open(13,0,1280,{reduced:false}),np=normal.page;
+ const original=await np.locator('#stones .blue').elementHandle(),before=await original.boundingBox();
+ await np.locator('[data-cell="12"]').hover();assert.equal(await np.locator('.ghost').count(),3);assert.match(await np.locator('#hint').textContent(),/1 blaue und 1 rote/);
+ await np.locator('[data-cell="12"]').click();await np.waitForTimeout(70);
+ assert.equal(await original.evaluate(el=>el.isConnected),true,'moving stone retains its DOM identity');
+ const moving=await original.boundingBox();assert(moving.x<before.x-1,'real stone moves toward the anchor');assert.match(await np.locator('#status').textContent(),/Dein Stein zieht/);
+ await np.locator('#undo').click();await np.waitForTimeout(750);assert.equal((await stored(np)).ply,0);assert.equal(await np.locator('#stones .stone').count(),2);
+ await np.locator('[data-cell="12"]').click();await np.waitForFunction(()=>JSON.parse(localStorage.getItem('sog.match')).ply===2);assert.match(await np.locator('#status').textContent(),/Rot zieht/);
+ await np.waitForFunction(()=>document.querySelector('#status').textContent==='Setze einen blauen Stein.');await np.screenshot({path:'work/sog-desktop.png',fullPage:true});await normal.context.close();
+ console.log('Exact shared-pull preview / real normal-motion stones / feedback actor / cancel during motion: PASS');
+ const {page,context}=await open(42,0,320,{denied:true});await page.locator('[data-cell="12"]').click();assert.match(await page.locator('#storage-note').textContent(),/Speicher/);await context.close();
+ assert.deepEqual(errors,[]);
+ await writeFile('work/sog-browser-result.json',JSON.stringify({immediateBoard:true,keyboard:true,undoPendingAI:true,pendingReload:true,win:true,loss:true,drawRestored:true,normalMotion:true,exactPreview:true,corruptStorage:true,legacyStoragePreserved:true,replayReadOnly:true,newMatch:true,deniedStorage:true,widths:[320,390,768,1440],errors},null,2)+'\n');
+} finally {await browser.close();}

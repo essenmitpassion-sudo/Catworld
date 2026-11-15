@@ -1,85 +1,178 @@
-import {createGame,startGame,legalActions,applyAction,validateGame,replayGame,ownerOf,neighbors,predictPacket,CONFIG,NODE_DEFS} from './engine.js';
-import {chooseAction} from './ai.js';
-const $=id=>document.getElementById(id),root=$('app');let storageAvailable=true;
-const read=(key,fallback)=>{try{return localStorage.getItem('signalbruch.'+key)??fallback;}catch{storageAvailable=false;return fallback;}};
-const write=(key,value)=>{try{localStorage.setItem('signalbruch.'+key,value);}catch{storageAvailable=false;}};
-const freshSeed=()=>{try{return crypto.getRandomValues(new Uint32Array(1))[0];}catch{return Date.now()>>>0;}};
-const q=new URLSearchParams(location.search),requested=q.has('seed')&&/^\d+$/.test(q.get('seed'))?Number(q.get('seed'))>>>0:null;
-let game;try{const saved=validateGame(JSON.parse(read('match','null')));game=saved&&(requested===null||saved.seed===requested)?saved:createGame(requested??freshSeed());}catch{game=createGame(requested??freshSeed());}
-let mode='send',selected=null,inspected=null,packetSelected=null,notice='',replayIndex=null,timer=null,seenEventPly=-1;
-let style=read('style','tactical');if(!['tactical','pressure','network'].includes(style))style='tactical';let pace=read('pace','normal');if(!['normal','fast'].includes(pace))pace='normal';
-root.innerHTML=`<main class="shell"><header><a class="brand" href="#" aria-label="SIGNALBRUCH"><span class="brand-mark" aria-hidden="true">⌁</span>SIGNAL<span>BRUCH</span></a><div class="header-actions"><span class="edition">NETZWERKSTRATEGIE / PROTOTYP 01</span><button id="rules-button" class="quiet">SO FUNKTIONIERT'S &nbsp; ?</button></div></header>
-<section class="intro"><div><div class="eyebrow">NICHT DIE KARTE. DEN WEG DER ENTSCHEIDUNG.</div><h1>Der Befehl ist unterwegs.<br><em>Die Lage verändert sich.</em></h1><p>Siedlungen senden selbständig. Du entscheidest, welche Signale ankommen.<span class="goal">Ziel: gegnerische Zentralstabilität auf 0 bringen.</span></p></div><div class="legend"><span><i class="west"></i>DEIN NETZ</span><span><i class="east"></i>GEGNER</span><span><i class="relay"></i>GEMEINSAME WEICHE</span></div></section>
-<section class="scoreboard" aria-label="Zentralstabilität"><div class="score own"><span class="small-label">WESTZENTRALE · DU</span><div><strong id="own-hp"></strong><small>STABILITÄT</small></div><div id="own-pips" class="pips"></div></div><div class="clock"><span id="round-label"></span><b id="turn-label"></b><small id="tick-hint"></small></div><div class="score foe"><span class="small-label">OSTZENTRALE · GEGNER</span><div><strong id="enemy-hp"></strong><small>STABILITÄT</small></div><div id="enemy-pips" class="pips"></div></div></section>
-<section id="setup" class="setup"><div><span class="eyebrow">DEIN ERSTER NETZTAKT</span><h2>Drei Eingriffe. Eine eigenwillige Welt.</h2><p><b>Senden:</b> Zwei Puffer für ein starkes Signal. <b>Umleiten:</b> Eine gemeinsame Weiche bis zum Netztakt festlegen. <b>Übernehmen:</b> Ein wartendes Gegnersignal für 1 eigene Stabilität umsignieren.</p><p id="initiative"></p></div><button id="start" class="primary">PARTIE STARTEN <span>→</span></button></section>
-<div class="game-layout"><section class="map-section" aria-label="Strategiekarte"><div class="map-head"><span id="map-status">NETZ BEREIT</span><span>Zahlen auf Verbindungen = Netztakte</span></div><div class="map-world" id="map-world"><svg id="map-lines" aria-hidden="true"></svg><div id="nodes"></div><div id="packets"></div></div><div class="map-caption"><span>□ SIEDLUNG &nbsp; ◇ ZENTRALE &nbsp; ○ RELAIS</span><span>● SIGNAL &nbsp; ◆ VERSIEGELT</span></div><p id="hint" class="hint" role="status" aria-live="polite"></p></section>
-<aside><section id="result" class="panel result" hidden aria-live="polite"><span class="eyebrow">DAS NETZ HAT ENTSCHIEDEN</span><h2 id="result-title"></h2><p id="result-reason"></p><button id="result-new" class="primary">NEUE PARTIE →</button></section>
-<section class="panel control"><span class="eyebrow">DEIN EINGRIFF</span><nav class="action-tabs" aria-label="Aktion"><button id="mode-send" data-mode="send" aria-pressed="true"><b>01</b>SENDEN</button><button id="mode-redirect" data-mode="redirect" aria-pressed="false"><b>02</b>UMLEITEN</button><button id="mode-takeover" data-mode="takeover" aria-pressed="false"><b>03</b>ÜBERNEHMEN</button></nav><h2 id="selection-title">Wähle eine Siedlung.</h2><p id="selection-copy"></p><div id="choices" class="choices"></div><p class="conditional">Prognose: heutige Weichenstellung. Weitere Eingriffe können den Weg verändern.</p></section>
-<section class="panel arrivals"><span class="eyebrow">SIGNALE IM NETZ</span><div id="signal-list"></div></section>
-<section class="panel log"><span class="eyebrow">WAS TATSÄCHLICH ANKAM</span><ol id="log"></ol></section></aside></div>
-<section class="bottom-bar"><div class="match-actions"><button id="new-game" class="secondary">NEUE PARTIE ↗</button><button id="retry" class="quiet">DIESES NETZ ERNEUT</button><button id="watch" class="quiet">VERLAUF ANSEHEN</button></div><div class="preferences"><label>Gegner<select id="ai-style"><option value="tactical">Vorausschauend</option><option value="pressure">Druckvoll</option><option value="network">Netzwerker</option></select></label><label>Tempo<select id="pace"><option value="normal">Ruhig</option><option value="fast">Zügig</option></select></label></div></section>
-<section id="replay-panel" class="replay-panel" hidden><label for="replay-range">VERLAUF <b id="replay-label"></b></label><input id="replay-range" type="range" min="0" max="0" value="0"><button id="replay-close" class="secondary">ZUR PARTIE</button></section><footer><span id="seed-label"></span><span id="save-status"></span><span>LOKAL · DETERMINISTISCH · KEIN BACKEND</span></footer></main>
-<dialog id="rules"><div class="rules-head"><span class="eyebrow">DIE REGELN DES SIGNALBRUCHS</span><button id="rules-close" class="quiet">SCHLIESSEN ×</button></div><h2>Deine Entscheidung<br>reist durch das Netz.</h2><ol><li><b>Ziel:</b> Bringe die gegnerische Zentrale von ${CONFIG.hqIntegrity} Stabilität auf 0. Eigene Signale an der eigenen Zentrale kehren wirkungslos heim. Siedlungen können verstärkt, neutralisiert und übernommen werden.</li><li><b>Ein Eingriff pro Seite, dann ein Netztakt:</b> Erst handeln beide Seiten. Danach reisen Signale weiter und Siedlungen handeln automatisch. Wer zuerst handelt, wechselt jede Runde. Dadurch kann die KI zwischen zwei deiner Züge zweimal handeln.</li><li><b>Senden:</b> Eine eigene Siedlung braucht ${CONFIG.sendCost} Puffer. Wähle sie und dann einen direkten Nachbarn. Du sendest Stärke ${CONFIG.sendPower} und legst damit auch ihren ständigen Ausgang fest.</li><li><b>Umleiten:</b> Wähle ein gemeinsames Relais und einen Nachbarn. Dieser Ausgang gilt für beide Seiten. Die Weiche rastet bis zum nächsten Netztakt ein und kann in dieser Runde nicht zurückgestellt werden.</li><li><b>Übernehmen:</b> Ein unversiegeltes Gegnersignal muss gerade in einem Relais warten. Du änderst seine Seite; danach ist es versiegelt und kann nicht erneut übernommen werden. Signale im Flug sind nicht erreichbar. Die Übernahme kostet ${CONFIG.takeoverCost} eigene Zentralstabilität; der letzte Punkt darf nicht verbraucht werden.</li><li><b>Autonome Siedlungen:</b> Pro Netztakt +1 Puffer. Bei ${CONFIG.buffer} senden sie selbst Stärke ${CONFIG.autoPower} über ihren bestehenden Ausgang und beginnen wieder bei 0. Auch nach Kontrollwechsel bleibt der Ausgang bestehen.</li><li><b>Ankunft:</b> Gleichzeitige Einflüsse auf Siedlungen werden gemeinsam verrechnet. Ihre Bindung reicht von Ost ${CONFIG.influence} bis West ${CONFIG.influence}; 0 ist neutral und sendet nicht. Eine fremde Nachricht an einer Zentrale senkt deren Stabilität.</li><li><b>Reisezeit:</b> Verbindungen kosten 1–3 Takte. In einem Relais wartet ein Signal bis zum nächsten Takt, sodass beide Seiten eingreifen können. Nach ${CONFIG.packetLife} Takten verfällt es. Bei ${CONFIG.maxTicks} Takten ohne Zentralübernahme: Remis.</li></ol><p>Alle Informationen sind öffentlich. Die KI nutzt dieselben legalen Eingriffe. Prognosen setzen voraus, dass niemand danach die Weiche ändert.</p><button id="rules-play" class="primary">VERSTANDEN →</button></dialog>`;
-const nodeButtons=[],packetButtons=new Map();
-for(const def of NODE_DEFS){const b=document.createElement('button');b.type='button';b.className='node';b.dataset.node=def.id;b.addEventListener('click',()=>clickNode(def.id));$('nodes').append(b);nodeButtons.push(b);}
-function active(){return game.phase==='playing'&&game.turn===0&&replayIndex===null;}
-function shown(){return replayIndex===null?game:replayGame(game,replayIndex);}
-function persist(){write('match',JSON.stringify(game));try{const u=new URL(location.href);u.searchParams.set('seed',String(game.seed));history.replaceState({},'',u);}catch{}}
-function geometry(){return matchMedia('(max-width:680px)').matches?{width:600,height:900,point:d=>({x:d.y,y:900-d.x})}:{width:900,height:600,point:d=>({x:d.x,y:d.y})};}
-function act(action){if(!active())return;try{game=applyAction(game,action);selected=null;packetSelected=null;notice='';persist();render();scheduleAI();}catch(e){notice=e.message;render();}}
-function clickNode(id){inspected=id;packetSelected=null;if(!active()){render();return;}const actions=legalActions(game),n=game.nodes[id];
- if(selected!==null){const a=actions.find(a=>mode==='send'?a.type==='send'&&a.source===selected&&a.to===id:mode==='redirect'?a.type==='redirect'&&a.relay===selected&&a.to===id:false);if(a){act(a);return;}}
- if(mode==='send'&&n.kind==='town'&&ownerOf(n)===0){selected=selected===id?null:id;notice=n.buffer<CONFIG.sendCost?'Hier fehlen noch Puffer. Die Siedlung lädt beim Netztakt selbständig.':'';}
- else if(mode==='redirect'&&n.kind==='relay'){selected=selected===id?null:id;notice=n.locked?'Diese Weiche ist bis zum Netztakt eingerastet.':'';}
- else notice=n.kind==='relay'?'Diese Weiche gilt für beide Seiten. Nutze „Umleiten“.':n.kind==='town'?'Stärke ändert die Bindung einer Siedlung erst bei Ankunft.':'Fremde Signale an dieser Zentrale senken ihre Stabilität.';render();
-}
-function clickPacket(id){packetSelected=id;const a=active()&&mode==='takeover'?legalActions(game).find(a=>a.type==='takeover'&&a.packet===id):null;if(a){act(a);return;}notice='';render();}
-function option(action,label,detail){const b=document.createElement('button');b.className='choice';b.innerHTML=`<strong>${label}</strong><span>${detail}</span>`;b.addEventListener('click',()=>act(action));return b;}
-function render(){
- const s=shown(),g=geometry(),legal=active()?legalActions(game):[],selectedNode=selected!==null?s.nodes[selected]:null;
- $('setup').hidden=s.phase!=='setup';$('result').hidden=game.phase!=='over'||replayIndex!==null;$('own-hp').textContent=s.nodes[0].integrity;$('enemy-hp').textContent=s.nodes[8].integrity;
- for(const [id,hp] of [['own-pips',s.nodes[0].integrity],['enemy-pips',s.nodes[8].integrity]])$(id).innerHTML=Array.from({length:CONFIG.hqIntegrity},(_,i)=>`<i class="${i<hp?'filled':''}"></i>`).join('');
- $('round-label').textContent=s.phase==='setup'?'VERBINDUNGEN AUFGEBAUT':`NETZTAKT ${s.tick} / ${CONFIG.maxTicks}${replayIndex!==null?' · VERLAUF':''}`;
- $('turn-label').textContent=replayIndex!==null?'Vergangener Zustand':s.phase==='setup'?'Das Netz wartet.':s.phase==='over'?s.winner===null?'Remis.':s.winner===0?'Deine Verbindung hält.':'Deine Zentrale fällt.':s.turn===0?'Du greifst ein.':'Gegner plant…';
- $('tick-hint').textContent=s.phase==='playing'?(s.acted[1-s.turn]?'Dieser Eingriff löst den Netztakt aus.':'Danach hat die andere Seite ihren Eingriff.'):'Beide Seiten handeln, dann reist das Signal.';
- $('initiative').textContent=game.initialStarter===0?'Du beginnst. Das Startrecht wechselt nach jedem Netztakt.':'Der Gegner beginnt. Das Startrecht wechselt nach jedem Netztakt.';
- $('map-status').textContent=`${s.packets.length} SIGNALE · ${s.nodes.filter(n=>n.kind==='town'&&ownerOf(n)===0).length} DEINER SIEDLUNGEN`;
- const w=$('map-world');w.style.aspectRatio=`${g.width}/${g.height}`;$('map-lines').setAttribute('viewBox',`0 0 ${g.width} ${g.height}`);
- const point=id=>g.point(NODE_DEFS[id]);let lines='<defs><marker id="route-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#ba8c45"/></marker></defs>';
- for(const e of s.edges){const a=point(e.a),b=point(e.b),chosen=selectedNode&&legal.some(v=>mode==='send'?v.type==='send'&&v.source===selected&&(v.to===e.a||v.to===e.b)&&(selected===e.a||selected===e.b):mode==='redirect'?v.type==='redirect'&&v.relay===selected&&(v.to===e.a||v.to===e.b)&&(selected===e.a||selected===e.b):false);lines+=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" class="connection ${chosen?'possible':''}"/><rect x="${(a.x+b.x)/2-11}" y="${(a.y+b.y)/2-10}" width="22" height="20" rx="5" class="delay-bg"/><text x="${(a.x+b.x)/2}" y="${(a.y+b.y)/2+6}" text-anchor="middle" class="delay">${e.delay}</text>`;}
- for(const n of s.nodes.filter(n=>n.kind==='relay')){const a=point(n.id),b=point(n.out),dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);lines+=`<line x1="${a.x+dx/len*35}" y1="${a.y+dy/len*35}" x2="${a.x+dx/len*Math.min(len-38,85)}" y2="${a.y+dy/len*Math.min(len-38,85)}" class="routing ${n.locked?'locked':''}" marker-end="url(#route-arrow)"/>`;}
- $('map-lines').innerHTML=lines;
- const flashed=s.last?.events.filter(e=>['arrival','auto'].includes(e.type)).map(e=>e.node)??[];
- for(const n of s.nodes){const b=nodeButtons[n.id],d=NODE_DEFS[n.id],p=point(n.id),owner=ownerOf(n),target=selectedNode&&legal.some(a=>mode==='send'?a.type==='send'&&a.source===selected&&a.to===n.id:mode==='redirect'?a.type==='redirect'&&a.relay===selected&&a.to===n.id:false);b.style.left=`${p.x/g.width*100}%`;b.style.top=`${p.y/g.height*100}%`;b.className=`node ${n.kind} ${owner===0?'owned':owner===1?'enemy':'neutral'} ${selected===n.id?'selected':''} ${target?'node-target':''} ${flashed.includes(n.id)&&seenEventPly!==s.ply?'flash':''}`;
-  b.innerHTML=`<span class="node-body"><b>${n.kind==='hq'?n.integrity:n.kind==='relay'?(n.locked?'⊡':'⑂'):n.buffer+'/'+CONFIG.buffer}</b></span><span class="node-label">${d.name}</span>${n.kind==='town'?`<span class="binding">${Array.from({length:CONFIG.influence},(_,i)=>`<i class="${i<Math.abs(n.influence)?'filled':''}"></i>`).join('')}</span>`:n.kind==='relay'?`<span class="node-extra">${n.locked?'EINGERASTET':'GEMEINSAM'}</span>`:''}`;
-  b.setAttribute('aria-label',`${d.name}, ${n.kind==='hq'?'Stabilität '+n.integrity:n.kind==='town'?(owner===0?'deine':owner===1?'gegnerische':'neutrale')+' Siedlung, '+n.buffer+' Puffer, Bindung '+Math.abs(n.influence):'gemeinsames Relais, Ausgang '+NODE_DEFS[n.out].name+(n.locked?', eingerastet':'')}`);b.setAttribute('aria-pressed',String(selected===n.id));
+import {CONFIG,createGame,applyMove,resolve,legalMoves,replayGame,validateGame} from './engine.js';
+import {chooseMove} from './ai.js';
+
+const KEY='sog.match',SIZE=CONFIG.size,MOTION=320,AI_DELAY=560;
+const $=id=>document.getElementById(id);
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+let storageOK=true,loadNote='',game,aiTimer,settleTimer,generation=0,animating=false;
+let review=null,preview=null,renderedPly=-1,renderedBoard=[],tokens=new Map(),keyboardCell=12,keyboardInput=false;
+try {
+ const raw=localStorage.getItem(KEY);
+ if(raw){
+  try {game=validateGame(JSON.parse(raw));}catch {game=null;}
+  if(!game)loadNote='Die gespeicherte Partie war beschädigt. Ein neues Brett ist bereit.';
  }
- const present=new Set();
- for(const p of s.packets){present.add(p.id);let b=packetButtons.get(p.id);if(!b){b=document.createElement('button');b.className='packet';b.type='button';b.dataset.packet=p.id;b.addEventListener('click',()=>clickPacket(p.id));$('packets').append(b);packetButtons.set(p.id,b);}let pos;
-  if(p.at!==null){const base=point(p.at),group=s.packets.filter(q=>q.at===p.at),i=group.findIndex(q=>q.id===p.id);pos={x:base.x+(i%4-1.5)*25,y:base.y-44-Math.floor(i/4)*24};}
-  else{const a=point(p.from),c=point(p.to),delay=s.edges.find(e=>e.a===p.from&&e.b===p.to||e.a===p.to&&e.b===p.from).delay,t=.17+(1-p.remaining/delay)*.65;pos={x:a.x+(c.x-a.x)*t,y:a.y+(c.y-a.y)*t};}
-  b.style.left=`${pos.x/g.width*100}%`;b.style.top=`${pos.y/g.height*100}%`;const available=legal.some(a=>a.type==='takeover'&&a.packet===p.id);b.className=`packet ${p.side===0?'owned':'enemy'} ${p.sealed?'sealed':''} ${mode==='takeover'&&available?'interceptible':''} ${packetSelected===p.id?'picked':''}`;b.innerHTML=`<b>${p.power}</b>`;b.setAttribute('aria-label',`${p.side===0?'Dein':'Gegnerisches'} Signal Stärke ${p.power}, ${p.at!==null?'wartet im '+NODE_DEFS[p.at].name:'nach '+NODE_DEFS[p.to].name+', noch '+p.remaining+' Takte'}${p.sealed?', versiegelt':''}`);
- }
- for(const [id,b] of packetButtons)if(!present.has(id)){b.remove();packetButtons.delete(id);}
- for(const type of ['send','redirect','takeover']){$('mode-'+type).setAttribute('aria-pressed',String(mode===type));$('mode-'+type).disabled=!active();}
- let title='Wähle eine Siedlung.',copy='Eine eigene Siedlung braucht 2 Puffer. Danach wählst du einen direkt verbundenen Nachbarn.';const choices=$('choices');choices.innerHTML='';
- const inspectedNode=selectedNode??(inspected!==null?s.nodes[inspected]:null),pkt=s.packets.find(p=>p.id===packetSelected);
- if(pkt){const future=predictPacket(s,pkt);title=`Signal ${pkt.power} · ${pkt.side===0?'West':'Ost'}`;copy=`${pkt.at!==null?'Wartet im '+NODE_DEFS[pkt.at].name+'.':'Unterwegs nach '+NODE_DEFS[pkt.to].name+'.'} ${pkt.sealed?'Bereits übernommen: versiegelt.':'Unversiegelt.'} ${future.expired?'Verfällt auf dem heutigen Weg.':'Heutiges Ziel: '+NODE_DEFS[future.target].name+' in '+future.eta+' Takten.'}`;}
- else if(mode==='redirect'){title=selectedNode?'Ausgang wählen.':'Wähle ein Relais.';copy=selectedNode?`${NODE_DEFS[selected].name}: derzeit nach ${NODE_DEFS[selectedNode.out].name}. ${selectedNode.locked?'Bis zum Netztakt eingerastet.':'Ein neuer Ausgang gilt für alle wartenden Signale.'}`:'Die drei gemeinsamen Weichen sind für beide Seiten bedienbar. Ein Eingriff rastet bis zum Netztakt ein.';}
- else if(mode==='takeover'){title='Wartende Signale übernehmen.';copy=`Nur unversiegelte Gegnersignale in einem Relais sind erreichbar. Kostet ${CONFIG.takeoverCost} eigene Zentralstabilität; der letzte Punkt bleibt geschützt. Übernommene Signale können nicht zurückübernommen werden.`;}
- else if(selectedNode){title=NODE_DEFS[selected].name;copy=`${selectedNode.buffer}/${CONFIG.buffer} Puffer. Ein starkes Signal kostet ${CONFIG.sendCost}. Automatischer Ausgang: ${NODE_DEFS[selectedNode.out].name}.`;}else if(inspectedNode){title=NODE_DEFS[inspectedNode.id].name;copy=inspectedNode.kind==='hq'?'Fremde Signalstärke senkt hier die Stabilität.':inspectedNode.kind==='town'?`Bindung ${Math.abs(inspectedNode.influence)} · Puffer ${inspectedNode.buffer}. Empfangene Signale wirken erst bei Ankunft.`:`Gemeinsamer Ausgang nach ${NODE_DEFS[inspectedNode.out].name}.`;}
- const options=legal.filter(a=>mode==='send'?a.type==='send'&&a.source===selected:mode==='redirect'?a.type==='redirect'&&a.relay===selected:a.type==='takeover');
- for(const a of options.slice(0,8))choices.append(option(a,a.type==='takeover'?`Signal ${s.packets.find(p=>p.id===a.packet).power} im ${NODE_DEFS[s.packets.find(p=>p.id===a.packet).at].name}`:`→ ${NODE_DEFS[a.to].name}`,a.type==='takeover'?`−${CONFIG.takeoverCost} Stabilität · danach versiegelt`:a.type==='send'?`Stärke ${CONFIG.sendPower} · ${s.edges.find(e=>e.a===selected&&e.b===a.to||e.a===a.to&&e.b===selected).delay} Takt(e)`:'Bis zum Netztakt festlegen'));
- $('selection-title').textContent=title;$('selection-copy').textContent=copy;
- const list=$('signal-list');list.replaceChildren();for(const p of [...s.packets].sort((a,b)=>(a.at===null)-(b.at===null)).slice(0,8)){const f=predictPacket(s,p),b=document.createElement('button');b.className=`signal-row ${p.side===0?'owned':'enemy'}`;b.innerHTML=`<b>${p.power}${p.sealed?' ◆':''}</b><span>${p.at!==null?NODE_DEFS[p.at].name:'→ '+NODE_DEFS[p.to].name}<small>${f.expired?'Heutiger Weg läuft aus':NODE_DEFS[f.target].name+' · '+f.eta+' Takte'}</small></span>`;b.addEventListener('click',()=>clickPacket(p.id));list.append(b);}if(!s.packets.length)list.innerHTML='<p class="empty">Noch keine Nachrichten unterwegs. Die Siedlungen laden bereits.</p>';
- $('log').replaceChildren(...[...s.log].reverse().slice(0,6).map(text=>{const li=document.createElement('li');li.textContent=text;return li;}));if(!s.log.length)$('log').innerHTML='<li>Jeder Auftrag hat eine Reise vor sich.</li>';
- $('hint').textContent=notice||(replayIndex!==null?'Vergangener Zustand. Die laufende Partie wird nicht verändert.':s.phase==='setup'?'Verbindungen und Reisezeiten sind sichtbar. Starte die Partie für deinen ersten Eingriff.':s.phase==='over'?s.reason:!active()?'Die KI plant mit denselben sichtbaren Informationen.':mode==='send'?'Eigene Siedlung wählen → Nachbar wählen. Der Auftrag reist erst danach los.':mode==='redirect'?'Relais wählen → nächsten Ausgang festlegen. Gilt für beide Seiten.':'Wähle ein unversiegeltes Gegnersignal, das gerade im Relais wartet.');
- $('result-title').textContent=game.winner===null?'Das Netz hält stand.':game.winner===0?'Du hast gewonnen.':'Deine Zentrale ist gefallen.';$('result-reason').textContent=game.reason;
- $('watch').disabled=!game.history.length;$('replay-panel').hidden=replayIndex===null;$('replay-range').max=game.history.length;$('replay-range').value=replayIndex??game.history.length;$('replay-label').textContent=`Aktion ${replayIndex??game.history.length}/${game.history.length}`;
- $('seed-label').textContent=`SIGNALBRUCH 0.2 · NETZ ${game.seed}`;$('save-status').textContent=storageAvailable?'PARTIE AUTOMATISCH GESPEICHERT':'DIESER BROWSER SPEICHERT NICHT';seenEventPly=s.ply;
+}catch {storageOK=false;}
+const params=new URLSearchParams(location.search),seed=Number(params.get('seed')),starter=Number(params.get('starter')??0);
+if(params.has('seed')&&Number.isInteger(seed)&&seed>=0&&seed<=4294967295) {
+ if(!game||game.seed!==seed||game.starter!==starter)game=createGame(seed,starter===1?1:0);
 }
-function scheduleAI(){clearTimeout(timer);if(game.phase!=='playing'||game.turn!==1||replayIndex!==null)return;const ply=game.ply;timer=setTimeout(()=>{if(game.phase!=='playing'||game.turn!==1||game.ply!==ply||replayIndex!==null)return;game=applyAction(game,chooseAction(game,style));selected=null;packetSelected=null;notice='';persist();render();scheduleAI();},pace==='fast'?70:500);}
-function fresh(same=false){clearTimeout(timer);let seed=freshSeed();if(seed===game.seed)seed=(seed+1)>>>0;game=createGame(same?game.seed:seed,same?game.initialStarter:seed%2);selected=null;inspected=null;packetSelected=null;mode='send';notice='';replayIndex=null;persist();render();}
-$('start').addEventListener('click',()=>{game=startGame(game);selected=null;notice='';persist();render();scheduleAI();});for(const type of ['send','redirect','takeover'])$('mode-'+type).addEventListener('click',()=>{mode=type;selected=null;packetSelected=null;notice='';render();});
-for(const id of ['new-game','result-new'])$(id).addEventListener('click',()=>fresh());$('retry').addEventListener('click',()=>fresh(true));$('ai-style').value=style;$('pace').value=pace;$('ai-style').addEventListener('change',e=>{style=e.target.value;write('style',style);});$('pace').addEventListener('change',e=>{pace=e.target.value;write('pace',pace);scheduleAI();});
-$('watch').addEventListener('click',()=>{clearTimeout(timer);replayIndex=0;selected=null;packetSelected=null;render();});$('replay-range').addEventListener('input',e=>{replayIndex=Number(e.target.value);render();});$('replay-close').addEventListener('click',()=>{replayIndex=null;render();scheduleAI();});$('rules-button').addEventListener('click',()=>$('rules').showModal());for(const id of ['rules-close','rules-play'])$(id).addEventListener('click',()=>$('rules').close());window.addEventListener('resize',render);persist();render();scheduleAI();
+if(!game)game=createGame(13,0);
+// A replayed URL must not force an old seed over a later saved rematch.
+if(location.search)history.replaceState(null,'',location.pathname);
+
+$('app').innerHTML=`
+<header class="top"><a class="brand" href="#" aria-label="SOG"><svg viewBox="0 0 44 32" aria-hidden="true"><path d="M2 16h9m22 0h9"/><circle cx="22" cy="16" r="9"/><path d="m7 12 4 4-4 4m30-8-4 4 4 4"/></svg><span>SOG</span></a><span class="tagline">Ein Stein verändert das Ganze.</span></header>
+<main><section class="game" aria-label="Partie gegen den Computer">
+ <div class="match-head"><div class="players"><span><i class="blue-dot"></i> DU</span><span class="divider">/</span><span><i class="red-dot"></i> ROT</span></div><span id="turn-count"></span></div>
+ <div class="instruction"><h1 id="status" aria-live="polite"></h1><p id="goal"><span class="four" aria-hidden="true"><i></i><i></i><i></i><i></i></span>Vier in einer Reihe gewinnen.</p></div>
+ <div id="stage" class="stage"><div id="board" role="group" aria-label="Spielfeld. Pfeiltasten wählen ein freies Feld, Enter setzt einen Stein."></div><svg id="arrows" viewBox="0 0 500 500" aria-hidden="true"></svg><div id="stones" aria-hidden="true"></div><div id="ghosts" aria-hidden="true"></div></div>
+ <p id="hint" class="hint" aria-live="polite"></p>
+ <div id="result" class="result" hidden></div>
+ <div id="replay-panel" class="replay-panel" hidden><div><span id="replay-label"></span><button id="replay-close" class="text-button">Zur Partie</button></div><input id="replay-range" type="range" min="0" value="0" aria-label="Vergangenen Zug ansehen"></div>
+ <div class="controls"><button id="undo" class="button secondary"><span aria-hidden="true">↶</span> Zurück</button><button id="new-game" class="button">Neue Partie</button></div>
+ <div class="under-board"><details id="rules"><summary>Wie geht’s?</summary><ol><li>Tippe auf ein freies Feld: Dort setzt du einen blauen Stein.</li><li>Er zieht in jeder geraden Richtung den nächsten Stein ein Feld näher – auch rote. Direkt benachbarte Steine bleiben stehen und halten weiter entfernte auf.</li><li>Vier gleiche Farben in einer Reihe gewinnen, auch diagonal. Du kannst dabei Rot zum Sieg ziehen. Entstehen beide Reihen gleichzeitig oder ist das Brett ohne Reihe voll, gibt es ein Remis.</li></ol><p>Vor dem Klicken zeigt die Vorschau, was sich bewegt. Am Handy siehst du sie beim Gedrückthalten. „Zurück“ nimmt deinen letzten Zug samt Antwort zurück.</p></details><button id="watch" class="text-button" hidden>Verlauf</button></div>
+ <p id="storage-note" class="storage-note" role="status"></p>
+</section><aside class="side-note" aria-hidden="true"><span class="serial">01 / SOG</span><div class="side-art"><i></i><i></i><i></i><i></i></div><p>Du setzt einen.<br>Das Brett antwortet.</p><span class="side-caption">Ein kleines Duell mit Anziehung.</span></aside></main>`;
+const cells=Array.from({length:SIZE*SIZE},(_,cell)=>{
+ const button=document.createElement('button');button.type='button';button.dataset.cell=cell;button.className='cell';
+ button.addEventListener('click',()=>playHuman(cell));
+ button.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')showPreview(cell);});
+ button.addEventListener('pointerleave',()=>clearPreview());
+ button.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')showPreview(cell);});
+ button.addEventListener('pointercancel',clearPreview);
+ button.addEventListener('focus',()=>{keyboardCell=cell;showPreview(cell);});
+ button.addEventListener('blur',clearPreview);
+ $('board').append(button);return button;
+});
+$('board').style.setProperty('--size',SIZE);
+$('board').addEventListener('keydown',event=>{
+ keyboardInput=true;const delta={ArrowLeft:-1,ArrowRight:1,ArrowUp:-SIZE,ArrowDown:SIZE}[event.key];
+ if(delta===undefined)return;event.preventDefault();
+ let cell=keyboardCell;
+ for(let n=0;n<SIZE*SIZE;n++){cell=(cell+delta+SIZE*SIZE)%(SIZE*SIZE);if(!cells[cell].disabled){cells[cell].focus();break;}}
+});
+$('board').addEventListener('pointerdown',()=>{keyboardInput=false;});
+$('board').addEventListener('pointerleave',clearPreview);
+$('undo').addEventListener('click',undo);
+$('new-game').addEventListener('click',()=>{
+ cancelWork();review=null;loadNote='';
+ game=createGame((Math.imul(game.seed,1664525)+1013904223)>>>0,1-game.starter);
+ resetVisual();save();render();scheduleAI();
+});
+$('watch').addEventListener('click',()=>{
+ cancelWork();review=game.ply;resetVisual();render();
+});
+$('replay-range').addEventListener('input',event=>{review=Number(event.target.value);resetVisual();render();});
+$('replay-close').addEventListener('click',()=>{review=null;resetVisual();render();scheduleAI();});
+$('rules').addEventListener('toggle',()=>clearPreview());
+document.querySelector('.brand').addEventListener('click',e=>e.preventDefault());
+
+function save() {
+ try {localStorage.setItem(KEY,JSON.stringify(game));}catch {storageOK=false;}
+}
+function cancelWork() {
+ generation++;clearTimeout(aiTimer);clearTimeout(settleTimer);aiTimer=settleTimer=undefined;animating=false;clearPreview();
+}
+function resetVisual() {renderedPly=-1;renderedBoard=[];for(const token of tokens.values())token.remove();tokens=new Map();}
+function current() {return review===null?game:replayGame(game,review);}
+function canPlay() {return review===null&&!animating&&game.phase==='playing'&&game.turn===0;}
+function description(s) {
+ if(s.reason==='double-line')return 'Beide Farben haben eine Viererreihe. Remis.';
+ if(s.reason==='full')return 'Das Brett ist voll. Keine Viererreihe – Remis.';
+ return s.winner===0?'Vier blaue Steine bilden eine Reihe.':'Vier rote Steine bilden eine Reihe.';
+}
+function ordinaryHint(s) {
+ if(review!==null)return review===0?'Die beiden Startsteine. Der Verlauf verändert deine Partie nicht.':`Zug ${review}: ${s.last.side===0?'Blau':'Rot'} setzte einen Stein${s.last.pulls.length?' und zog '+s.last.pulls.length+' näher':''}.`;
+ if(loadNote)return loadNote;
+ if(s.ply<2)return 'Er zieht die nächsten Steine ein Feld näher. Auch rote.';
+ if(s.last?.pulls.length){const own=s.last.pulls.filter(p=>p.side===s.last.side).length,enemy=s.last.pulls.length-own;return `${s.last.side===0?'Dein':'Rots'} Sog: ${own} ${own===1?'eigener Stein':'eigene Steine'}, ${enemy} ${enemy===1?'gegnerischer Stein':'gegnerische Steine'} bewegt.`;}
+ return 'Gerade Nachbarn bleiben stehen. Weiter entfernte rücken näher.';
+}
+function updateStatus() {
+ const s=current();$('stage').classList.toggle('readonly',!canPlay());
+ $('status').className='';
+ if(review!==null){$('status').textContent='Dein Blick zurück.';$('status').className='review-status';}
+ else if(animating){$('status').textContent=s.last.side===0?'Dein Stein zieht.':'Rot zieht.';$('status').className=s.last.side===0?'blue-text':'red-text';}
+ else if(s.phase==='over'){$('status').textContent=s.winner===0?'Du gewinnst.':s.winner===1?'Rot gewinnt.':'Unentschieden.';$('status').className=s.winner===0?'blue-text':s.winner===1?'red-text':'';}
+ else {$('status').textContent=s.turn===0?'Setze einen blauen Stein.':'Rot denkt …';$('status').className=s.turn===0?'blue-text':'red-text';}
+ $('turn-count').textContent=s.ply?`ZUG ${s.ply}`:'';
+ $('result').hidden=s.phase!=='over'||animating||review!==null;$('result').textContent=s.phase==='over'?description(s):'';
+ $('hint').textContent=ordinaryHint(s);$('hint').className='hint';
+ const hasHuman=game.history.some((_,i)=>(game.starter+i)%2===0);
+ $('undo').disabled=review!==null||!hasHuman;
+ $('watch').hidden=game.ply===0||review!==null;
+ $('replay-panel').hidden=review===null;
+ $('replay-range').max=game.ply;$('replay-range').value=review??game.ply;
+ $('replay-label').textContent=review===0?'Anfang':`Zug ${review} / ${game.ply}`;
+ $('storage-note').textContent=storageOK?'':'Ohne Speicher: Die Partie bleibt nur in diesem Fenster.';
+ const available=legalMoves(s);if(!available.includes(keyboardCell))keyboardCell=available[0]??0;
+ for(let cell=0;cell<cells.length;cell++) {
+  const color=s.board[cell];cells[cell].disabled=!canPlay()||color!==0;
+  cells[cell].tabIndex=cell===keyboardCell?0:-1;
+  cells[cell].setAttribute('aria-label',`Reihe ${Math.floor(cell/SIZE)+1}, Spalte ${cell%SIZE+1}. ${color===1?'Blauer Stein':color===2?'Roter Stein':'Freies Feld. Stein setzen'}`);
+ }
+}
+function center(cell){return {x:(cell%SIZE+.5)*500/SIZE,y:(Math.floor(cell/SIZE)+.5)*500/SIZE};}
+function position(token,cell) {token.style.left=`${(cell%SIZE+.5)/SIZE*100}%`;token.style.top=`${(Math.floor(cell/SIZE)+.5)/SIZE*100}%`;}
+function makeStone(color,cell,extra='') {const el=document.createElement('i');el.className=`stone ${color===1?'blue':'red'} ${extra}`;position(el,cell);return el;}
+function drawArrows(pulls,kind='trail') {
+ const marker=kind==='preview'?'preview-arrow':'trail-arrow';
+ $('arrows').innerHTML=`<defs><marker id="${marker}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="currentColor"/></marker></defs>`+pulls.map(p=>{
+  const a=center(p.from),b=center(p.to),dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy),end=.72;
+  return `<line class="${kind} ${p.side===0?'blue-arrow':'red-arrow'}" x1="${a.x+dx/len*17}" y1="${a.y+dy/len*17}" x2="${a.x+dx*end}" y2="${a.y+dy*end}" marker-end="url(#${marker})"/>`;
+ }).join('');
+}
+function renderBoard(s,animate) {
+ const incremental=animate&&renderedPly===s.ply-1&&renderedBoard.length===s.board.length;
+ if(incremental) {
+  const moved=s.last.pulls.map(p=>({p,token:tokens.get(p.from)}));
+  for(const {p} of moved)tokens.delete(p.from);
+  for(const {p,token} of moved)if(token){token.classList.add('pulled');position(token,p.to);tokens.set(p.to,token);}
+  const added=makeStone(s.last.side+1,s.last.cell,'new');$('stones').append(added);tokens.set(s.last.cell,added);
+ }else {
+  resetVisual();
+  s.board.forEach((color,cell)=>{if(color){const token=makeStone(color,cell);$('stones').append(token);tokens.set(cell,token);}});
+ }
+ const winning=new Set(s.winning.flat(2));
+ for(const [cell,token] of tokens){token.classList.toggle('winning',!animating&&winning.has(cell));token.classList.remove('preview-moving');if(!animating)token.classList.remove('new','pulled');}
+ renderedPly=s.ply;renderedBoard=[...s.board];drawArrows(s.last?.pulls??[]);
+}
+function clearPreview() {
+ preview=null;if(!$('ghosts'))return;$('ghosts').replaceChildren();
+ for(const token of tokens.values())token.classList.remove('preview-moving');
+ if($('hint')){$('hint').className='hint';$('hint').textContent=ordinaryHint(current());drawArrows(current().last?.pulls??[]);}
+}
+function showPreview(cell) {
+ if(!canPlay()||game.board[cell]!==0)return;clearPreview();preview=cell;
+ const result=resolve(game.board,cell,0),ghosts=[makeStone(1,cell,'ghost anchor')];
+ for(const pull of result.pulls){tokens.get(pull.from)?.classList.add('preview-moving');ghosts.push(makeStone(pull.side+1,pull.to,'ghost'));}
+ $('ghosts').replaceChildren(...ghosts);drawArrows(result.pulls,'preview');
+ $('hint').textContent=result.over?(result.winner===0?'Dieser Zug bildet deine Viererreihe. Du gewinnst.':result.winner===1?'Achtung: Dieser Zug bildet Rots Viererreihe.':result.reason==='double-line'?'Beide Farben bilden vier. Dieser Zug endet remis.':'Brett voll: Dieser Zug endet remis.'):
+  result.pulls.length?`Vorschau: ${result.pulls.filter(p=>p.side===0).length} blaue und ${result.pulls.filter(p=>p.side===1).length} rote Steine rücken näher.`:'Hier wird ein Stein gesetzt. Kein anderer rückt näher.';
+ $('hint').className='hint '+(result.over&&result.winner===1?'danger':result.winner===0?'success':'');
+}
+function render(animate=false) {clearPreview();const s=current();renderBoard(s,animate);updateStatus();}
+function commit(cell) {
+ loadNote='';clearPreview();game=applyMove(game,cell);save();
+ animating=!reduced.matches;render(true);
+ if(animating){const ownGeneration=generation;settleTimer=setTimeout(()=>{if(ownGeneration!==generation)return;animating=false;render(false);if(keyboardInput&&canPlay())cells[keyboardCell].focus();},MOTION+25);}
+ else if(keyboardInput&&canPlay())cells[keyboardCell].focus();
+ scheduleAI();
+}
+function playHuman(cell) {if(canPlay()&&game.board[cell]===0)commit(cell);}
+function scheduleAI() {
+ clearTimeout(aiTimer);aiTimer=undefined;
+ if(review!==null||game.phase!=='playing'||game.turn!==1)return;
+ const ownGeneration=generation;
+ aiTimer=setTimeout(()=>{
+  if(ownGeneration!==generation||review!==null||game.phase!=='playing'||game.turn!==1)return;
+  const cell=chooseMove(game);commit(cell);
+ },AI_DELAY);
+}
+function undo() {
+ if(review!==null)return;
+ let index=game.history.length-1;while(index>=0&&(game.starter+index)%2!==0)index--;
+ if(index<0)return;cancelWork();game=replayGame(game,index);loadNote='';resetVisual();save();render();scheduleAI();
+}
+save();render();scheduleAI();

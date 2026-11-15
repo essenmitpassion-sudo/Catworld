@@ -1,304 +1,184 @@
 {
-  "method": "Same 12 seeded mirrored networks, each with both initial initiative assignments. Both sides use the identical tactical policy; round initiative alternates. Automated diagnostic, not human balance or fun evidence.",
-  "engine_sha256": "9e9759400c6086f781b7608dc44ac421e4866936342bc3043e67262ed8777398",
-  "ai_sha256": "c38c8e12787fb69ee155377ebaac1a383948b9ca97981b825796d301d54dcde5",
+  "method": "Same 12 seeded opposite one-stone-per-color openings, both initial starters, identical depth3 tactical policy. Same5x5 topology; not solved balance or human fun evidence.",
+  "engine_sha256": "74b824fc4061a2e3b0c6c792cc6fca2c5fb87758fdf93bd2661e20b03d483a5b",
+  "ai_sha256": "3cd8908a08766aad926cb8b65b6a02bb89e45dd63562971baaf3ee11c0be6913",
   "summary": {
     "games": 24,
-    "westWins": 8,
-    "eastWins": 16,
-    "initialStarterWins": 4,
-    "initialSecondWins": 20,
+    "blueWins": 12,
+    "redWins": 12,
+    "starterWins": 8,
+    "secondWins": 16,
     "draws": 0,
-    "meanTicks": 12.166666666666666
+    "meanPlies": 9.166666666666666
   },
   "runs": [
     {
       "seed": 1,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 1,
       "starter": 1,
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
-      "hq": [
-        0,
-        3
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 2,
       "starter": 0,
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 2,
       "starter": 1,
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "winner": 1,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 3,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 3,
       "starter": 1,
       "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 4,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 12,
+      "reason": "line"
     },
     {
       "seed": 4,
       "starter": 1,
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
-      "hq": [
-        0,
-        3
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 12,
+      "reason": "line"
     },
     {
       "seed": 5,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 5,
       "starter": 1,
       "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 6,
       "starter": 0,
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 6,
       "starter": 1,
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "winner": 1,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 7,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 7,
       "starter": 1,
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
-      "hq": [
-        0,
-        3
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 8,
       "starter": 0,
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 8,
       "starter": 1,
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "winner": 1,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 9,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 9,
       "starter": 1,
       "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 10,
       "starter": 0,
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "winner": 0,
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 10,
       "starter": 1,
       "winner": 1,
-      "ticks": 13,
-      "actions": 26,
-      "hq": [
-        0,
-        3
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 7,
+      "reason": "line"
     },
     {
       "seed": 11,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 11,
       "starter": 1,
       "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 12,
       "starter": 0,
       "winner": 1,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        0,
-        4
-      ],
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     },
     {
       "seed": 12,
       "starter": 1,
       "winner": 0,
-      "ticks": 12,
-      "actions": 24,
-      "hq": [
-        4,
-        0
-      ],
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "plies": 10,
+      "reason": "line"
     }
   ]
 }

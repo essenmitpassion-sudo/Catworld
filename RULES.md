@@ -1,33 +1,15 @@
-# SIGNALBRUCH / Regeln 0.2
+# SOG / Regeln 0.1
 
-## Ziel und Karte
+**Setze einen Stein. Vier in einer Reihe gewinnen.**
 
-Die gegnerische Zentrale beginnt mit 6 Stabilität. Bringe sie durch ankommende gegnerische Signale auf 0. Fallen beide Zentralen im gleichen Netztakt aus, endet die Partie unentschieden. Ohne Ausfall gibt es nach 24 Netztakten ein Remis. Freundliche Signale zur eigenen Zentrale kehren wirkungslos zurück; sie reparieren nichts.
+5×5 Felder. Blau spielt gegen Rot. Beide beginnen mit je einem Stein auf gegenüberliegenden Feldern. Der sichtbare Start hängt vom Seed ab. Danach wird abwechselnd ein eigener Stein auf ein beliebiges freies Feld gesetzt.
 
-Neun öffentliche Knoten: zwei Zentralen, vier autonome Siedlungen und drei gemeinsame Relais. Verbindungen zeigen ihre feste Reisezeit von 1–3 Netztakten. Links/rechts sind gespiegelt; Seed-Varianten verändern wenige Laufzeiten und die anfängliche Mittelweiche, keine verborgenen Informationen.
+Der neue Stein zieht in jeder der vier geraden Richtungen den nächsten vorhandenen Stein genau **ein Feld näher**, unabhängig von seiner Farbe. Direkt benachbarte Steine bleiben stehen. Sie verdecken weiter entfernte Steine. Diagonal wird nichts gezogen. Alle Anziehungen wirken gleichzeitig, Farben bleiben erhalten, nichts wird geschlagen.
 
-## Eingriff und Netztakt
+Danach gewinnt die Farbe, die mindestens vier unmittelbar aufeinanderfolgende Steine waagrecht, senkrecht oder diagonal bildet. Dein Zug kann also Rot zum Sieg verhelfen. Bilden beide Farben gleichzeitig eine Viererreihe, gibt es ein Remis. Ebenso bei vollem Brett ohne Reihe. Jeder Zug füllt ein zusätzliches Feld: höchstens23 Züge, keine Wartetakte oder Schleifen.
 
-Beide Seiten führen je einen Eingriff aus, dann bewegt sich das gesamte Netz einen Takt. Danach wechselt das Startrecht. Dadurch kann eine Seite unmittelbar vor und nach einem Netztakt handeln; das sind zwei verschiedene Runden. Der Seed bestimmt die anfängliche Startseite. Ohne laufende Partie gibt es keine gültigen Aktionen.
+Zeige am Computer auf ein freies Feld oder wähle es mit Pfeiltasten: Die Vorschau zeigt Zielorte und direkte Sieg-/Verlustfolgen. Enter setzt. Am Handy setzt ein Tippen; während Gedrückthalten ist die Vorschau sichtbar. Die reale Bewegung zeigt unmittelbar, was sich geändert hat. Reduzierte Bewegung wird respektiert.
 
-- **Senden:** Wähle eine eigene Siedlung mit mindestens 2 Puffer und einen direkt verbundenen Nachbarn. Verbrauche 2 Puffer, starte ein Signal der Stärke 2 und setze gleichzeitig den dauerhaften Ausgang dieser Siedlung auf den gewählten Nachbarn.
-- **Umleiten:** Stelle ein gemeinsames Relais auf einen anderen direkt verbundenen Ausgang. Diese Einstellung gilt für beide Seiten. Das Relais rastet bis nach dem nächsten Netztakt ein; der Gegner kann es in dieser Runde nicht sofort zurückstellen. Andere Relais bleiben verfügbar.
-- **Übernehmen:** Signiere ein unversiegeltes gegnerisches Signal um, das gerade an einem Relais wartet. Das kostet 1 Stabilität deiner eigenen Zentrale; ihren letzten Punkt darfst du nicht ausgeben. Das Signal gehört danach dir und ist gegen jede weitere Übernahme versiegelt. Stärke, Restlebensdauer und physischer Ort bleiben gleich. Ein Signal unterwegs lässt sich nicht übernehmen.
+Die KI verwendet denselben öffentlichen Zustand und dieselben legalen Übergänge. Ihre iterative Suche ist begrenzt und behauptet keine optimale Strategie. Der Seed verändert nur die sichtbare Eröffnung und deterministische Gleichstandsentscheidungen, keine Zufallswürfel während der Partie.
 
-## Physische Reise
-
-Ein Signal benötigt pro Verbindung deren angezeigte Anzahl Netztakte. Unterwegs bleibt sein Ziel fest. Trifft es ein Relais, wartet es dort bis zum nächsten Netztakt; vor der Weiterreise erhalten beide Seiten ihr Eingriffsfenster. Beim Abflug gilt der dann aktuelle Relaisausgang. Mehrere Signale können gleichzeitig unterwegs sein und einander passieren.
-
-Jedes Signal lebt höchstens 8 Netztakte. Schleifen verbrauchen diese Zeit. Eine Ankunft an Siedlung oder Zentrale im letzten Lebenstakt zählt noch; andernfalls verfällt das Signal. Prognosen nehmen die jetzigen Relaisstellungen an. Spätere Eingriffe können den vorhergesagten Weg verändern.
-
-## Siedlungen handeln selbstständig
-
-Einfluss reicht von −2 (Ost) bis +2 (West). Positive Werte bedeuten Westkontrolle, negative Ostkontrolle; 0 ist neutral. Alle gleichzeitig ankommenden Signale werden zuerst zusammengezählt: Weststärke erhöht Einfluss, Oststärke senkt ihn; begrenzt auf −2…+2. Freundliche Verstärkung einer voll gebundenen Siedlung hat deshalb keine Wirkung.
-
-Eigene Siedlungen erhalten nach jedem Netztakt 1 Puffer. Bei 3 Puffer senden sie automatisch Stärke 1 über ihren gespeicherten Ausgang und setzen den Puffer auf 0. Anfangspuffer: 2. Neue automatische Signale reisen erst im folgenden Takt. Neutrale Siedlungen laden und senden nicht. Bei Wechsel des Eigentümers wird der Puffer auf 0 gesetzt; der physische Ausgang bleibt bestehen. Danach gilt die normale Aufladung. Ein manuelles Senden verschiebt somit auch den nächsten autonomen Impuls.
-
-## Gegner, Speicherung und Verlauf
-
-Alles auf der Karte ist öffentlich. Die KI sucht zwei Eingriffe voraus und bewertet zusätzlich eine bedingte Zweitaktprognose; sie benutzt die normalen legalen Aktionen. Ihre drei Profile gewichten Zentraldruck und Siedlungskontrolle verschieden. Sie kennt keine zukünftigen menschlichen Züge und ist kein optimaler Löser.
-
-Der Browser speichert vollständige abgeschlossene Aktionen. Beim Laden wird die Partie aus Seed, anfänglicher Startseite und Verlauf neu berechnet und verglichen. Manipulierte oder unvollständige Zustände werden verworfen. Ohne verfügbaren Speicher bleibt das Spiel benutzbar. Der Verlauf zeigt vergangene Zustände, ohne die laufende Partie zu verändern.
+„Zurück“ nimmt den letzten menschlichen Zug und die eventuelle KI-Antwort zurück und bricht laufende Anzeige-/KI-Timer ab. „Neue Partie“ wechselt Seed und Startrecht. Der Verlauf ist schreibgeschützt. Gespeicherte Partien werden aus Seed, Startseite und legalen Zügen vollständig neu berechnet; beschädigte Daten beginnen eine neue Partie. Alte SIGNALBRUCH-Speicherdaten werden nicht überschrieben.

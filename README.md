@@ -1,8 +1,8 @@
-# SIGNALBRUCH
+# SOG
 
-Ein kleines Strategiespiel über verzögerte Signale, autonome Siedlungen und gemeinsame Weichen. Du veränderst Wege und Zeitpunkte: Ein Signal unterwegs gehorcht noch dem alten Ziel, ein wartendes Signal kann umgeleitet oder für einen riskanten Gegenangriff übernommen werden.
+Ein gesetzter Stein zieht die nächsten Steine in vier Richtungen näher – auch gegnerische. Vier in einer Reihe gewinnen. Ein kompaktes Duell mit einer einzigen Aktion und sichtbaren gemeinsamen Folgen.
 
-Drei Aktionen: **Senden**, **Umleiten**, **Übernehmen**. Eine Partie Mensch gegen regelkonforme KI bis zum Ausfall einer Zentrale oder Remis nach 24 Netztakten. Die vollständigen Regeln stehen in [RULES.md](RULES.md) und direkt im Spiel. Automatisches Speichern, Neustart, wiederholbare Netze und ein unverändernder Verlauf sind vorhanden.
+Der Nutzer hat SIGNALBRUCH wegen zu vieler Informationen und unverständlichem Einstieg verworfen und ausdrücklich einen neuen Kern im Catworld-Repository beauftragt. SOG ersetzt dieses Spiel. Der Master bleibt unter docs/SIGNALBRUCH_MASTER.md als allgemeiner Qualitätsauftrag erhalten; sein Netzprinzip ist eine verworfene Hypothese. [Entscheidungen und Grenzen](docs/DECISION.md), [Regeln](RULES.md), [aktueller Stand](CURRENT.md).
 
 ```sh
 npm ci
@@ -13,10 +13,10 @@ npm run paired
 npm run smoke
 ```
 
-Node 22+; hier Node 24. Öffne `dist/SIGNALBRUCH.html` für die vollständig eigenständige Offlinefassung; `dist/index.html` ist der gleiche Hosting-Build. Keine Laufzeitdienste, Konten, Fonts oder externen Assets. Browserprüfungen benötigen installiertes Chromium: `/usr/bin/chromium`, alternativ `CHROMIUM_PATH`. Sie bedienen den exakten Build an einer abgefangenen Testadresse, ohne Vorschau-Server.
+Node22+, hier24. Die Standalone-Datei `dist/SOG.html` funktioniert ohne Laufzeitdienste oder externe Assets. `dist/index.html` ist derselbe Hosting-Build. Browserprüfungen verwenden vorhandenes Chromium (`/usr/bin/chromium`, überschreibbar mit `CHROMIUM_PATH`) und bedienen den exakten Build an einer abgefangenen Testadresse. Kein Vorschau-Server erforderlich.
 
-Spieladresse: https://veil-signal-duel.docile-eel-0528.chatgpt.site (bestehende private Site, historischer URL-Name). Den tatsächlich veröffentlichten Stand dokumentiert [CURRENT.md](CURRENT.md).
+Reiner deterministischer Regelkern `src/engine.js`, öffentliche begrenzte KI `src/ai.js`, Darstellung/Eingabe/Speicher `src/main.js`. Keine neuen Abhängigkeiten. Die Oberfläche beginnt direkt mit dem Brett; Hilfe bleibt optional. Atomare Speicherung, abbrechbare Animation/KI, Rückgängig, Neustart und schreibgeschützter Verlauf sind vorhanden.
 
-`src/engine.js` enthält den deterministischen Regelkern, Zugvalidierung, Prognosen und Rekonstruktion gespeicherter Partien. `src/ai.js` nutzt ausschliesslich denselben öffentlichen Zustand und dieselben legalen Übergänge. `src/main.js` und `src/style.css` enthalten Darstellung, Eingabe und lokale Speicherung. Simulations- und Browsernachweise werden unter `work/signalbruch-*` erzeugt; aktuelle Berichte stehen in `docs/`.
+Spieladresse bleibt https://veil-signal-duel.docile-eel-0528.chatgpt.site (private bestehende Site, historischer URL-Name). Den tatsächlich veröffentlichten Commit dokumentiert CURRENT.md. Quell-Branch `strategy/sog-prototype`; die unabhängig weiterentwickelte VERSATZ-Standardbranch bleibt erhalten.
 
-SIGNALBRUCH ersetzt das verworfene VEIL vollständig. Catworld und VEIL bleiben über Git rekonstruierbar; es gibt keinen parallelen Altspielmodus. Der aktuelle Auftrag steht in [docs/SIGNALBRUCH_MASTER.md](docs/SIGNALBRUCH_MASTER.md). Entscheidungen und Grenzen: [docs/DECISION.md](docs/DECISION.md). Technische Funktionsfähigkeit ist getestet. Menschlicher Spielspass, Wiederspielwert und die angestrebten 5–10 Minuten sind noch nicht gemessen. Die gepaarte Botsimulation zeigt weiterhin einen Startreihenfolge-Vorteil.
+Technische Funktion wird durch Regeltests, vollständige Simulationen und Browserbedienung geprüft. Startbalance, menschlicher Spielspass, Partiedauer und langfristiger Wiederspielwert sind offen. Keine Weltneuheitsbehauptung: Bewegung und Reihenbildung haben bekannte Vorbilder, siehe Designentscheidung. Alte Spiele und Berichte bleiben über Git rekonstruierbar.

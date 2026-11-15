@@ -1,30 +1,30 @@
 {
+  "method": "Three public line-evaluation policies at depth3; same legal transitions, seeded opposite one-stone-per-color opening, 8 seeds per policy, alternating initial starter. Bot diagnostic, not human fun/duration evidence.",
+  "engine_sha256": "74b824fc4061a2e3b0c6c792cc6fca2c5fb87758fdf93bd2661e20b03d483a5b",
+  "ai_sha256": "3cd8908a08766aad926cb8b65b6a02bb89e45dd63562971baaf3ee11c0be6913",
   "summary": {
     "games": 24,
-    "humanWins": 6,
-    "computerWins": 18,
+    "blueWins": 19,
+    "redWins": 5,
     "draws": 0,
-    "meanTicks": 12.583333333333334,
-    "maxDecisionMs": 19.003917,
-    "actions": {
-      "send": 194,
-      "redirect": 318,
-      "takeover": 92
-    },
+    "meanPlies": 8.875,
+    "maxDecisionMs": 26.45504199999999,
+    "pulls": 115,
+    "opponentPulls": 58,
     "byStyle": {
       "tactical": {
-        "wins": 2,
-        "losses": 6,
+        "wins": 7,
+        "losses": 1,
         "draws": 0
       },
       "pressure": {
-        "wins": 2,
-        "losses": 6,
+        "wins": 7,
+        "losses": 1,
         "draws": 0
       },
-      "network": {
-        "wins": 2,
-        "losses": 6,
+      "gather": {
+        "wins": 5,
+        "losses": 3,
         "draws": 0
       }
     }
@@ -32,555 +32,243 @@
   "runs": [
     {
       "seed": 1,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
       "starter": 1,
-      "hq": [
-        0,
-        3
-      ],
-      "owned": [
-        1,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 3,
-      "redirects": 15,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 5,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 2,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 3,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
       "starter": 1,
-      "hq": [
-        4,
-        0
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 13,
-      "sends": 7,
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 5,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 4,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 1,
+      "plies": 12,
+      "pulls": 9,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 5,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
       "starter": 1,
-      "hq": [
-        4,
-        0
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 13,
-      "sends": 7,
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 5,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 6,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 7,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
       "starter": 1,
-      "hq": [
-        0,
-        3
-      ],
-      "owned": [
-        1,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 3,
-      "redirects": 15,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 3,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 8,
-      "humanStyle": "tactical",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "tactical",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 1,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
       "starter": 1,
-      "hq": [
-        0,
-        1
-      ],
-      "owned": [
-        1,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 10,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 5,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 2,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        2
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 3,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
       "starter": 1,
-      "hq": [
-        4,
-        0
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 13,
-      "sends": 7,
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 5,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 4,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 1,
+      "plies": 12,
+      "pulls": 9,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 5,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
       "starter": 1,
-      "hq": [
-        4,
-        0
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 13,
-      "sends": 7,
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 5,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 6,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        2
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 7,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 13,
-      "actions": 26,
       "starter": 1,
-      "hq": [
-        0,
-        1
-      ],
-      "owned": [
-        1,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 10,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 3,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 8,
-      "humanStyle": "pressure",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        2
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "pressure",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 1,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 17,
-      "actions": 34,
       "starter": 1,
-      "hq": [
-        0,
-        3
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 3,
-      "redirects": 21,
-      "sends": 10,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 1,
+      "plies": 9,
+      "pulls": 5,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 2,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 3,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
       "starter": 1,
-      "hq": [
-        4,
-        0
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 13,
-      "sends": 7,
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 1,
+      "plies": 9,
+      "pulls": 5,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 4,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 0,
+      "plies": 9,
+      "pulls": 7,
+      "opponentPulls": 3,
+      "reason": "line"
     },
     {
       "seed": 5,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 0,
-      "ticks": 12,
-      "actions": 24,
       "starter": 1,
-      "hq": [
-        4,
-        0
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 13,
-      "sends": 7,
-      "reason": "Ostzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 1,
+      "plies": 9,
+      "pulls": 5,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 6,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 7,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 17,
-      "actions": 34,
       "starter": 1,
-      "hq": [
-        0,
-        3
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 3,
-      "redirects": 21,
-      "sends": 10,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 0,
+      "plies": 10,
+      "pulls": 3,
+      "opponentPulls": 2,
+      "reason": "line"
     },
     {
       "seed": 8,
-      "humanStyle": "network",
-      "aiStyle": "tactical",
-      "winner": 1,
-      "ticks": 12,
-      "actions": 24,
       "starter": 0,
-      "hq": [
-        0,
-        4
-      ],
-      "owned": [
-        0,
-        0,
-        1,
-        1
-      ],
-      "takeovers": 4,
-      "redirects": 12,
-      "sends": 8,
-      "reason": "Westzentrale hat ihre Stabilität verloren."
+      "style": "gather",
+      "winner": 0,
+      "plies": 7,
+      "pulls": 4,
+      "opponentPulls": 2,
+      "reason": "line"
     }
   ]
 }

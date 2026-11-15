@@ -1,26 +1,67 @@
-import {legalActions,applyAction,project,predictPacket,ownerOf,CONFIG} from './engine.js';
-const weights={tactical:{hq:12,town:2.2,buffer:.25},pressure:{hq:17,town:1.1,buffer:.12},network:{hq:9,town:4,buffer:.4}};
-function value(s,side,w){
- if(s.phase==='over')return s.winner===null?0:s.winner===side?10000:-10000;
- const own=s.nodes[side===0?0:8],enemy=s.nodes[side===0?8:0];let score=(own.integrity-enemy.integrity)*w.hq;
- for(const n of s.nodes)if(n.kind==='town'){score+=n.influence*(side===0?1:-1)*w.town;const owner=ownerOf(n);if(owner!==null)score+=(owner===side?1:-1)*(1.4+n.buffer*w.buffer);}
- for(const p of s.packets){const f=predictPacket(s,p);if(f.expired){score+=(p.side===side?-1:1)*p.power*.15;continue;}const target=s.nodes[f.target],sign=p.side===side?1:-1;
-  if(target.kind==='hq'){if(target.owner!==p.side)score+=sign*p.power*w.hq*.7/(1+f.eta*.35);else score+=0;}
-  else {const next=Math.max(-CONFIG.influence,Math.min(CONFIG.influence,target.influence+(p.side===0?p.power:-p.power)));score+=(next-target.influence)*(side===0?1:-1)*w.town/(1+f.eta*.3);}
+import {CONFIG,LINES,resolve,legalMoves} from './engine.js';
+
+const MATE=100000;
+const PROFILES={tactical:[0,1,10,75],gather:[0,2,16,55],pressure:[0,1,7,100]};
+function hash(value) {value=Math.imul(value^(value>>>16),0x45d9f3b);value=Math.imul(value^(value>>>16),0x45d9f3b);return(value^(value>>>16))>>>0;}
+function value(result,side,weights,ply) {
+ if(result.over)return result.winner===null?0:result.winner===side?MATE-ply:-MATE+ply;
+ const own=side+1,other=2-side;let score=0;
+ for(const line of LINES) {
+  let mine=0,theirs=0;
+  for(const at of line){mine+=result.board[at]===own?1:0;theirs+=result.board[at]===other?1:0;}
+  if(!theirs)score+=weights[mine];if(!mine)score-=weights[theirs];
+ }
+ for(let cell=0;cell<result.board.length;cell++)if(result.board[cell]) {
+  const middle=(CONFIG.size-1)/2;
+  const central=CONFIG.size-1-Math.abs(middle-Math.floor(cell/CONFIG.size))-Math.abs(middle-cell%CONFIG.size);
+  score+=(result.board[cell]===own?1:-1)*central*.18;
  }
  return score;
 }
-function evaluate(s,side,w){const current=value(s,side,w);if(s.phase==='over')return current;return current*.3+value(project(s,2),side,w)*.7;}
-/** All state is public. Search uses exactly the player's legal transitions. */
-export function chooseAction(state,style='tactical'){
- if(state.phase!=='playing')throw Error('Keine laufende Partie');const side=state.turn,w=weights[style]??weights.tactical;
- const options=legalActions(state).map((action,index)=>{const next=applyAction(state,action);return{action,next,index,score:evaluate(next,side,w)};}).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,8);
- let best=options[0],score=-Infinity;
- for(const option of options){let future=option.score;
-  if(option.next.phase==='playing'){
-   const replies=legalActions(option.next).map(a=>evaluate(applyAction(option.next,a),side,w));future=option.next.turn===side?Math.max(...replies):Math.min(...replies);
+
+/** Bounded iterative adversarial search. Public board, identical legal resolve. */
+export function chooseMove(state,{depth=3,style='tactical',maxNodes=9000}={}) {
+ const moves=legalMoves(state);if(!moves.length)throw Error('Kein erlaubter Zug.');
+ depth=Math.max(1,Math.min(4,Number.isInteger(depth)?depth:3));
+ maxNodes=Math.max(1000,Math.min(50000,Number.isFinite(maxNodes)?maxNodes:9000));
+ const side=state.turn,weights=PROFILES[style]??PROFILES.tactical,abort=Symbol('budget');
+ let nodes=0,salt=state.seed;
+ for(const v of state.board)salt=hash(salt^v^0x9e3779b9);
+ function candidates(board,actor,ply) {
+  const list=[];
+  for(let cell=0;cell<board.length;cell++)if(board[cell]===0) {
+   if(++nodes>maxNodes)throw abort;
+   const result=resolve(board,cell,actor);
+   list.push({cell,result,score:value(result,side,weights,ply),tie:hash(salt^Math.imul(cell+1,2654435761))});
   }
-  const combined=future*.8+option.score*.2;if(combined>score+1e-9){score=combined;best=option;}
+  return list.sort((a,b)=>(actor===side?b.score-a.score:a.score-b.score)||a.tie-b.tie);
  }
- return {...best.action};
+ function search(result,actor,left,alpha,beta,ply) {
+  if(result.over||left===0)return value(result,side,weights,ply);
+  const options=candidates(result.board,actor,ply+1);
+  // At the leaf every legal child has already been scored and sorted.
+  if(left===1)return options[0].score;
+  let best=actor===side?-Infinity:Infinity;
+  for(const option of options) {
+   const score=search(option.result,1-actor,left-1,alpha,beta,ply+1);
+   if(actor===side){best=Math.max(best,score);alpha=Math.max(alpha,best);}
+   else{best=Math.min(best,score);beta=Math.min(beta,best);}
+   if(alpha>=beta)break;
+  }
+  return best;
+ }
+ const roots=candidates(state.board,side,1);
+ let completed=roots[0].cell;
+ if(roots[0].result.winner===side)return completed;
+ for(let horizon=1;horizon<=depth;horizon++) {
+  let best=-Infinity,chosen=completed;
+  try {
+   for(const option of roots) {
+    const score=search(option.result,1-side,horizon-1,best,Infinity,1);
+    if(score>best){best=score;chosen=option.cell;}
+   }
+   completed=chosen;
+  }catch(error){if(error!==abort)throw error;break;}
+ }
+ return completed;
 }

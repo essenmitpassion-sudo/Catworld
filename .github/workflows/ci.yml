@@ -1,4 +1,4 @@
-name: SIGNALBRUCH checks
+name: SOG checks
 on:
   push:
   pull_request:
