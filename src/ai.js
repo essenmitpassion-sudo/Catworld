@@ -1,10 +1,11 @@
 import {advance,legalMoves,positionKey} from './engine.js';
+import {gateDistance} from './routes.js';
 const WIN=100000;
 /** Evaluation is a hypothesis. Exact wins/captures come from the same public rules. */
 export function evaluate(s,side,style='balanced'){
  if(s.status==='won')return s.winner===side?WIN:-WIN;if(s.status==='draw')return 0;
  let score=0;const material=style==='capture'?200:125,progress=style==='race'?28:16;
- for(let i=0;i<25;i++)if(s.board[i]){const p=s.board[i],y=Math.floor(i/5),x=i%5,d=p===1?y:4-y;const value=material+(4-d)*progress+(2-Math.abs(2-x))*4;score+=p===side?value:-value;}
+ for(let i=0;i<25;i++)if(s.board[i]){const p=s.board[i],y=Math.floor(i/5),x=i%5,d=p===1?y:4-y;const value=style==='route'?material+(4-gateDistance(i,p))*progress:material+(4-d)*progress+(2-Math.abs(2-x))*4;score+=p===side?value:-value;}
  return score;
 }
 /** Iterative alpha-beta; no transposition cache because repetition is path-dependent. */
