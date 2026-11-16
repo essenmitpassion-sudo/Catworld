@@ -1,0 +1,68 @@
+# PROJECT UNCHARTED – Anforderungen
+
+Verbindliche Quellen: `docs/directives/MASTER_V3.md` (vollständig archivierter Upload), aktuelles Verständnis-/Kontinuitätsprotokoll und Nutzerkorrektur vom 16.11.2026: **VERSATZ ersetzen; alte Versuche nur als Erfahrung nutzen.**
+
+Status: OPEN, IN_PROGRESS, IMPLEMENTED, VERIFIED, BLOCKED. VERIFIED gilt ausschließlich für das konkrete Akzeptanzkriterium, nie pauschal für eine ganze Kategorie. A = automatischer Test, P = praktische Ausführung mit Werkzeugen, H = menschliche Qualitätsbewertung. Alte VERSATZ-Nachweise belegen keine Eigenschaft des neuen Spiels.
+
+| ID | Konkrete Anforderung | Priorität | Akzeptanzkriterium | Status | Tatsächlicher Nachweis |
+| --- | --- | --- | --- | --- | --- |
+| R1-01 | Neues originelles Strategiespiel statt VERSATZ | P0 | Eigenes Kernprinzip, Ziel und vollständige Partie im neuen Produkt | OPEN | Nutzerkorrektur erfasst; noch kein neues Spiel |
+| R1-02 | Wenige Regeln, schneller Einstieg | P0 | Erste sinnvolle Entscheidung ohne lange Einführung; Verständnis mit H prüfen | OPEN | Kein Erstspieltest |
+| R1-03 | Mehrere erfolgreiche Strategien und neue Möglichkeiten nach mehreren Partien | P1 | Dokumentierte unterschiedliche Pläne, Gegenstrategien und wiederholte H-Partien | OPEN | Keine neuen Partien |
+| R1-04 | Kohärenter, attraktiv dargestellter und erweiterbarer kleiner Spielkern | P2 | Darstellung unterstützt Regeln; Erweiterbarkeit an konkretem Bedarf prüfen | OPEN | Keine neue Implementierung |
+| R2-01 | Wirkprinzipien der sieben Referenzspiele untersuchen | P0 | Designentscheidung ordnet Emergenz, Feedback, kompakte Entscheidungen, Kombinationen, Risiko, Experimente und Automatisierung konkreten Regeln zu | OPEN | Referenzen vollständig in Master §4 erhalten |
+| R2-02 | Erfahrungen Deepfall, KNICK, Catworld, Chaincore und Soundweave berücksichtigen | P0 | Konsequenzen im Konzept dokumentiert; frühere Ergebnisse nur bei tatsächlicher Verfügbarkeit als Erfahrung beanspruchen | IN_PROGRESS | VERSATZ/CURRENT.md und frühere SOG-/SIGNALBRUCH-Entscheidungen gelesen; andere Erfahrungen nur aus Master bekannt |
+| R2-03 | Drei deutlich verschiedene Kernideen entwickeln | P0 | Weiterentwicklung, Systemkombination und radikal eigenes Prinzip kurz beschrieben | OPEN | Noch keine neue Auswahl |
+| R2-04 | Ideen nach sieben Kriterien vergleichen und selbstständig entscheiden | P0 | Neuartigkeit, Tiefe, Verständlichkeit, Überraschung, Wiederspielwert, visuelle Machbarkeit, technisches Risiko; genau ein Konzept wählen | OPEN | Kein Neustart alter Konzeptphase als neues Ergebnis ausgegeben |
+| R3-01 | Begrenzte Welt, klare Ausgangslage, originelles Kernsystem | P0 | Neue Partie zeigt Zustand und Ziel; reproduzierbarer Start | OPEN | Neuer Kern fehlt |
+| R3-02 | Ein bis drei bedeutungsvolle Spieleraktionen | P0 | Alle Aktionen besitzen legalen Eingabepfad und verständliche Konsequenzen | OPEN | Neue Aktionen nicht definiert |
+| R3-03 | Gegenkräfte und vollständiger Entscheidungsloop | P0 | Situation → Entscheidung → Konsequenz → Anpassung praktisch ausgeführt | OPEN | Kein neuer Micro-Run |
+| R3-04 | Sieg, Niederlage und Neustart | P0 | Je vollständiger tatsächlicher UI-Ablauf mit nachvollziehbarem Endzustand und sauberem Neustart | OPEN | Alte VERSATZ-Tests zählen nicht |
+| R3-05 | Sofort verständliche Bedienung und kurze Partie | P0 | Erster Zyklus Ziel 60–120 s, Partie Ziel 3–8 min; reale Zeiten messen oder begründete Abweichung dokumentieren | OPEN | Keine Zeitmessung; automatische Laufzeit ersetzt H nicht |
+| R3-06 | P0 erst nach praktischer Ausführung freigeben | P0 | Gebautes neues Spiel mit Steuerung, Reaktionen und Endzuständen gestartet und bedient | OPEN | Toolverfügbarkeit Chromium bestätigt; neuer UI-Test fehlt |
+| R4-01 | Nutzen, Preis, sichtbarer Effekt, Wechselwirkung und Zukunftsfolge jeder zentralen Aktion | P1 | Aktionsübersicht benennt alle fünf Aspekte und konkrete Spielsituationen belegen sie | OPEN | Neue Mechanik offen |
+| R4-02 | Keine ständig beste Aktion; echte Gegenstrategien | P1 | Unterschiedliche Stellungen verlangen unterschiedliche Entscheidungen; dominante Kandidaten und Exploits gezielt untersucht | OPEN | Nicht durch Bot-Siegquote allein belegbar |
+| R4-03 | Überraschungen aus verständlichen Regeln | P1 | Reproduzierbare Kombination/Kettenreaktion und erkennbare Ursache-Wirkung | OPEN | Keine neue Wechselwirkung |
+| R4-04 | Wiederspielbarkeit durch Ausgangslagen und Entscheidungen | P1 | Unterschiedliche reproduzierbare Starts und Verläufe; menschlichen Wiederholungswunsch separat prüfen | OPEN | Kein neuer Seed-/Startvergleich |
+| R4-05 | Spannung, Rückschläge, Erholung und hohe Entscheidungsdichte | P1 | Vollständige Partien auf Leerlauf, irreversible frühe Entscheidung und Erholungsmöglichkeiten untersuchen | OPEN | Erlebnisprüfung fehlt |
+| R4-06 | Mechaniken ohne Tiefen-/Verständnisnutzen entfernen | P1 | Nach Meilenstein jede Zusatzmechanik begründen oder streichen; keine Feature-Flut | OPEN | Noch kein neuer Kern |
+| R5-01 | Eigene visuelle Identität und mechanikbezogener visueller USP | P2 | Tatsächliche Darstellung inspiziert; Formen, Silhouetten, Raumbeziehungen unterstützen Entscheidungen | OPEN | Neues Design fehlt |
+| R5-02 | Unmittelbares Eingabefeedback und lesbare Folgen | P0 | Aktionen verändern sichtbar den richtigen Zustand; Symbole/Farben konsistent; Situationen unterscheidbar | OPEN | Neuer UI-Ablauf fehlt |
+| R5-03 | Sinnvolle Animationen ohne Abhängigkeit von Effekten | P2 | Zustandswechsel mit/ohne Bewegung verständlich; Animation entspricht Regeln und blockiert keine Eingabe dauerhaft | OPEN | Neue Darstellung fehlt |
+| R5-04 | Grafikaufwand folgt überzeugendem Kern | P0 | Erst spielbarer Micro-Run, dann begründete visuelle Verfeinerung; kein Entwickler-Dashboard als Spielersatz | OPEN | Reihenfolge festgelegt, Ausführung offen |
+| R6-01 | Regeln und Darstellung trennen; testbare Übergänge | P0 | Pure Regelübergänge mit konkreten invarianten- und szenariobasierten Tests | OPEN | Neue Architektur noch nicht gewählt |
+| R6-02 | Reproduzierbare Simulation, Seeds wo sinnvoll, robuste Eingaben | P0 | Gleicher Start und Verlauf ergeben gleichen Zustand; ungültige Eingaben zerstören keinen Spielstand | OPEN | Neue Tests fehlen |
+| R6-03 | Einfachste tragfähige Technik, wenige Abhängigkeiten | P0 | Architektur begründet; keine spekulativen Frameworks, Plugins, Migration oder unnötigen Agenten | OPEN | Bestehende JS/Node/esbuild-Werkzeuge verfügbar; neue Wahl offen |
+| R6-04 | Technische Prüfungen und vollständige neue Spielabläufe | P0 | Passende Unit-/Integrationsprüfungen, Build und komplette Partien mit aktuellen Ergebnissen | OPEN | A: nur unveränderte alte Basis 44/44 und Build 53.142 Bytes geprüft |
+| R6-05 | Strategische Prüfung über Stile, Starts, Gegenstrategien, Exploits | P1 | Reproduzierbare Fälle, Methoden und Grenzen dokumentiert | OPEN | Keine neuen Versuche |
+| R6-06 | Praktische visuelle Prüfung | P0 | Gebaute UI tatsächlich bedienen und Darstellung ansehen; unprüfbare Teile ausdrücklich offen lassen | OPEN | Chromium vorhanden; kein neuer Build |
+| R6-07 | Menschliche Qualität getrennt von Technik ausweisen | P1 | Verständnis, Spannung, Entscheidungsqualität, Spielspaß und Wiederholung ausschließlich mit passenden H-Belegen bewerten | OPEN | Kein menschlicher Playtest vorhanden |
+| R6-08 | Wichtigste belegte Schwäche iterativ verbessern | P1 | Schwäche → Hypothese → kleine Änderung → Vorher/Nachher → Regression → Sicherung dokumentiert | OPEN | Noch kein neuer Meilenstein |
+| R6-09 | Keine Feature-Menge zum Verdecken eines schwachen Kerns | P1 | Bei Gate-Fehler zuerst Kernschwäche behandeln; keine globale Erfolgsmeldung | OPEN | Prozess festgelegt; Durchführung offen |
+| R7-01 | Sichere autorisierte Arbeit autonom fortsetzen | P0 | Keine gewöhnlichen Wartefreigaben; nächste wertvollste Aufgabe nach Meilenstein bearbeiten | IN_PROGRESS | Lesen, Klonen, Sicherung und Analyse ohne unnötige Freigabe ausgeführt |
+| R7-02 | Lokale Blocker begrenzen, unabhängige Aufgaben bearbeiten | P0 | Fehler und Alternative dokumentieren; Grenzen/Berechtigungen respektieren | OPEN | Derzeit kein projektweiter Blocker |
+| R7-03 | Keine nicht eingerichtete Hintergrundarbeit behaupten | P0 | Status benennt nur tatsächlich ausgeführte Schritte und aktive Ausführungsgrenzen | IN_PROGRESS | Keine Hintergrundfortsetzung eingerichtet |
+| R8-01 | Repository-Identität, Branch, HEAD, Remote, Arbeitsbaum prüfen | P0 | Gelesene Git-Ausgaben identifizieren autorisiertes Repo und unveröffentlichte Änderungen | VERIFIED | P 16.11.: sauberer frischer Clone; origin Catworld; Ausgangsbranch g0/first-cat-action; HEAD 2d4874e1810a562ed50587e46eb4faa97d518059 |
+| R8-02 | Neue Arbeit auf geeignetem Branch; Historie erhalten | P0 | Entwicklungsbranch vom gesicherten Stand; keine unkontrollierten Force-Pushes oder History-Rewrites | VERIFIED | P: development/v3-continuity von 2d4874e angelegt; andere Remote-Branches erhalten |
+| R8-03 | Nach funktionsfähigen Schritten nachvollziehbare Commits | P0 | Änderungen und zugehörige Nachweise gemeinsam nachvollziehbar versioniert | OPEN | Analyseänderungen noch nicht committed |
+| R8-04 | Autorisierte Pushes mit Remote-Readback bestätigen | P0 | Neuer Commit-SHA stimmt mit git ls-remote des Entwicklungsbranches überein | OPEN | Neue Analyse noch nicht gepusht; Archivpushes siehe R9 |
+| R9-01 | Ursprünglichen Catworld-Stand separat remote sichern | P0 | Eigenständige Archiv-Referenz mit bestätigtem exaktem SHA | VERIFIED | P: archive/catworld-original-2026-11-16 → 7175190acf5dec4c84bf00d1a1d22f36acb4c1d2 per Push und ls-remote bestätigt |
+| R9-02 | Gesamten unmittelbaren VERSATZ-Vorgänger sichern | P0 | Aktueller Vorgänger vollständig remote referenziert, inklusive Historie | VERIFIED | P: archive/versatz-before-v3-2026-11-16 → 2d4874e1810a562ed50587e46eb4faa97d518059 per Push und ls-remote bestätigt |
+| R9-03 | Nicht commitete Arbeit separat erhalten, falls vorhanden | P0 | Arbeitsbaum vor Ersatz geprüft; vorhandene Arbeit separat nachweisbar erhalten | VERIFIED | P: git status --porcelain vor Änderungen leer; frischer Clone, keine lokale unveröffentlichte Arbeit vorgefunden; andere Rechner nicht geprüft |
+| R9-04 | Ersatz erst nach Remote-Sicherung; sichere Alternative bei Fehler | P0 | Bei fehlender Sicherung keine destruktive Änderung; sonst neuer Kern ersetzt alte Inhalte mit Historie | IN_PROGRESS | Sicherung bestätigt; alte Produktdateien bisher noch vorhanden |
+| R10-01 | Vollständigen Masterprompt vor Änderungen lesen und verfügbar halten | P0 | Originaltext im Repo; keine Anforderung aus nicht verfügbarem Kontext erfinden | VERIFIED | P: gesamter Upload gelesen und unverändert nach docs/directives/MASTER_V3.md kopiert |
+| R10-02 | Jede umsetzungsrelevante Forderung eindeutig R1–R10 zuordnen | P0 | REQUIREMENTS.md enthält ID, Handlung, Priorität, Akzeptanz, Status und echten Nachweis; Abhängigkeiten/Widersprüche benannt | IMPLEMENTED | Diese Matrix; Abgleich in docs/MASTER_V3_ANALYSIS.md; abschließende Selbstprüfung ausstehend |
+| R10-03 | PROJECT_STATE.md nach jedem funktionierenden Schritt aktualisieren | P0 | VISION, IMPLEMENTATION, VERIFICATION, GIT, NEXT mit tatsächlichem Zustand | IMPLEMENTED | PROJECT_STATE.md initialisiert; neues Spiel noch nicht umgesetzt |
+| R10-04 | Nach Meilenstein Master → Matrix → Code → Tests → Status abgleichen | P0 | Konkrete Abweichungen und wichtigste Korrektur dokumentiert; technisch sinnvolle Checks automatisieren | IN_PROGRESS | Initialer Abgleich: alte Fortsetzungsanweisung widerspricht aktueller Nutzerkorrektur; AGENTS.md wird angepasst |
+| R10-05 | Neue Sitzung aus Dateien und Git zuverlässig fortsetzen | P0 | Zustand, offene Anforderungen, letzte Sicherung und eindeutige nächste Aufgabe rekonstruierbar | IMPLEMENTED | PROJECT_STATE.md benennt Analysephase und nächste Konzeptentscheidung; Fortsetzung noch nicht unabhängig ausgeführt |
+| R10-06 | Gates P0–P3 anhand tatsächlicher Wirkung bewerten | P0 | P0 praktischer Loop; P1 Gegenspiel; P2 Identität/Wiederholung; P3 Robustheit jeweils separat belegt | OPEN | Alle Gates für das neue Spiel offen |
+| R10-07 | Bei Zeit-/Kontextende kontrolliert sichern; kompakt ehrlich berichten | P0 | Commit/Remote-Stand, offene Grenzen und nächster Schritt stimmen mit Repo überein | IN_PROGRESS | Analyse wird gesichert; kein Abschluss des Spiels beansprucht |
+
+## Abhängigkeiten und Grenzen
+
+- R9-Sicherung vor R9-04; erfüllt. R2-Auswahl vor neuem R3-Kern. R3/P0 vor zusätzlichen P1–P3-Funktionen.
+- R6-07/H kann nicht durch R6-04/A oder automatisierte Browserbedienung/P ersetzt werden. Spielspaß ist offen.
+- Zeitwerte sind Richtziele, keine starren Erfolgsschwellen. Abweichungen brauchen Messung und Begründung.
+- Anforderungen an kontinuierliche Pflege bleiben aktiv, auch wenn ein einzelner Meilenstein geprüft ist.
+- V3 ersetzt frühere allgemeine Spielrichtung. Die aktuelle ausdrückliche Nutzerkorrektur ersetzt insbesondere „VERSATZ fortsetzen“ in alten Projektdateien. Sicherheits-, Speicher- und technische Erfahrungen bleiben relevant.
+- Keine Pflicht zu KI-Gegner, Mehrspieler, Kampagne, konkreter Engine, Veröffentlichung oder Repository-Umbenennung. Solche Mittel sind nur bei Nutzen für den gewählten Kern gerechtfertigt.
