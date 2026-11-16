@@ -181,3 +181,21 @@ test("finite positions, family conservation and restart hold across 40 seeded co
     assert.deepEqual(game.createGame(String(seed)), initial);
   }
 });
+
+test("impossible remaining carrying capacity ends the journey instead of allowing futile turns", () => {
+  const s = water([giant("a", 400, 300)]);
+  s.goal = 12;
+  s.delivered = 5;
+  s.rafts = [{ id: "r", x: 800, y: 300, people: 8 }];
+  const n = game.advance(s);
+  assert.equal(n.status, "lost");
+  assert.match(n.reason, /tragen/);
+});
+
+test("exactly sufficient carrying capacity stays playable while families remain reachable", () => {
+  const s = water([giant("a", 400, 300)]);
+  s.goal = 12;
+  s.delivered = 6;
+  s.rafts = [{ id: "r", x: 800, y: 300, people: 3 }];
+  assert.equal(game.advance(s).status, "playing");
+});

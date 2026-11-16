@@ -224,10 +224,16 @@ export function advance(s) {
         g.arrived = true;
       }
     }
-  const available =
-    n.delivered +
+  const remainingPeople =
     n.giants.reduce((a, g) => a + (active(g) ? g.people : 0), 0) +
     n.rafts.reduce((a, r) => a + r.people, 0);
+  const remainingCapacity = n.giants.reduce(
+    (a, g) => a + (active(g) ? g.capacity : 0),
+    0,
+  );
+  // Each island can arrive only once. Even unlimited time cannot deliver more
+  // than this upper bound; equality must remain playable.
+  const available = n.delivered + Math.min(remainingPeople, remainingCapacity);
   if (n.delivered >= n.goal) {
     n.status = "won";
     n.reason = "Die Gärten haben ein neues Ufer.";
@@ -236,9 +242,11 @@ export function advance(s) {
     n.reason =
       n.tide >= LIMIT
         ? "Die letzte Tide ist verstrichen."
-        : available < n.goal
-          ? "Zu viele Familien sind verloren."
-          : "Alle Inseln haben ihre Reise beendet.";
+        : n.delivered + remainingCapacity < n.goal
+          ? "Die verbliebenen Inseln können nicht genug Familien tragen."
+          : available < n.goal
+            ? "Zu viele Familien sind verloren."
+            : "Alle Inseln haben ihre Reise beendet.";
   }
   // Keep plans affordable; rest is always available, never an exhausted-input soft lock.
   for (const g of n.giants)

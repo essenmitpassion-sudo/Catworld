@@ -25,9 +25,9 @@ npm run smoke
 npm run balance
 ```
 
-Zusätzliche Regressionen bei laufendem `npm run dev`: `node scripts/input.mjs`, `node scripts/layout.mjs`; Darstellung der Rettungsfolge: `node scripts/feedback.mjs`. Chromium unter `/usr/bin/chromium` wird von den Browserchecks verwendet. Rohdaten/Screenshots landen in ignoriertem `work/` und sind jederzeit reproduzierbar.
+Zusätzliche Regressionen bei laufendem `npm run dev`: `node scripts/input.mjs`, `node scripts/layout.mjs`; Darstellung der Rettungsfolge: `node scripts/feedback.mjs`. Chromium unter `/usr/bin/chromium` wird von den Browserchecks verwendet. `node scripts/counterexamples.mjs` prüft zusätzlich 500 reproduzierbare Fahrweisen auf nutzlos fortgesetzte Reisen mit zu geringer Tragkraft. Rohdaten/Screenshots landen in ignoriertem `work/` und sind jederzeit reproduzierbar.
 
-12 Regeltests, 40 deterministische Stressläufe innerhalb der Suite; vollständige Browserpartien (Sieg/Verlust/Neustart), Maus/Kursregler/Tastatur, Bewegungssperre, Offline-Interaktion und vier Fensterbreiten. 60 Strategieläufe: Navigator 12/12 Siege; ohne Eilen 10/12; blindes Eilen 5/12; geradeaus und unveränderte Befehle 0/12. Das sind begrenzte automatische Nachweise, keine menschlichen Playtests und kein Beweis für Spielspass, Balance oder langfristige Tiefe.
+14 Regeltests, 40 deterministische Stressläufe innerhalb der Suite; vollständige Browserpartien (Sieg/Verlust/Neustart), Maus/Kursregler/Tastatur, Bewegungssperre, Offline-Interaktion und vier Fensterbreiten. 60 Strategieläufe: Navigator 12/12 Siege; ohne Eilen 10/12; blindes Eilen 5/12; geradeaus und unveränderte Befehle 0/12. Das sind begrenzte automatische Nachweise, keine menschlichen Playtests und kein Beweis für Spielspass, Balance oder langfristige Tiefe.
 
 ## Projekt und Kontinuität
 

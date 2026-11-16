@@ -25,13 +25,13 @@ Initial einmal vollständig gegen MASTER_V5 §§1–20 abgeglichen, 16.11.2026. 
 | R6.3 | P0 | Tatsächliche Bildprüfung mehrerer Zustände/kleiner Fenster | R6.1,R7.1 | VERIFIED | 320/390/768/1440; Einstieg/Mitte/Sieg/390/1440 angesehen |
 | R6.4 | P3 | Tastatur/Touch/reduzierte Bewegung; nicht nur Farbe | R6.2 | IMPLEMENTED | Maus/Tastatur, native Regler, Touch-Emulation, reduzierte und volle Animation; kein Hardwaretest |
 | R7.1 | P0 | Welt/Einstieg/Handlung/Konflikt/Druck/kompletter Loop/Sieg/Verlust/Neustart | R4.3 | VERIFIED | Chromium Sieg17/9Tiden, Verlust0/6, Neustarts, sichtbare Welt/Handlung/Druck |
-| R7.2 | P0 | Zustand/Regeln/Render/Input getrennt, robuste deterministische Übergänge | R7.1 | VERIFIED | engine/scene/main getrennt; 12 Tests +40Seeds; volle Browserzustände verglichen |
+| R7.2 | P0 | Zustand/Regeln/Render/Input getrennt, robuste deterministische Übergänge | R7.1 | VERIFIED | engine/scene/main getrennt; 14 Tests +40Seeds; volle Browserzustände verglichen |
 | R7.3 | P0 | Einfach ausführbares Produkt/Standalone ohne Laufzeitnetz | R7.2 | VERIFIED | npm build/dev; play/SAUM.html, identische Datei HTTP/offline; file:// administrativ blockiert |
-| R8.1 | P0 | Gezielte Regeln/Input/Neustart/Regression automatisch | R7.2 | VERIFIED | 12 Regeltests, Input/Feedback/Layout/Touch-Regressionen; Wiederholung nach Reviewfixes |
+| R8.1 | P0 | Gezielte Regeln/Input/Neustart/Regression automatisch | R7.2 | VERIFIED | 14 Regeltests, Input/Feedback/Layout/Touch-Regressionen; Wiederholung nach Reviewfixes |
 | R8.2 | P0 | Wirklich starten, ganzer Loop mit Erfolg/Verlust praktisch | R7.3 | VERIFIED | Vollständiger neuer Chromium-Sieg/Verlust/Neustart und Animation; docs/evidence/verification.json |
-| R8.3 | P1 | Reproduzierbare adversariale Strategie/Exploitstichprobe | R8.1 | IMPLEMENTED | 60 deterministische Strategiepartien/5 Politiken; kein Balancebeweis |
+| R8.3 | P1 | Reproduzierbare adversariale Strategie/Exploitstichprobe | R8.1 | IMPLEMENTED | 60 Strategiepartien/5 Politiken +500 Fahrweisen zur Kapazitätsgrenze; kein Balancebeweis |
 | R8.4 | P0 | Implementiert/automatisch/praktisch/subjektiv/menschlich trennen | — | VERIFIED | Status evidenzgebunden; keine erfundenen Playtests |
-| R9.1 | P0 | Kurze Zyklen; wichtigste belegte Schwäche korrigieren/nachprüfen | R8.2 | VERIFIED | Überlauf/Nahansicht, frühe Familienanzeige und Reviewfehler jeweils gezielt nachgeprüft |
+| R9.1 | P0 | Kurze Zyklen; wichtigste belegte Schwäche korrigieren/nachprüfen | R8.2 | VERIFIED | Überlauf, Ankunftsfeedback, Reviewfehler und erreichbarer Kapazitäts-Gegenfall jeweils rot→grün |
 | R9.2 | P1 | Gates mit Belegen, Kern vor Metasystem, kein Bloat | R8.2 | VERIFIED | P0/P1-Nachweise getrennt; menschliches Gate/Balance offen; keine Metasysteme |
 | R9.3 | P0 | Ohne Warte-OK; Blocker begrenzt diagnostizieren/Alternative/weiter | — | VERIFIED | Konzept selbst gewählt; Bundle blockiert nicht |
 | R10.1 | P0 | VISION/IMPLEMENTATION/VERIFICATION/GIT/NEXT aktuell | R3.1 | IMPLEMENTED | PROJECT_STATE fortgeschrieben, GIT-Readback nach Push ergänzen |

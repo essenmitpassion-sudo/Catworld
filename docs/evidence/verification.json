@@ -1,8 +1,8 @@
 {
   "date": "2026-11-16",
   "artifact": "play/SAUM.html",
-  "sha256": "39d8f9b57d7609bcbe550b15dc136f1e8195819af12bb5122839b7d9cddd3486",
-  "ruleTests": 12,
+  "sha256": "26b9b88f292f3af7b05f82245f12b1fd1c1645ae51323a52fc6f474a3debe32b",
+  "ruleTests": 14,
   "stressSeeds": 40,
   "browser": {
     "win": {
@@ -979,5 +979,20 @@
   },
   "humanPlaytests": 0,
   "fileScheme": "Blocked by managed Chromium administrator policy; identical portable file tested via HTTP and offline interaction",
-  "review": "One independent read-only reviewer: no critical engine defect; important keyboard focus issue and stale warning styling reproduced RED then fixed GREEN. Simultaneous shelter and hazard/rescue/delivery order follow explicit design. Early loss uses loose available-population upper bound, not a reachability solver."
+  "review": "One independent read-only reviewer: no critical engine defect; important keyboard focus issue and stale warning styling reproduced RED then fixed GREEN. Simultaneous shelter and hazard/rescue/delivery order follow explicit design. Early loss uses loose available-population upper bound, not a reachability solver. Subsequent bounded probe found a reachable capacity dead-end (seed7/tide12/max11). Capacity upper bound added with failing-before/passing-after fixture and equality guard; all 14 tests, 60 strategy runs and full browser suite rerun.",
+  "capacityRegression": {
+    "reachableCase": {
+      "seed": "7",
+      "oldEndTide": 14,
+      "newEndTide": 12,
+      "maximumDeliverableAt12": 11,
+      "goal": 12
+    },
+    "boundedProbe": {
+      "seeds": 500,
+      "capacityEndings": 363,
+      "continuingImpossibleJourneys": 0
+    },
+    "boundaryTest": "exactly sufficient capacity remains playable"
+  }
 }
