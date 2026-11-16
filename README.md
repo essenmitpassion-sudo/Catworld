@@ -4,6 +4,8 @@ Ein eigenständiger Strategiespiel-Vertical-Slice für PROJECT UNCHARTED V5. Fü
 
 ## Spielen
 
+Direkt spielen: https://veil-signal-duel.docile-eel-0528.chatgpt.site (mit dem eigenen ChatGPT-Konto anmelden, falls die Seite danach fragt). Veröffentlichung als Sites-Version 4 bestätigt.
+
 `play/SAUM.html` herunterladen und im Browser öffnen. Die Datei enthält das ganze Spiel, ohne Laufzeitnetzwerk oder Installation. Alternativ lokal mit Node 22+:
 
 ```sh
