@@ -1,20 +1,21 @@
-# PROJECT UNCHARTED V4 · KIPPWERK
-Stand: 16.11.2026. Autorität: docs/directives/MASTER_V4.md. Die zweite vollständige Nutzerdatei ersetzt den abgeschnittenen ersten Upload; keine Produktänderung zwischen ihren gemeinsamen Abschnitten. Einzige aktive Fortsetzung hier; überprüfbare Anforderungen in REQUIREMENTS.md. docs/DESIGN.md ist die feste Konzeptentscheidung, keine zweite Roadmap.
+# PROJECT UNCHARTED V5 · SAUM
+16.11.2026. Einzige aktive Direktive docs/directives/MASTER_V5.md (vollständiger Upload unverändert). V1–V4/Catworld/KIPPWERK historisch ersetzt. DESIGN.md ist Konzeptentscheidung, kein weiterer Aufgabenplan.
 
-## Spiel / Implementierung
-KIPPWERK: zwei Leitungsachsen-Eingriffe lenken Druckketten zu vier Feuern. P0 vollständig implementiert: Kippen/Entlasten, zwei Eingriffe, exakte Vorschau, Randhülle, vier Feuer, zehn Fluten, Sieg/Verlust/Neustart. Vorgänger aus aktivem Baum nach Sicherung entfernt, weiterhin vollständig in Git erreichbar.
+## VISION
+SAUM – Die wandernden Inseln. Lotse dreier bewohnter Meeresriesen. Körper transportieren Familien und geben einander Schutz; Ruhe, Formation und Rettungsumwege verändern dieselbe Situation. Nautischer Kupferstich lebender Garteninseln auf hellem Papier.
 
-## Start / Prüfung
-Befehle: npm ci; npm test; npm run build; npm run dev (Port 3000); npm run smoke; npm run balance. dist/KIPPWERK.html ist der portable Einzeldatei-Build. Alte Basis vor Ersatz: npm ci und 44/44 Tests erfolgreich; das beweist ausschließlich den Vorgänger.
+## IMPLEMENTATION
+IN_PROGRESS: 14-Tiden-Lauf, neue Regeln und organische Welt. Browser/Standalone, vorhandenes esbuild/Node/Playwright. Kein Laufzeitnetzwerk und keine Metaökonomie.
 
-## Nachweise / Schwächen
-V4 vollständig gelesen, Anforderungsmatrix einmal semantisch gegen Abschnitte 1–17 geprüft. Kein Human-Feedback. AUTOMATED_TESTED: 9/9 Regeltests, Druckerhaltung auf 100 Seeds. PRACTICALLY_VERIFIED: Chromium klickte auf dem tatsächlichen Standalone-Build einen Sieg (MORGEN, 8 Fluten, 8 Hülle) und Verlust (4 Fluten, 0 Hülle), Vorschaugleichheit bei jeder Gewinnflut, Neustart; Layout 320/390/768/1440 ohne horizontalen Überlauf und ohne Runtimefehler. Screenshots work/preview. file:// durch Browser-Administrationsrichtlinie gesperrt; identische Einzeldatei über abgefangene HTTP-Testadresse geprüft, keine Hosted-Veröffentlichung. Erste Botstichprobe 12 Seeds: idle 0/12, balanced 12/12, safe 11/12, greedy 12/12. Keine Balance-/Spaßbehauptung. Hauptschwäche P0: sämtliche Kettenzellen leuchten gleichzeitig, Ursache/Wirkung schwer verfolgbar. Menschliches Verständnis, Timing und Spaß offen.
+## VERIFICATION
+V4-Baseline hier ausgeführt: npm ci und 9/9 Tests bestanden. Kein SAUM-Nachweis daraus. Start: npm run build && npm run dev (3000). npm test; npm run smoke; npm run balance. Menschliche Playtests/Faszination/Langzeitmotivation offen.
 
-## Git
-Branch development/uncharted im isolierten /workspace/work/uncharted. Ausgang e7c16bf83b803c973c5d0b053b06c657d0b32c2a. Archiv-Branch archive/catworld-final-v4-2026-11-16 und Tag archive/catworld-v4-baseline-2026-11-16 zeigen remote nachweislich auf denselben Ausgang. Git-Bundle /workspace/work/catworld-pre-v4.bundle vollständig verifiziert, enthält sämtliche verfügbaren Branch-Historien. Initiales Catworld war leere Checkout-Hülle ohne lokale Arbeit. Fremde Geräte nicht geprüft. Kein Force-Push; keine Veröffentlichung.
+## GIT
+/workspace/Catworld, development/uncharted. Ausgang/Remote 09ef38f26b5b457651f805f8bded324c2f126472, zusätzlicher lokaler archive/kippwerk-v4-2026-11-16 auf diesem SHA. Initialer Checkout leer/unborn work, keine lokale Arbeit; Remote sicher geladen. GitHub ls-remote und gefetchte Archivbäume geprüft: archive/catworld-final-v4-2026-11-16 und Tag archive/catworld-v4-baseline-2026-11-16 = e7c16bf83b803c973c5d0b053b06c657d0b32c2a; archive/catworld-original-2026-11-16 = 7175190acf5dec4c84bf00d1a1d22f36acb4c1d2. Gemeldetes /workspace/work/catworld-pre-v4.bundle nicht vorhanden, kein neuer Prüfnachweis behauptet. Keine unnötige zweite Catworld-Archivierung. Keine fremden Geräte geprüft. Hosting unverändert.
 
-## Nächste Aktion
-P1: Kettenanimation in echte Entladungsstufen aufteilen, UI-Gleichheit und Eingabesperre währenddessen prüfen; Strategiestichprobe ausweiten und Ein-Achsen-Exploits prüfen. Keine Hintergrundausführung eingerichtet.
-
-## P0 Sicherung / gezielter Abgleich
-Regeln/UI/Build und Browserbelege geprüft, Diffcheck vor Commit. Vorheriger gesicherter Designcommit e331972. Dieser P0-Commit wird anschließend auf origin development/uncharted gepusht und per SHA bestätigt. Archiv unverändert. P0 technischer/praktischer Kern erfüllt; zeitliche/menschliche Ziele und P1–P3 noch offen.
+## NEXT · einzige aktive Arbeitsfolge
+- [ ] T1 engine.js: Atem/Schutz/Fahrtweg/Rettung/Lieferung/Endzustand/Seed-Fixtures zuerst rot, Regeln implementieren, Suite grün.
+- [ ] T2 scene.js organische Welt; main.js Maus/Touch/Tastatur, Vorschau, echte Bewegung, Regeln, Enden/Neustart; Build und vollständige Browserpartie.
+- [ ] T3 adversariale Stichprobe mehrerer Seekarten, wichtigste belegte Schwäche korrigieren; Desktop/320/390/768, Screenshots ansehen, Anforderungen aktualisieren, Diff/Tests/Commit/Push/SHA-Rücklesen.
+Review-Fokus: Atemmangel ohne Blockade; kreuzende Fahrwege ohne Tunneln; Familien nie duplizieren; Vorschau ohne Mutation; Neustart/doppelte Eingabe während Animation sicher.
+Methodik writing-plans/executing-plans inline und gezielte TDD. Nutzer autorisiert Eigenentscheidung und verlangt keine unnötige Agentenorganisation: Autorenreview statt Delegation und keine zusätzlichen Planfreigaben. Hier zugleich Fortschrittsledger, keine zweite Roadmap.

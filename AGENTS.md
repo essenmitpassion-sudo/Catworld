@@ -1,5 +1,5 @@
-# PROJECT UNCHARTED V4 · KIPPWERK
-Read docs/directives/MASTER_V4.md, PROJECT_STATE.md and REQUIREMENTS.md. V4 replaces prior product instructions. Work on development/uncharted, retain Git history and archive refs. No further concept restart without concrete evidence. One integrator; no unnecessary agents. User authorizes autonomous reversible work, commits and non-force pushes to origin.
+# PROJECT UNCHARTED V5 · SAUM
+Read docs/directives/MASTER_V5.md, PROJECT_STATE.md and REQUIREMENTS.md. V5 replaces V1–V4, Catworld and KIPPWERK product goals. KIPPWERK is historical and rejected. Work on development/uncharted, preserve history and archives. One integrator, no unnecessary agents. User authorizes autonomous design, implementation, tests, commits and non-force pushes to origin. Do not reselect an implemented viable concept without evidence.
 
 Catworld archive: archive/catworld-final-v4-2026-11-16 and tag archive/catworld-v4-baseline-2026-11-16, both e7c16bf83b803c973c5d0b053b06c657d0b32c2a; remote readback verified. Other branches retained. Local verified recovery bundle /workspace/work/catworld-pre-v4.bundle. Empty initial checkout had no uncommitted, untracked or ignored project work; other devices not inspected.
 

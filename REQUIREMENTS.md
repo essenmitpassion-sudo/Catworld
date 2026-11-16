@@ -1,57 +1,39 @@
-# Anforderungen · PROJECT UNCHARTED V4
+# PROJECT UNCHARTED V5 · Anforderungen
+Initial einmal vollständig gegen MASTER_V5 §§1–20 abgeglichen, 16.11.2026. Status: OPEN, IN_PROGRESS, IMPLEMENTED, VERIFIED, BLOCKED. Evidenz wird gezielt nach Meilensteinen aktualisiert. Menschlicher Erlebnisnachweis separat offen.
 
-Status: OPEN / IN_PROGRESS / IMPLEMENTED / VERIFIED / BLOCKED. VERIFIED nur für das konkrete Kriterium. Nachweisarten separat: IMPLEMENTED, AUTOMATED_TESTED, PRACTICALLY_VERIFIED, HUMAN_VALIDATED. P0–P3 priorisieren Arbeit, keine globale Blockade.
-
-| ID | Anforderung | Priorität / Abhängigkeiten | Akzeptanzkriterium | Status | Tatsächlicher Nachweis |
+| ID | Priorität | Akzeptanzkriterium | Abhängigkeit | Status | Nachweis |
 |---|---|---|---|---|---|
-| R1.01 | Neues kleines Strategiespiel, keine alten Lern-/Katzenziele | P0 / — | Neuer vollständiger Kern mit eigenem Namen; Altspiel nur Git-Archiv | OPEN | Noch kein passender Nachweis |
-| R1.02 | In Minuten erlernbar; Entscheidungszyklus 60–120 s, erste Partie ca. 3–8 min | P0 / R4 | Menschlicher Erstpartietest mit gemessenen Zeiten | OPEN | Noch kein passender Nachweis |
-| R1.03 | Wenige Regeln, USP, unterschiedliche Spielweisen und Wiederholungsreiz | P1 / R3/R7 | Gegenbeispiele und Policyvergleich; Wiederholungsreiz separat durch Menschen | OPEN | Noch kein passender Nachweis |
-| R2.01 | Sieben benannte Referenzspiele auf kleine Handlung, Abwägung, Emergenz, Zufall, Wiederspielwert, unnötige Komplexität untersuchen | P0 / — | docs/DESIGN.md benennt jede Referenz und die sechs Fragen | VERIFIED | docs/DESIGN.md; Quellengrundlage/Grenzen ausdrücklich genannt |
-| R2.02 | Verfügbare Lehren aus fünf Vorgängerprojekten berücksichtigen; Lücken benennen | P0 / R9 | Verifizierbare Quellen genannt, keine erfundenen Beobachtungen | VERIFIED | docs/DESIGN.md; Quellengrundlage/Grenzen ausdrücklich genannt |
-| R2.03 | Drei Ansätze evolutionär/innovativ/radikal, fünf Kriterien, selbstständige Wahl | P0 / R2.01 | Drei deutlich andere Kerne und begründete Auswahl dokumentiert | VERIFIED | docs/DESIGN.md; Quellengrundlage/Grenzen ausdrücklich genannt |
-| R2.04 | Keine Kopie von Regeln+Präsentation; Beobachtungen von Hypothesen trennen | P1 / R2.03 | Eigenständige Kombination/Präsentation geprüft; Originalitätsgrenzen offen | OPEN | Noch kein passender Nachweis |
-| R3.01 | Erkennen/Entscheiden/Handeln/Folge/Anpassung; jede Aktion Nutzen und Kosten | P0 / R4 | Kippen und Entlasten verändern exakte Vorschau und knappen Eingriffsvorrat | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R3.02 | Wenige starke interagierende Regeln und überraschende kontrollierbare Ketten | P1 / R4 | Handgeprüfte Mehrfachkette, Vorschaugleichheit, Rücknahme | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R3.03 | Keine Universalstrategie, tote Ressourcen, beliebiger Zufall oder frühe ausweglose Restpartie | P1 / R7 | Mehrseed-Policyvergleich, Verlust-/Comebackfälle; kein globaler Beweis behauptet | OPEN | Noch kein passender Nachweis |
-| R3.04 | Keine repetitiven Pflichtklicks, leere Wartezeiten oder unverständlichen Konsequenzen | P1 / R5 | Flut direkt auslösbar, Eingriffe optional, Resultat sichtbar; Menschentest offen | OPEN | Noch kein passender Nachweis |
-| R4.01 | Überschaubares Feld, verständlicher Start und eigenständiger Kern | P0 / R2.03 | 5×5 Feld, Start-/Regelerklärung und Druckachsen im Browser | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R4.02 | Ein bis drei Aktionen, Systemdruck und sichtbare Konsequenzen | P0 / R3.01 | Kippen/Entlasten/Flut über echte UI-Eingaben; Feuer/Hülle/Restfluten sichtbar | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R4.03 | Sieg, Niederlage und Neustart vollständig erreichbar | P0 / R4.02 | Vollständige Browserpartien aus echtem Start bis beide Enden und Neustart | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R4.04 | Tatsächlich grafisch starten und vollständigen Ablauf prüfen; Einschränkungen nennen | P0 / R4.03 | Chromium-Protokoll und Screenshots, keine Simulation als UI-Test ausgeben | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R5.01 | Eigene prägnante Designsprache erklärt Kernmechanik | P2 / R4 | Visuelle Prüfung von Achsen, Druck, Feuern und Flutwegen | OPEN | Noch kein passender Nachweis |
-| R5.02 | Sofortige Eingabe, klare Zustände/Kontraste, lesbare Daten, Ursache/Wirkung | P1 / R4 | UI-Tests und Screenshotprüfung; Auswirkungen vor/nach Flut nachvollziehbar | OPEN | Noch kein passender Nachweis |
-| R5.03 | Zweckmäßige Animation und konsistente skalierende Bedienung | P2 / R5.02 | Normale/reduzierte Bewegung, Tastatur/Touch, 320–1440 px ohne Überlauf | OPEN | Noch kein passender Nachweis |
-| R5.04 | Keine Grafikproduktion vor Kern; keine generische Entwickleroberfläche | P0 / R4 | P0 Kern vor Ausbau; Spielscreen ohne technische Implementierungsdaten | OPEN | Noch kein passender Nachweis |
-| R6.01 | Umgebung prüfen, Engine passend wählen und technische Übernahmen begründen | P0 / R9 | Node/esbuild/Chromium bestätigt; Vanilla JS + SVG ohne Runtime-Abhängigkeit | VERIFIED | Umgebungsprüfung; docs/DESIGN.md |
-| R6.02 | Regeln/Darstellung getrennt; nachvollziehbare deterministische Übergänge | P0 / — | Reine Engine, nichtmutierende Vorschau, handgeprüfte Regeltests | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R6.03 | Reproduzierbare Starts und einfache Start-/Buildverfahren | P0 / R6.02 | Seedgleichheit; npm ci/test/build/dev; Standalone offline startbar | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R6.04 | Wenig Abhängigkeiten, klare Struktur, keine spekulative Infrastruktur/Paralleländerung | P0 / — | Ein Integrator; kleine Engine/UI/Builddateien; begründete Tools | VERIFIED | Umgebungsprüfung; docs/DESIGN.md |
-| R7.01 | Regeln, Eingaben, Übergänge, Kettenende, Restart und Regressionen testen | P0 / R6 | Node-Suite plus Browser-Input/Restart und begrenzte Ketten | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R7.02 | Alternativen, Risiken, erfolgreiche Strategien, Gegenstrategien und Exploits prüfen | P1 / R3 | Policies über mehrere Seeds plus konkrete taktische Gegenbeispiele | OPEN | Noch kein passender Nachweis |
-| R7.03 | Praktisch Start/Steuerung/ganze Partien/Zustandsverständnis prüfen | P0 / R4 | Echte Browserklicks; menschliches Verständnis getrennt offen | OPEN | Noch kein passender Nachweis |
-| R7.04 | Erlebte Spannung, Experimentierwert und Wiederholungsmotivation ehrlich bewerten | P2 / R4 | HUMAN_VALIDATED nur nach echtem Feedback | OPEN | Noch kein passender Nachweis |
-| R7.05 | IMPLEMENTED/AUTOMATED_TESTED/PRACTICALLY_VERIFIED/HUMAN_VALIDATED auseinanderhalten | P0 / — | Nachweise explizit beschriftet, keine Spaßbehauptung aus Bots | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R7.06 | Größte belegte Schwäche vor neuem Inhalt verbessern | P1 / R4 | Vorher-/Nachher-Experiment mit Hypothese/Test/Entscheidung | OPEN | Noch kein passender Nachweis |
-| R7.07 | Simulationen reproduzierbar und proportional, keine Scheinerfolge oder Prüfendlosschleifen | P1 / R6 | Seeds, Policies, Rohresultate; begrenzte Suite und klare Grenzen | OPEN | Noch kein passender Nachweis |
-| R8.01 | Autonom recherchieren, implementieren, testen, verbessern, committen/pushen | P0 / R9 | Ausführung ohne erneute routinemäßige Freigabe | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R8.02 | P0 vor P1 vor P2 vor P3; Qualität vor Umfang und Nutzen neuer Features | P0 / — | Meilensteine und Schwäche/Verbesserung/Prüfung/Sicherung im Status | OPEN | Noch kein passender Nachweis |
-| R8.03 | Blocker nur abhängig behandeln; wiederholte Fehler begrenzt reparieren/Alternative | P0 / — | Ursache und begrenzte Alternative bei Fehlern dokumentiert | OPEN | Noch kein passender Nachweis |
-| R8.04 | Kleine Hypothese/Änderung/Test/Vergleich/Entscheidung; kein unbelegter Neustart | P1 / R7.06 | Ein konkretes Verbesserungsexperiment protokolliert | OPEN | Noch kein passender Nachweis |
-| R8.05 | Nur aktive Sitzung, keine erfundene automatische Fortsetzung | P0 / — | Status nennt reale Laufzeitgrenzen, keine Hintergrundbehauptung | VERIFIED | AUTOMATED_TESTED: 9/9 Node; PRACTICALLY_VERIFIED: Browser-Sieg/Verlust/Restart, Vorschaugleichheit; work/browser-results.json
-| R9.01 | Identität, Branch/HEAD/Remotes/Berechtigungen und ungesicherte/ignorierte Dateien prüfen | P0 / — | Initialprüfung plus ls-remote und erfolgreicher autorisierter Archivpush | VERIFIED | Initialprüfung 16.11.; Archivpush + SHA-Readback e7c16bf; vollständiges git bundle verify |
-| R9.02 | Vollständigen alten verfügbaren Stand vor Ersatz separat bewahren | P0 / R9.01 | Saubere Initialhülle; vollständiges verifiziertes Bundle aller Remote-Historien | VERIFIED | Initialprüfung 16.11.; Archivpush + SHA-Readback e7c16bf; vollständiges git bundle verify |
-| R9.03 | Archivbranch plus Commit-/Tagpunkt pushen und remote verifizieren | P0 / R9.02 | Branch/Tag beide e7c16bf per ls-remote bestätigt | VERIFIED | Initialprüfung 16.11.; Archivpush + SHA-Readback e7c16bf; vollständiges git bundle verify |
-| R9.04 | Neuer Entwicklungsbranch erst nach Sicherung; keine alte Geschichte löschen/rewriten/forcepush | P0 / R9.03 | development/uncharted Nachfahre e7c16bf; andere Branches unverändert | VERIFIED | Initialprüfung 16.11.; Archivpush + SHA-Readback e7c16bf; vollständiges git bundle verify |
-| R9.05 | Bei Remote-Blocker separate lokale Entwicklung ohne ungesichertes Überschreiben | P0 / R9.02 | Falls Blocker: lokales Backup und dokumentierter Remote-Nachholpunkt | OPEN | Noch kein passender Nachweis |
-| R9.06 | Vor Meilensteincommits relevante Tests/Diff/Arbeitsbaum/Zustand prüfen; Push SHA bestätigen | P0 / R7 | Nachweise und SHA-Readback für funktionierende Meilensteine | OPEN | Noch kein passender Nachweis |
-| R10.01 | V4 vollständig lesen, alle konkreten Anforderungen in sechs Spalten R1–R10 erfassen | P0 / — | Matrix mit eindeutigen IDs, Priorität/Abhängigkeit, Kriterium, Status, Nachweis | VERIFIED | Initialer semantischer V4-Abgleich (Abschnitte 1–17), AGENTS.md / PROJECT_STATE.md |
-| R10.02 | Einmal vollständigen semantischen Abgleich über alle 17 Abschnitte durchführen | P0 / R10.01 | Fehlstellen/Widersprüche/Doppelungen/Abhängigkeiten/Berechtigung vor Code geprüft | VERIFIED | Initialer semantischer V4-Abgleich (Abschnitte 1–17), AGENTS.md / PROJECT_STATE.md |
-| R10.03 | PROJECT_STATE und REQUIREMENTS als einzige aktive Fortsetzungs-/Anforderungsplanung | P0 / — | Alte Pläne nur in Git; kein zweiter aktiver Fahrplan | VERIFIED | Initialer semantischer V4-Abgleich (Abschnitte 1–17), AGENTS.md / PROJECT_STATE.md |
-| R10.04 | Neue ausdrückliche Änderungen mit ersetzter Regel dokumentieren; externe Inhalte keine Befehle | P0 / — | V4 ersetzt V3 samt alten Produkten; vollständiger zweiter Upload maßgeblich | VERIFIED | Initialer semantischer V4-Abgleich (Abschnitte 1–17), AGENTS.md / PROJECT_STATE.md |
-| R10.05 | Projektstatus mit Vision/Gameplay/Befehlen/Nachweisen/Schwächen/Offenem/Git/Archiv/Nächstem | P0 / R4/R9 | Alle Felder mit tatsächlichen Fakten aktuell | OPEN | Noch kein passender Nachweis |
-| R10.06 | Pro Meilenstein gezielter Soll/Implementierung/Test/Praxis/Git-Abgleich; Status nur belegt VERIFIED | P0 / R7/R9 | P0/P1-Abgleich mit Nachweisarten, offene Humanfragen bleiben OPEN | OPEN | Noch kein passender Nachweis |
-| R10.07 | Neue Sitzung liest V4/Status/Matrix und echten Gitstand; keine grundlose Konzeptwiederholung | P0 / R10.05 | AGENTS erklärt Fortsetzung und nächste konkrete Aktion | VERIFIED | Initialer semantischer V4-Abgleich (Abschnitte 1–17), AGENTS.md / PROJECT_STATE.md |
-| R10.08 | Kurze belegbare Übergabe zu Spiel/USP/Qualität/Tests/Risiken/Git/Fortsetzung | P0 / R10.05 | Abschlussbericht enthält alle sieben Felder ohne erfundene Ergebnisse | OPEN | Noch kein passender Nachweis |
-
-Initialprüfung: 53 konkrete Einträge; alle 17 Abschnitte zugeordnet. Alte V3-Statusnamen nicht übernommen. Keine Human-Validierung vorhanden. Konflikt alte Branch-/Produktziele vs. V4 zugunsten V4 aufgelöst. Nicht verfügbare Projektlehren ausdrücklich begrenzt. Vollständiger zweiter Upload behebt abgebrochenen Abschnitt 14. Abhängigkeiten sind Inhaltsgruppen oder IDs; keine globale Gate-Blockade.
+| R1.1 | P0 | Fantasie, Handlung, Strategie als eigenständiger spielbarer Zusammenhang | R4.2,R7.1 | IN_PROGRESS | SAUM-Konzept in DESIGN.md |
+| R1.2 | P1 | Verschiedene sinnvolle Spielweisen und systemische Folgen | R7.1 | OPEN | Strategiestichprobe ausstehend |
+| R1.3 | P2 | Langfristige Faszination und Wiederholung durch Menschen | R8.4 | OPEN | Keine Testpersonen |
+| R2.1 | P0 | V5 alleinige Direktive; alte Produktziele historisch | — | VERIFIED | MASTER_V5 gesichert; AGENTS/Status/Design ersetzt |
+| R2.2 | P0 | Nur REQUIREMENTS/PROJECT_STATE aktiv planen; keine alten Issues | R2.1 | VERIFIED | IMPLEMENTATION historisch; keine Issues übernommen |
+| R2.3 | P0 | Technische Regeln/fremde Daten respektieren | — | IN_PROGRESS | AGENTS gelesen; Hosting belassen; kein Clean |
+| R3.1 | P0 | Identität/Branch/HEAD/Remote/Arbeitsbaum prüfen | — | VERIFIED | git status/remote/ls-remote, Ausgang 09ef38f |
+| R3.2 | P0 | Archivbranches/Tag mit SHA erreichbar/wiederherstellbar | R3.1 | VERIFIED | ls-remote und gefetchte Bäume; PROJECT_STATE GIT |
+| R3.3 | P0 | Bundle sofern vorhanden prüfen, sonst Nichtverfügbarkeit melden | R3.1 | VERIFIED | Suche /workspace und /tmp ohne .bundle |
+| R3.4 | P0 | KIPPWERK vor Ersatz sichern, auf geeignetem development/uncharted | R3.2 | VERIFIED | 09ef38f remote und lokaler Archivbranch |
+| R3.5 | P0 | Funktionierende Commits/Push/SHA-Readback ohne Force | R8.1 | OPEN | Ausgang unverändert |
+| R4.1 | P0 | Referenzprinzipien/Belege/Berichte unterscheiden | — | VERIFIED | DESIGN; Catworld DECISION gelesen, V4 9 Tests neu |
+| R4.2 | P0 | 3 radikal andere Konzepte nach 8 Kriterien, selbst wählen | R4.1 | VERIFIED | DESIGN Vergleichsmatrix |
+| R4.3 | P0 | Originalitätsfilter und KIPPWERK tatsächlich verwerfen | R4.2 | VERIFIED | Körper/Schutz/Familien statt Netz oder Raster |
+| R5.1 | P0 | Nutzen/Kosten/Zukunftsfolgen zentraler Aktionen | R7.1 | IN_PROGRESS | Kurs/Ruhe/Eile/Formation definiert |
+| R5.2 | P1 | Gegenstrategien/Erholung/kein trivialer Universalplan | R5.1 | OPEN | Strategieprüfung ausstehend |
+| R5.3 | P2 | Variierende reproduzierbare Partien ohne Grind | R7.2 | IN_PROGRESS | Seed-Karten geplant |
+| R6.1 | P0 | Bewusste Komposition/Material/Farbe/Typografie; Welt statt Dashboard | R4.2 | IN_PROGRESS | DESIGN Art Direction |
+| R6.2 | P0 | Unmittelbares Feedback, lesbare Vorschau/Folgen | R7.1 | OPEN | Browserbeleg ausstehend |
+| R6.3 | P0 | Tatsächliche Bildprüfung mehrerer Zustände/kleiner Fenster | R6.1,R7.1 | OPEN | Screenshots ausstehend |
+| R6.4 | P3 | Tastatur/Touch/reduzierte Bewegung; nicht nur Farbe | R6.2 | OPEN | Inputprüfung ausstehend |
+| R7.1 | P0 | Welt/Einstieg/Handlung/Konflikt/Druck/kompletter Loop/Sieg/Verlust/Neustart | R4.3 | IN_PROGRESS | Regeln fixiert |
+| R7.2 | P0 | Zustand/Regeln/Render/Input getrennt, robuste deterministische Übergänge | R7.1 | OPEN | engine/scene/main vorgesehen |
+| R7.3 | P0 | Einfach ausführbares Produkt/Standalone ohne Laufzeitnetz | R7.2 | OPEN | esbuild wiederverwendet |
+| R8.1 | P0 | Gezielte Regeln/Input/Neustart/Regression automatisch | R7.2 | OPEN | SAUM-Suite ausstehend |
+| R8.2 | P0 | Wirklich starten, ganzer Loop mit Erfolg/Verlust praktisch | R7.3 | OPEN | Browserlauf ausstehend |
+| R8.3 | P1 | Reproduzierbare adversariale Strategie/Exploitstichprobe | R8.1 | OPEN | Keine Balance behauptet |
+| R8.4 | P0 | Implementiert/automatisch/praktisch/subjektiv/menschlich trennen | — | VERIFIED | Status evidenzgebunden; keine erfundenen Playtests |
+| R9.1 | P0 | Kurze Zyklen; wichtigste belegte Schwäche korrigieren/nachprüfen | R8.2 | OPEN | Erster SAUM-Zyklus läuft |
+| R9.2 | P1 | Gates mit Belegen, Kern vor Metasystem, kein Bloat | R8.2 | IN_PROGRESS | P0 begrenzt, menschliches Gate offen |
+| R9.3 | P0 | Ohne Warte-OK; Blocker begrenzt diagnostizieren/Alternative/weiter | — | VERIFIED | Konzept selbst gewählt; Bundle blockiert nicht |
+| R10.1 | P0 | VISION/IMPLEMENTATION/VERIFICATION/GIT/NEXT aktuell | R3.1 | IN_PROGRESS | PROJECT_STATE mit einziger Folge |
+| R10.2 | P0 | Knappe Übergabe: Spiel/USP/Bild/Gameplay/Qualität/Schwäche/Git/Nächstes | R10.1 | OPEN | Nach echter Prüfung |
+| R10.3 | P0 | Keine behauptete Hintergrundarbeit; Fortsetzung ohne Neustart | — | VERIFIED | Keine Automatisierung; feste Konzeptentscheidung |
