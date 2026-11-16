@@ -13,7 +13,7 @@ Initial einmal vollständig gegen MASTER_V5 §§1–20 abgeglichen, 16.11.2026. 
 | R3.2 | P0 | Archivbranches/Tag mit SHA erreichbar/wiederherstellbar | R3.1 | VERIFIED | ls-remote und gefetchte Bäume; PROJECT_STATE GIT |
 | R3.3 | P0 | Bundle sofern vorhanden prüfen, sonst Nichtverfügbarkeit melden | R3.1 | VERIFIED | Suche /workspace und /tmp ohne .bundle |
 | R3.4 | P0 | KIPPWERK vor Ersatz sichern, auf geeignetem development/uncharted | R3.2 | VERIFIED | 09ef38f remote und lokaler Archivbranch |
-| R3.5 | P0 | Funktionierende Commits/Push/SHA-Readback ohne Force | R8.1 | OPEN | Ausgang unverändert |
+| R3.5 | P0 | Funktionierende Commits/Push/SHA-Readback ohne Force | R8.1 | VERIFIED | 10f5c1f und 525c2c8 gepusht/per ls-remote bestätigt, Archive unverändert, kein Force |
 | R4.1 | P0 | Referenzprinzipien/Belege/Berichte unterscheiden | — | VERIFIED | DESIGN; Catworld DECISION gelesen, V4 9 Tests neu |
 | R4.2 | P0 | 3 radikal andere Konzepte nach 8 Kriterien, selbst wählen | R4.1 | VERIFIED | DESIGN Vergleichsmatrix |
 | R4.3 | P0 | Originalitätsfilter und KIPPWERK tatsächlich verwerfen | R4.2 | VERIFIED | Körper/Schutz/Familien statt Netz oder Raster |
@@ -34,6 +34,6 @@ Initial einmal vollständig gegen MASTER_V5 §§1–20 abgeglichen, 16.11.2026. 
 | R9.1 | P0 | Kurze Zyklen; wichtigste belegte Schwäche korrigieren/nachprüfen | R8.2 | VERIFIED | Überlauf, Ankunftsfeedback, Reviewfehler und erreichbarer Kapazitäts-Gegenfall jeweils rot→grün |
 | R9.2 | P1 | Gates mit Belegen, Kern vor Metasystem, kein Bloat | R8.2 | VERIFIED | P0/P1-Nachweise getrennt; menschliches Gate/Balance offen; keine Metasysteme |
 | R9.3 | P0 | Ohne Warte-OK; Blocker begrenzt diagnostizieren/Alternative/weiter | — | VERIFIED | Konzept selbst gewählt; Bundle blockiert nicht |
-| R10.1 | P0 | VISION/IMPLEMENTATION/VERIFICATION/GIT/NEXT aktuell | R3.1 | IMPLEMENTED | PROJECT_STATE fortgeschrieben, GIT-Readback nach Push ergänzen |
-| R10.2 | P0 | Knappe Übergabe: Spiel/USP/Bild/Gameplay/Qualität/Schwäche/Git/Nächstes | R10.1 | OPEN | Nach echter Prüfung |
+| R10.1 | P0 | VISION/IMPLEMENTATION/VERIFICATION/GIT/NEXT aktuell | R3.1 | VERIFIED | PROJECT_STATE aktuell, geprüfter Code-Checkpoint525c2c8 mit Remote-Readback und konkretem NEXT |
+| R10.2 | P0 | Knappe Übergabe: Spiel/USP/Bild/Gameplay/Qualität/Schwäche/Git/Nächstes | R10.1 | IMPLEMENTED | Spiel/Download/Qualität/Git/Nächstes in README/PROJECT_STATE; knappe Chat-Übergabe |
 | R10.3 | P0 | Keine behauptete Hintergrundarbeit; Fortsetzung ohne Neustart | — | VERIFIED | Keine Automatisierung; feste Konzeptentscheidung |
