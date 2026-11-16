@@ -1,1 +1,20 @@
-{"name":"kippwerk","version":"0.1.0","private":true,"type":"module","engines":{"node":">=22"},"scripts":{"test":"node --test tests/*.test.js","build":"node scripts/build.mjs","dev":"node scripts/serve.mjs","smoke":"node scripts/smoke.mjs","balance":"node scripts/balance.mjs"},"devDependencies":{"@playwright/test":"^1.56.1","esbuild":"^0.28.2"}}
+{
+  "name": "saum",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/serve.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "balance": "node scripts/balance.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "esbuild": "^0.28.2"
+  }
+}

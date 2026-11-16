@@ -1,0 +1,983 @@
+{
+  "date": "2026-11-16",
+  "artifact": "play/SAUM.html",
+  "sha256": "39d8f9b57d7609bcbe550b15dc136f1e8195819af12bb5122839b7d9cddd3486",
+  "ruleTests": 12,
+  "stressSeeds": 40,
+  "browser": {
+    "win": {
+      "tides": 9,
+      "delivered": 17,
+      "trace": [
+        {
+          "tide": 1,
+          "delivered": 0,
+          "events": [
+            {
+              "type": "rescue",
+              "id": "mara",
+              "text": "Mara nimmt 2 Familien auf.",
+              "count": 2
+            },
+            {
+              "type": "rescue",
+              "id": "nemi",
+              "text": "Nemi nimmt 2 Familien auf.",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "tide": 2,
+          "delivered": 0,
+          "events": []
+        },
+        {
+          "tide": 3,
+          "delivered": 0,
+          "events": [
+            {
+              "type": "rescue",
+              "id": "ivo",
+              "text": "Ivo nimmt 2 Familien auf.",
+              "count": 2
+            }
+          ]
+        },
+        {
+          "tide": 4,
+          "delivered": 0,
+          "events": []
+        },
+        {
+          "tide": 5,
+          "delivered": 0,
+          "events": []
+        },
+        {
+          "tide": 6,
+          "delivered": 0,
+          "events": [
+            {
+              "type": "rescue",
+              "id": "mara",
+              "text": "Mara nimmt 1 Familien auf.",
+              "count": 1
+            },
+            {
+              "type": "rescue",
+              "id": "nemi",
+              "text": "Nemi nimmt 1 Familien auf.",
+              "count": 1
+            }
+          ]
+        },
+        {
+          "tide": 7,
+          "delivered": 0,
+          "events": []
+        },
+        {
+          "tide": 8,
+          "delivered": 5,
+          "events": [
+            {
+              "type": "arrive",
+              "id": "ivo",
+              "text": "Ivo bringt 5 Familien in den Saum.",
+              "count": 5
+            }
+          ]
+        },
+        {
+          "tide": 9,
+          "delivered": 17,
+          "events": [
+            {
+              "type": "arrive",
+              "id": "mara",
+              "text": "Mara bringt 6 Familien in den Saum.",
+              "count": 6
+            },
+            {
+              "type": "arrive",
+              "id": "nemi",
+              "text": "Nemi bringt 6 Familien in den Saum.",
+              "count": 6
+            }
+          ]
+        }
+      ]
+    },
+    "loss": {
+      "tides": 6,
+      "delivered": 0
+    },
+    "seedRestart": true,
+    "offline": true,
+    "animation": true,
+    "errors": [],
+    "runtimeNetworkRequests": 0,
+    "widths": [
+      320,
+      390,
+      768,
+      1440
+    ]
+  },
+  "strategyRuns": [
+    {
+      "seed": "MORGEN",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "MORGEN",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "MORGEN",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 5,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "sprint": 12,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "MORGEN",
+      "policy": "patient",
+      "status": "won",
+      "tides": 12,
+      "delivered": 17,
+      "rescue": 8,
+      "shelter": 1,
+      "damage": 0,
+      "modeCounts": {
+        "glide": 32,
+        "rest": 4
+      }
+    },
+    {
+      "seed": "MORGEN",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 17,
+      "rescue": 8,
+      "shelter": 0,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 16,
+        "rest": 6,
+        "glide": 5
+      }
+    },
+    {
+      "seed": "FERNE",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 23,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "FERNE",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 23,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "FERNE",
+      "policy": "sprint",
+      "status": "won",
+      "tides": 9,
+      "delivered": 12,
+      "rescue": 7,
+      "shelter": 0,
+      "damage": 4,
+      "modeCounts": {
+        "sprint": 23,
+        "rest": 4
+      }
+    },
+    {
+      "seed": "FERNE",
+      "policy": "patient",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 5,
+      "modeCounts": {
+        "glide": 22,
+        "rest": 2
+      }
+    },
+    {
+      "seed": "FERNE",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 12,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 16,
+        "rest": 6,
+        "glide": 5
+      }
+    },
+    {
+      "seed": "SALZ",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 7,
+      "delivered": 0,
+      "rescue": 7,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 21
+      }
+    },
+    {
+      "seed": "SALZ",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 7,
+      "delivered": 0,
+      "rescue": 7,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 21
+      }
+    },
+    {
+      "seed": "SALZ",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 9,
+      "delivered": 11,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 5,
+      "modeCounts": {
+        "sprint": 22,
+        "rest": 5
+      }
+    },
+    {
+      "seed": "SALZ",
+      "policy": "patient",
+      "status": "won",
+      "tides": 12,
+      "delivered": 17,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 1,
+      "modeCounts": {
+        "glide": 32,
+        "rest": 4
+      }
+    },
+    {
+      "seed": "SALZ",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 17,
+      "rescue": 8,
+      "shelter": 1,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 15,
+        "rest": 6,
+        "glide": 6
+      }
+    },
+    {
+      "seed": "GARTEN",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "glide": 21,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "GARTEN",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "glide": 22,
+        "rest": 2
+      }
+    },
+    {
+      "seed": "GARTEN",
+      "policy": "sprint",
+      "status": "won",
+      "tides": 9,
+      "delivered": 15,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 4,
+      "modeCounts": {
+        "sprint": 21,
+        "rest": 6
+      }
+    },
+    {
+      "seed": "GARTEN",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 15,
+      "rescue": 8,
+      "shelter": 2,
+      "damage": 2,
+      "modeCounts": {
+        "glide": 30,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "GARTEN",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 12,
+      "delivered": 18,
+      "rescue": 9,
+      "shelter": 11,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 15,
+        "rest": 12,
+        "glide": 9
+      }
+    },
+    {
+      "seed": "SAUM",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "SAUM",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "SAUM",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 5,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 8,
+      "modeCounts": {
+        "sprint": 12,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "SAUM",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 16,
+      "rescue": 10,
+      "shelter": 4,
+      "damage": 3,
+      "modeCounts": {
+        "glide": 29,
+        "rest": 4
+      }
+    },
+    {
+      "seed": "SAUM",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 12,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 16,
+        "rest": 6,
+        "glide": 5
+      }
+    },
+    {
+      "seed": "WIND",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 23,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "WIND",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 23,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "WIND",
+      "policy": "sprint",
+      "status": "won",
+      "tides": 9,
+      "delivered": 12,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 4,
+      "modeCounts": {
+        "sprint": 22,
+        "rest": 5
+      }
+    },
+    {
+      "seed": "WIND",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 17,
+      "rescue": 9,
+      "shelter": 5,
+      "damage": 1,
+      "modeCounts": {
+        "glide": 28,
+        "rest": 5
+      }
+    },
+    {
+      "seed": "WIND",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 17,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 1,
+      "modeCounts": {
+        "sprint": 16,
+        "rest": 6,
+        "glide": 5
+      }
+    },
+    {
+      "seed": "1",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 23,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "1",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 8,
+      "delivered": 0,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 23,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "1",
+      "policy": "sprint",
+      "status": "won",
+      "tides": 9,
+      "delivered": 12,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 4,
+      "modeCounts": {
+        "sprint": 22,
+        "rest": 5
+      }
+    },
+    {
+      "seed": "1",
+      "policy": "patient",
+      "status": "lost",
+      "tides": 14,
+      "delivered": 6,
+      "rescue": 9,
+      "shelter": 14,
+      "damage": 1,
+      "modeCounts": {
+        "glide": 27,
+        "rest": 15
+      }
+    },
+    {
+      "seed": "1",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 18,
+      "rescue": 9,
+      "shelter": 1,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 17,
+        "rest": 6,
+        "glide": 4
+      }
+    },
+    {
+      "seed": "2",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "2",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "2",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 7,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "sprint": 13,
+        "rest": 5
+      }
+    },
+    {
+      "seed": "2",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 12,
+      "rescue": 8,
+      "shelter": 7,
+      "damage": 0,
+      "modeCounts": {
+        "glide": 29,
+        "rest": 4
+      }
+    },
+    {
+      "seed": "2",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 12,
+      "rescue": 9,
+      "shelter": 0,
+      "damage": 1,
+      "modeCounts": {
+        "sprint": 16,
+        "rest": 6,
+        "glide": 5
+      }
+    },
+    {
+      "seed": "3",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 7,
+      "delivered": 0,
+      "rescue": 8,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "glide": 20,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "3",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 7,
+      "delivered": 0,
+      "rescue": 8,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "glide": 20,
+        "rest": 1
+      }
+    },
+    {
+      "seed": "3",
+      "policy": "sprint",
+      "status": "won",
+      "tides": 9,
+      "delivered": 14,
+      "rescue": 10,
+      "shelter": 0,
+      "damage": 5,
+      "modeCounts": {
+        "sprint": 21,
+        "rest": 6
+      }
+    },
+    {
+      "seed": "3",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 16,
+      "rescue": 7,
+      "shelter": 2,
+      "damage": 0,
+      "modeCounts": {
+        "glide": 30,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "3",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 10,
+      "delivered": 17,
+      "rescue": 8,
+      "shelter": 3,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 17,
+        "rest": 6,
+        "glide": 7
+      }
+    },
+    {
+      "seed": "4",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "4",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "4",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 5,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "sprint": 12,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "4",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 12,
+      "rescue": 9,
+      "shelter": 6,
+      "damage": 2,
+      "modeCounts": {
+        "glide": 28,
+        "rest": 5
+      }
+    },
+    {
+      "seed": "4",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 17,
+      "rescue": 8,
+      "shelter": 1,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 16,
+        "rest": 6,
+        "glide": 5
+      }
+    },
+    {
+      "seed": "5",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "5",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "5",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 5,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "sprint": 13,
+        "rest": 2
+      }
+    },
+    {
+      "seed": "5",
+      "policy": "patient",
+      "status": "won",
+      "tides": 11,
+      "delivered": 16,
+      "rescue": 8,
+      "shelter": 0,
+      "damage": 1,
+      "modeCounts": {
+        "glide": 30,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "5",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 17,
+      "rescue": 8,
+      "shelter": 2,
+      "damage": 0,
+      "modeCounts": {
+        "sprint": 14,
+        "glide": 7,
+        "rest": 6
+      }
+    },
+    {
+      "seed": "6",
+      "policy": "idle",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "6",
+      "policy": "straight",
+      "status": "lost",
+      "tides": 6,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 7,
+      "modeCounts": {
+        "glide": 18
+      }
+    },
+    {
+      "seed": "6",
+      "policy": "sprint",
+      "status": "lost",
+      "tides": 5,
+      "delivered": 0,
+      "rescue": 6,
+      "shelter": 0,
+      "damage": 6,
+      "modeCounts": {
+        "sprint": 12,
+        "rest": 3
+      }
+    },
+    {
+      "seed": "6",
+      "policy": "patient",
+      "status": "won",
+      "tides": 13,
+      "delivered": 17,
+      "rescue": 10,
+      "shelter": 10,
+      "damage": 2,
+      "modeCounts": {
+        "glide": 31,
+        "rest": 8
+      }
+    },
+    {
+      "seed": "6",
+      "policy": "navigator",
+      "status": "won",
+      "tides": 9,
+      "delivered": 17,
+      "rescue": 9,
+      "shelter": 1,
+      "damage": 1,
+      "modeCounts": {
+        "sprint": 13,
+        "glide": 8,
+        "rest": 6
+      }
+    }
+  ],
+  "regressions": {
+    "mixedPointerKeyboard": "passed",
+    "sliderWarning": "passed",
+    "arrivalFeedback": "passed",
+    "layout": [
+      320,
+      390,
+      768,
+      1440
+    ],
+    "touch": "Chromium touch emulation passed; no hardware claim"
+  },
+  "humanPlaytests": 0,
+  "fileScheme": "Blocked by managed Chromium administrator policy; identical portable file tested via HTTP and offline interaction",
+  "review": "One independent read-only reviewer: no critical engine defect; important keyboard focus issue and stale warning styling reproduced RED then fixed GREEN. Simultaneous shelter and hazard/rescue/delivery order follow explicit design. Early loss uses loose available-population upper bound, not a reachability solver."
+}

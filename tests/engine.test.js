@@ -1,56 +1,183 @@
-import {test} from 'node:test';
-import assert from 'node:assert/strict';
-import {createGame, resolve, edit, advance, forecast} from '../src/engine.js';
-const empty=()=>Array.from({length:25},()=>({axis:'h',pressure:0}));
-const total=b=>b.reduce((a,c)=>a+c.pressure,0);
+import test from "node:test";
+import assert from "node:assert/strict";
+import * as game from "../src/engine.js";
+const giant = (id, x, y, extra = {}) => ({
+  id,
+  name: id,
+  x,
+  y,
+  angle: 0,
+  mode: "glide",
+  speed: 100,
+  breath: 6,
+  maxBreath: 6,
+  hull: 3,
+  people: 3,
+  capacity: 6,
+  kind: "swift",
+  arrived: false,
+  ...extra,
+});
+const water = (giants = [giant("a", 400, 300)]) => ({
+  ...game.createGame("MORGEN"),
+  tide: 0,
+  giants,
+  rafts: [],
+  reefs: [],
+  storms: [],
+  delivered: 0,
+  goal: 3,
+  status: "playing",
+  events: [],
+});
 
-test('four pressure splits into two on each side and never mutates input',()=>{
- const b=empty(); b[12].pressure=3; const snapshot=structuredClone(b);
- const r=resolve(b,[{index:12,amount:1}]);
- assert.equal(r.board[12].pressure,0); assert.equal(r.board[11].pressure,2); assert.equal(r.board[13].pressure,2);
- assert.equal(total(r.board),4); assert.deepEqual(b,snapshot); assert.equal(r.events.length,1);
+test("planning rejects unknown commands and non-finite courses without mutating state", () => {
+  assert.equal(
+    typeof game.setPlan,
+    "function",
+    "new course-planning API is required",
+  );
+  const s = water(),
+    copy = structuredClone(s);
+  for (const [id, p] of [
+    ["x", { mode: "rest" }],
+    ["a", { mode: "hack" }],
+    ["a", { angle: NaN }],
+    ["a", { angle: Infinity }],
+  ])
+    assert.deepEqual(game.setPlan(s, id, p), s);
+  assert.deepEqual(s, copy);
 });
-test('vertical axis cascades to a second cell with literal hand-calculated result',()=>{
- const b=empty();b[12]={axis:'v',pressure:3};b[7]={axis:'h',pressure:2};
- const r=resolve(b,[{index:12,amount:1}]);
- assert.equal(r.board[7].pressure,0); assert.equal(r.board[6].pressure,2);assert.equal(r.board[8].pressure,2);assert.equal(r.board[17].pressure,2);
- assert.equal(r.events.length,2);assert.equal(r.leaks,0);
+test("glide and sprint pay breath, rest restores it, exhausted ships always have a legal rest", () => {
+  let s = water();
+  let n = game.advance(s);
+  assert.equal(n.giants[0].x, 500);
+  assert.equal(n.giants[0].breath, 5);
+  s = game.setPlan(s, "a", { mode: "sprint" });
+  n = game.advance(s);
+  assert.equal(n.giants[0].x, 550);
+  assert.equal(n.giants[0].breath, 4);
+  s = water([giant("a", 400, 300, { breath: 0, mode: "rest" })]);
+  assert.equal(game.setPlan(s, "a", { mode: "sprint" }).giants[0].mode, "rest");
+  n = game.advance(s);
+  assert.equal(n.giants[0].x, 400);
+  assert.equal(n.giants[0].breath, 3);
 });
-test('only middle edge exits charge corresponding beacons; corner exits damage hull',()=>{
- const b=empty(); b[2]={axis:'v',pressure:4}; b[14]={axis:'h',pressure:4}; b[22]={axis:'v',pressure:4}; b[10]={axis:'h',pressure:4};b[0].pressure=4;
- const r=resolve(b,[]);
- assert.deepEqual(r.delivered,[2,2,2,2]);assert.equal(r.leaks,1);
- assert.equal(total(r.board)+r.delivered.reduce((a,c)=>a+c,0)+r.leaks*2,20);
+test("reef damage checks entire path, not only destination", () => {
+  const s = water();
+  s.reefs = [{ x: 450, y: 300, r: 12 }];
+  const n = game.advance(s);
+  assert.equal(n.giants[0].hull, 2);
+  assert.equal(n.giants[0].people, 2);
 });
-test('edits spend two scarce interventions, reject third and invalid input without mutation',()=>{
- const s=createGame('rules');const snapshot=structuredClone(s);const a=edit(s,12,'flip');const b=edit(a,13,'flip');
- assert.equal(a.edits,1);assert.notEqual(a.board[12].axis,s.board[12].axis);assert.equal(b.edits,2);
- assert.throws(()=>edit(b,14,'flip'));assert.throws(()=>edit(s,-1,'flip'));assert.throws(()=>edit(s,1.5,'flip'));assert.throws(()=>edit(s,12,'hack'));
- assert.deepEqual(s,snapshot);
+test("resting companion shelters a traveller from the next storm", () => {
+  const s = water([
+    giant("a", 400, 300),
+    giant("b", 560, 350, { mode: "rest" }),
+  ]);
+  s.goal = 1;
+  s.storms = [{ x: 500, y: 300, r: 100, dy: 0, phase: 0 }];
+  const n = game.advance(s);
+  assert.equal(n.giants[0].hull, 3);
+  assert.ok(n.events.some((e) => e.type === "shelter" && e.id === "a"));
+  const alone = water();
+  alone.goal = 1;
+  alone.storms = s.storms;
+  assert.equal(game.advance(alone).giants[0].hull, 2);
 });
-test('vent sacrifices up to two stored pressure and cannot spend on an empty cell',()=>{
- const s=createGame('vent');s.board[12].pressure=3;s.board[0].pressure=0;
- const a=edit(s,12,'vent');assert.equal(a.board[12].pressure,1);assert.equal(a.edits,1);assert.throws(()=>edit(s,0,'vent'));
+test("shelter ahead of the protector does not work", () => {
+  const s = water([
+    giant("a", 500, 300),
+    giant("b", 500, 400, { mode: "rest" }),
+  ]);
+  s.goal = 1;
+  s.storms = [{ x: 600, y: 300, r: 60, dy: 0, phase: 0 }];
+  assert.equal(game.advance(s).giants[0].hull, 2);
 });
-test('seed reproduces complete run schedule while other seeds differ; forecasts do not mutate',()=>{
- assert.deepEqual(createGame('a'),createGame('a'));assert.notDeepEqual(createGame('a').board,createGame('b').board);
- const s=createGame('a');const before=structuredClone(s);assert.equal(forecast(s).length,2);assert.deepEqual(s,before);
- assert.throws(()=>createGame('<script>'));assert.throws(()=>createGame('x'.repeat(25)));
+test("simultaneous crossing paths collide even with distant endpoints", () => {
+  const s = water([
+    giant("a", 400, 250, { angle: 1 }),
+    giant("b", 400, 350, { angle: -1 }),
+  ]);
+  s.goal = 1;
+  const n = game.advance(s);
+  assert.deepEqual(
+    n.giants.map((g) => g.hull),
+    [2, 2],
+  );
 });
-test('advance and preview agree exactly, keep input and reset intervention budget',()=>{
- const s=edit(createGame('preview'),12,'flip');const before=structuredClone(s);
- const r=resolve(s.board,forecast(s));const next=advance(s);
- assert.deepEqual(next.board,r.board);assert.equal(next.hull,Math.max(0,s.hull-r.leaks));assert.equal(next.turn,1);assert.equal(next.edits,0);assert.deepEqual(s,before);
+test("one raft cannot be collected twice; capacity leaves remaining families afloat", () => {
+  const s = water([giant("a", 400, 300, { people: 5 }), giant("b", 400, 430)]);
+  s.goal = 1;
+  s.rafts = [{ id: "r", x: 450, y: 300, people: 2 }];
+  const n = game.advance(s);
+  assert.equal(n.giants[0].people, 6);
+  assert.equal(n.rafts[0].people, 1);
+  const next = game.advance(n);
+  assert.equal(next.giants[0].people, 6);
+  assert.equal(next.rafts[0].people, 1);
 });
-test('win, hull loss priority, deadline loss and terminal input lock are explicit',()=>{
- const s=createGame('end');s.board=empty();s.beacons=[8,8,8,6];s.schedule[0]=[{index:10,amount:4}];
- const win=advance(s);assert.equal(win.status,'won');assert.throws(()=>advance(win));assert.throws(()=>edit(win,1,'flip'));
- const death=structuredClone(s);death.hull=1;death.board[0].pressure=4;assert.equal(advance(death).status,'lost');
- const late=createGame('late');late.board=empty();late.turn=9;late.schedule[9]=[];assert.equal(advance(late).status,'lost');
+test("families on a destroyed carrier are lost rather than delivered or rescued", () => {
+  const s = water([giant("a", 1010, 300, { hull: 1 })]);
+  s.reefs = [{ x: 1035, y: 300, r: 20 }];
+  s.rafts = [{ id: "r", x: 1040, y: 300, people: 2 }];
+  const n = game.advance(s);
+  assert.equal(n.delivered, 0);
+  assert.equal(n.giants[0].people, 0);
+  assert.equal(n.rafts[0].people, 2);
+  assert.equal(n.status, "lost");
 });
-test('dense mixed networks terminate, stabilize and conserve every unit across 100 seeds',()=>{
- for(let i=0;i<100;i++) {const s=createGame(String(i));const f=forecast(s);const r=resolve(s.board,f);
- assert.ok(r.board.every(c=>c.pressure>=0&&c.pressure<4));assert.ok(r.events.length<1000);
- assert.equal(total(s.board)+f.reduce((n,x)=>n+x.amount,0),total(r.board)+r.delivered.reduce((a,c)=>a+c,0)+2*r.leaks);
- }
+test("delivery scores exactly once and terminal states lock input", () => {
+  const s = water([giant("a", 1010, 300)]);
+  const n = game.advance(s);
+  assert.equal(n.delivered, 3);
+  assert.equal(n.status, "won");
+  assert.equal(n.giants[0].people, 0);
+  assert.deepEqual(game.advance(n), n);
+  assert.deepEqual(game.setPlan(n, "a", { mode: "rest" }), n);
+});
+test("last tide permits victory before deadline loss; rest to deadline loses", () => {
+  const s = water([giant("a", 1010, 300)]);
+  s.tide = 13;
+  assert.equal(game.advance(s).status, "won");
+  const t = water([giant("a", 1000, 300, { mode: "rest" })]);
+  t.tide = 13;
+  assert.equal(game.advance(t).status, "lost");
+});
+test("forecast is pure and exactly matches execution, seed replay is deterministic", () => {
+  const s = game.createGame("MORGEN"),
+    copy = structuredClone(s);
+  assert.deepEqual(game.preview(s), game.advance(s));
+  assert.deepEqual(s, copy);
+  assert.deepEqual(game.createGame("MORGEN"), s);
+  assert.notDeepEqual(game.createGame("FERNE").rafts, s.rafts);
+});
+test("finite positions, family conservation and restart hold across 40 seeded complete runs", () => {
+  for (let seed = 0; seed < 40; seed++) {
+    let s = game.createGame(String(seed)),
+      initial = structuredClone(s);
+    const total =
+      s.giants.reduce((a, g) => a + g.people, 0) +
+      s.rafts.reduce((a, r) => a + r.people, 0);
+    for (let t = 0; t < 14 && s.status === "playing"; t++) {
+      for (const g of s.giants)
+        s = game.setPlan(s, g.id, {
+          angle: Math.sin(t + seed) * 0.9,
+          mode: t % 3 === 0 ? "rest" : "glide",
+        });
+      s = game.advance(s);
+      assert.ok(
+        s.delivered +
+          s.giants.reduce((a, g) => a + g.people, 0) +
+          s.rafts.reduce((a, r) => a + r.people, 0) <=
+          total,
+      );
+      for (const g of s.giants) {
+        assert.ok(Number.isFinite(g.x) && Number.isFinite(g.y));
+        assert.ok(g.breath >= 0 && g.breath <= g.maxBreath);
+      }
+    }
+    assert.notEqual(s.status, "playing");
+    assert.deepEqual(game.createGame(String(seed)), initial);
+  }
 });
