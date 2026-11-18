@@ -192,6 +192,7 @@ try {
     await until(() => visible('suche'), 'keyboard search submission');
     assert.equal(await evaluate('document.activeElement.tagName'), 'H2');
     await until(() => evaluate("Boolean(document.querySelector('#web-results article a[href$=passport]'))"), 'catalog offer Passport');
+    assert.equal(await evaluate('document.activeElement.tagName'), 'H2', 'focus stays on visible search results');
     await click('#web-results article a[href="#passport"]');
     assert(await visible('passport'));
     await click('nav a[href="#vergleich"]');

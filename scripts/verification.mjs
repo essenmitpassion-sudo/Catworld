@@ -174,6 +174,7 @@ export function pageVerifier(domains = []) {
       recent.set(key, { check, completedAt: Date.now() });
       return check;
     } finally {
+      nextRequest.set(domain, Math.max(nextRequest.get(domain) ?? 0, Date.now() + (source.interval ?? 0)));
       pending.delete(key);
     }
   };

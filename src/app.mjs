@@ -195,7 +195,9 @@ function renderWebResults(result, query) {
   intro.append(element('h2', 'Aktuell geprüft'), element('span',
     result.items.length + (result.items.length === 1 ? ' Angebot' : ' Angebote'), 'unit'));
   if (result.sourceMode === 'catalog') intro.append(element('p', 'Prüfung der bekannten Katalogquellen', 'muted'));
-  get('results').querySelector('.surface')?.setAttribute('hidden', '');
+  const previousCard = get('results').querySelector('.surface');
+  const moveFocus = previousCard?.contains(document.activeElement);
+  previousCard?.setAttribute('hidden', '');
   const cards = result.items.map(item => {
     const box = element('article', null, 'surface offer');
     const heading = element('div', null, 'offer-heading');
@@ -231,6 +233,11 @@ function renderWebResults(result, query) {
     return box;
   });
   target.replaceChildren(intro, ...cards);
+  if (moveFocus && !get('suche').hidden) {
+    const title = intro.querySelector('h2');
+    title.tabIndex = -1;
+    title.focus();
+  }
   const expiry = Math.min(...result.items.map(item => Date.parse(item.expiresAt)));
   resultsExpiry = setTimeout(() => renderWebResults({ kind: 'expired' }, query), Math.max(1, expiry - Date.now()));
 }
