@@ -34,14 +34,17 @@ const app = server();
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 let browser;
 let socket;
+let browserError = '';
 try {
   app.listen(0, '127.0.0.1');
   await once(app, 'listening');
   browser = spawn(browserPath, [
     '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
     '--disable-background-networking', '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank',
-  ], { stdio: 'ignore', windowsHide: true });
+  ], { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
   browser.on('error', error => console.error(error.message));
+  browser.stderr.setEncoding('utf8');
+  browser.stderr.on('data', chunk => { browserError = (browserError + chunk).slice(-4000); });
   const port = await until(async () => (await readFile(join(profile, 'DevToolsActivePort'), 'utf8')).split('\n')[0], 'browser startup');
   const pages = await (await fetch('http://127.0.0.1:' + port + '/json/list')).json();
   socket = new WebSocket(pages.find(page => page.type === 'page').webSocketDebuggerUrl);
@@ -129,6 +132,9 @@ try {
     assert(await evaluate("document.querySelector('#results').textContent.includes('Keine passende SSD')"));
     console.log('Browser workflow passed at ' + width + 'px');
   }
+} catch (error) {
+  if (browserError) console.error(browserError.trim());
+  throw error;
 } finally {
   socket?.close();
   if (browser?.pid && browser.exitCode === null) {

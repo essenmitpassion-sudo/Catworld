@@ -272,7 +272,9 @@ for (const form of document.querySelectorAll('[data-search]')) {
 for (const button of document.querySelectorAll('[data-example]')) {
   button.addEventListener('click', () => submit('Samsung 990 PRO 2 TB'));
 }
-window.addEventListener('hashchange', () => renderRoute(true));
+window.addEventListener('hashchange', event => {
+  if (event.newURL === location.href) renderRoute(true);
+});
 renderRoute();
 
 try {
