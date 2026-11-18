@@ -1,12 +1,6 @@
 import { criteriaFor } from '../src/criteria.mjs';
-
-const webSources = [
-  { domain: 'digitec.ch', name: 'Digitec', path: /^\/de\/s1\/product\/[\w-]+-\d+$/ },
-  { domain: 'interdiscount.ch', name: 'Interdiscount', path: /^\/de\/product\/[\w-]+-\d+$/ },
-  { domain: 'conrad.ch', name: 'Conrad', path: /^\/de\/p\/[\w-]+-\d+\.html$/ },
-  { domain: 'ricardo.ch', name: 'Ricardo', path: /^\/de\/a\/[\w-]+-(\d{8,})\/?$/, marketplace: true },
-  { domain: 'tutti.ch', name: 'tutti.ch', path: /^\/de\/vi\/(?:[\w-]+\/)*(\d{6,})\/?$/, marketplace: true },
-];
+import { catalog } from '../src/deals.mjs';
+import { sources as webSources } from './sources.mjs';
 const partNumbers = value => [...value.toUpperCase().matchAll(/\b[A-Z]{2,6}-[A-Z0-9]{5,}\b/g)]
   .map(match => match[0]).filter(value => /\d/.test(value));
 
@@ -59,10 +53,12 @@ export async function discover(input, webSearch) {
       const evidence = inTitle.length ? inTitle : partNumbers(typeof row.snippet === 'string' ? row.snippet : '');
       if (!evidence.includes(requestedPart)) continue;
     }
+    const knownProduct = catalog.find(product => product.sources.some(source => source.url === url.href));
+    const expectedPart = requestedPart ?? knownProduct?.mpn;
     items.set(id, {
       title, url: url.href, source: source.name,
       type: source.marketplace ? 'listing' : 'shop', status: 'unconfirmed',
-      ...(requestedPart ? { mpn: requestedPart } : {}),
+      ...(expectedPart ? { mpn: expectedPart } : {}),
     });
     if (items.size === 6) break;
   }

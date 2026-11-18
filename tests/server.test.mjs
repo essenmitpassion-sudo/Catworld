@@ -1,0 +1,34 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { server } from '../scripts/serve.mjs';
+
+test('ein bekannter Produktauftrag verwendet auch bei eingerichtetem KI-Zugang die direkte Quellenprüfung', async () => {
+  let modelCalls = 0;
+  const app = server({
+    webSearch: async () => { modelCalls++; return []; },
+    verify: async item => ({
+      url: item.url, checkedAt: new Date().toISOString(), httpStatus: 200, mpn: item.mpn,
+      status: 'partial', availability: 'active', price: 43900, total: null, currency: 'CHF',
+    }),
+  });
+  await new Promise((resolve, reject) => {
+    app.once('error', reject);
+    app.listen(0, '127.0.0.1', resolve);
+  });
+  try {
+    const origin = 'http://127.0.0.1:' + app.address().port;
+    const response = await fetch(origin + '/api/discovery', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Origin: origin, 'Sec-Fetch-Site': 'same-origin' },
+      body: JSON.stringify({ query: 'Samsung 990 PRO 2 TB bis CHF 500' }),
+    });
+    assert.equal(response.status, 200);
+    const result = await response.json();
+    assert.equal(result.sourceMode, 'catalog');
+    assert(result.items.some(item => item.source === 'DQ Solutions'));
+    assert(result.items.every(item => item.check.total === null));
+    assert.equal(modelCalls, 0);
+  } finally {
+    await new Promise(resolve => app.close(resolve));
+  }
+});

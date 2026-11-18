@@ -1,6 +1,7 @@
 import { catalog, search, compare, costFields, directLink, isAmount, maxObservationAge } from './deals.mjs';
 import { criteriaFor } from './criteria.mjs';
 import { readSearches, storeSearch, removeSearch, searchStorageKey } from './saved-searches.mjs';
+import { applyChecks } from './observations.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
@@ -17,6 +18,7 @@ let watched = new Set();
 let storageError = false;
 let activeSearch;
 let resultsExpiry;
+let observationExpiry;
 let activeCriteria = {};
 
 async function updateSearches(operation) {
@@ -158,6 +160,9 @@ function renderRadar() {
 function renderWebResults(result, query) {
   clearTimeout(resultsExpiry);
   const target = get('web-results');
+  observations = applyChecks(observations, catalog, result);
+  refreshAtExpiry();
+  if (!get('passport').hidden || !get('vergleich').hidden) renderRoute();
   if (result.kind === 'clarification') {
     const question = message('Darf ein Gebrauchtangebot dabei sein?', 'Wenn ein Upgrade allein sinnvoll ist, bleibt es im Vergleich.');
     const choices = element('div', null, 'actions');
@@ -189,6 +194,8 @@ function renderWebResults(result, query) {
   const intro = element('div', null, 'section-heading');
   intro.append(element('h2', 'Aktuell geprüft'), element('span',
     result.items.length + (result.items.length === 1 ? ' Angebot' : ' Angebote'), 'unit'));
+  if (result.sourceMode === 'catalog') intro.append(element('p', 'Prüfung der bekannten Katalogquellen', 'muted'));
+  get('results').querySelector('.surface')?.setAttribute('hidden', '');
   const cards = result.items.map(item => {
     const box = element('article', null, 'surface offer');
     const heading = element('div', null, 'offer-heading');
@@ -201,6 +208,7 @@ function renderWebResults(result, query) {
     const details = element('details');
     details.append(element('summary', 'Prüfung und offene Angaben'));
     details.append(facts([
+      ['Herstellernummer', check.mpn ?? 'Unbestätigt'],
       ['Zustand laut Quelle', check.condition ?? 'Unbestätigt'],
       ['Verkäufer laut Quelle', check.seller ?? 'Unbestätigt'],
       ...costFields.map(([key, label]) => [label, isAmount(check[key]) ? money(check[key]) : 'Unbekannt']),
@@ -213,7 +221,13 @@ function renderWebResults(result, query) {
         renderWebResults({ kind: 'expired' }, query);
       }
     });
-    box.append(details, action);
+    const actions = element('div', null, 'actions');
+    actions.append(action);
+    const knownProduct = catalog.find(product => product.sources.some(source => source.url === item.url));
+    if (knownProduct && check.mpn === knownProduct.mpn) {
+      actions.append(productAction('Deal Passport', 'passport', knownProduct, item.source));
+    }
+    box.append(details, actions);
     return box;
   });
   target.replaceChildren(intro, ...cards);
@@ -297,6 +311,7 @@ function factsFor(offer) {
   const available = observation?.stock === 'in-stock' ? 'Verfügbar'
     : observation?.stock === 'out-of-stock' ? 'Nicht verfügbar' : 'Unbestätigt';
   return [
+    ['Artikelpreis', isAmount(observation?.price) && observation.price > 0 ? money(observation.price) : 'Unbekannt'],
     ['Gesamtkosten', offer.total === null ? 'Unbekannt' : money(offer.total)],
     ['Verfügbarkeit', available],
     ['Prüfzeitpunkt', observation ? date.format(new Date(observation.checkedAt)) + ' (CH)' : 'Keine aktuelle Prüfung'],
@@ -351,7 +366,7 @@ function renderPassport() {
     partial: observation
       ? 'Die vorliegenden Angebotsdaten sind unvollständig. Kontrolliere die offenen Angaben vor dem Kauf.'
       : 'Die Produktvariante wurde der Händlerseite zugeordnet. Preis, Bestand, Lieferbedingungen und Weiterleitungen sind derzeit nicht aktuell bestätigt.',
-    unconfirmed: 'Die Angebotsdaten passen nicht eindeutig zur hinterlegten Variante oder Adresse.',
+    unconfirmed: 'Die letzte Prüfung konnte dieses Angebot nicht bestätigen. Eine aktuelle passende Angebotsprüfung fehlt.',
   };
   const expenses = costFields.map(([key, label]) => {
     const amount = observation?.[key];
@@ -510,7 +525,8 @@ try {
   if (!response.ok) throw new Error('Observation data unavailable');
   const data = await response.json();
   if (!Array.isArray(data)) throw new Error('Invalid observation data');
-  observations = data;
+  const currentUrls = new Set(observations.map(row => row?.url));
+  observations = [...data.filter(row => !currentUrls.has(row?.url)), ...observations];
   sourceState = 'ready';
 } catch {
   sourceState = 'error';
@@ -519,12 +535,13 @@ renderRadar();
 renderRoute();
 
 function refreshAtExpiry() {
+  clearTimeout(observationExpiry);
   const now = Date.now();
   const expiry = catalog.flatMap(product => compare(product, observations, now).offers)
     .filter(offer => offer.observation)
     .map(offer => Date.parse(offer.observation.checkedAt) + maxObservationAge);
   if (!expiry.length) return;
-  setTimeout(() => {
+  observationExpiry = setTimeout(() => {
     renderRadar();
     renderRoute();
     refreshAtExpiry();

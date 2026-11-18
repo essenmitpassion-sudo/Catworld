@@ -70,5 +70,6 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
     id: randomUUID(), completedAt: new Date(now()).toISOString(), checks,
   });
   return { kind: 'results', items, unconfirmed: discovery.items.length - items.length - excluded,
-    excluded, criteria: discovery.criteria };
+    excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url),
+    completedAt: new Date(now()).toISOString() };
 }

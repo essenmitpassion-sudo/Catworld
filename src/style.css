@@ -50,7 +50,7 @@ h1 { font-size: clamp(2.3rem, 7vw, 5.35rem); line-height: .99; font-weight: 760;
 .radar-dial i, .radar-dial b { position: absolute; width: .55rem; height: .55rem; border-radius: 50%; background: var(--accent); }
 .radar-dial i { left: 26%; top: 29%; }
 .radar-dial b { left: 70%; top: 66%; opacity: .55; }
-.section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: .6rem; margin-bottom: .65rem; }
+.section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .6rem; margin-bottom: .65rem; }
 h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); letter-spacing: -.035em; line-height: 1.2; }
 .unit, .muted { color: var(--muted); }
 .unit { font-size: .8rem; white-space: nowrap; }
@@ -68,6 +68,7 @@ h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); letter-spacing: -.035em; line-heig
 .offer h3 { font-size: 1.2rem; line-height: 1.35; }
 details summary { cursor: pointer; min-height: 2.75rem; padding-block: .6rem; font-weight: 650; }
 #web-results > .section-heading { max-width: 48rem; }
+#web-results > .section-heading > p { flex-basis: 100%; font-size: .85rem; }
 .search-options { border-top: 1px solid var(--line); margin-top: .7rem; }
 .search-options label { font-size: .85rem; }
 .filter-fields { display: grid; gap: 1rem; margin-block: .5rem 1rem; }

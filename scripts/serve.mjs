@@ -5,6 +5,7 @@ import { discover, InvalidSearch } from './discovery.mjs';
 import { gatewaySearch } from './gateway.mjs';
 import { pageVerifier } from './verification.mjs';
 import { scan } from './scans.mjs';
+import { catalogSearch } from './catalog-search.mjs';
 
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
@@ -12,6 +13,7 @@ const files = new Map([
   ['/deals.mjs', ['deals.mjs', 'text/javascript']], ['/observations.json', ['observations.json', 'application/json']],
   ['/costs.mjs', ['costs.mjs', 'text/javascript']], ['/criteria.mjs', ['criteria.mjs', 'text/javascript']],
   ['/saved-searches.mjs', ['saved-searches.mjs', 'text/javascript']],
+  ['/observations.mjs', ['observations.mjs', 'text/javascript']],
 ]);
 const securityHeaders = {
   'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",
@@ -43,8 +45,10 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
       }
     }
     try {
+      let sourceMode = 'catalog';
       const result = await discover(JSON.parse(body), async query => {
-        if (!webSearch) throw new Error('disabled');
+        const known = await catalogSearch(query);
+        if (!known.length && !webSearch) throw new Error('disabled');
         const now = Date.now();
         if (now >= windowEnds) {
           windowEnds = now + 60_000;
@@ -54,13 +58,15 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
         running++;
         calls++;
         try {
+          if (known.length) return known;
+          sourceMode = 'web';
           return await webSearch(query);
         } finally {
           running--;
         }
       });
       const checked = await scan(result, { verify, journalPath });
-      reply(200, checked);
+      reply(200, { ...checked, sourceMode });
     } catch (error) {
       if (error instanceof InvalidSearch || error instanceof SyntaxError) return reply(400, { kind: 'invalid' });
       if (error.message === 'disabled') return reply(503, { kind: 'disabled' });
@@ -91,7 +97,7 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
   const webSearch = gatewaySearch({ apiKey: process.env.AI_GATEWAY_API_KEY, model: process.env.UDI_SEARCH_MODEL });
-  const verify = pageVerifier((process.env.UDI_VERIFY_DOMAINS ?? '').split(',').map(value => value.trim()));
+  const verify = pageVerifier((process.env.UDI_VERIFY_DOMAINS ?? 'dq-solutions.ch').split(',').map(value => value.trim()));
   server({ webSearch, verify, journalPath: fileURLToPath(new URL('../.udi/checks.json', import.meta.url)) })
     .listen(4173, '127.0.0.1', () => console.log('UDI: http://127.0.0.1:4173'));
 }

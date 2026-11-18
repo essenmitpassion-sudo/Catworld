@@ -1,5 +1,5 @@
 import { costs } from './costs.mjs';
-import { acceptsOffer } from './criteria.mjs';
+import { acceptsOffer, withoutBudget } from './criteria.mjs';
 export { costFields, isAmount } from './costs.mjs';
 
 export const catalog = [{
@@ -12,6 +12,7 @@ export const catalog = [{
   sources: [
     { seller: 'Digitec', url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721' },
     { seller: 'Conrad', url: 'https://www.conrad.ch/de/p/samsung-990-pro-2-tb-interne-m-2-pcie-nvme-ssd-2280-pcie-nvme-40-x4-retail-mz-v9p2t0bw-2705384.html' },
+    { seller: 'DQ Solutions', url: 'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011' },
   ],
 }];
 
@@ -23,7 +24,7 @@ function tokens(value) {
 }
 
 export function search(query) {
-  const words = tokens(query);
+  const words = tokens(withoutBudget(query));
   return catalog.filter(product => {
     const available = new Set(tokens(product.terms + ' ' + product.mpn));
     return words.length > 0 && words.every(word => available.has(word));

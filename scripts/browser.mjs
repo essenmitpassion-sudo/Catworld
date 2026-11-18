@@ -7,7 +7,8 @@ import { join } from 'node:path';
 import { once } from 'node:events';
 import { setTimeout as pause } from 'node:timers/promises';
 import { server } from './serve.mjs';
-import { inspectPage } from './verification.mjs';
+import { inspectPage, pageVerifier } from './verification.mjs';
+import { catalog } from '../src/deals.mjs';
 
 const browserPath = process.env.UDI_BROWSER || [
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
@@ -31,7 +32,11 @@ async function until(read, label) {
   throw new Error('Timed out: ' + label, { cause: error });
 }
 
-const app = server({ webSearch: async ({ query, scope }) => {
+const live = process.argv.includes('--live');
+const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
+const app = live ? server({
+  verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
+}) : server({ webSearch: async ({ query, scope }) => {
   if (scope === 'both' || scope === 'secondhand') return [
     { title: 'Gebrauchter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' },
     { title: 'Verkaufter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/verkauft-1234567891/' },
@@ -42,13 +47,12 @@ const app = server({ webSearch: async ({ query, scope }) => {
 }, verify: async item => inspectPage(item, {
   status: 200,
   html: '<script type="application/ld+json">' + JSON.stringify({
-    '@type': 'Product', url: item.url, name: item.title,
+    '@type': 'Product', url: item.url, name: item.title, mpn: item.mpn,
     offers: { '@type': 'Offer', url: item.url, priceCurrency: 'CHF', price: '550',
-      seller: { name: 'Testverkäufer' }, itemCondition: 'https://schema.org/UsedCondition',
+      seller: { name: item.mpn ? item.source : 'Testverkäufer' }, itemCondition: 'https://schema.org/UsedCondition',
       availability: item.url.includes('verkauft') ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' },
   }) + '</script>',
 }) });
-const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 let browser;
 let socket;
 let browserError = '';
@@ -90,13 +94,13 @@ try {
     });
   }
   async function evaluate(expression) {
-    const reply = await send('Runtime.evaluate', { expression, returnByValue: true });
+    const reply = await send('Runtime.evaluate', { expression, returnByValue: true, userGesture: true });
     if (reply.exceptionDetails) throw new Error(reply.exceptionDetails.exception?.description ?? expression);
     return reply.result.value;
   }
   const origin = 'http://127.0.0.1:' + app.address().port;
   await send('Page.enable');
-  await send('Page.addScriptToEvaluateOnNewDocument', {
+  if (!live) await send('Page.addScriptToEvaluateOnNewDocument', {
     source: `Object.defineProperty(window, 'SpeechRecognition', { value: class {
       start() {
         queueMicrotask(() => {
@@ -124,7 +128,7 @@ try {
   async function noOverflow() {
     assert(await evaluate('document.documentElement.scrollWidth <= innerWidth'));
   }
-  for (const width of [390, 1365]) {
+  for (const width of live ? [390] : [390, 1365]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
     await send('Page.navigate', { url: origin + '/?width=' + width });
     await until(() => visible('suche'), 'search start page');
@@ -132,6 +136,45 @@ try {
       await mkdir(process.env.UDI_SCREENSHOT_DIR, { recursive: true });
       const shot = await send('Page.captureScreenshot', { format: 'png' });
       await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'start-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+    }
+    if (live) {
+      await evaluate("document.querySelector('#search-query').focus()");
+      await type('Samsung 990 PRO 2 TB bis CHF 500');
+      await key('Enter');
+      await until(() => evaluate("document.querySelector('#web-results article a')?.href.startsWith('https://www.dq-solutions.ch/')"), 'live DQ offer');
+      await noOverflow();
+      const receipt = JSON.parse(await readFile(join(profile, 'checks.json'), 'utf8')).at(-1);
+      const check = receipt.checks.find(check => check.seller === 'DQ Solutions');
+      assert.equal(check.httpStatus, 200);
+      assert.equal(check.mpn, 'MZ-V9P2T0BW');
+      assert.equal(check.availability, 'active');
+      assert(check.price > 0);
+      assert.equal(check.total, null);
+      const offerUrl = await evaluate("document.querySelector('#web-results article a').href");
+      if (process.env.UDI_SCREENSHOT_DIR) {
+        await evaluate("document.querySelector('#web-results').scrollIntoView()");
+        const shot = await send('Page.captureScreenshot', { format: 'png' });
+        await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'live-offer.png'), Buffer.from(shot.data, 'base64'));
+      }
+      // Respect the source's crawl delay before following the link in the browser.
+      await pause(10_100);
+      await click('#web-results article a[href="#passport"]');
+      assert(await visible('passport'));
+      assert(await evaluate("document.querySelector('#detail').textContent.includes('MZ-V9P2T0BW')"));
+      assert.equal(await evaluate("document.querySelector('#detail a[target=_blank]').href"), offerUrl);
+      await click('#detail a[target=_blank]');
+      let lastPages = [];
+      const merchant = await until(async () => {
+        const list = await (await fetch('http://127.0.0.1:' + port + '/json/list')).json();
+        lastPages = list.map(page => ({ url: page.url, title: page.title }));
+        return list.find(page => page.url === offerUrl && page.title.includes('MZ-V9P2T0BW'));
+      }, 'correct live merchant page').catch(error => {
+        console.error(JSON.stringify({ observedBrowserPages: lastPages }));
+        throw error;
+      });
+      console.log(JSON.stringify({ checkedOffer: check, browserPage: { url: merchant.url, title: merchant.title } }));
+      await send('Target.closeTarget', { targetId: merchant.id });
+      continue;
     }
     await click('nav a[href="#radar"]');
     await until(() => visible('radar'), 'radar');
@@ -148,9 +191,12 @@ try {
     await key('Enter');
     await until(() => visible('suche'), 'keyboard search submission');
     assert.equal(await evaluate('document.activeElement.tagName'), 'H2');
-    await click('#results a');
+    await until(() => evaluate("Boolean(document.querySelector('#web-results article a[href$=passport]'))"), 'catalog offer Passport');
+    await click('#web-results article a[href="#passport"]');
+    assert(await visible('passport'));
+    await click('nav a[href="#vergleich"]');
     assert(await visible('vergleich'));
-    assert.equal(await evaluate("document.querySelectorAll('#comparison article').length"), 2);
+    assert.equal(await evaluate("document.querySelectorAll('#comparison article').length"), catalog[0].sources.length);
     assert(await evaluate("document.querySelector('#comparison').textContent.includes('Kaufentscheid offen')"));
     await noOverflow();
     await click('#comparison article a');

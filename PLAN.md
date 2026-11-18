@@ -8,6 +8,8 @@ Für die Skalierung bleiben Suchauftrag, Quellenadapter, Angebotsprüfung, Koste
 
 Die Effektivität wird an passenden aktuellen Angeboten pro Suchauftrag, Anteil abgelehnter oder veralteter Treffer, Quellenabdeckung, Antwortzeit und Kosten pro brauchbarem Ergebnis gemessen. GPT, Claude und Gemini werden am selben Satz von Suchaufträgen bewertet. Vor einem Modellwechsel werden Suchwerkzeuge, Quellenbelege und Datenschutzbedingungen geprüft. Wiederverwendung gilt nur innerhalb der jeweiligen Frische- und Nutzungsgrenzen. Marktweite Dauerabfragen, Prognosen und Meldungen folgen erst auf den nachgewiesenen Nutzerbedarf und belastbare Beobachtungen.
 
+Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quellen. Die KI-Suche ergänzt unbekannte Wünsche und neue Quellen. Jeder tatsächliche Preis- und Bestandswert stammt aus einer frischen Quellenprüfung. Der lokale DQ-Pilot liest ausschliesslich veröffentlichte Fakten und übernimmt keine Produktbilder, Beschreibungen oder Bewertungen.
+
 | Priorität | Anforderung | Abnahme |
 |---|---|---|
 | P0 | Bestehendes Catworld-Repository vollständig auf UDI umstellen. Historie, Wiederherstellung und fremde Projekte schützen. | Default, Branches, Historie und Workspace geprüft. Sämtliche historischen Branchspitzen sind über abgeglichene Archiv-Refs wiederherstellbar. UDI-Entwicklungsbranch enthält nur UDI. Verifizierter Push ohne Force. Nach Produktabnahme wird der vorgesehene Standardbranch auf UDI gesetzt und der Remote-Default geprüft. |

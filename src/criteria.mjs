@@ -10,15 +10,29 @@ function amount(value) {
   return result;
 }
 
-function budgetFrom(query) {
+function budgetMentions(query) {
   const expression = /\b(bis(?:\s+zu)?|budget|maximal|max\.?|höchstens|unter)\s*[:]?\s+(?:(?:CHF|Fr\.?)\s*)?([\d'’]+(?:[.,]\d+)?)\s*(CHF|Franken|Fr\.?)?(?=$|[\s,.!?])/giu;
-  const budgets = [];
+  const mentions = [];
   for (const match of query.matchAll(expression)) {
     const tail = query.slice(match.index + match[0].length);
     if (!match[3] && /^\s*(?:TB|GB|MB|RAM|MHz|GHz|Watt|km|EUR|Euro|€|%|Zoll)\b/i.test(tail)) continue;
-    budgets.push(amount(match[2]) - (match[1].toLowerCase() === 'unter' ? 1 : 0));
+    mentions.push(match);
   }
+  return mentions;
+}
+
+function budgetFrom(query) {
+  const budgets = budgetMentions(query).map(match =>
+    amount(match[2]) - (match[1].toLowerCase() === 'unter' ? 1 : 0));
   return budgets.length ? Math.min(...budgets) : null;
+}
+
+export function withoutBudget(query) {
+  let result = query;
+  for (const match of budgetMentions(query).reverse()) {
+    result = result.slice(0, match.index) + ' ' + result.slice(match.index + match[0].length);
+  }
+  return result.trim();
 }
 
 export function criteriaFor(input) {
@@ -42,6 +56,6 @@ export function acceptsOffer(observation, criteria = {}) {
   const conditionMatches = !criteria.condition || criteria.condition === 'any'
     || (criteria.condition === 'new' && observation?.condition === 'Neu')
     || (criteria.condition === 'used' && ['Gebraucht', 'Generalüberholt'].includes(observation?.condition));
-  return conditionMatches && !(criteria.maxTotal != null && summary.minimum > criteria.maxTotal)
+  return conditionMatches && !(criteria.maxTotal != null && (summary.minimum === null || summary.minimum > criteria.maxTotal))
     && !(criteria.completeCostsOnly && summary.total === null);
 }

@@ -85,3 +85,18 @@ test('Quellenfreigabe und konkrete URL werden vor einem Abruf geprüft', async (
     assert.equal(check.reason, 'url-rejected');
   }
 });
+
+test('Produktzustand und Verkäuferreferenz werden aus derselben DQ-Produktseite aufgelöst', () => {
+  const url = 'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011';
+  const check = inspectPage({ url, mpn: 'MZ-V9P2T0BW', source: 'DQ Solutions' }, {
+    status: 200, html: html([
+      { '@type': 'Store', '@id': 'https://www.dq-solutions.ch/de#organization', name: 'DQ Solutions' },
+      { ...product, url, mpn: 'MZ-V9P2T0BW', itemCondition: 'https://schema.org/NewCondition',
+        offers: { ...product.offers, url, itemCondition: undefined, seller: { '@id': 'https://www.dq-solutions.ch/de#organization' } } },
+    ]),
+  }, now);
+  assert.equal(check.availability, 'active');
+  assert.equal(check.seller, 'DQ Solutions');
+  assert.equal(check.condition, 'Neu');
+  assert.equal(check.mpn, 'MZ-V9P2T0BW');
+});
