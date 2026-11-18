@@ -21,7 +21,13 @@ Der lokale Server verwendet Vercel AI Gateway für die Suche nach konkreten Schw
 
 Ohne Konfiguration bleiben der lokale Katalog und die Watchlist nutzbar. Frei formulierte Suchen können eine Rückfrage zur Gebrauchtoption auslösen. Im Browser unterstütztes Diktat füllt das Suchfeld, der Nutzer prüft den Text und sendet ihn selbst. Je nach Browser verarbeitet dessen Spracherkennungsdienst Audio ausserhalb von UDI.
 
-Die Suche gibt unbestätigte Fundstellen ohne Preis- oder Bestandswerte aus. Für Empfehlungen gelten weiterhin die Angebotsbeobachtungen. Der Suchserver lauscht lokal auf `127.0.0.1` und begrenzt externe Anfragen auf sechs Suchläufe pro Minute und zwei gleichzeitig. Für öffentlichen Mehrbenutzerbetrieb braucht es Authentifizierung und gemeinsam durchgesetzte Anfrage- und Budgetlimits.
+Die Suchansicht zeigt höchstens drei Angebote aus einer frischen Detailseitenprüfung. Noch offene Gesamtkosten bleiben gekennzeichnet. Die Suchergebnisse verfallen nach fünf Minuten. Für Kaufempfehlungen gelten weiterhin die vollständigen Angebotsbeobachtungen.
+
+Der Prüfer kann für konkret freigegebene Quellen durch `UDI_VERIFY_DOMAINS` aktiviert werden. Der aktuelle Adapter unterstützt `ricardo.ch` und `tutti.ch` als kommagetrennte Werte. Eine Freigabe setzt die Prüfung der aktuellen Nutzungs- und Abrufbedingungen für den jeweiligen Betrieb voraus. Der Prüfer ruft ausschliesslich konkrete Adressen aus der serverseitigen Suche ab. Er folgt keinen Weiterleitungen, validiert und bindet öffentliche DNS-Adressen, begrenzt Zeit und Antwortgrösse und wertet eindeutige Schema.org-Angebotsdaten aus. Zugriffssperren und fehlende Belege führen zum Ausschluss. Abgerufene Texte werden nicht gespeichert.
+
+Prüfergebnisse werden lokal in `.udi/checks.json` mit URL, Prüfzeit, HTTP-Status und extrahierten Fakten gespeichert. Das Journal umfasst höchstens 200 Scans mit jeweils drei Prüfungen. Suchtexte und Schlüssel sind darin nicht enthalten. Gleichzeitige Schreibvorgänge laufen serialisiert mit atomarem Dateiaustausch. Sichere dieses Verzeichnis für eine Wiederherstellung des Einzelbetriebs.
+
+Der Suchserver lauscht lokal auf `127.0.0.1` und begrenzt externe Suchanfragen auf sechs Suchläufe pro Minute. Ein Suchlauf prüft höchstens drei Detailseiten mit jeweils 2,5 Sekunden Zeitlimit. Für öffentlichen Mehrbenutzerbetrieb braucht es Authentifizierung und gemeinsam durchgesetzte Anfrage- und Budgetlimits.
 
 ## Angebotsdaten
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>UDI · Kauf-Radar</title>
+  <title>UDI · Dein nächstes gutes Angebot</title>
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.mjs"></script>
 </head>
@@ -12,7 +12,7 @@
   <a class="skip" href="#main">Zum Inhalt</a>
   <header class="site-header">
     <div class="shell masthead">
-      <a class="brand" href="#radar"><span class="brand-mark" aria-hidden="true">◉</span><span>udi<span class="period">.</span></span><span class="brand-caption">Universal Deal Intelligence</span></a>
+      <a class="brand" href="#suche"><span class="brand-mark" aria-hidden="true">◉</span><span>udi<span class="period">.</span></span><span class="brand-caption">Universal Deal Intelligence</span></a>
       <nav aria-label="Hauptnavigation">
         <a href="#radar">Radar</a><a href="#suche">Suche</a><a href="#vergleich">Vergleich</a><a href="#watchlist">Watchlist</a>
       </nav>
@@ -43,13 +43,17 @@
       <div id="radar-content" class="surface" aria-live="polite">Daten werden geladen …</div>
     </section>
     <section id="suche" hidden aria-labelledby="search-title">
-      <div class="page-title"><p class="eyebrow">PC-Komponenten / SSD</p><h1 id="search-title">Suche</h1></div>
+      <div class="search-intro">
+        <p class="eyebrow">Dein Kaufassistent · Schweiz</p>
+        <h1 id="search-title">Was suchst du<span class="period">?</span></h1>
+        <p>Beschreibe deinen Wunsch. Wir suchen passende Angebote und prüfen, was aktuell ist.</p>
+      </div>
       <form class="search-form" data-search>
-        <label for="search-query">Produkt, Budget oder Kaufwunsch</label>
+        <label for="search-query">Dein Wunsch und dein Budget</label>
         <div class="search-field"><input id="search-query" name="query" type="search" maxlength="300" required placeholder="Ein Gaming-PC bis CHF 650"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
         <div class="actions">
           <button type="button" class="text-button" data-mic hidden>Diktieren</button>
-          <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+          <button type="button" class="text-button" data-example>Beispiel · Samsung 990 PRO 2 TB</button>
         </div>
       </form>
       <div id="results" class="stack" aria-live="polite"></div>

@@ -14,6 +14,7 @@ let sourceState = 'loading';
 let watched = new Set();
 let storageError = false;
 let activeSearch;
+let resultsExpiry;
 
 try {
   const saved = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
@@ -120,6 +121,7 @@ function renderRadar() {
 }
 
 function renderWebResults(result, query) {
+  clearTimeout(resultsExpiry);
   const target = get('web-results');
   if (result.kind === 'clarification') {
     const question = message('Darf ein Gebrauchtangebot dabei sein?', 'Wenn ein Upgrade allein sinnvoll ist, bleibt es im Vergleich.');
@@ -140,18 +142,46 @@ function renderWebResults(result, query) {
       busy: 'Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.',
       unavailable: 'Die Websuche ist vorübergehend nicht erreichbar.',
       invalid: 'Gib einen Kaufwunsch als Text ohne Webadresse ein.',
-      results: 'Die Websuche hat keine konkreten Seiten bei den eingebundenen Anbietern gefunden.',
+      results: result.unconfirmed
+        ? 'Wir konnten die gefundenen Angebote gerade nicht aktuell bestätigen. Versuche es später erneut.'
+        : 'Keine passenden aktuellen Angebote gefunden. Ändere deinen Suchwunsch oder versuche es später erneut.',
+      expired: 'Die Angebotsprüfung ist abgelaufen. Suche erneut für den aktuellen Stand.',
     };
     target.replaceChildren(element('p', messages[result.kind] ?? messages.unavailable, 'surface muted'));
     return;
   }
-  const intro = message('Fundstellen im Web', 'Preis, Ausstattung und Angebotsstatus sind noch unbestätigt. Prüfe sie auf der angegebenen Seite.');
+  const intro = element('div', null, 'section-heading');
+  intro.append(element('h2', 'Aktuell geprüft'), element('span',
+    result.items.length + (result.items.length === 1 ? ' Angebot' : ' Angebote'), 'unit'));
   const cards = result.items.map(item => {
-    const box = message(item.title, item.source + ' · Unbestätigt');
-    box.append(link(item.type === 'listing' ? 'Inserat öffnen' : 'Angebotsseite öffnen', item.url, 'button', true));
+    const box = element('article', null, 'surface offer');
+    const heading = element('div', null, 'offer-heading');
+    heading.append(element('p', item.source, 'eyebrow'), element('span', 'Teilweise geprüft', 'badge'));
+    const check = item.check;
+    box.append(heading, element('h3', item.title), element('p', money(check.price), 'offer-price'),
+      element('p', 'Artikelpreis · Gesamtkosten noch offen', 'muted'),
+      element('p', 'Quelle meldet verfügbar · geprüft ' + date.format(new Date(check.checkedAt)) + ' (CH)', 'muted'));
+    const details = element('details');
+    details.append(element('summary', 'Prüfung und offene Angaben'));
+    details.append(facts([
+      ['Zustand laut Quelle', check.condition ?? 'Unbestätigt'],
+      ['Verkäufer laut Quelle', check.seller ?? 'Unbestätigt'],
+      ['Versand und Gebühren', 'Unbekannt'],
+      ['Funktionszustand', 'Nicht unabhängig getestet'],
+    ]));
+    const action = link(item.type === 'listing' ? 'Inserat öffnen' : 'Angebotsseite öffnen', item.url, 'button', true);
+    action.addEventListener('click', event => {
+      if (Date.now() >= Date.parse(item.expiresAt)) {
+        event.preventDefault();
+        renderWebResults({ kind: 'expired' }, query);
+      }
+    });
+    box.append(details, action);
     return box;
   });
   target.replaceChildren(intro, ...cards);
+  const expiry = Math.min(...result.items.map(item => Date.parse(item.expiresAt)));
+  resultsExpiry = setTimeout(() => renderWebResults({ kind: 'expired' }, query), Math.max(1, expiry - Date.now()));
 }
 
 async function submit(query, scope) {
@@ -163,7 +193,8 @@ async function submit(query, scope) {
   get('results').replaceChildren(...(products.length ? products.map(productCard) : [
     message('Dein Suchwunsch', query),
   ]));
-  get('web-results').replaceChildren(element('p', 'Websuche läuft …', 'surface muted'));
+  clearTimeout(resultsExpiry);
+  get('web-results').replaceChildren(element('p', 'Wir suchen und prüfen die Angebote …', 'surface muted'));
   navigate('suche');
   const resultTitle = get('results').querySelector('h2');
   resultTitle.tabIndex = -1;
@@ -173,7 +204,7 @@ async function submit(query, scope) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, scope }),
-      signal: AbortSignal.any([request.signal, AbortSignal.timeout(12_000)]),
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),
     });
     const result = await response.json();
     if (!request.signal.aborted) renderWebResults(result, query);
@@ -292,7 +323,7 @@ function renderWatchlist() {
 function renderRoute(focus = false) {
   const hash = location.hash.slice(1);
   const current = routes.find(id => !get(id).hidden);
-  const route = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'radar' : 'radar');
+  const route = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'suche' : 'suche');
   for (const id of routes) get(id).hidden = id !== route;
   for (const anchor of document.querySelectorAll('nav a')) {
     if (anchor.hash === '#' + (route === 'passport' ? 'vergleich' : route)) anchor.setAttribute('aria-current', 'page');

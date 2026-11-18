@@ -58,6 +58,7 @@ export async function discover(input, webSearch) {
     items.set(id, {
       title, url: url.href, source: source.name,
       type: source.marketplace ? 'listing' : 'shop', status: 'unconfirmed',
+      ...(requestedPart ? { mpn: requestedPart } : {}),
     });
     if (items.size === 6) break;
   }

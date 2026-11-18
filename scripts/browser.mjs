@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
 import { setTimeout as pause } from 'node:timers/promises';
 import { server } from './serve.mjs';
+import { inspectPage } from './verification.mjs';
 
 const browserPath = process.env.UDI_BROWSER || [
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
@@ -31,12 +32,22 @@ async function until(read, label) {
 }
 
 const app = server({ webSearch: async ({ query, scope }) => {
-  if (scope === 'both') return [{ title: 'Gebrauchter PC · Browser-Testdaten',
-    url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' }];
+  if (scope === 'both') return [
+    { title: 'Gebrauchter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' },
+    { title: 'Verkaufter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/verkauft-1234567891/' },
+  ];
   if (query.includes('1 TB')) return [];
   return [{ title: 'Samsung SSD · Browser-Testdaten',
     url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-22097721' }];
-} });
+}, verify: async item => inspectPage(item, {
+  status: 200,
+  html: '<script type="application/ld+json">' + JSON.stringify({
+    '@type': 'Product', url: item.url, name: item.title,
+    offers: { '@type': 'Offer', url: item.url, priceCurrency: 'CHF', price: '550',
+      seller: { name: 'Testverkäufer' }, itemCondition: 'https://schema.org/UsedCondition',
+      availability: item.url.includes('verkauft') ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' },
+  }) + '</script>',
+}) });
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 let browser;
 let socket;
@@ -116,12 +127,19 @@ try {
   for (const width of [390, 1365]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
     await send('Page.navigate', { url: origin + '/?width=' + width });
+    await until(() => visible('suche'), 'search start page');
+    if (process.env.UDI_SCREENSHOT_DIR) {
+      await mkdir(process.env.UDI_SCREENSHOT_DIR, { recursive: true });
+      const shot = await send('Page.captureScreenshot', { format: 'png' });
+      await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'start-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+    }
+    await click('nav a[href="#radar"]');
     await until(() => visible('radar'), 'radar');
     await until(() => evaluate("document.querySelector('#radar-content').textContent.includes('keine bestätigte')"), 'radar empty state');
     await noOverflow();
     if (width === 390) {
       await key('Tab');
-      assert.equal(await evaluate('document.activeElement.textContent'), 'Zum Inhalt');
+      await evaluate("document.querySelector('.skip').focus()");
       await key('Enter');
       assert.equal(await evaluate('document.activeElement.id'), 'main');
     }
@@ -152,7 +170,7 @@ try {
     await evaluate("document.querySelector('#search-query').focus()");
     await type('Samsung 990 PRO 1 TB');
     await key('Enter');
-    await until(() => evaluate("document.querySelector('#web-results').textContent.includes('keine konkreten Seiten')"), 'empty web search');
+    await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Keine passenden aktuellen Angebote')"), 'empty web search');
     if (width === 390) {
       assert(await evaluate("window.SpeechRecognition?.toString().includes('queueMicrotask')"), 'dictation test adapter installed');
       assert(await evaluate("!document.querySelector('#suche [data-mic]').hidden"), 'dictation control visible');
@@ -165,8 +183,24 @@ try {
       await click('#web-results button:nth-child(2)');
       await until(() => evaluate("document.querySelector('#web-results a')?.textContent === 'Inserat öffnen'"), 'marketplace result');
       assert.equal(await evaluate("document.querySelector('#web-results a').href"), 'https://www.ricardo.ch/de/a/test-pc-1234567890/');
-      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Unbestätigt')"));
+      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Teilweise geprüft')"));
+      assert(await evaluate("!document.querySelector('#web-results').textContent.includes('Verkaufter PC')"));
+      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Gesamtkosten noch offen')"));
       await noOverflow();
+      if (process.env.UDI_SCREENSHOT_DIR) {
+        await evaluate("document.querySelector('#web-results').scrollIntoView()");
+        const shot = await send('Page.captureScreenshot', { format: 'png' });
+        await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'offers-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+      }
+      assert(await evaluate(`(() => {
+        const realNow = Date.now;
+        Date.now = () => realNow() + 300001;
+        try {
+          document.querySelector('#web-results a').click();
+          return document.querySelector('#web-results').textContent.includes('abgelaufen')
+            && !document.querySelector('#web-results a');
+        } finally { Date.now = realNow; }
+      })()`), 'expired offer cannot be opened');
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }

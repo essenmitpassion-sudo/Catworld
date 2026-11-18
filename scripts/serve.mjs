@@ -1,8 +1,10 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
+import { pathToFileURL, fileURLToPath } from 'node:url';
 import { discover, InvalidSearch } from './discovery.mjs';
 import { gatewaySearch } from './gateway.mjs';
+import { pageVerifier } from './verification.mjs';
+import { scan } from './scans.mjs';
 
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
@@ -15,7 +17,7 @@ const securityHeaders = {
   'X-Content-Type-Options': 'nosniff',
 };
 
-export function server({ webSearch = null } = {}) {
+export function server({ webSearch = null, verify = null, journalPath } = {}) {
   const callsPerMinute = 6;
   let windowEnds = 0;
   let calls = 0;
@@ -55,7 +57,8 @@ export function server({ webSearch = null } = {}) {
           running--;
         }
       });
-      reply(200, result);
+      const checked = await scan(result, { verify, journalPath });
+      reply(200, checked);
     } catch (error) {
       if (error instanceof InvalidSearch || error instanceof SyntaxError) return reply(400, { kind: 'invalid' });
       if (error.message === 'disabled') return reply(503, { kind: 'disabled' });
@@ -86,5 +89,7 @@ export function server({ webSearch = null } = {}) {
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
   const webSearch = gatewaySearch({ apiKey: process.env.AI_GATEWAY_API_KEY, model: process.env.UDI_SEARCH_MODEL });
-  server({ webSearch }).listen(4173, '127.0.0.1', () => console.log('UDI: http://127.0.0.1:4173'));
+  const verify = pageVerifier((process.env.UDI_VERIFY_DOMAINS ?? '').split(',').map(value => value.trim()));
+  server({ webSearch, verify, journalPath: fileURLToPath(new URL('../.udi/checks.json', import.meta.url)) })
+    .listen(4173, '127.0.0.1', () => console.log('UDI: http://127.0.0.1:4173'));
 }
