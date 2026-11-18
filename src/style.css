@@ -56,6 +56,7 @@ h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); letter-spacing: -.035em; line-heig
 .unit { font-size: .8rem; white-space: nowrap; }
 .surface { background: var(--paper); border: 1px solid var(--line); border-radius: .65rem; padding: clamp(1rem, 3vw, 1.65rem); overflow-wrap: anywhere; }
 .surface > * + *, .stack > * + * { margin-top: .75rem; }
+#web-results:not(:empty) { margin-top: .75rem; }
 .page-title { padding-block: 2.25rem 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.25rem; }
 .columns { display: grid; gap: .75rem; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }

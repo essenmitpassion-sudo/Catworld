@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=24" },
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "test": "node --test --test-isolation=none tests/deals.test.mjs",
+    "test": "node --test --test-isolation=none tests/*.test.mjs",
     "build": "node scripts/build.mjs",
     "dev": "node scripts/serve.mjs",
     "smoke": "node scripts/browser.mjs"
+  },
+  "dependencies": {
+    "ai": "7.0.176"
   }
 }

@@ -30,7 +30,13 @@ async function until(read, label) {
   throw new Error('Timed out: ' + label, { cause: error });
 }
 
-const app = server();
+const app = server({ webSearch: async ({ query, scope }) => {
+  if (scope === 'both') return [{ title: 'Gebrauchter PC · Browser-Testdaten',
+    url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' }];
+  if (query.includes('1 TB')) return [];
+  return [{ title: 'Samsung SSD · Browser-Testdaten',
+    url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-22097721' }];
+} });
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 let browser;
 let socket;
@@ -78,6 +84,23 @@ try {
     return reply.result.value;
   }
   const origin = 'http://127.0.0.1:' + app.address().port;
+  await send('Page.enable');
+  await send('Page.addScriptToEvaluateOnNewDocument', {
+    source: `Object.defineProperty(window, 'SpeechRecognition', { value: class {
+      start() {
+        queueMicrotask(() => {
+          this.onresult({ results: [[{ transcript: 'Mein PC braucht mehr Speicher' }]] });
+          this.onend();
+        });
+      }
+    }, configurable: true })`,
+  });
+  const forbidden = await fetch(origin + '/api/discovery', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Origin: 'https://evil.test', 'Sec-Fetch-Site': 'cross-site' },
+    body: JSON.stringify({ query: 'Gebrauchter Gaming-PC' }),
+  });
+  assert.equal(forbidden.status, 403);
   const visible = id => evaluate(`document.getElementById('${id}')?.hidden === false`);
   const click = selector => evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
   const type = text => send('Input.insertText', { text });
@@ -129,7 +152,22 @@ try {
     await evaluate("document.querySelector('#search-query').focus()");
     await type('Samsung 990 PRO 1 TB');
     await key('Enter');
-    assert(await evaluate("document.querySelector('#results').textContent.includes('Keine passende SSD')"));
+    await until(() => evaluate("document.querySelector('#web-results').textContent.includes('keine konkreten Seiten')"), 'empty web search');
+    if (width === 390) {
+      assert(await evaluate("window.SpeechRecognition?.toString().includes('queueMicrotask')"), 'dictation test adapter installed');
+      assert(await evaluate("!document.querySelector('#suche [data-mic]').hidden"), 'dictation control visible');
+      await click('#suche [data-mic]');
+      await until(() => evaluate("document.querySelector('#search-query').value === 'Mein PC braucht mehr Speicher'"), 'dictation input');
+      assert(await visible('suche'));
+      assert.equal(await evaluate("document.querySelector('#results h2').textContent"), 'Dein Suchwunsch');
+      await key('Enter');
+      await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Darf ein Gebrauchtangebot')"), 'clarification');
+      await click('#web-results button:nth-child(2)');
+      await until(() => evaluate("document.querySelector('#web-results a')?.textContent === 'Inserat öffnen'"), 'marketplace result');
+      assert.equal(await evaluate("document.querySelector('#web-results a').href"), 'https://www.ricardo.ch/de/a/test-pc-1234567890/');
+      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Unbestätigt')"));
+      await noOverflow();
+    }
     console.log('Browser workflow passed at ' + width + 'px');
   }
 } catch (error) {

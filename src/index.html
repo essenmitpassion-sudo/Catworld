@@ -25,11 +25,14 @@
         <div>
           <p class="eyebrow"><span></span> Schweiz / PC-Komponenten</p>
           <h1 id="radar-title">Dein Kauf-Radar<span class="period">.</span></h1>
-          <p class="intro">Finde die passende SSD, vergleiche Händler und sieh, welche Angaben belegt sind.</p>
+          <p class="intro">Beschreibe, was du brauchst. Suche nach PC-Komponenten, Upgrades oder gebrauchten Rechnern.</p>
           <form class="search-form" data-search>
-            <label for="radar-query">Welche SSD suchst du?</label>
-            <div class="search-field"><input id="radar-query" name="query" type="search" maxlength="100" required placeholder="Samsung 990 PRO 2 TB"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
-            <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+            <label for="radar-query">Was möchtest du kaufen?</label>
+            <div class="search-field"><input id="radar-query" name="query" type="search" maxlength="300" required placeholder="Ein Gaming-PC bis CHF 650"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
+            <div class="actions">
+              <button type="button" class="text-button" data-mic hidden>Diktieren</button>
+              <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+            </div>
           </form>
         </div>
         <aside class="radar-graphic" aria-hidden="true">
@@ -42,11 +45,15 @@
     <section id="suche" hidden aria-labelledby="search-title">
       <div class="page-title"><p class="eyebrow">PC-Komponenten / SSD</p><h1 id="search-title">Suche</h1></div>
       <form class="search-form" data-search>
-        <label for="search-query">Produkt oder Herstellernummer</label>
-        <div class="search-field"><input id="search-query" name="query" type="search" maxlength="100" required placeholder="Samsung 990 PRO 2 TB"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
-        <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+        <label for="search-query">Produkt, Budget oder Kaufwunsch</label>
+        <div class="search-field"><input id="search-query" name="query" type="search" maxlength="300" required placeholder="Ein Gaming-PC bis CHF 650"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
+        <div class="actions">
+          <button type="button" class="text-button" data-mic hidden>Diktieren</button>
+          <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+        </div>
       </form>
       <div id="results" class="stack" aria-live="polite"></div>
+      <div id="web-results" class="stack" aria-live="polite"></div>
     </section>
     <section id="vergleich" hidden aria-labelledby="compare-title">
       <div class="page-title"><p class="eyebrow">Händler / Gesamtkosten</p><h1 id="compare-title">Vergleich</h1></div>

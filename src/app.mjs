@@ -13,6 +13,7 @@ let observations = [];
 let sourceState = 'loading';
 let watched = new Set();
 let storageError = false;
+let activeSearch;
 
 try {
   const saved = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
@@ -118,16 +119,67 @@ function renderRadar() {
   }
 }
 
-function submit(query) {
+function renderWebResults(result, query) {
+  const target = get('web-results');
+  if (result.kind === 'clarification') {
+    const question = message('Darf ein Gebrauchtangebot dabei sein?', 'Wenn ein Upgrade allein sinnvoll ist, bleibt es im Vergleich.');
+    const choices = element('div', null, 'actions');
+    for (const [label, scope] of [['Neue Angebote', 'component'], ['Auch gebraucht', 'both']]) {
+      const button = element('button', label, 'button');
+      button.addEventListener('click', () => submit(query, scope));
+      choices.append(button);
+    }
+    question.append(choices);
+    target.replaceChildren(question);
+    if (!get('suche').hidden && get('results').contains(document.activeElement)) choices.firstElementChild.focus();
+    return;
+  }
+  if (result.kind !== 'results' || !result.items.length) {
+    const messages = {
+      disabled: 'Die Websuche ist in dieser Installation noch nicht verbunden.',
+      busy: 'Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.',
+      unavailable: 'Die Websuche ist vorübergehend nicht erreichbar.',
+      invalid: 'Gib einen Kaufwunsch als Text ohne Webadresse ein.',
+      results: 'Die Websuche hat keine konkreten Seiten bei den eingebundenen Anbietern gefunden.',
+    };
+    target.replaceChildren(element('p', messages[result.kind] ?? messages.unavailable, 'surface muted'));
+    return;
+  }
+  const intro = message('Fundstellen im Web', 'Preis, Ausstattung und Angebotsstatus sind noch unbestätigt. Prüfe sie auf der angegebenen Seite.');
+  const cards = result.items.map(item => {
+    const box = message(item.title, item.source + ' · Unbestätigt');
+    box.append(link(item.type === 'listing' ? 'Inserat öffnen' : 'Angebotsseite öffnen', item.url, 'button', true));
+    return box;
+  });
+  target.replaceChildren(intro, ...cards);
+}
+
+async function submit(query, scope) {
+  activeSearch?.abort();
+  const request = new AbortController();
+  activeSearch = request;
   get('search-query').value = query;
   const products = search(query);
   get('results').replaceChildren(...(products.length ? products.map(productCard) : [
-    message('Keine passende SSD gefunden', 'Suche nach dem Modell, der Kapazität oder der Herstellernummer. Der aktuelle Katalog umfasst die Samsung 990 PRO mit 2 TB ohne Kühlkörper.'),
+    message('Dein Suchwunsch', query),
   ]));
+  get('web-results').replaceChildren(element('p', 'Websuche läuft …', 'surface muted'));
   navigate('suche');
   const resultTitle = get('results').querySelector('h2');
   resultTitle.tabIndex = -1;
   resultTitle.focus();
+  try {
+    const response = await fetch('./api/discovery', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, scope }),
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(12_000)]),
+    });
+    const result = await response.json();
+    if (!request.signal.aborted) renderWebResults(result, query);
+  } catch {
+    if (!request.signal.aborted) renderWebResults({ kind: 'unavailable' }, query);
+  }
 }
 
 function facts(rows) {
@@ -271,6 +323,43 @@ for (const form of document.querySelectorAll('[data-search]')) {
 }
 for (const button of document.querySelectorAll('[data-example]')) {
   button.addEventListener('click', () => submit('Samsung 990 PRO 2 TB'));
+}
+const SpeechRecognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  let recording;
+  for (const button of document.querySelectorAll('[data-mic]')) {
+    button.hidden = false;
+    button.title = 'Die Spracherkennung deines Browsers kann Audio an seinen Spracherkennungsdienst übertragen.';
+    button.addEventListener('click', () => {
+      if (recording) {
+        recording.abort();
+        return;
+      }
+      const input = button.closest('form').elements.query;
+      const speech = new SpeechRecognition();
+      speech.lang = 'de-CH';
+      speech.onresult = event => {
+        input.value = event.results[0][0].transcript.slice(0, input.maxLength);
+        input.focus();
+        get('notice').textContent = 'Diktat eingefügt. Du kannst den Text prüfen und dann suchen.';
+      };
+      speech.onerror = event => {
+        if (event.error !== 'aborted') get('notice').textContent = 'Diktieren war nicht möglich. Du kannst den Suchwunsch tippen.';
+      };
+      speech.onend = () => {
+        recording = null;
+        button.textContent = 'Diktieren';
+      };
+      try {
+        speech.start();
+        recording = speech;
+        button.textContent = 'Diktat stoppen';
+        get('notice').textContent = 'Mikrofon aktiv.';
+      } catch {
+        get('notice').textContent = 'Diktieren war nicht möglich. Du kannst den Suchwunsch tippen.';
+      }
+    });
+  }
 }
 window.addEventListener('hashchange', event => {
   if (event.newURL === location.href) renderRoute(true);
