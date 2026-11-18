@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile, unlink } from 'node:fs/promises';
 import { dirname } from 'node:path';
+import { maxObservationAge } from '../src/deals.mjs';
 
 const journals = new Map();
-const maxAge = 5 * 60_000;
 
 async function saveScan(path, record) {
   const previous = journals.get(path) ?? Promise.resolve();
@@ -43,7 +43,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
     try { check = await verify?.(candidate); } catch { /* Each source can fail independently. */ }
     const checkedAt = typeof check?.checkedAt === 'string' ? Date.parse(check.checkedAt) : NaN;
     const currentTime = now();
-    const current = Number.isFinite(checkedAt) && checkedAt <= currentTime && currentTime - checkedAt < maxAge;
+    const current = Number.isFinite(checkedAt) && checkedAt <= currentTime && currentTime - checkedAt < maxObservationAge;
     const record = check ?? {
       url: candidate.url, checkedAt: new Date(currentTime).toISOString(),
       status: 'unconfirmed', availability: 'unknown', reason: 'not-checked',
@@ -53,7 +53,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
       && check.availability === 'active' && Number.isSafeInteger(check.price) && check.price > 0
       && check.price <= 100_000_000) {
       items.push({ ...candidate, status: 'partial', check: { ...check, total: null },
-        expiresAt: new Date(checkedAt + maxAge).toISOString() });
+        expiresAt: new Date(checkedAt + maxObservationAge).toISOString() });
     }
   }
   if (journalPath && checks.length) await saveScan(journalPath, {

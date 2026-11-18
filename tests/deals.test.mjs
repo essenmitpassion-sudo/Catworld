@@ -4,7 +4,7 @@ import { catalog, search, directLink, assess, compare } from '../src/deals.mjs';
 
 const product = catalog[0];
 const [first, second] = product.sources;
-const now = Date.parse('2026-11-17T12:00:00Z');
+const now = Date.parse('2026-11-17T11:01:00Z');
 const observation = {
   mpn: product.mpn, url: first.url, finalUrl: first.url,
   seller: first.seller, checkedAt: '2026-11-17T11:00:00Z',
@@ -38,6 +38,7 @@ test('only fresh, matching observations with known costs are eligible', () => {
     { shipping: null }, { fees: -1 }, { currency: 'EUR' },
     { checkedAt: '2026-11-15T11:00:00Z' }, { checkedAt: '2026-11-18T11:00:00Z' },
     { stock: 'unknown' }, { delivery: '' }, { finalUrl: second.url },
+    { checkedAt: '2026-11-17T10:56:00Z' },
     { mpn: 'MZ-V9P2T0CW' }, { seller: second.seller },
   ]) assert.notEqual(assess(product, first, { ...observation, ...change }, now).state, 'verified');
   assert.equal(assess(product, first, { ...observation, taxes: null }, now).total, null);

@@ -35,7 +35,7 @@ export const costFields = [
   ['imports', 'Importkosten'], ['fees', 'Pflichtgebühren'],
 ];
 
-export const maxObservationAge = 24 * 60 * 60 * 1000;
+export const maxObservationAge = 5 * 60 * 1000;
 export const isAmount = value => Number.isSafeInteger(value) && value >= 0 && value <= 100_000_000;
 const timestamp = value => typeof value === 'string'
   && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(value)

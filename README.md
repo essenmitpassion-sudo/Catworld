@@ -21,7 +21,7 @@ Der lokale Server verwendet Vercel AI Gateway für die Suche nach konkreten Schw
 
 Ohne Konfiguration bleiben der lokale Katalog und die Watchlist nutzbar. Frei formulierte Suchen können eine Rückfrage zur Gebrauchtoption auslösen. Im Browser unterstütztes Diktat füllt das Suchfeld, der Nutzer prüft den Text und sendet ihn selbst. Je nach Browser verarbeitet dessen Spracherkennungsdienst Audio ausserhalb von UDI.
 
-Die Suchansicht zeigt höchstens drei Angebote aus einer frischen Detailseitenprüfung. Noch offene Gesamtkosten bleiben gekennzeichnet. Die Suchergebnisse verfallen nach fünf Minuten. Für Kaufempfehlungen gelten weiterhin die vollständigen Angebotsbeobachtungen.
+Die Suchansicht zeigt höchstens drei Angebote aus einer frischen Detailseitenprüfung. Noch offene Gesamtkosten bleiben gekennzeichnet. Für Suchergebnisse und Radar gilt eine gemeinsame Frischegrenze von fünf Minuten. Für Kaufempfehlungen müssen ausserdem vollständige Angebotsbeobachtungen vorliegen.
 
 Der Prüfer kann für konkret freigegebene Quellen durch `UDI_VERIFY_DOMAINS` aktiviert werden. Der aktuelle Adapter unterstützt `ricardo.ch` und `tutti.ch` als kommagetrennte Werte. Eine Freigabe setzt die Prüfung der aktuellen Nutzungs- und Abrufbedingungen für den jeweiligen Betrieb voraus. Der Prüfer ruft ausschliesslich konkrete Adressen aus der serverseitigen Suche ab. Er folgt keinen Weiterleitungen, validiert und bindet öffentliche DNS-Adressen, begrenzt Zeit und Antwortgrösse und wertet eindeutige Schema.org-Angebotsdaten aus. Zugriffssperren und fehlende Belege führen zum Ausschluss. Abgerufene Texte werden nicht gespeichert.
 
