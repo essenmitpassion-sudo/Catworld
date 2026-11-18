@@ -1,49 +1,23 @@
-# VERSATZ — Ein Schritt. Alles bewegt sich.
+# Universal Deal Intelligence
 
-Ein kompaktes Strategiespiel für zwei: Ziehe eine Figur ein Feld und verschiebe die komplette Zielreihe – einschließlich gegnerischer Figuren. Erreiche das andere Tor oder schlage alle Gegner.
+Mit UDI kannst du die Samsung 990 PRO 2 TB ohne Kühlkörper suchen, die bekannten Schweizer Händlerseiten vergleichen, den Deal Passport öffnen und das Produkt im eigenen Browser beobachten.
 
-**Regeln v2:** Jeder vollständige Zug verändert das Brett oder gewinnt sofort. Reines Stehenbleiben durch Gegenverschiebung ist kein Zug. Andere Figuren mitzunehmen, während deine Figur zurückkehrt, bleibt erlaubt. Dadurch entstehen echte Tempo-Fallen.
+## Lokal starten
 
-Hotseat oder drei faire KI-Stufen; vollständige Zugvorschau mit konkreten sofortigen Gewinnantworten; räumlich getrennte Schritt-/Reihenanimation; Rücknahme, Replay, Revanche und lokale Speicherung. Ohne Konto, Backend oder Laufzeit-Netzwerk.
-
-## Starten
-
-Node22+:
-
-```sh
-npm ci
-npm test
-npm run build
-```
-
-`dist/VERSATZ.html` lässt sich anschließend als einzelne Datei im Browser öffnen. Sie enthält auch den KI-Worker. Alternativ `npm run dev`, dann `http://localhost:3000`; `PORT` ändert den Port.
-
-Figur → markiertes Nachbarfeld → Versatz prüfen → bestätigen. Nicht erlaubte Leerzug-Richtungen sind erklärt und deaktiviert; die erste legale Richtung ist vorausgewählt. Das Vorschau-Brett ist schreibgeschützt. „Anderes Feld“ behält deine Figur bei. Fehlende sofortige Gewinnwarnung bedeutet keine Sicherheit gegen spätere Drohungen.
-
-Elfenbein startet unten, Jade oben. Farbe/Startrecht/Aufstellung sind wählbar; Wechsel startet eine neue Partie. „Zu zweit“ erlaubt beide Seiten auf einem Gerät. Revanche wechselt das Startrecht. Alte v1-Spielstände bleiben in ihrer bisherigen lokalen Ablage erhalten und werden unter den geänderten Regeln nicht still weitergespielt.
-
-## Prüfen
+Node.js 24 und für den Browsertest Chromium, Chrome oder Edge.
 
 ```sh
 npm test
 npm run build
-npm run smoke
-npm run smoke:counterplay
-npm run smoke:active
-npm run smoke:motion
-npm run simulate          # 800 aktuelle Profile
-npm run research          # 60 kontrollierte Regelmodell-Vergleiche
-npm run research:endgames # exakte Tempo-Beweise v1/v2
+npm run dev
 ```
 
-Chromium: `/usr/bin/chromium`, über `CHROMIUM_PATH` überschreibbar. Browserprüfungen bedienen den tatsächlich gebauten HTML-Inhalt an einem abgefangenen Test-Origin; sie behaupten keine Live-Veröffentlichung. CI erzeugt dieselbe Standalone-Datei und stellt Prüfdaten als Artefakt bereit.
+Öffne [UDI im Browser](http://127.0.0.1:4173). Mit `npm run smoke` prüfst du die gebaute App in einem isolierten Chromium-Profil. Bei einem abweichenden Installationspfad setze `UDI_BROWSER` auf die Browserdatei.
 
-Regeln: [RULES.md](RULES.md). Aktuelle Entscheidung und Grenzen: [docs/PHASE_2.md](docs/PHASE_2.md). Fortsetzung: [CURRENT.md](CURRENT.md), [NEXT_TASK.md](NEXT_TASK.md).
+## Angebotsdaten
 
-**Forschungsprototyp:** Die neue Tempo-Regel erzeugt belegte taktische Gewinne, aber keine nachgewiesene Eröffnungsbalance oder menschlichen Spielspaß. Die bisherige kompakte Starterserie und die versetzte19/64-Serie gehören zu v1 und spezifischen Suchpolitiken. Historische Forschung bleibt getrennt reproduzierbar (`research:classic`, `research:endgames:v1`, `research:routes`); `research/rules-v1` ist reiner wissenschaftlicher Kontrollcode ohne Produktmodus.
+Der Katalog enthält zwei redaktionell zugeordnete Produktseiten. Aktuelle Angebote setzen zulässige Beobachtungen voraus. Der mitgelieferte Datensatz ist leer. Die App zeigt in diesem Zustand weder aktuelle Preise noch Kaufempfehlungen.
 
-Dieses Projekt ersetzt VEIL und davor das Catworld-Lernspiel. Geschichte vor den aktiven Zügen: Commit34a7e57 und Checkpoint `checkpoint/pre-active-rules-34a7e57`. Vollständige Git-Historie bleibt erhalten. Die frühere Sites-Veröffentlichung zeigt weiterhin VEIL; VERSATZ wird hier als Repository/Standalone gepflegt.
+`public/observations.json` ist die vertrauenswürdige Publikationsgrenze für freigegebene, nachvollziehbare Beobachtungen. Jede Zeile beschreibt genau eine Anbieter-URL und Variante mit `mpn`, `seller`, `url`, `finalUrl`, `checkedAt` in UTC mit Z, `currency` als CHF, `stock` als `in-stock` oder `out-of-stock`, `delivery` und den Kostenfeldern `price`, `shipping`, `taxes`, `imports`, `fees` in Rappen. Ein bereits enthaltener oder nachweislich entfallender Zuschlag zählt als 0. Unbekannte Beträge bleiben null. Der Import muss die Identität der Zielseite, Verkäufer, Preisumfang und Datenherkunft unabhängig belegen und eine spätere Abweichung oder einen fehlgeschlagenen Linkcheck publizieren können.
 
-## Speicherpflege
-
-`npm run clean:check` zeigt den Löschplan; `npm run clean` entfernt bekannte Zwischenberichte, Screenshots, Protokolle und den lokalen Paketcache. Vorschau, aktuelles Wiederherstellungsbundle, Quellcode und Git-Historie bleiben erhalten. Vor Tests und Builds werden alte Testausgaben nach sieben Tagen und bekannte Ausgaben bei mehr als16 MiB automatisch bereinigt; der npm-Cache wird bei mehr als16 MiB geleert. Unbekannte Dateien werden bei Überschreitung gemeldet, nicht gelöscht. CI-Artefakte werden künftig sieben Tage aufbewahrt. Details: [docs/STORAGE.md](docs/STORAGE.md).
+Das Frontend ruft nur seine eigene Beobachtungsdatei ab. Die Watchlist speichert Produktnummern lokal. Es gibt keine Konten, Tracking-Einbindungen oder automatisierten Nachrichten.

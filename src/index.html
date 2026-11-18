@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>UDI · Kauf-Radar</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Zum Inhalt</a>
+  <header class="site-header">
+    <div class="shell masthead">
+      <a class="brand" href="#radar"><span class="brand-mark" aria-hidden="true">◉</span><span>udi<span class="period">.</span></span><span class="brand-caption">Universal Deal Intelligence</span></a>
+      <nav aria-label="Hauptnavigation">
+        <a href="#radar">Radar</a><a href="#suche">Suche</a><a href="#vergleich">Vergleich</a><a href="#watchlist">Watchlist</a>
+      </nav>
+    </div>
+  </header>
+  <main class="shell" id="main" tabindex="-1">
+    <p id="notice" role="status" class="sr-only"></p>
+    <section id="radar" hidden aria-labelledby="radar-title">
+      <div class="hero">
+        <div>
+          <p class="eyebrow"><span></span> Schweiz / PC-Komponenten</p>
+          <h1 id="radar-title">Dein Kauf-Radar<span class="period">.</span></h1>
+          <p class="intro">Finde die passende SSD, vergleiche Händler und sieh, welche Angaben belegt sind.</p>
+          <form class="search-form" data-search>
+            <label for="radar-query">Welche SSD suchst du?</label>
+            <div class="search-field"><input id="radar-query" name="query" type="search" maxlength="100" required placeholder="Samsung 990 PRO 2 TB"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
+            <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+          </form>
+        </div>
+        <aside class="radar-graphic" aria-hidden="true">
+          <div class="radar-dial"><i></i><b></b></div>
+        </aside>
+      </div>
+      <div class="section-heading"><h2>Aktuelle Kaufgelegenheiten</h2><span class="unit">CHF · Schweiz</span></div>
+      <div id="radar-content" class="surface" aria-live="polite">Daten werden geladen …</div>
+    </section>
+    <section id="suche" hidden aria-labelledby="search-title">
+      <div class="page-title"><p class="eyebrow">PC-Komponenten / SSD</p><h1 id="search-title">Suche</h1></div>
+      <form class="search-form" data-search>
+        <label for="search-query">Produkt oder Herstellernummer</label>
+        <div class="search-field"><input id="search-query" name="query" type="search" maxlength="100" required placeholder="Samsung 990 PRO 2 TB"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
+        <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
+      </form>
+      <div id="results" class="stack" aria-live="polite"></div>
+    </section>
+    <section id="vergleich" hidden aria-labelledby="compare-title">
+      <div class="page-title"><p class="eyebrow">Händler / Gesamtkosten</p><h1 id="compare-title">Vergleich</h1></div>
+      <div id="comparison" class="stack"></div>
+    </section>
+    <section id="passport" hidden aria-labelledby="passport-title">
+      <div class="page-title"><p class="eyebrow"><a href="#vergleich">← Zum Vergleich</a></p><h1 id="passport-title">Deal Passport</h1></div>
+      <div id="detail" class="stack"></div>
+    </section>
+    <section id="watchlist" hidden aria-labelledby="watch-title">
+      <div class="page-title"><p class="eyebrow">Auf diesem Gerät</p><h1 id="watch-title">Watchlist</h1></div>
+      <div id="saved" class="stack"></div>
+    </section>
+  </main>
+  <footer class="shell footer"><span>UDI</span><span>Schweizer Produktmarkt · Preise in CHF</span></footer>
+</body>
+</html>

@@ -1,5 +1,0 @@
-Continue from the verified Phase2 active-turn and animation-feedback checkpoints. Read CURRENT.md and docs/PHASE_2.md. Do not restart concept selection or retune formation from one bot pool.
-
-Next concrete gameplay priority: inspect the13 remaining repetition draws in docs/playtest-current.json. Select a native multiple-piece cycle with real movement and replay it. Compare all legal exits using the independent rule oracle and a bounded alternative-policy search; distinguish an avoidable search preference from a genuine defensive cycle. Only implement a change if a specific counterplay hypothesis has evidence. Preserve repetition/120-ply semantics and exact1v1 history handling. Longer forced openings and human enjoyment remain unvalidated.
-
-Both completed increments require normal non-force push/readback, not a live-hosting claim. Use npm test, npm run build, smoke, smoke:counterplay, smoke:active and smoke:motion for interaction changes. Model-only60/800 experiments need rerunning when their fingerprinted sources change, not for presentation changes.
