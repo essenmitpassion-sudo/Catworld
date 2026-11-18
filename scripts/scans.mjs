@@ -2,6 +2,8 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile, unlink } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { maxObservationAge } from '../src/deals.mjs';
+import { costs } from '../src/costs.mjs';
+import { acceptsOffer } from '../src/criteria.mjs';
 
 const journals = new Map();
 
@@ -36,6 +38,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
   if (discovery.kind !== 'results') return discovery;
   const checks = [];
   const items = [];
+  let excluded = 0;
   // Bound detail-page requests independently of the number of search results.
   const candidates = discovery.items.slice(0, 3);
   for (const candidate of candidates) {
@@ -49,15 +52,23 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
       status: 'unconfirmed', availability: 'unknown', reason: 'not-checked',
     };
     checks.push(record);
-    if (current && check.url === candidate.url && check.httpStatus === 200
+    if (current && check.url === candidate.url && check.httpStatus === 200 && check.currency === 'CHF'
       && check.availability === 'active' && Number.isSafeInteger(check.price) && check.price > 0
       && check.price <= 100_000_000) {
-      items.push({ ...candidate, status: 'partial', check: { ...check, total: null },
+      const summary = costs(check);
+      const criteria = discovery.criteria ?? {};
+      if (!acceptsOffer(check, criteria)) {
+        excluded++;
+        continue;
+      }
+      items.push({ ...candidate, status: 'partial', check: { ...check, ...summary },
+        budgetStatus: criteria.maxTotal == null ? 'none' : summary.total === null ? 'unknown-total' : 'within',
         expiresAt: new Date(checkedAt + maxObservationAge).toISOString() });
     }
   }
   if (journalPath && checks.length) await saveScan(journalPath, {
     id: randomUUID(), completedAt: new Date(now()).toISOString(), checks,
   });
-  return { kind: 'results', items, unconfirmed: discovery.items.length - items.length };
+  return { kind: 'results', items, unconfirmed: discovery.items.length - items.length - excluded,
+    excluded, criteria: discovery.criteria };
 }

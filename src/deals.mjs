@@ -1,3 +1,7 @@
+import { costs } from './costs.mjs';
+import { acceptsOffer } from './criteria.mjs';
+export { costFields, isAmount } from './costs.mjs';
+
 export const catalog = [{
   name: 'Samsung 990 PRO',
   variant: '2 TB · ohne Kühlkörper',
@@ -30,13 +34,7 @@ export function directLink(url, product) {
   return product.sources.find(source => source.url === url)?.url ?? null;
 }
 
-export const costFields = [
-  ['price', 'Artikelpreis'], ['shipping', 'Versand'], ['taxes', 'Zusätzliche Steuern'],
-  ['imports', 'Importkosten'], ['fees', 'Pflichtgebühren'],
-];
-
 export const maxObservationAge = 5 * 60 * 1000;
-export const isAmount = value => Number.isSafeInteger(value) && value >= 0 && value <= 100_000_000;
 const timestamp = value => typeof value === 'string'
   && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(value)
   ? Date.parse(value) : NaN;
@@ -54,21 +52,22 @@ export function assess(product, source, observation, now = Date.now()) {
   result.observation = observation;
   if (!['in-stock', 'out-of-stock'].includes(observation.stock)
     || typeof observation.delivery !== 'string' || !observation.delivery.trim()
-    || !costFields.every(([key]) => isAmount(observation[key])) || observation.price === 0) return result;
+    || costs(observation).total === null) return result;
 
-  const total = costFields.reduce((sum, [key]) => sum + observation[key], 0);
+  const { total } = costs(observation);
   return { ...result, state: 'verified', total, observation };
 }
 
-export function compare(product, observations, now = Date.now()) {
+export function compare(product, observations, now = Date.now(), criteria = {}) {
   const offers = product.sources.map(source => {
     const candidates = observations.filter(row => row?.url === source.url);
     const times = candidates.map(row => timestamp(row.checkedAt));
     const latest = times.reduce((max, time) => Math.max(max, time), -Infinity);
     const newest = candidates.filter((_, index) => times[index] === latest);
-    return assess(product, source, newest.length === 1 ? newest[0] : null, now);
+    const offer = assess(product, source, newest.length === 1 ? newest[0] : null, now);
+    return { ...offer, excluded: !acceptsOffer(offer.observation, criteria) };
   });
-  const eligible = offers.filter(offer => offer.state === 'verified' && offer.observation.stock === 'in-stock')
+  const eligible = offers.filter(offer => !offer.excluded && offer.state === 'verified' && offer.observation.stock === 'in-stock')
     .sort((left, right) => left.total - right.total);
   const recommendation = eligible.length >= 2 && eligible[0].total < eligible[1].total ? eligible[0] : null;
   return { offers, recommendation };

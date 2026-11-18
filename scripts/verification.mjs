@@ -35,7 +35,7 @@ function francs(value, currency) {
 export function inspectPage(item, page, now = Date.now()) {
   const check = {
     url: item.url, checkedAt: new Date(now).toISOString(), httpStatus: page.status ?? null,
-    status: 'unconfirmed', availability: 'unknown', price: null, total: null,
+    status: 'unconfirmed', availability: 'unknown', price: null, total: null, currency: null,
     seller: null, condition: null, reason: 'missing-evidence',
   };
   if ([404, 410].includes(page.status)) return { ...check, availability: 'inactive', reason: 'removed' };
@@ -82,6 +82,7 @@ export function inspectPage(item, page, now = Date.now()) {
   return {
     ...check, status: 'partial', availability: availability === 'InStock' ? 'active' : 'unknown',
     price: francs(offer.price, offer.priceCurrency),
+    currency: offer.priceCurrency === 'CHF' ? 'CHF' : null,
     seller: plain(typeof offer.seller === 'string' ? offer.seller : offer.seller?.name),
     condition: new Map([['UsedCondition', 'Gebraucht'], ['NewCondition', 'Neu'],
       ['RefurbishedCondition', 'Generalüberholt'], ['DamagedCondition', 'Beschädigt']])

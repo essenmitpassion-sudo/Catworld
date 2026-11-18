@@ -57,7 +57,8 @@ test('Gebrauchtsuche liefert deduplizierte Direktlinks mit offenem Status', asyn
 
 test('ungültige Eingabe wird vor einem externen Aufruf abgewiesen', async () => {
   for (const input of [null, { query: ' ' }, { query: 'x'.repeat(301) },
-    { query: 'https://localhost/test' }, { query: 'PC', scope: 'all-web' }]) {
+    { query: 'https://localhost/test' }, { query: 'PC', scope: 'all-web' },
+    { query: 'PC', maxPrice: '-100' }, { query: 'PC', completeCostsOnly: 'false' }]) {
     await assert.rejects(discover(input, () => assert.fail('Externer Aufruf')), { name: 'InvalidSearch' });
   }
 });

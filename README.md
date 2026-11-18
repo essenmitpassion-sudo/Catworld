@@ -2,6 +2,10 @@
 
 Mit UDI kannst du die Samsung 990 PRO 2 TB ohne Kühlkörper suchen, die bekannten Schweizer Händlerseiten vergleichen, den Deal Passport öffnen und das Produkt im eigenen Browser beobachten.
 
+Die Suche berücksichtigt Budget und Zustand aus dem Kaufwunsch oder den aufklappbaren Kaufkriterien. Bekannte Kosten oberhalb des Budgets führen zum Ausschluss. Solange Gebühren offen sind, bleibt die Budgetpassung unbestätigt. Mit «Nur Angebote mit bestätigten Gesamtkosten» lassen sich solche Treffer ausblenden. Dieselben Kriterien gelten im Katalogvergleich und im Deal Passport.
+
+Mit «Suche speichern» bleibt der Auftrag samt Budget, Zustand und Gebrauchtoption in der Watchlist dieses Browsers. «Erneut prüfen» führt den gespeicherten Auftrag mit seinen Kriterien neu aus. Die Watchlist umfasst bis zu 20 Suchaufträge. Speicherfehler werden angezeigt, bestehende Daten bleiben bei Lesefehlern erhalten. In Browsern mit Web Locks werden Änderungen an den gespeicherten Suchen zwischen Tabs serialisiert.
+
 ## Lokal starten
 
 Node.js 24 und für den Browsertest Chromium, Chrome oder Edge.

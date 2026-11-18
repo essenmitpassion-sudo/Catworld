@@ -14,9 +14,9 @@
 [hidden] { display: none !important; }
 body { margin: 0; }
 a { color: inherit; text-underline-offset: .23em; }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 button, .button { cursor: pointer; }
-a:focus-visible, button:focus-visible, input:focus-visible { outline: 3px solid #116950; outline-offset: 4px; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 3px solid #116950; outline-offset: 4px; }
 .shell { width: min(100% - 2rem, 70rem); margin-inline: auto; }
 .site-header { border-bottom: 1px solid var(--line); background: var(--paper); }
 .masthead { display: flex; align-items: start; flex-direction: column; gap: .4rem; padding-top: .55rem; }
@@ -68,6 +68,13 @@ h2 { font-size: clamp(1.25rem, 3vw, 1.75rem); letter-spacing: -.035em; line-heig
 .offer h3 { font-size: 1.2rem; line-height: 1.35; }
 details summary { cursor: pointer; min-height: 2.75rem; padding-block: .6rem; font-weight: 650; }
 #web-results > .section-heading { max-width: 48rem; }
+.search-options { border-top: 1px solid var(--line); margin-top: .7rem; }
+.search-options label { font-size: .85rem; }
+.filter-fields { display: grid; gap: 1rem; margin-block: .5rem 1rem; }
+.filter-fields input, .filter-fields select { min-height: 2.75rem; width: 100%; border: 1px solid var(--line); border-radius: .4rem; padding: .5rem; background: var(--paper); color: var(--ink); }
+.search-options .checkbox-label { display: flex; gap: .65rem; align-items: center; min-height: 2.75rem; }
+.checkbox-label input { accent-color: var(--forest); width: 1.15rem; height: 1.15rem; flex-shrink: 0; }
+@media (min-width: 45rem) { .filter-fields { grid-template-columns: 1fr 1fr; } }
 .page-title { padding-block: 2.25rem 1.5rem; border-bottom: 1px solid var(--line); margin-bottom: 1.25rem; }
 .columns { display: grid; gap: .75rem; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; }

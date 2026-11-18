@@ -32,7 +32,7 @@ async function until(read, label) {
 }
 
 const app = server({ webSearch: async ({ query, scope }) => {
-  if (scope === 'both') return [
+  if (scope === 'both' || scope === 'secondhand') return [
     { title: 'Gebrauchter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' },
     { title: 'Verkaufter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/verkauft-1234567891/' },
   ];
@@ -167,11 +167,11 @@ try {
     assert(await evaluate("document.querySelector('#saved').textContent.includes('Watchlist ist leer')"));
     await click('nav a[href="#suche"]');
     await until(() => visible('suche'), 'search');
-    await evaluate("document.querySelector('#search-query').focus()");
-    await type('Samsung 990 PRO 1 TB');
-    await key('Enter');
-    await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Keine passenden aktuellen Angebote')"), 'empty web search');
     if (width === 390) {
+      await evaluate("document.querySelector('#search-query').focus()");
+      await type('Samsung 990 PRO 1 TB');
+      await key('Enter');
+      await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Keine passenden aktuellen Angebote')"), 'empty web search');
       assert(await evaluate("window.SpeechRecognition?.toString().includes('queueMicrotask')"), 'dictation test adapter installed');
       assert(await evaluate("!document.querySelector('#suche [data-mic]').hidden"), 'dictation control visible');
       await click('#suche [data-mic]');
@@ -201,6 +201,37 @@ try {
             && !document.querySelector('#web-results a');
         } finally { Date.now = realNow; }
       })()`), 'expired offer cannot be opened');
+      await evaluate("document.querySelector('#suche .search-options').open = true; document.querySelector('#max-price').value = '500'; document.querySelector('#condition').value = 'used'; document.querySelector('#search-query').focus()");
+      await key('Enter');
+      await until(() => evaluate("document.querySelector('#web-results').textContent.includes('erfüllen deine Kaufkriterien nicht')"), 'over-budget offer excluded');
+      assert(await evaluate("!document.querySelector('#web-results a')"));
+      assert(await evaluate("document.querySelector('#results').textContent.includes('Gesamtbudget bis CHF')"));
+      await noOverflow();
+      await click('#results button');
+      await until(() => evaluate("document.querySelector('#results button').textContent === 'Suche gespeichert'"), 'saved search');
+      await click('nav a[href="#watchlist"]');
+      await until(() => evaluate("document.querySelector('#saved').textContent.includes('Gesamtbudget bis CHF')"), 'watchlist saved criteria');
+      await send('Page.reload');
+      await until(() => evaluate("document.querySelector('#saved').textContent.includes('Mein PC braucht mehr Speicher')"), 'saved search persisted');
+      await click('#saved .button');
+      await until(() => visible('suche'), 'restore saved search');
+      assert.equal(await evaluate("document.querySelector('#max-price').value"), '500.00');
+      assert.equal(await evaluate("document.querySelector('#condition').value"), 'used');
+      await until(() => evaluate("document.querySelector('#web-results').textContent.includes('erfüllen deine Kaufkriterien nicht')"), 'saved search reapplies budget');
+      await click('nav a[href="#watchlist"]');
+      await until(() => visible('watchlist'), 'saved search removal');
+      await click('#saved .text-button');
+      await until(() => evaluate("document.querySelector('#saved').textContent.includes('Watchlist ist leer')"), 'saved search removed');
+      await click('nav a[href="#suche"]');
+      await until(() => visible('suche'), 'search');
+      await evaluate("document.querySelector('#max-price').value = '1.234'; document.querySelector('#search-query').focus()");
+      await key('Enter');
+      assert(await evaluate("document.querySelector('#results').textContent.includes('Bitte prüfe deine Kaufkriterien')"));
+      assert.equal(await evaluate('document.activeElement.id'), 'max-price');
+      if (process.env.UDI_SCREENSHOT_DIR) {
+        const shot = await send('Page.captureScreenshot', { format: 'png' });
+        await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'criteria-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+      }
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }

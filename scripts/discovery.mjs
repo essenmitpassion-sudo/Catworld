@@ -1,3 +1,5 @@
+import { criteriaFor } from '../src/criteria.mjs';
+
 const webSources = [
   { domain: 'digitec.ch', name: 'Digitec', path: /^\/de\/s1\/product\/[\w-]+-\d+$/ },
   { domain: 'interdiscount.ch', name: 'Interdiscount', path: /^\/de\/product\/[\w-]+-\d+$/ },
@@ -19,16 +21,18 @@ export async function discover(input, webSearch) {
     || (requestedScope != null && !['component', 'secondhand', 'both'].includes(requestedScope))) {
     throw new InvalidSearch('Gib einen Suchwunsch mit 1 bis 300 Zeichen ein.');
   }
+  let criteria;
+  try { criteria = criteriaFor({ ...input, query }); } catch (error) { throw new InvalidSearch(error.message); }
   const secondhand = /\b(gebraucht\w*|secondhand|second.hand|refurbished|ricardo|tutti)\b/i.test(query);
   const completePc = /\b(komplett.pc|gaming.pc|desktop.pc|gebraucht\w* (?:gaming[- ]?)?pc|fertig.pc)\b/i.test(query);
   const outcome = /\b(mehr speicher|zu wenig speicher|zu langsam|pc aufrüsten)\b/i.test(query);
-  const newOnly = /\b(kein(?:e|en|er|es)? gebraucht\w*|nur neu(?:ware)?|neu(?:er|en|e|es)? (?:gaming[- ]?)?pc)\b/i.test(query);
-  if (!requestedScope && !secondhand && !newOnly && (outcome || completePc)) {
-    return { kind: 'clarification' };
+  const newOnly = criteria.condition === 'new';
+  if (!requestedScope && !secondhand && criteria.condition === 'any' && (outcome || completePc)) {
+    return { kind: 'clarification', criteria };
   }
-  const scope = newOnly ? 'component' : requestedScope ?? (secondhand ? 'secondhand' : 'component');
+  const scope = newOnly ? 'component' : requestedScope ?? (secondhand || criteria.condition === 'used' ? 'secondhand' : 'component');
   const sources = webSources.filter(source => scope === 'both' || Boolean(source.marketplace) === (scope === 'secondhand'));
-  const rows = await webSearch({ query, scope, domains: sources.map(source => source.domain) });
+  const rows = await webSearch({ query, scope, domains: sources.map(source => source.domain), criteria });
   const items = new Map();
   const [requestedPart] = partNumbers(query);
   for (const row of rows) {
@@ -62,5 +66,5 @@ export async function discover(input, webSearch) {
     });
     if (items.size === 6) break;
   }
-  return { kind: 'results', items: [...items.values()] };
+  return { kind: 'results', items: [...items.values()], criteria };
 }

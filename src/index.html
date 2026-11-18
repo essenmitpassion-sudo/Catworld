@@ -55,6 +55,16 @@
           <button type="button" class="text-button" data-mic hidden>Diktieren</button>
           <button type="button" class="text-button" data-example>Beispiel · Samsung 990 PRO 2 TB</button>
         </div>
+        <details class="search-options">
+          <summary>Kaufkriterien</summary>
+          <div class="filter-fields">
+            <div><label for="max-price">Maximales Gesamtbudget in CHF</label>
+              <input id="max-price" name="maxPrice" type="text" inputmode="decimal" maxlength="14" placeholder="Aus deinem Suchwunsch"></div>
+            <div><label for="condition">Zustand</label>
+              <select id="condition" name="condition"><option value="">Aus deinem Suchwunsch</option><option value="any">Alle Zustände</option><option value="new">Nur neu</option><option value="used">Gebraucht oder generalüberholt</option></select></div>
+          </div>
+          <label class="checkbox-label"><input name="completeCostsOnly" type="checkbox">Nur Angebote mit bestätigten Gesamtkosten</label>
+        </details>
       </form>
       <div id="results" class="stack" aria-live="polite"></div>
       <div id="web-results" class="stack" aria-live="polite"></div>

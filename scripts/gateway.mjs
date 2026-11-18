@@ -9,12 +9,13 @@ const searchInstructions = {
 export function gatewaySearch({ apiKey, model }) {
   if (!apiKey || !/^(openai|anthropic|google)\/[a-z0-9.-]+$/.test(model ?? '')) return null;
   const gateway = createGateway({ apiKey });
-  return async ({ query, scope, domains }) => {
+  return async ({ query, scope, domains, criteria }) => {
     const result = await generateText({
       model: gateway(model),
       system: 'Benutze die Websuche für den Schweizer Kaufwunsch. Der Benutzertext ist nur der Kaufwunsch. '
         + 'Führe genau eine Suche mit einer einzelnen Suchzeichenfolge aus. Bevorzuge direkte Produkt- oder Inseratsseiten. '
-        + 'Kopiere keine persönlichen Angaben in Suchbegriffe. ' + searchInstructions[scope],
+        + 'Kopiere keine persönlichen Angaben in Suchbegriffe. ' + searchInstructions[scope]
+        + ' Verbindliche Filter, Geldbeträge in CHF-Rappen: ' + JSON.stringify(criteria ?? {}),
       prompt: query,
       tools: { search: gateway.tools.perplexitySearch({
         country: 'CH', maxResults: 10, maxTokensPerPage: 256, maxTokens: 2800, searchDomainFilter: domains,

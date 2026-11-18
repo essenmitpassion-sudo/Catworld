@@ -1,6 +1,6 @@
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 
-const files = ['index.html', 'app.mjs', 'deals.mjs', 'style.css'];
+const files = ['index.html', 'app.mjs', 'deals.mjs', 'costs.mjs', 'criteria.mjs', 'saved-searches.mjs', 'style.css'];
 const observations = new URL('../public/observations.json', import.meta.url);
 const data = JSON.parse(await readFile(observations, 'utf8'));
 if (!Array.isArray(data)) throw new Error('observations.json must contain an array');

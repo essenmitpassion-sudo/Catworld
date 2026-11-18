@@ -10,6 +10,8 @@ const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
   ['/style.css', ['style.css', 'text/css']], ['/app.mjs', ['app.mjs', 'text/javascript']],
   ['/deals.mjs', ['deals.mjs', 'text/javascript']], ['/observations.json', ['observations.json', 'application/json']],
+  ['/costs.mjs', ['costs.mjs', 'text/javascript']], ['/criteria.mjs', ['criteria.mjs', 'text/javascript']],
+  ['/saved-searches.mjs', ['saved-searches.mjs', 'text/javascript']],
 ]);
 const securityHeaders = {
   'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",

@@ -9,7 +9,7 @@ const observation = {
   mpn: product.mpn, url: first.url, finalUrl: first.url,
   seller: first.seller, checkedAt: '2026-11-17T11:00:00Z',
   price: 20000, shipping: 0, taxes: 0, imports: 0, fees: 0,
-  currency: 'CHF', stock: 'in-stock', delivery: '2 Werktage',
+  currency: 'CHF', stock: 'in-stock', delivery: '2 Werktage', condition: 'Neu',
 };
 
 test('search keeps model variants distinct', () => {
@@ -55,4 +55,16 @@ test('a recommendation compares two eligible sellers by landed cost', () => {
   assert.equal(compare(product, [observation, { ...alternative, fees: null }], now).recommendation, null);
   assert.equal(compare(product, [observation, alternative, { ...alternative, checkedAt: { toString: null } }], now).recommendation, null);
   assert.equal(compare(product, [observation, alternative, { ...alternative, price: 1 }], now).recommendation, null);
+});
+
+test('Katalogvergleich und Empfehlung müssen dieselben Kaufkriterien respektieren', () => {
+  const alternative = { ...observation, seller: second.seller, url: second.url,
+    finalUrl: second.url, price: 21000 };
+  for (const criteria of [{ maxTotal: 100 }, { condition: 'used' }]) {
+    const result = compare(product, [observation, alternative], now, criteria);
+    assert.equal(result.recommendation, null);
+    assert(result.offers.every(offer => offer.excluded));
+  }
+  const passing = compare(product, [observation, alternative], now, { maxTotal: 20000, condition: 'new' });
+  assert.equal(passing.offers[0].excluded, false);
 });

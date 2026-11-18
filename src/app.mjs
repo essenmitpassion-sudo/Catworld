@@ -1,4 +1,6 @@
 import { catalog, search, compare, costFields, directLink, isAmount, maxObservationAge } from './deals.mjs';
+import { criteriaFor } from './criteria.mjs';
+import { readSearches, storeSearch, removeSearch, searchStorageKey } from './saved-searches.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
@@ -15,6 +17,39 @@ let watched = new Set();
 let storageError = false;
 let activeSearch;
 let resultsExpiry;
+let activeCriteria = {};
+
+async function updateSearches(operation) {
+  const run = () => operation(localStorage);
+  if (navigator.locks) return navigator.locks.request(searchStorageKey, run);
+  return run();
+}
+
+function saveSearchButton(input) {
+  const button = element('button', 'Suche speichern', 'text-button');
+  button.type = 'button';
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    try {
+      await updateSearches(storage => storeSearch(storage, input));
+      button.textContent = 'Suche gespeichert';
+      get('notice').textContent = 'Suchwunsch und Kaufkriterien wurden in deiner Watchlist gespeichert.';
+    } catch (error) {
+      button.disabled = false;
+      get('notice').textContent = 'Die Suche konnte auf diesem Gerät nicht gespeichert werden.';
+      button.insertAdjacentElement('afterend', element('p', error.message, 'muted'));
+    }
+  });
+  return button;
+}
+
+function describeCriteria(criteria) {
+  return [
+    criteria.maxTotal == null ? null : 'Gesamtbudget bis ' + money(criteria.maxTotal),
+    { new: 'Nur neu', used: 'Gebraucht oder generalüberholt' }[criteria.condition],
+    criteria.completeCostsOnly ? 'Nur bestätigte Gesamtkosten' : null,
+  ].filter(Boolean).join(' · ');
+}
 
 try {
   const saved = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
@@ -142,8 +177,9 @@ function renderWebResults(result, query) {
       busy: 'Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.',
       unavailable: 'Die Websuche ist vorübergehend nicht erreichbar.',
       invalid: 'Gib einen Kaufwunsch als Text ohne Webadresse ein.',
-      results: result.unconfirmed
-        ? 'Wir konnten die gefundenen Angebote gerade nicht aktuell bestätigen. Versuche es später erneut.'
+      results: result.excluded
+        ? 'Die geprüften Angebote erfüllen deine Kaufkriterien nicht. Du kannst dein Budget oder den Zustand anpassen.'
+        : result.unconfirmed ? 'Wir konnten die gefundenen Angebote gerade nicht aktuell bestätigen. Versuche es später erneut.'
         : 'Keine passenden aktuellen Angebote gefunden. Ändere deinen Suchwunsch oder versuche es später erneut.',
       expired: 'Die Angebotsprüfung ist abgelaufen. Suche erneut für den aktuellen Stand.',
     };
@@ -158,15 +194,16 @@ function renderWebResults(result, query) {
     const heading = element('div', null, 'offer-heading');
     heading.append(element('p', item.source, 'eyebrow'), element('span', 'Teilweise geprüft', 'badge'));
     const check = item.check;
-    box.append(heading, element('h3', item.title), element('p', money(check.price), 'offer-price'),
-      element('p', 'Artikelpreis · Gesamtkosten noch offen', 'muted'),
+    box.append(heading, element('h3', item.title), element('p', money(check.total ?? check.price), 'offer-price'),
+      element('p', check.total === null ? 'Artikelpreis · Gesamtkosten noch offen' : 'Gesamtkosten inklusive bekannter Pflichtkosten', 'muted'),
       element('p', 'Quelle meldet verfügbar · geprüft ' + date.format(new Date(check.checkedAt)) + ' (CH)', 'muted'));
+    if (item.budgetStatus === 'unknown-total') box.append(element('p', 'Ob der Endpreis in dein Budget passt, ist noch offen.', 'muted'));
     const details = element('details');
     details.append(element('summary', 'Prüfung und offene Angaben'));
     details.append(facts([
       ['Zustand laut Quelle', check.condition ?? 'Unbestätigt'],
       ['Verkäufer laut Quelle', check.seller ?? 'Unbestätigt'],
-      ['Versand und Gebühren', 'Unbekannt'],
+      ...costFields.map(([key, label]) => [label, isAmount(check[key]) ? money(check[key]) : 'Unbekannt']),
       ['Funktionszustand', 'Nicht unabhängig getestet'],
     ]));
     const action = link(item.type === 'listing' ? 'Inserat öffnen' : 'Angebotsseite öffnen', item.url, 'button', true);
@@ -189,10 +226,35 @@ async function submit(query, scope) {
   const request = new AbortController();
   activeSearch = request;
   get('search-query').value = query;
+  const form = get('search-query').form;
+  const input = {
+    query, scope,
+    maxPrice: form.elements.maxPrice.value.trim(),
+    condition: form.elements.condition.value || undefined,
+    completeCostsOnly: form.elements.completeCostsOnly.checked,
+  };
+  let criteria;
+  try {
+    criteria = criteriaFor(input);
+    get('max-price').removeAttribute('aria-invalid');
+  } catch (error) {
+    clearTimeout(resultsExpiry);
+    get('results').replaceChildren(message('Bitte prüfe deine Kaufkriterien', error.message));
+    get('web-results').replaceChildren();
+    navigate('suche');
+    form.querySelector('.search-options').open = true;
+    get('max-price').setAttribute('aria-invalid', 'true');
+    get('max-price').focus();
+    return;
+  }
   const products = search(query);
+  activeCriteria = criteria;
   get('results').replaceChildren(...(products.length ? products.map(productCard) : [
     message('Dein Suchwunsch', query),
   ]));
+  const criteriaLabel = describeCriteria(criteria);
+  if (criteriaLabel) get('results').append(element('p', criteriaLabel, 'muted'));
+  get('results').append(saveSearchButton(input));
   clearTimeout(resultsExpiry);
   get('web-results').replaceChildren(element('p', 'Wir suchen und prüfen die Angebote …', 'surface muted'));
   navigate('suche');
@@ -203,7 +265,7 @@ async function submit(query, scope) {
     const response = await fetch('./api/discovery', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, scope }),
+      body: JSON.stringify(input),
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),
     });
     const result = await response.json();
@@ -249,15 +311,19 @@ function renderComparison() {
     target.replaceChildren(box);
     return;
   }
-  const { offers, recommendation } = compare(activeProduct, observations);
+  const { offers, recommendation } = compare(activeProduct, observations, Date.now(), activeCriteria);
   const columns = element('div', null, 'columns');
   for (const offer of offers) {
     const box = element('article', null, 'surface');
     box.append(element('h3', offer.seller), element('span', labels[offer.state], 'badge ' + offer.state),
-      facts(factsFor(offer)), productAction('Deal Passport · ' + offer.seller, 'passport', activeProduct, offer.seller));
+      facts(factsFor(offer)));
+    if (offer.excluded) box.append(element('p', 'Erfüllt deine Kaufkriterien nicht.', 'muted'));
+    else box.append(productAction('Deal Passport · ' + offer.seller, 'passport', activeProduct, offer.seller));
     columns.append(box);
   }
   const heading = message(activeProduct.name + ' · ' + activeProduct.variant, activeProduct.mpn);
+  const criteriaLabel = describeCriteria(activeCriteria);
+  if (criteriaLabel) heading.append(element('p', criteriaLabel, 'muted'));
   heading.append(element('p', recommendationText(recommendation)));
   target.replaceChildren(heading, columns);
 }
@@ -270,8 +336,14 @@ function renderPassport() {
     target.replaceChildren(box);
     return;
   }
-  const { offers, recommendation } = compare(activeProduct, observations);
+  const { offers, recommendation } = compare(activeProduct, observations, Date.now(), activeCriteria);
   const offer = offers.find(row => row.seller === activeSeller);
+  if (offer.excluded) {
+    const box = message('Angebot erfüllt deine Kaufkriterien nicht', 'Suche mit angepassten Kriterien oder öffne den Vergleich.');
+    box.append(link('Zum Vergleich', '#vergleich'));
+    target.replaceChildren(box);
+    return;
+  }
   const box = message(offer.seller + ' · ' + activeProduct.name, activeProduct.variant + ' · ' + activeProduct.mpn);
   const observation = offer.observation;
   const risk = {
@@ -310,6 +382,39 @@ function renderWatchlist() {
     box.append(actions);
     return box;
   });
+  try {
+    for (const request of readSearches(localStorage)) {
+      const box = message(request.query, describeCriteria(criteriaFor(request)) || 'Alle Zustände');
+      const actions = element('div', null, 'actions');
+      const searchAgain = element('button', 'Erneut prüfen', 'button');
+      searchAgain.type = 'button';
+      searchAgain.addEventListener('click', () => {
+        get('max-price').value = request.maxPrice;
+        get('condition').value = request.condition;
+        get('search-query').form.elements.completeCostsOnly.checked = request.completeCostsOnly;
+        submit(request.query, request.scope ?? undefined);
+      });
+      const remove = element('button', 'Suche entfernen', 'text-button');
+      remove.type = 'button';
+      remove.addEventListener('click', async () => {
+        remove.disabled = true;
+        try {
+          await updateSearches(storage => removeSearch(storage, request));
+          renderWatchlist();
+          get('notice').textContent = 'Gespeicherte Suche entfernt.';
+          get('saved').querySelector('button, a')?.focus();
+        } catch (error) {
+          remove.disabled = false;
+          box.append(element('p', 'Die Suche konnte nicht entfernt werden. ' + error.message, 'muted'));
+        }
+      });
+      actions.append(searchAgain, remove);
+      box.append(actions);
+      boxes.push(box);
+    }
+  } catch {
+    boxes.push(message('Gespeicherte Suchen nicht lesbar', 'Die gespeicherten Daten bleiben auf diesem Gerät. Prüfe die Browsereinstellungen für lokalen Speicher.'));
+  }
   if (!boxes.length) {
     const empty = message('Deine Watchlist ist leer', 'Speichere eine SSD aus ihrem Deal Passport.');
     empty.append(link('Zur Suche', '#suche'));
@@ -394,6 +499,9 @@ if (SpeechRecognition) {
 }
 window.addEventListener('hashchange', event => {
   if (event.newURL === location.href) renderRoute(true);
+});
+window.addEventListener('storage', event => {
+  if (event.key === searchStorageKey && !get('watchlist').hidden) renderWatchlist();
 });
 renderRoute();
 
