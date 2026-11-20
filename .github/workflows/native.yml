@@ -69,4 +69,15 @@ jobs:
           tail -n 20 "$RUNNER_TEMP/udi-ios-build.log"
           test -d "$RUNNER_TEMP/udi-ios/Build/Products/Debug-iphonesimulator/App.app"
           shasum -a 256 "$RUNNER_TEMP/udi-ios/Build/Products/Debug-iphonesimulator/App.app/App"
+      - name: Prepare Android emulator on disposable runner
+        if: matrix.platform == 'android'
+        shell: bash
+        run: |
+          test -e /dev/kvm
+          sudo chmod 666 /dev/kvm
+          sdkmanager 'system-images;android-36;google_apis;x86_64' < /dev/null
+          printf 'no\n' | avdmanager create avd --name udi-smoke --package 'system-images;android-36;google_apis;x86_64' --force
+      - name: Start installed native app and check rendered surface
+        shell: bash
+        run: node scripts/native-start.mjs '${{ matrix.platform }}'
       # Deliberately no artifact upload, release, signing account or deployment.
