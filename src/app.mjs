@@ -7,6 +7,7 @@ import { intentFor, addCapacity } from './intent.mjs';
 import { setupVoice } from './voice.mjs';
 import { costs } from './costs.mjs';
 import { setupInstall } from './install.mjs';
+import { setupSharing, readSharedSearch } from './share.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
@@ -28,6 +29,7 @@ let activeCriteria = {};
 let skippedQuestion = null;
 let suggestionReceipt = null;
 let voice;
+let sharer;
 mountIcons();
 setupInstall();
 
@@ -38,6 +40,7 @@ function draftInput(query = get('search-query').value.trim()) {
 }
 
 function refreshIntent() {
+  sharer?.invalidate();
   const input = draftInput();
   const target = get('intent-summary');
   const questionBox = get('intent-question');
@@ -588,7 +591,7 @@ function renderWatchlist() {
 }
 
 function renderRoute(focus = false) {
-  const hash = location.hash.slice(1);
+  const hash = location.hash.slice(1).split('?')[0];
   const current = routes.find(id => !get(id).hidden);
   const route = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'suche' : 'suche');
   if (route !== 'suche' && voice?.isRecording()) voice.stop();
@@ -644,8 +647,25 @@ get('search-query').addEventListener('keydown', event => {
   }
 });
 voice = setupVoice(composer, refreshIntent);
+sharer = setupSharing(document, draftInput);
+function importSharedSearch() {
+  try {
+    const input=readSharedSearch(location.hash);
+    if(!input)return;
+    if(voice?.isRecording())throw new Error('Beende zuerst deine Aufnahme. Dein Text bleibt erhalten; öffne den geteilten Link danach erneut.');
+    activeSearch?.abort();clearTimeout(resultsExpiry);
+    get('results').replaceChildren();get('web-results').replaceChildren();
+    get('suche').classList.remove('has-search');get('search-home').hidden=false;
+    get('search-query').value=input.query;get('max-price').value=input.maxPrice;get('condition').value=input.condition;
+    composer.elements.completeCostsOnly.checked=input.completeCostsOnly;
+    refreshIntent();
+    get('shared-notice').hidden=false;
+    get('shared-notice').textContent='Geteilte Suche übernommen. Prüfe oder ändere Text und Kriterien und starte die Prüfung bewusst. Nach einer Installation kannst du den Original-Link erneut öffnen; eine automatische Übergabe ist nicht garantiert.';
+  }catch(error){get('shared-notice').hidden=false;get('shared-notice').textContent='Geteilte Suche nicht übernommen. '+error.message+' Du kannst deinen Wunsch selbst eingeben.';}
+}
+importSharedSearch();
 window.addEventListener('hashchange', event => {
-  if (event.newURL === location.href) renderRoute(true);
+  if (event.newURL === location.href) {importSharedSearch();renderRoute(true);}
 });
 window.addEventListener('storage', event => {
   if (event.key === searchStorageKey && !get('watchlist').hidden) renderWatchlist();

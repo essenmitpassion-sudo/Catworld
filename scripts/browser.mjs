@@ -165,11 +165,49 @@ try {
       await until(()=>visible('hilfe'),'installation and pilot help');
       assert(await evaluate("document.querySelector('main #hilfe')!==null"));
       assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('HTTPS-Testadresse')"));
+      if(width===390) {
+        await evaluate("window.udiInstallCalls=0;const invitation=new Event('beforeinstallprompt',{cancelable:true});Object.assign(invitation,{prompt:async()=>{window.udiInstallCalls++},userChoice:Promise.resolve({outcome:'dismissed'})});window.dispatchEvent(invitation)");
+        assert.equal(await evaluate('window.udiInstallCalls'),0,'installation prompt needs explicit action');
+        await click('[data-install]');
+        await until(()=>evaluate("document.querySelector('[data-install-status]').textContent.includes('abgebrochen')"),'installation dismissal respected');
+        assert.equal(await evaluate('window.udiInstallCalls'),1);
+        assert(await evaluate("document.querySelector('[data-install]').hidden"));
+      }
+      assert(await evaluate("(()=>{const u=new URL(document.querySelector('#hilfe a[target=_blank]').href);return u.pathname==='/essenmitpassion-sudo/Catworld/issues/new' && !u.searchParams.has('template') && u.searchParams.has('title') && u.searchParams.get('body').includes('keine persoenlichen Daten')})()"),'feedback works without a template on the historical default branch');
+      if(process.env.UDI_SCREENSHOT_DIR) {
+        await mkdir(process.env.UDI_SCREENSHOT_DIR,{recursive:true});
+        const shot=await send('Page.captureScreenshot',{format:'png'});
+        await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'help-'+width+'.png'),Buffer.from(shot.data,'base64'));
+      }
       await noOverflow();
       await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();await evaluate("document.documentElement.style.fontSize=''");
       await click('#hilfe [data-example]');
       await until(()=>visible('suche'),'pilot onboarding prepares search');
       assert(await evaluate("!document.querySelector('#web-results').textContent"),'onboarding does not start scanning');
+      if(width===390) {
+        await evaluate("navigator.clipboard.writeText=async value=>{window.udiCopied=value}");
+        await click('.share-search summary');await click('[data-share-prepare]');
+        assert(await evaluate("document.querySelector('[data-share-status]').textContent.includes('lokaler Testlink')"));
+        assert(await evaluate("document.querySelector('[data-share-native]').hidden"));
+        await noOverflow();
+        await click('[data-share-copy]');
+        assert(await evaluate("window.udiCopied===document.querySelector('[data-share-url]').value"));
+        await evaluate("document.querySelector('#max-price').value='500';document.querySelector('#condition').value='new';document.querySelector('#max-price').dispatchEvent(new Event('input',{bubbles:true}))");
+        assert(await evaluate("document.querySelector('#share-preview').hidden && !document.querySelector('[data-share-url]').value"),'edited criteria invalidate the prepared link');
+        await click('[data-share-prepare]');await click('[data-share-copy]');
+        const shared=await evaluate('window.udiCopied');
+        await send('Page.navigate',{url:shared});
+        await until(()=>evaluate("document.querySelector('#shared-notice')?.textContent.includes('Geteilte Suche übernommen')"),'shared search received');
+        assert.equal(await evaluate("document.querySelector('#max-price').value"),'500.00');
+        assert.equal(await evaluate("document.querySelector('#condition').value"),'new');
+        assert(await evaluate("!document.querySelector('#web-results').textContent && performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery'))"),'opening a shared link never scans automatically');
+        await send('Page.navigate',{url:origin+'/#suche?auftrag=%broken'});
+        await until(()=>evaluate("document.querySelector('#shared-notice')?.textContent.includes('nicht übernommen')"),'invalid share explained without executing it');
+        assert(await evaluate("!document.querySelector('#web-results').textContent"));
+        await send('Page.navigate',{url:origin+'/?reset-share=1#suche'});
+        await until(()=>evaluate("location.search==='?reset-share=1' && document.getElementById('suche')?.hidden===false"),'ordinary search after share test');
+        await click('[data-example]');
+      }
       assert(await evaluate("Boolean(document.querySelector('#search-query').tagName === 'TEXTAREA')"));
       await click('[data-example]');
       assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Samsung 990 PRO 2 TB');

@@ -46,6 +46,8 @@ Feedback: freiwilliger strukturierter Bericht nach docs/PILOT-TEST.md; in der Ap
 
 Primär eine Suche mit ihren Kriterien teilen, keine Preis-/Bestandsmomentaufnahme als aktuelle Wahrheit. Der Empfänger sieht eine bearbeitbare Zusammenfassung und startet selbst eine neue Prüfung. Links dürfen keine Sprachaufnahme, Schlüssel oder Zugangstoken enthalten. Suchtext kann persönlich sein; vor Freigabe sichtbar machen und bewusst bestätigen. Ein QR-Code ist später lediglich ein zusätzlicher Transport desselben Links, etwa auf einem zweiten Bildschirm. Auf einem einzelnen Telefon schafft ein QR-only-Einstieg zusätzliche Reibung.
 
+Im Projekt umgesetzt: «Diese Suche teilen» → Link zur Prüfung vorbereiten → bewusst kopieren oder bei geeigneter Adresse das native Teilen nutzen. Die Suchabsicht liegt im URL-Fragment, wird nicht als Query an den Server geschickt und enthält keine Angebotsdaten. Änderungen machen die vorbereitete Vorschau ungültig. Beim Empfang wird eine ältere Suche abgebrochen; es erscheinen Wunsch und Kriterien, keine automatisch angefragten Angebote. Lokale Links werden ausdrücklich als Testlinks für denselben Computer bezeichnet. Es gibt noch keinen allgemein verwendbaren UDI-Host und keinen eingebauten QR-Generator.
+
 Es gibt keinen belegten plattformübergreifenden Deferred-Deep-Link-Dienst. Die App verspricht nicht, den Inhalt nach einer Neuinstallation automatisch wiederherzustellen. Sicherer Rückfall: Original-Link behalten und nach Installation erneut öffnen. Ohne freigegebene mobile Adresse keine allgemein nutzbaren Freigabelinks erzeugen; lokale Links als solche erklären. Keine Empfehlungscodes, Prämien, Kontaktbuchimporte oder Kampagnenmechanik im ersten Pilot.
 
 ## P3 · nur anhand tatsächlicher Nutzung

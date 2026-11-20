@@ -70,6 +70,12 @@ h1 { overflow-wrap: anywhere; }
 .value-proof { border-top: 1px solid var(--line); padding-top: 1rem; margin-top: 1rem; }
 .value-proof > * + * { margin-top: .6rem; }
 .value-proof p { font-size: .875rem; }
+.share-search { margin-top: .8rem; font-size: .875rem; }
+.share-search > summary { color: #3458ba; font-size: .8rem; }
+#share-preview { background: white; border: 1px solid var(--line); border-radius: .75rem; padding: 1rem; }
+#share-preview > * + * { margin-top: .65rem; }
+#share-url { font-size: .8rem; padding: .6rem; border: 1px solid var(--line); border-radius: .4rem; resize: vertical; overflow-wrap: anywhere; }
+.shared-notice { margin-top: 1rem; border-left: 3px solid var(--blue); padding: .65rem .8rem; background: var(--soft); font-size: .875rem; }
 .search-intro { padding-top: 2.5rem; }
 .search-intro h1 { font-size: clamp(2.25rem,5vw,3.75rem); }
 .search-intro > p:last-child { max-width: 60ch; }
