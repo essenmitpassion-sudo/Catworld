@@ -10,14 +10,17 @@ Die Effektivität wird an passenden aktuellen Angeboten pro Suchauftrag, Anteil 
 
 Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quellen. Die KI-Suche ergänzt unbekannte Wünsche und neue Quellen. Jeder tatsächliche Preis- und Bestandswert stammt aus einer frischen Quellenprüfung. Der lokale DQ-Pilot liest ausschliesslich veröffentlichte Fakten und übernimmt keine Produktbilder, Beschreibungen oder Bewertungen.
 
-## Aktueller Umsetzungsschritt · verständliche Suche und konsistentes Design
+## Aktueller Umsetzungsschritt · nativer Start und verlässlicher Marktkontext
 
 ### Native Kompilierung ohne lokale SDKs
 
 Nach abgeschlossenem Marktvertrag nächster Pareto-Schritt: beide Projekte tatsächlich mit nativen Compilern ausführen. Repository-Sichtbarkeit per API öffentlich bestätigt. Offizielle GitHub-Dokumentation bestätigt kostenlose Standard-Runner für öffentliche Repositories; Ubuntu24.04 und macos26 sind solche Labels und enthalten passende SDKs/Xcode. Neuer Workflow mit ausschliesslich lesenden Rechten, festem öffentlichem Sichtbarkeitsguard, gleichen Prioritäten, Zeitlimit und ohne Binär-Upload/Release/Deployment. Kein kostenpflichtiger Runner oder Konto wird angelegt.
 
 - [x] Android-Debug-APK und iOS-Simulator-App ohne Signierung auf Standard-Runnern tatsächlich kompiliert: Stand 1546570, [beide Jobs erfolgreich](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/44748663800); Hashes in Joblogs. Kein IPA, Gerätesupport oder veröffentlichter Testbuild daraus ableiten. Binärdateien bleiben im kurzlebigen Runner.
-- [ ] Beide gebauten Apps im Android-Emulator bzw. iPhone-Simulator installieren/starten und gerenderte Suche, Watchlist und dynamischen Hinweis zum unverbundenen Dienst nachweisen. Erster Versuch 33913f0: Android-SDK-Werkzeug fehlte im PATH, iOS-Systemmigration überschritt vier Minuten vor App-Installation. Dokumentierten SDK-Pfad verwenden und einmaliges Erststartlimit auf acht Minuten begrenzen; aktuelle Prüfung 41f0309 abwarten. Kein vollständiger Such-/Sprach-/Gerätenachweis durch diesen begrenzten Test.
+- [x] Beide gebauten Apps tatsächlich installiert und gestartet: [28a45ed, beide Jobs erfolgreich](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/44794327630). Android API36 bei320×640: native Brücke, fertiges Dokument und per Scrollen sichtbare/unverdeckte Suche, Watchlist, Dienstwarnung und Textführung. iPhone17Pro/iOS26.2: dieselben Texte im echten Simulator-Screenshot mit Apple Vision erkannt. Keine vollständige Text-/Sprach-/Speicher-/Anbieter-/Geräteabnahme daraus ableiten. Prüfschritte und Nachweise in docs/PLATFORMS.md.
+- [x] Wichtigste sichtbare native Schwäche korrigiert: keine Sprachaufforderung bei noch fehlender Spracheingabe. Vor Korrektur reproduziert; DE/EN-Sprachwechsel, 64 Fachtests, volle Chromium-/Layout-Abläufe und beide nativen Starts bestanden. SDK-Gerätepfade vereinheitlicht; Prüfzugang statt leerer UIAutomator-Texte, Sichtbarkeit/Überdeckung tatsächlich geprüft. Workflowfehler durch SHA-geprüftes actionlint vorab erkennen, fehlerhaften alten Kontext als Gegenprobe zurückgewiesen. Quell-/Betreiberpaket175 Dateien isoliert wiederhergestellt und geprüft; normaler Remote-Push verifiziert.
+
+Nächster ausführbarer P1-Schritt: vorhandene Quellen-/Kostenlogik aus der lokalen HTTP-Hülle für einen strikt authentifizierten Dienst nutzbar machen, mit getrennten Quoten und Beobachtungen je Testnutzer. Lokalen Host-/Origin-Schutz erhalten. Native Suche erst nach sicherem HTTPS-Ziel, sicherer Tokenablage und echtem Quellenablauf auf beiden Plattformen aktivieren. Vercel-Teamzugriff erneut403; keine fremden SOUNDWEAVE-Projekte, unautorisierten Veröffentlichungen oder Kosten.
 
 ### Expliziter Markt- und Lieferkontext · aktueller Pareto-Schritt
 
