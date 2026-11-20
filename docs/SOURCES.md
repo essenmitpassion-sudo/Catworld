@@ -17,3 +17,16 @@ Für DQ wurden am 18.11. die [Robots-Regeln](https://www.dq-solutions.ch/de/robo
 Bechtle lieferte am 18.11. strukturierte Preisdaten, war wegen seiner Geschäftskunden-/öffentlichen Beschaffungsausrichtung keine passende Privatkundenalternative. Weitere Versuche mit Schutzseiten, entfernten URLs oder Rate Limits wurden nicht umgangen.
 
 Nächste Abnahme: DQ-Gesamtkosten unter eindeutig bestimmter Versand- und Zahlungsart belegen, eine zweite unabhängige Privatkundenquelle praktisch prüfen und den echten Vergleich im Browser durchführen. Ricardo und Gutscheine folgen mit eigener Status- und Kostenlogik, sobald ein zulässiger, belastbarer Zugang vorliegt.
+
+## Kostenabnahme DQ · Recherche vom 20.11.2026
+
+Die öffentlichen Bedingungen wurden erneut eingesehen. Dies ist keine bestätigte Checkout-Kostenberechnung; die Recherche wurde nicht als Kostenbeobachtung in die App importiert.
+
+| Bestandteil | Öffentlicher Nachweis | Offener Geltungsbereich |
+|---|---|---|
+| MwSt. / gesetzliche Abgaben | [Retail-AGB, Ziffer 4](https://www.dq-solutions.ch/de/wissenswert/agb): inklusive MwSt. und gesetzlicher Gebühren. | Der Adapter muss Privatkundenpreis und Variante binden. |
+| Versand / Mindermenge | [Versandinformationen](https://www.dq-solutions.ch/de/wissenswert/versandinformationen): portofrei innerhalb der Schweiz; CHF 8 unter CHF 49 Warenwert. | Lieferland und Warenkorbgrenze prüfen; nicht auf Ausland übertragen. |
+| Zahlungsgebühr | [Zahlungsinformationen](https://www.dq-solutions.ch/de/wissenswert/zahlungsinformationen): Kreditkarte, PostFinance, TWINT und Vorauskasse kostenlos. | Keine Aussage für beliebige Zahlungsarten, Rechnung oder Finanzierung. Eine konkret gewählte, verfügbare Zahlungsart ist noch nicht im UDI-Pilot abgenommen. |
+| Verpackung / weitere Pflichtkosten | Retail-AGB nennen Verpackung unter möglicherweise separat verrechneten Nebenkosten. | Betrag oder belegter Entfall für diese SSD nicht eindeutig quantifiziert; verhindert weiterhin den bestätigten Gesamtpreis. |
+
+Sicherer Fortsetzungspunkt: vollständige Kostengrundlage mit konkreter Liefer-/Zahlungsart samt Verpackung belegen. Dafür keine Bestellung, Bonitätsprüfung, Finanzierung oder Eingabe persönlicher Liefer-/Zahlungsdaten auslösen. Ist die Restangabe öffentlich nicht belegbar, DQ teilweise geprüft lassen und eine zweite zulässige Privatkundenquelle mit klaren Gesamtkosten priorisieren. Die Zahlungsseite beseitigt eine Quellenlücke, keine gesamte Kostenunsicherheit.
