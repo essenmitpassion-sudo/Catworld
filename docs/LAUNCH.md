@@ -1,5 +1,7 @@
 # UDI · erster verantwortbarer App-Start
 
+Aktueller vorbereiteter App-Code: 00acf2f (20.11.2026), Deutsch/Englisch im weiterhin Schweizer CHF-Pilot. 54 Fachtests, Build und Chromium-DE/EN-Abläufe erfolgreich; [CI-Nachweis](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/44721827146). Betreiberpaket `artifacts/udi-pilot-00acf2f.tar.gz` samt JSON-Beleg: 88 Dateien isoliert entpackt und geprüft, Lockdatei installiert, enthaltenes Backend liefert Manifest und Katalog-API. SHA-256 `d85900ae626631c9f8257018e2364e3c47a2a5241e5eafa116dcc49ea4d08fd9`. Englische Live-Suche bis konkreter DQ-Händlerseite am 20.11., 11.41 Uhr CH belegt, Gesamtkosten offen. Diese Erweiterung ändert keine der folgenden externen Start- und Gerätefreigaben. Weitere Sprachen/Märkte folgen [der getrennten Skalierungsplanung](INTERNATIONAL.md).
+
 Entscheidung vom 20.11.2026: enger, zunächst betreuter Pilot als installierbare Web-App (PWA) aus dem vorhandenen Stack. Keine neue Produktoberfläche und kein zweites Repository. Das ist kein nativer Android-/iOS-Build und kein bereits veröffentlichter Dienst.
 
 ## Ist-Zustand und gewählter Weg
