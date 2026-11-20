@@ -36,6 +36,7 @@ const live = process.argv.includes('--live');
 const liveEnglish=live&&process.argv.includes('--english');
 const layoutBaseline=process.argv.includes('--layout-baseline');
 const layoutOnly=layoutBaseline||process.argv.includes('--layout-only');
+const nativeOnly=process.argv.includes('--native-only');
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 const appOptions = live ? {
   verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
@@ -156,7 +157,7 @@ try {
     assert(await evaluate("document.querySelector('main').scrollWidth<=document.querySelector('main').clientWidth"),'app content reflows without horizontal clipping');
     assert(await evaluate("(()=>{const main=document.querySelector('main').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return main.bottom<=nav.top+.5||nav.bottom<=main.top+.5})()"),'navigation never overlays the content viewport');
   }
-  for (const width of live ? [390] : [360, 390, 768, 1365]) {
+  for (const width of live ? [390] : nativeOnly?[]:[360, 390, 768, 1365]) {
     if (width !== (live ? 390 : 360)) {
       await new Promise(resolve => app.close(resolve));
       app = server(appOptions);
@@ -521,7 +522,7 @@ try {
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }
-  if(!live&&!layoutOnly)for(const width of [390,1365]) {
+  if(!live&&!layoutOnly&&!nativeOnly)for(const width of [390,1365]) {
     await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
     await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<500});
@@ -589,7 +590,10 @@ try {
     assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');
     assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery')&&!entry.name.includes('observations.json'))"),'native path never falls back to device API or bundled observations');
     assert(await evaluate("document.querySelector('#native-runtime-status').getBoundingClientRect().height>0"),'service warning survives submitted search');
-    await click('#results button');await click('nav a[href="#watchlist"]');await send('Page.reload');
+    await evaluate("if(navigator.locks){const request=navigator.locks.request.bind(navigator.locks);navigator.locks.request=async(...args)=>{await new Promise(resolve=>setTimeout(resolve,250));return request(...args)}}");
+    await click('#results button');
+    await until(()=>evaluate("document.querySelector('#results button')?.textContent==='Search saved'"),'native-boundary save completion before restart');
+    await click('nav a[href="#watchlist"]');await send('Page.reload');
     await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
     await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'native version help');
     assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));
