@@ -34,9 +34,6 @@ jobs:
             os: macos-15
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
-    env:
-      ANDROID_AVD_HOME: ${{ runner.temp }}/udi-avd
-      ANDROID_USER_HOME: ${{ runner.temp }}/udi-android-user
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -84,8 +81,11 @@ jobs:
         run: |
           test -e /dev/kvm
           sudo chmod 666 /dev/kvm
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'emulator' 'system-images;android-36;google_apis;x86_64' < /dev/null
+          export ANDROID_AVD_HOME="$RUNNER_TEMP/udi-avd"
+          export ANDROID_USER_HOME="$RUNNER_TEMP/udi-android-user"
           mkdir -p "$ANDROID_AVD_HOME" "$ANDROID_USER_HOME"
+          printf '%s\n' "ANDROID_AVD_HOME=$ANDROID_AVD_HOME" "ANDROID_USER_HOME=$ANDROID_USER_HOME" >> "$GITHUB_ENV"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'emulator' 'system-images;android-36;google_apis;x86_64' < /dev/null
           printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name udi-smoke --package 'system-images;android-36;google_apis;x86_64' --force
           test -f "$ANDROID_AVD_HOME/udi-smoke.ini"
           "$ANDROID_HOME/emulator/emulator" -list-avds
