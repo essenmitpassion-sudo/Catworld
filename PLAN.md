@@ -12,6 +12,12 @@ Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quelle
 
 ## Aktueller Umsetzungsschritt · verständliche Suche und konsistentes Design
 
+### Native Kompilierung ohne lokale SDKs
+
+Nach abgeschlossenem Marktvertrag nächster Pareto-Schritt: beide Projekte tatsächlich mit nativen Compilern ausführen. Repository-Sichtbarkeit per API öffentlich bestätigt. Offizielle GitHub-Dokumentation bestätigt kostenlose Standard-Runner für öffentliche Repositories; Ubuntu24.04 und macos26 sind solche Labels und enthalten passende SDKs/Xcode. Neuer Workflow mit ausschliesslich lesenden Rechten, festem öffentlichem Sichtbarkeitsguard, gleichen Prioritäten, Zeitlimit und ohne Binär-Upload/Release/Deployment. Kein kostenpflichtiger Runner oder Konto wird angelegt.
+
+- [ ] Android-Debug-APK und iOS-Simulator-App ohne Signierung auf den passenden Standard-Runnern kompilieren; tatsächliche Ergebnisse abwarten, Compilerfehler beheben und Logs/Hashes als Nachweis sichern. Kein nativer Start, Nutzerablauf, IPA, Gerätesupport oder veröffentlichter Testbuild aus einer erfolgreichen Kompilierung ableiten.
+
 ### Expliziter Markt- und Lieferkontext · aktueller Pareto-Schritt
 
 Native Geräteabnahmen bleiben an fehlende Android-/iOS-Werkzeuge und den geschützten gemeinsamen Dienst gebunden. Als unabhängigen vollständigen Schritt den vorhandenen Schweizer Datenpfad absichern: Marktkonfiguration aus UI/i18n lösen, Markt/Lieferwunsch auf Suchaufträgen und Quellenkennung/Markt auf Beobachtungen ausdrücklich führen. Gewünschte Lieferregion ist keine bestätigte Lieferbarkeit; fehlende Endpreis-/Lieferdaten bleiben offen. Keine neuen Länder, FX oder Quellen aktivieren.
