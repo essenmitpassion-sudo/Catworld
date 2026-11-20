@@ -25,6 +25,8 @@ npm run dev
 
 `npm run live` prüft die echte Suche im Browser und öffnet den Direktlink bis zur passenden Händlerseite. Der Test braucht Internetzugang. Er führt keine Bestellung aus und verwendet keine KI-API.
 
+`npm run test:layout` prüft zusätzlich den sichtbaren Suchstart bei 360/390/768/1365 × 780 Pixeln, die Trennung von Inhalt und Navigation, tatsächliche Zeigeraktionen und Erreichbarkeit bei 200 Prozent Schrift in einem 520 Pixel hohen Bereich. Screenshots und Layoutmesswerte lassen sich über `UDI_SCREENSHOT_DIR` ablegen. Das ist eine praktische Chromium-Prüfung der bestehenden App, keine physische Geräteabnahme.
+
 ## Optionale Websuche
 
 Der lokale Server verwendet Vercel AI Gateway für die Suche nach konkreten Schweizer Händler- und Inseratsseiten. Setze serverseitig `AI_GATEWAY_API_KEY` und `UDI_SEARCH_MODEL` mit einer im Gateway verfügbaren Modell-ID aus `openai/`, `anthropic/` oder `google/`. Starte den Server danach neu. Die Aktivierung kann Gebühren auslösen. Setze das gewünschte Budget im Gateway und übermittle den Schlüssel über die lokale Umgebung oder einen Secret Store.

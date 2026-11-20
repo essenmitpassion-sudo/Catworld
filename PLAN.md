@@ -12,6 +12,17 @@ Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quelle
 
 ## Aktueller Umsetzungsschritt · verständliche Suche und konsistentes Design
 
+### Kompakter App-Einstieg · Look-Auftrag vom 20.11.2026
+
+Kleinste vollständige Änderung im vorhandenen Vanilla-Stack: klare kleine Suchüberschrift, ein Eingabebereich ohne wiederholten Wunsch, erkannte Kriterien und höchstens eine relevante Rückfrage bei Bedarf. Optionale Kriterien und bewusster Suchstart bleiben erhalten. Quellenumfang und offene Kosten bleiben verständlich. Statt einer Navigation über dem Inhalt erhält die mobile App einen eigenen Navigationsbereich und einen begrenzten, separat scrollenden Inhaltsbereich; Desktop behält seine Kopfnavigation. Kein weiterer Produktauftritt und keine neuen Datenannahmen.
+
+Alternativen: Nur Schrift/Abstände verkleinern würde die Dopplung und Überlagerung erhalten. Ein Assistent mit mehreren Schritten würde zusätzliche Bedienwege erzeugen. Gewählt ist eine kompakte direkte Suche mit bedarfsweisen Ergänzungen, weil sie den belegten Engpass ohne neuen Stack behebt.
+
+- [x] Vorher/Nachher praktisch gemessen und visuell verglichen: bei 390 × 780 Pixeln Eingabe-Oberkante 387 → 211 px, Suchknopf-Oberkante 723 → 414 px. Vorher lag der Knopf unter der bei 709 px beginnenden Navigation; jetzt endet er bei 462 px und die eigenständige Navigation beginnt bei 719 px. Die neue Regression scheiterte am bisherigen Stand.
+- [x] Kompaktes DE/EN-Layout umgesetzt. Freier Wunsch bleibt nur im Textfeld; Kriterien, notwendige Rückfrage und bewusst gewählte Ergänzung erscheinen bedarfsweise. Aufnahme, Kriterien, Suchstart und gespeicherte Wünsche bleiben bedienbar. Navigationsbereich liegt vollständig ausserhalb des scrollenden Inhalts. Leere Freigabe und redundante Werbetexte entfernt.
+- [x] 54 Fachtests, Build und vollständige DE4-/EN2-Chromium-Abläufe bestanden. Zusätzliche dauerhafte Layoutprüfung bei vier Grössen mit echten Zeigeraktionen, erreichbarem letztem Inhaltslink und 200 Prozent Text in 520 px Höhe; auch Startknopf auf vollständige Sichtbarkeit geprüft. Reviewfehler einer zu grossen Mindestbreite reproduziert und korrigiert. Englischer echter DQ-Ablauf am 20.11., 13.26 Uhr CH bis zur richtigen Händlerseite erfolgreich; Gesamtkosten offen. Sicherungsnachweise in STATUS.md. Physische Geräte-/Erstnutzerabnahme bleibt separat offen.
+- [ ] soundweave.stream nur nach Nutzungs-/Zugriffsprüfung verwenden. DNS derzeit ohne Apex-Ziel, Cloudflare-Nameserver; bestehende Subdomain-/Projektzuordnung und Eigentum nicht vollständig belegt. Vercel-Teamabfrage HTTP 403, Domain-Projektabfrage 404. Erforderlichen Teamzugriff einholen, Verwaltungsdaten und Wiederherstellung sichern; keine vorhandene SOUNDWEAVE-Anwendung überschreiben. Technischen App-Betrieb vor Domainzuordnung sicher abnehmen.
+
 ### Deutsch/Englisch und skalierbare Märkte · Auftrag vom 20.11.2026
 
 Der konsolidierte Auftrag «USP, App-Bau, Monetarisierung und Start» bestätigt App-first, einen echten begrenzten Nutzerablauf, transparente Monetarisierung und nützliche Wiederkehr. Keine neue Browser-Version und kein unbegründeter Neubau. Internationale Abdeckung wird nicht mit Sprachumschaltung verwechselt. Selbst gemeldete Käufe bleiben Nutzerangaben, keine bestätigte Ersparnis. Bisherige Quellen-, Kosten-, Geräte- und Startfreigaben gelten weiter.

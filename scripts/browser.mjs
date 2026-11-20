@@ -34,6 +34,8 @@ async function until(read, label) {
 
 const live = process.argv.includes('--live');
 const liveEnglish=live&&process.argv.includes('--english');
+const layoutBaseline=process.argv.includes('--layout-baseline');
+const layoutOnly=layoutBaseline||process.argv.includes('--layout-only');
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 const appOptions = live ? {
   verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
@@ -137,6 +139,11 @@ try {
   assert.equal(forbidden.status, 403);
   const visible = id => evaluate(`document.getElementById('${id}')?.hidden === false`);
   const click = selector => evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
+  async function pointerClick(selector) {
+    const point=await evaluate(`(()=>{const button=document.querySelector(${JSON.stringify(selector)});button.scrollIntoView({block:'center'});const r=button.getBoundingClientRect(),x=r.x+r.width/2,y=r.y+r.height/2;if(!button.contains(document.elementFromPoint(x,y)))throw new Error('Action is obscured');return {x,y}})()`);
+    await send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
+    await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
+  }
   const type = text => send('Input.insertText', { text });
   async function key(name) {
     const windowsVirtualKeyCode = { Enter: 13, Tab: 9 }[name];
@@ -146,6 +153,8 @@ try {
   }
   async function noOverflow() {
     assert(await evaluate('document.documentElement.scrollWidth <= innerWidth'));
+    assert(await evaluate("document.querySelector('main').scrollWidth<=document.querySelector('main').clientWidth"),'app content reflows without horizontal clipping');
+    assert(await evaluate("(()=>{const main=document.querySelector('main').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return main.bottom<=nav.top+.5||nav.bottom<=main.top+.5})()"),'navigation never overlays the content viewport');
   }
   for (const width of live ? [390] : [360, 390, 768, 1365]) {
     if (width !== (live ? 390 : 360)) {
@@ -155,10 +164,31 @@ try {
       await once(app, 'listening');
       origin = 'http://127.0.0.1:' + app.address().port;
     }
-    await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
+    await send('Emulation.setDeviceMetricsOverride', { width, height: layoutOnly?780:900, deviceScaleFactor: 1, mobile: width < 500 });
     await send('Page.navigate', { url: origin + '/?width=' + width });
     await until(() => visible('suche'), 'search start page');
     await noOverflow();
+    if(layoutOnly) {
+      const layout=await evaluate(`(()=>{const rect=s=>{const r=document.querySelector(s).getBoundingClientRect();return {top:Math.round(r.top),bottom:Math.round(r.bottom),height:Math.round(r.height)}};return {width:innerWidth,height:innerHeight,input:rect('#search-query'),submit:rect('.primary-search'),intro:rect('.search-intro'),content:rect('main'),nav:rect('nav'),emptySummaryHidden:document.querySelector('#intent-compass').hidden}})()`);
+      console.log(JSON.stringify({layoutBaseline,layout}));
+      if(process.env.UDI_SCREENSHOT_DIR){await mkdir(process.env.UDI_SCREENSHOT_DIR,{recursive:true});const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'layout-'+width+'.png'),Buffer.from(shot.data,'base64'));}
+      if(!layoutBaseline) {
+        assert(layout.emptySummaryHidden,'empty search has no redundant summary');
+        if(width<500){assert(layout.content.bottom<=layout.nav.top,'navigation has its own area outside content');assert(layout.submit.bottom<=layout.nav.top-12,'search starts within the first screen');}
+        assert(await evaluate("(()=>{const b=document.querySelector('.primary-search'),r=b.getBoundingClientRect();return b.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})()"),'visible search button receives pointer input');
+        await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+        assert(await evaluate("document.querySelector('#intent-compass').hidden"),'plain query is not repeated');
+        await pointerClick('.primary-search');await until(()=>evaluate("Boolean(document.querySelector('#web-results article a'))"),'visible primary action starts real app flow');
+        await evaluate("document.querySelector('main').scrollTop=document.querySelector('main').scrollHeight");
+        assert(await evaluate("(()=>{const footer=document.querySelector('footer a'),r=footer.getBoundingClientRect();return footer.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})()"),'last content action scrolls fully clear of navigation');
+        await send('Emulation.setDeviceMetricsOverride',{width,height:520,deviceScaleFactor:1,mobile:width<500});
+        await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();
+        assert(await evaluate("(()=>{const button=document.querySelector('.primary-search').getBoundingClientRect(),form=document.querySelector('.composer').getBoundingClientRect();return button.left>=form.left && button.right<=form.right})()"),'large-text search button fits entirely inside its form');
+        await evaluate("document.querySelector('#search-query').focus();document.querySelector('#search-query').scrollIntoView({block:'center'})");
+        assert(await evaluate("(()=>{const input=document.querySelector('#search-query'),r=input.getBoundingClientRect();return input.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})()"),'input remains reachable with large text in a short viewport');
+      }
+      continue;
+    }
     if (!live) {
       const manifest = await send('Page.getAppManifest');
       assert.equal(manifest.errors.length,0,'manifest loads without parser errors');
@@ -218,7 +248,7 @@ try {
       assert(await evaluate("Boolean(document.querySelector('#search-query').tagName === 'TEXTAREA')"));
       await click('[data-example]');
       assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Samsung 990 PRO 2 TB');
-      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('Samsung 990 PRO 2 TB')"));
+      assert(await evaluate("document.querySelector('#intent-compass').hidden && !document.querySelector('#intent-summary').textContent"),'plain search is not repeated beneath the input');
       assert(await evaluate("!document.querySelector('#web-results').textContent"), 'example prepares the search without starting it');
       await evaluate("document.querySelector('#search-query').focus()");
       await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', windowsVirtualKeyCode: 13, modifiers: 8 });
@@ -328,7 +358,7 @@ try {
       await click('#suche [data-mic]');
       await until(() => evaluate("document.querySelector('#search-query').value === 'Mein PC braucht mehr Speicher'"), 'dictation input');
       await until(() => evaluate("!document.querySelector('[data-audio-preview]').hidden && document.querySelector('[data-audio]').src.startsWith('blob:')"), 'temporary recording preview');
-      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('Mein PC braucht mehr Speicher')"));
+      assert(await evaluate("document.querySelector('#intent-compass').hidden"),'dictated request is editable in one place');
       assert(await evaluate("document.querySelector('#intent-question').hidden"), 'no unnecessary capacity question for a vague need');
       assert(await visible('suche'));
       assert.equal(await evaluate("document.querySelector('#results h2').textContent"), 'Dein Suchwunsch');
@@ -491,7 +521,7 @@ try {
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }
-  if(!live)for(const width of [390,1365]) {
+  if(!live&&!layoutOnly)for(const width of [390,1365]) {
     await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
     await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<500});
@@ -508,8 +538,8 @@ try {
     assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery'))"),'language change never scans');
     const manifest=await send('Page.getAppManifest');assert.equal(JSON.parse(manifest.data).lang,'en');assert.equal(manifest.errors.length,0);
     await noOverflow();await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();await evaluate("document.documentElement.style.fontSize=''");
-    if(process.env.UDI_SCREENSHOT_DIR){await evaluate('scrollTo(0,0)');const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'english-start-'+width+'.png'),Buffer.from(shot.data,'base64'));}
-    await click('#suche button[type=submit]');
+    if(process.env.UDI_SCREENSHOT_DIR){await evaluate("document.querySelector('main').scrollTo(0,0)");const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'english-start-'+width+'.png'),Buffer.from(shot.data,'base64'));}
+    await pointerClick('#suche button[type=submit]');
     await until(()=>evaluate("Boolean(document.querySelector('#web-results article a[href=\"#passport\"]'))"),'English current offer').catch(async error=>{console.error(await evaluate("document.querySelector('#web-results').textContent"));console.error(await evaluate("document.querySelector('#results').textContent"));throw error;});
     assert(await evaluate("document.querySelector('#web-results').textContent.includes('Recently checked') && document.querySelector('#web-results').textContent.includes('total costs still unknown')"));
     assert(await evaluate("document.querySelector('#web-results article h3').textContent.includes('Samsung 990 PRO')"),'product identity remains unchanged');

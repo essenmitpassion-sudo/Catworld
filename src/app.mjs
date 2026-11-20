@@ -44,24 +44,25 @@ function refreshIntent({invalidate=true}={}) {
   if(invalidate)sharer?.invalidate();
   const input = draftInput();
   const target = get('intent-summary');
+  const panel = get('intent-compass');
+  panel.hidden = true;
+  target.replaceChildren();
+  get('suche').querySelector('.share-search').hidden = !input.query;
   const questionBox = get('intent-question');
   questionBox.replaceChildren();
   questionBox.hidden = true;
   if (!input.query) {
-    target.replaceChildren(element('p', m('Beschreibe deinen Wunsch. Hier siehst du, wonach UDI suchen wird.'), 'muted'));
     return;
   }
   let intent;
   try { intent = intentFor(input); }
-  catch (error) { target.replaceChildren(element('p', uiError(error), 'muted')); return; }
-  const origin = suggestionReceipt?.query === input.query ? suggestionReceipt.note : m('Deine Formulierung · wird unverändert gesucht');
-  target.replaceChildren(element('p', intent.query, 'intent-query'), element('p', origin, 'intent-origin'));
+  catch (error) { panel.hidden=false;target.replaceChildren(element('p', uiError(error), 'muted')); return; }
+  if(suggestionReceipt?.query===input.query)target.append(element('p',suggestionReceipt.note,'intent-origin'));
   const tags = element('div', null, 'intent-tags');
-  tags.append(element('span', m('Markt: Schweiz · Pilot'), 'intent-tag'));
   const criteriaLabel = describeCriteria(intent.criteria);
   if (criteriaLabel) tags.append(element('span', criteriaLabel, 'intent-tag'));
   if (skippedQuestion === input.query) tags.append(element('span', m('Kapazität offen · von dir bestätigt'), 'intent-tag'));
-  target.append(tags);
+  if(tags.childNodes.length)target.append(tags);
   if (intent.question && skippedQuestion !== input.query) {
     questionBox.hidden = false;
     const title = element('h3', m(intent.question.title));
@@ -86,6 +87,7 @@ function refreshIntent({invalidate=true}={}) {
     choices.append(skip);
     questionBox.append(title, element('p', m(intent.question.reason)), choices);
   }
+  panel.hidden=!target.childNodes.length&&questionBox.hidden;
 }
 
 function restoreSearch(request) {
@@ -663,6 +665,7 @@ function importSharedSearch() {
     setText(get('shared-notice'),m('Geteilte Suche übernommen. Prüfe oder ändere Text und Kriterien und starte die Prüfung bewusst. Nach einer Installation kannst du den Original-Link erneut öffnen; eine automatische Übergabe ist nicht garantiert.'));
   }catch(error){get('shared-notice').hidden=false;setText(get('shared-notice'),m('Geteilte Suche nicht übernommen. {error} Du kannst deinen Wunsch selbst eingeben.',()=>({error:uiError(error)})));}
 }
+refreshIntent();
 importSharedSearch();
 window.addEventListener('hashchange', event => {
   if (event.newURL === location.href) {importSharedSearch();renderRoute(true);}

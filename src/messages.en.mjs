@@ -1,5 +1,7 @@
 // Gettext-style controlled UI messages. Never use for raw merchant/user text.
 const base = {
+  "Schreiben oder einsprechen. Quelle, Prüfzeit und offene Kosten direkt am Angebot.": "Type or speak. See the source, check time and unknown costs with each offer.",
+  "Direkt prüfbar: Samsung 990 PRO 2 TB bei DQ Solutions. Andere Produkte und Gebrauchtangebote sind noch eingeschränkt.": "Direct checks: Samsung 990 PRO 2 TB at DQ Solutions. Other products and used offers are still limited.",
   "UDI · Weniger suchen. Besser entscheiden.": "UDI · Search less. Decide better.",
   "Zum Inhalt": "Skip to content",
   "UDI · Zur Suche": "UDI · Go to search",
