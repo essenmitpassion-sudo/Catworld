@@ -12,7 +12,7 @@ const temp = process.env.RUNNER_TEMP;
 assert(temp, 'Run native startup checks on the disposable CI runner.');
 const appId = 'stream.soundweave.udi';
 function run(command, args, timeout = 120000) {
-  const result = spawnSync(command, args, { encoding: 'utf8', timeout, maxBuffer: 8 * 1024 * 1024 });
+  const result = spawnSync(command, args, { encoding: 'utf8', timeout, killSignal: 'SIGKILL', maxBuffer: 8 * 1024 * 1024 });
   assert(!result.error && result.status === 0,
     `${command} ${args.join(' ')} failed: ${result.error?.message ?? ''}\n${result.stdout ?? ''}\n${result.stderr ?? ''}`);
   return result.stdout;
@@ -63,7 +63,10 @@ if (platform === 'android') {
   console.log(`Starting ${device.name} (${device.udid}).`);
   try {
     if (device.state !== 'Booted') run('xcrun', ['simctl', 'boot', device.udid]);
-    run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 240000);
+    // A fresh hosted simulator performs its own data migration before our app
+    // is installed. The first probe exhausted four minutes in locationd's
+    // migrator; allow a bounded eight minutes without disabling system services.
+    run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 480000);
     run('xcrun', ['simctl', 'install', device.udid, join(temp, 'udi-ios/Build/Products/Debug-iphonesimulator/App.app')]);
     console.log(run('xcrun', ['simctl', 'launch', device.udid, appId]));
     await delay(8000);

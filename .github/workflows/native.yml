@@ -75,8 +75,8 @@ jobs:
         run: |
           test -e /dev/kvm
           sudo chmod 666 /dev/kvm
-          sdkmanager 'system-images;android-36;google_apis;x86_64' < /dev/null
-          printf 'no\n' | avdmanager create avd --name udi-smoke --package 'system-images;android-36;google_apis;x86_64' --force
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'emulator' 'system-images;android-36;google_apis;x86_64' < /dev/null
+          printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name udi-smoke --package 'system-images;android-36;google_apis;x86_64' --force
       - name: Start installed native app and check rendered surface
         shell: bash
         run: node scripts/native-start.mjs '${{ matrix.platform }}'
