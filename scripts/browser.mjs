@@ -34,9 +34,9 @@ async function until(read, label) {
 
 const live = process.argv.includes('--live');
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
-const app = live ? server({
+const appOptions = live ? {
   verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
-}) : server({ webSearch: async ({ query, scope }) => {
+} : { webSearch: async ({ query, scope }) => {
   if (scope === 'both' || scope === 'secondhand') return [
     { title: 'Gebrauchter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' },
     { title: 'Verkaufter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/verkauft-1234567891/' },
@@ -52,7 +52,8 @@ const app = live ? server({
       seller: { name: item.mpn ? item.source : 'Testverkäufer' }, itemCondition: 'https://schema.org/UsedCondition',
       availability: item.url.includes('verkauft') ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' },
   }) + '</script>',
-}) });
+}) };
+let app = server(appOptions);
 let browser;
 let socket;
 let browserError = '';
@@ -61,7 +62,8 @@ try {
   await once(app, 'listening');
   browser = spawn(browserPath, [
     '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
-    '--disable-background-networking', '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank',
+    '--disable-background-networking', ...(!live ? ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream'] : []),
+    '--remote-debugging-port=0', '--user-data-dir=' + profile, 'about:blank',
   ], { stdio: ['ignore', 'ignore', 'pipe'], windowsHide: true });
   browser.on('error', error => console.error(error.message));
   browser.stderr.setEncoding('utf8');
@@ -94,17 +96,27 @@ try {
     });
   }
   async function evaluate(expression) {
-    const reply = await send('Runtime.evaluate', { expression, returnByValue: true, userGesture: true });
+    const reply = await send('Runtime.evaluate', { expression, returnByValue: true, userGesture: true, awaitPromise: true });
     if (reply.exceptionDetails) throw new Error(reply.exceptionDetails.exception?.description ?? expression);
     return reply.result.value;
   }
-  const origin = 'http://127.0.0.1:' + app.address().port;
+  let origin = 'http://127.0.0.1:' + app.address().port;
   await send('Page.enable');
   if (!live) await send('Page.addScriptToEvaluateOnNewDocument', {
     source: `Object.defineProperty(window, 'SpeechRecognition', { value: class {
       start() {
-        queueMicrotask(() => {
+        if (window.udiHoldSpeech) return;
+        setTimeout(() => {
+          if (window.udiSpeechError) { this.onerror({error: window.udiSpeechError}); this.onend(); return; }
           this.onresult({ results: [[{ transcript: 'Mein PC braucht mehr Speicher' }]] });
+          this.onend();
+        }, 650);
+      }
+      stop() {
+        if (this.ending) return;
+        this.ending = true;
+        queueMicrotask(() => {
+          if (window.udiFinalOnStop) this.onresult({results: [[{transcript:window.udiFinalOnStop}]]});
           this.onend();
         });
       }
@@ -128,14 +140,39 @@ try {
   async function noOverflow() {
     assert(await evaluate('document.documentElement.scrollWidth <= innerWidth'));
   }
-  for (const width of live ? [390] : [390, 1365]) {
+  for (const width of live ? [390] : [360, 390, 768, 1365]) {
+    if (width !== (live ? 390 : 360)) {
+      await new Promise(resolve => app.close(resolve));
+      app = server(appOptions);
+      app.listen(0, '127.0.0.1');
+      await once(app, 'listening');
+      origin = 'http://127.0.0.1:' + app.address().port;
+    }
     await send('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 500 });
     await send('Page.navigate', { url: origin + '/?width=' + width });
     await until(() => visible('suche'), 'search start page');
+    await noOverflow();
+    if (!live) {
+      assert(await evaluate("Boolean(document.querySelector('#search-query').tagName === 'TEXTAREA')"));
+      await click('[data-example]');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Samsung 990 PRO 2 TB');
+      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('Samsung 990 PRO 2 TB')"));
+      assert(await evaluate("!document.querySelector('#web-results').textContent"), 'example prepares the search without starting it');
+      await evaluate("document.querySelector('#search-query').focus()");
+      await send('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Enter', code: 'Enter', text: '\r', windowsVirtualKeyCode: 13, modifiers: 8 });
+      await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13, modifiers: 8 });
+      assert(await evaluate("document.querySelector('#search-query').value.includes('\\n')"), 'Shift+Enter inserts a line without starting a search');
+      await click('[data-example]');
+    }
     if (process.env.UDI_SCREENSHOT_DIR) {
       await mkdir(process.env.UDI_SCREENSHOT_DIR, { recursive: true });
       const shot = await send('Page.captureScreenshot', { format: 'png' });
       await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'start-' + width + '.png'), Buffer.from(shot.data, 'base64'));
+    }
+    if (!live) {
+      await evaluate("document.documentElement.style.fontSize='200%'");
+      await noOverflow();
+      await evaluate("document.documentElement.style.fontSize=''");
     }
     if (live) {
       await evaluate("document.querySelector('#search-query').focus()");
@@ -219,14 +256,21 @@ try {
       await type('Samsung 990 PRO 1 TB');
       await key('Enter');
       await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Keine passenden aktuellen Angebote')"), 'empty web search');
-      assert(await evaluate("window.SpeechRecognition?.toString().includes('queueMicrotask')"), 'dictation test adapter installed');
+      assert(await evaluate("window.SpeechRecognition?.toString().includes('udiSpeechError')"), 'dictation test adapter installed');
       assert(await evaluate("!document.querySelector('#suche [data-mic]').hidden"), 'dictation control visible');
+      await evaluate("document.querySelector('#search-query').value = ''; document.querySelector('#search-query').dispatchEvent(new Event('input', {bubbles:true}))");
       await click('#suche [data-mic]');
       await until(() => evaluate("document.querySelector('#search-query').value === 'Mein PC braucht mehr Speicher'"), 'dictation input');
+      await until(() => evaluate("!document.querySelector('[data-audio-preview]').hidden && document.querySelector('[data-audio]').src.startsWith('blob:')"), 'temporary recording preview');
+      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('Mein PC braucht mehr Speicher')"));
+      assert(await evaluate("document.querySelector('#intent-question').hidden"), 'no unnecessary capacity question for a vague need');
       assert(await visible('suche'));
       assert.equal(await evaluate("document.querySelector('#results h2').textContent"), 'Dein Suchwunsch');
       await key('Enter');
-      await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Darf ein Gebrauchtangebot')"), 'clarification');
+      await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Darf ein Gebrauchtangebot')"), 'clarification').catch(async error => {
+        console.error(await evaluate("JSON.stringify({query:document.querySelector('#search-query').value,focus:document.activeElement.outerHTML,results:document.querySelector('#web-results').textContent,voice:document.querySelector('[data-voice-status]').textContent,intent:document.querySelector('#intent-compass').textContent})"));
+        throw error;
+      });
       await click('#web-results button:nth-child(2)');
       await until(() => evaluate("document.querySelector('#web-results a')?.textContent === 'Inserat öffnen'"), 'marketplace result');
       assert.equal(await evaluate("document.querySelector('#web-results a').href"), 'https://www.ricardo.ch/de/a/test-pc-1234567890/');
@@ -279,6 +323,60 @@ try {
         const shot = await send('Page.captureScreenshot', { format: 'png' });
         await writeFile(join(process.env.UDI_SCREENSHOT_DIR, 'criteria-' + width + '.png'), Buffer.from(shot.data, 'base64'));
       }
+      // Intent refinement happens before a request and never modifies the draft silently.
+      await evaluate("document.querySelector('#max-price').value = ''; document.querySelector('#condition').value = ''; document.querySelector('#search-query').value = 'RAM für meinen PC'; document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+      assert.equal(await evaluate("document.querySelectorAll('#intent-question h3').length"), 1);
+      const previousResults = await evaluate("document.querySelector('#web-results').textContent");
+      await click('#suche button[type=submit]');
+      assert.equal(await evaluate('document.activeElement.tagName'), 'H3');
+      assert.equal(await evaluate("document.querySelector('#web-results').textContent"), previousResults);
+      await click('#intent-question button:nth-child(2)');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"), 'RAM 32 GB für meinen PC');
+      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('von UDI vorgeschlagen, von dir gewählt')"));
+      assert(await evaluate("document.querySelector('#intent-question').hidden"));
+      await evaluate("document.querySelector('#search-query').value='RAM für meinen PC'; document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+      await click('#intent-question button:last-child');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"), 'RAM für meinen PC');
+      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('Kapazität offen')"));
+
+      await evaluate("document.querySelector('#search-query').value='Bitte gebraucht.'; document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('#search-query').value === 'Bitte gebraucht. Mein PC braucht mehr Speicher'"), 'dictation appends without losing typed text');
+      await until(() => evaluate("!document.querySelector('[data-audio-preview]').hidden"), 'recording ready for playback');
+      assert(await evaluate("(async()=>{const audio=document.querySelector('[data-audio]');await audio.play();const playing=!audio.paused;audio.pause();return playing;})()"));
+      await click('[data-delete-audio]');
+      assert(await evaluate("document.querySelector('[data-audio-preview]').hidden && !document.querySelector('[data-audio]').getAttribute('src')"));
+      assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Bitte gebraucht. Mein PC braucht mehr Speicher');
+
+      await evaluate("window.udiGetMedia=navigator.mediaDevices.getUserMedia; navigator.mediaDevices.getUserMedia=()=>Promise.reject(new DOMException('denied','NotAllowedError'))");
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('[data-voice-status]').textContent.includes('Kein Mikrofonzugriff')"), 'microphone refusal explained');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Bitte gebraucht. Mein PC braucht mehr Speicher');
+      await evaluate("navigator.mediaDevices.getUserMedia=window.udiGetMedia; window.udiSpeechError='no-speech'");
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('[data-voice-status]').textContent.includes('nicht verstehen')"), 'speech recognition failure explained');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Bitte gebraucht. Mein PC braucht mehr Speicher');
+      await evaluate("window.udiSpeechError='not-allowed'");
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('[data-voice-status]').textContent.includes('nicht erlaubt')"), 'speech service refusal explained');
+      await evaluate("window.udiSpeechError=null; window.udiHoldSpeech=true");
+      await evaluate("window.udiFinalOnStop='Samsung 990 PRO 2 TB';document.querySelector('#search-query').value='Eine';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('[data-mic-label]').textContent==='Aufnahme stoppen'"), 'ready to stop recording');
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('#search-query').value==='Eine Samsung 990 PRO 2 TB'"), 'final words after manual stop preserved');
+      await evaluate("window.udiFinalOnStop=null");
+      await click('[data-mic]');
+      await until(() => evaluate("document.querySelector('[data-voice-status]').textContent.includes('0:01')"), 'visible recording duration');
+      await click('#suche button[type=submit]');
+      assert.equal(await evaluate("document.querySelector('[data-mic]').getAttribute('aria-pressed')"), 'false');
+      assert.equal(await evaluate("document.querySelector('#web-results').textContent"), previousResults, 'stopping a recording does not start a search');
+      await evaluate("window.udiHoldSpeech=false");
+      const unsupported = await send('Page.addScriptToEvaluateOnNewDocument', { source: "Object.defineProperty(window,'SpeechRecognition',{value:undefined,configurable:true});Object.defineProperty(window,'webkitSpeechRecognition',{value:undefined,configurable:true})" });
+      await send('Page.reload');
+      await until(() => evaluate("Boolean(document.querySelector('[data-mic]')?.disabled)"), 'unsupported browser offers text fallback');
+      assert(await evaluate("document.querySelector('[data-voice-status]').textContent.includes('Textfeld')"));
+      await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: unsupported.identifier });
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }

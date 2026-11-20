@@ -14,9 +14,13 @@ const files = new Map([
   ['/costs.mjs', ['costs.mjs', 'text/javascript']], ['/criteria.mjs', ['criteria.mjs', 'text/javascript']],
   ['/saved-searches.mjs', ['saved-searches.mjs', 'text/javascript']],
   ['/observations.mjs', ['observations.mjs', 'text/javascript']],
+  ['/ui.mjs', ['ui.mjs', 'text/javascript']], ['/intent.mjs', ['intent.mjs', 'text/javascript']],
+  ['/voice.mjs', ['voice.mjs', 'text/javascript']],
+  ['/assets/manrope-latin.woff2', ['assets/manrope-latin.woff2', 'font/woff2']],
+  ['/assets/manrope-OFL.txt', ['assets/manrope-OFL.txt', 'text/plain']],
 ]);
 const securityHeaders = {
-  'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",
+  'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; media-src blob:; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",
   'Referrer-Policy': 'no-referrer',
   'X-Content-Type-Options': 'nosniff',
 };

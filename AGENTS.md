@@ -1,6 +1,10 @@
 # Universal Deal Intelligence
 
 - Produktauftrag und Abnahmekriterien stehen in PLAN.md. STATUS.md hält Nachweise und den nächsten ausführbaren Schritt fest.
+- Zu Beginn einer Fortsetzung AGENTS.md, PLAN.md und STATUS.md lesen. Der Produktauftrag bleibt UDI im bestehenden Catworld-Repository; alte Spieleziele sind historische Archive, keine aktive Autorität.
+- Aktueller Schwerpunkt ist [App-first](docs/requirements/2026-11-20-app-first.md): zuerst Einstieg, Sprache/Text, belegte Angebote und hilfreichen Wiedereinstieg abnehmen. Keine zusätzliche Browser-/Marketing-Oberfläche entwickeln. Browserprüfungen sind QA der bestehenden App-Oberfläche; ein Web-Frontend ist kein Nachweis einer nativen App oder einer Geräteabnahme.
+- Die Originalaufträge zur [Spracheingabe und zum Suchkompass](docs/requirements/2026-11-20-search-experience.md) und zum [Kern mit echten, aktuellen Angeboten](docs/requirements/2026-11-20-live-offers.md) sind dauerhaft versioniert. Bei Arbeiten am jeweiligen Bereich diese Originale lesen; Akzeptanz und Prioritäten werden einmalig in PLAN.md gepflegt. Neue ausdrückliche Nutzeranweisungen berücksichtigen und offene Abweichungen in STATUS.md festhalten.
+- Autorisierte Arbeit selbständig fortsetzen, konkrete Ergebnisse testen und sichern. Nur bei fehlender Berechtigung, unauflösbaren kritischen Angaben oder irreversiblen Risiken nachfragen. Keine Hintergrundausführung behaupten, wenn keine eingerichtet ist.
 - Ein Git-Integrator sichert verifizierte Änderungen mit normalen Commits und liest Remote-Referenzen zurück. Historische Referenzen erhalten. Ein Wechsel des Standardbranches setzt die Produktabnahme voraus.
 - Schweizer Produktdaten nur aus nachweislich zulässig zugänglichen Quellen. MPN, Variante, konkreter Verkäufer, Ziel-URL, Prüfzeit, Bestand und vollständige CHF-Kosten als getrennte Fakten behandeln.
 - Unbekannte Gebühren bleiben unbekannt. Stale, abweichende oder unvollständige Beobachtungen dürfen keine Kaufempfehlung oder Meldung begründen. Weiterleitungen an jeder Stufe begrenzen, sobald ein zugelassener Abrufdienst existiert.

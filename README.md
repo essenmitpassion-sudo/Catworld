@@ -42,3 +42,23 @@ Der Katalog enthält drei redaktionell zugeordnete Produktseiten. Die DQ-Seite w
 `public/observations.json` ist die vertrauenswürdige Publikationsgrenze für freigegebene, nachvollziehbare Beobachtungen. Jede Zeile beschreibt genau eine Anbieter-URL und Variante mit `mpn`, `seller`, `url`, `finalUrl`, `checkedAt` in UTC mit Z, `currency` als CHF, `stock` als `in-stock` oder `out-of-stock`, `delivery` und den Kostenfeldern `price`, `shipping`, `taxes`, `imports`, `fees` in Rappen. Ein bereits enthaltener oder nachweislich entfallender Zuschlag zählt als 0. Unbekannte Beträge bleiben null. Der Import muss die Identität der Zielseite, Verkäufer, Preisumfang und Datenherkunft unabhängig belegen und eine spätere Abweichung oder einen fehlgeschlagenen Linkcheck publizieren können.
 
 Das Frontend nutzt für Beobachtungen und Websuche nur seine eigene Origin. Die Watchlist speichert Produktnummern lokal. Es gibt keine Konten, Tracking-Einbindungen oder automatisierten Nachrichten.
+
+## Projektauftrag wieder aufnehmen
+
+Der aktuelle Schwerpunkt ist [App-first](docs/requirements/2026-11-20-app-first.md). Die vorhandene App-Oberfläche wird zuerst als vollständiger, auf dem Handy verständlicher Ablauf verbessert. Eine zusätzliche Browser-/Marketing-Version wird nicht gebaut. Der aktuelle Stack ist eine Web-App; native Installationspakete und ein praktischer Nachweis auf echten Mobilgeräten stehen aus.
+
+Die verbindlichen Arbeitsregeln stehen in [AGENTS.md](AGENTS.md), Anforderungen und Abnahmen in [PLAN.md](PLAN.md), tatsächlicher Fortschritt, Nachweise und Fortsetzungspunkt in [STATUS.md](STATUS.md). Die Originalaufträge zur [Suchoberfläche](docs/requirements/2026-11-20-search-experience.md) und zu [echten Angeboten](docs/requirements/2026-11-20-live-offers.md) bleiben mit der Git-Historie erhalten. Sie sind Produktanforderungen, keine Behauptung bereits vorhandener Fähigkeiten.
+
+Öffne dieses Repository auf `development/udi` und starte eine neue Codex-Aufgabe mit:
+
+> Arbeite an UDI weiter. Lies AGENTS.md, PLAN.md und STATUS.md sowie die dort für die nächste Aufgabe verlinkten Originalaufträge. Setze die nächste offene Priorität um, prüfe den echten Nutzerablauf und sichere den verifizierten Stand mit Commit und Push. Kein Force-Push und keine Änderungen an SOUNDWEAVE.
+
+Der bisherige Standardbranch enthält noch das archivierte Vorgängerprodukt. Bis zur UDI-Produktabnahme deshalb ausdrücklich den UDI-Branch auswählen. Die Fortsetzung benötigt keinen Zugriff auf den früheren Chat.
+
+## Texteingabe und Aufnahme
+
+Der Suchkompass zeigt den unveränderten Suchtext und wirksame Kaufkriterien vor dem Start. Bei ausdrücklich gewünschtem RAM oder SSD ohne Kapazität kann eine einzelne Rückfrage erscheinen. Auswahlvorschläge werden erst durch bewusste Auswahl in den Text übernommen und als solche bezeichnet. Die Kapazität kann offenbleiben. Die vorhandene Websuche wird dadurch nicht automatisch aktiviert; der konkrete Live-Pilot bleibt auf den dokumentierten Katalog beschränkt.
+
+Das Mikrofon startet nur durch den Nutzer. Unterstützte Browser zeichnen mit MediaRecorder eine vorübergehende Aufnahme zum Anhören auf und verwenden ihre native Spracherkennung für den bearbeitbaren Text. Diktat wird an vorhandenen Text angehängt. UDI erhält beim Suchauftrag ausschliesslich Text und Kriterien. Browser-Spracherkennung kann Audio an den Dienst des Browsers senden. Die Aufnahme wird von UDI weder hochgeladen noch dauerhaft gespeichert. Mikrofon-, Berechtigungs- und Erkennungsfehler lassen die Texteingabe nutzbar.
+
+Die Schrift Manrope wird samt OFL-Lizenz lokal ausgeliefert; es gibt keine Font-Anfragen an Dritte. Die Symbole sind Teil des lokalen Codes.

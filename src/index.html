@@ -4,84 +4,57 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>UDI · Dein nächstes gutes Angebot</title>
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="Dein Wunsch, klar verstanden. UDI prüft konkrete Angebote im Schweizer PC-Pilot und macht offene Kosten sichtbar.">
+  <title>UDI · Weniger suchen. Besser entscheiden.</title>
+  <link rel="preload" href="./assets/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.mjs"></script>
 </head>
 <body>
   <a class="skip" href="#main">Zum Inhalt</a>
-  <header class="site-header">
-    <div class="shell masthead">
-      <a class="brand" href="#suche"><span class="brand-mark" aria-hidden="true">◉</span><span>udi<span class="period">.</span></span><span class="brand-caption">Universal Deal Intelligence</span></a>
-      <nav aria-label="Hauptnavigation">
-        <a href="#radar">Radar</a><a href="#suche">Suche</a><a href="#vergleich">Vergleich</a><a href="#watchlist">Watchlist</a>
-      </nav>
-    </div>
-  </header>
+  <header class="site-header"><div class="shell masthead">
+    <a class="brand" href="#suche" aria-label="UDI · Zur Suche"><span class="brand-mark" aria-hidden="true"><span></span></span><span>udi<span class="period">.</span></span><span class="brand-caption">Deal<br>Intelligence</span></a>
+    <nav aria-label="Hauptnavigation">
+      <a href="#suche"><span data-icon="search"></span><span>Suche</span></a><a href="#radar"><span data-icon="radar"></span><span>Radar</span></a><a href="#vergleich"><span data-icon="compare"></span><span>Vergleich</span></a><a href="#watchlist"><span data-icon="bookmark"></span><span>Watchlist</span></a>
+    </nav>
+    <span class="market-label"><span class="swiss-cross" aria-hidden="true">+</span> Schweiz <span>· CHF</span></span>
+  </div></header>
   <main class="shell" id="main" tabindex="-1">
     <p id="notice" role="status" class="sr-only"></p>
     <section id="radar" hidden aria-labelledby="radar-title">
-      <div class="hero">
-        <div>
-          <p class="eyebrow"><span></span> Schweiz / PC-Komponenten</p>
-          <h1 id="radar-title">Dein Kauf-Radar<span class="period">.</span></h1>
-          <p class="intro">Beschreibe, was du brauchst. Suche nach PC-Komponenten, Upgrades oder gebrauchten Rechnern.</p>
-          <form class="search-form" data-search>
-            <label for="radar-query">Was möchtest du kaufen?</label>
-            <div class="search-field"><input id="radar-query" name="query" type="search" maxlength="300" required placeholder="Ein Gaming-PC bis CHF 650"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
-            <div class="actions">
-              <button type="button" class="text-button" data-mic hidden>Diktieren</button>
-              <button type="button" class="text-button" data-example>Samsung 990 PRO 2 TB ansehen</button>
-            </div>
-          </form>
-        </div>
-        <aside class="radar-graphic" aria-hidden="true">
-          <div class="radar-dial"><i></i><b></b></div>
-        </aside>
-      </div>
-      <div class="section-heading"><h2>Aktuelle Kaufgelegenheiten</h2><span class="unit">CHF · Schweiz</span></div>
-      <div id="radar-content" class="surface" aria-live="polite">Daten werden geladen …</div>
+      <div class="page-title"><p class="eyebrow">Dein Markt im Blick</p><h1 id="radar-title">Dein Kauf-Radar<span class="period">.</span></h1><p>Nur Kaufgelegenheiten, deren Vergleich eine Empfehlung trägt.</p></div>
+      <form class="radar-search" data-search><label for="radar-query">Was möchtest du finden?</label><div class="search-field"><input id="radar-query" name="query" type="search" maxlength="300" required placeholder="Samsung 990 PRO 2 TB"><button type="submit" class="button">Suchen</button></div></form>
+      <div class="section-heading"><h2>Aktuelle Kaufgelegenheiten</h2><span class="unit">CHF · Schweiz</span></div><div id="radar-content" class="surface" aria-live="polite">Daten werden geladen …</div>
     </section>
     <section id="suche" hidden aria-labelledby="search-title">
-      <div class="search-intro">
-        <p class="eyebrow">Dein Kaufassistent · Schweiz</p>
-        <h1 id="search-title">Was suchst du<span class="period">?</span></h1>
-        <p>Beschreibe deinen Wunsch. Wir suchen passende Angebote und prüfen, was aktuell ist.</p>
-      </div>
-      <form class="search-form" data-search>
-        <label for="search-query">Dein Wunsch und dein Budget</label>
-        <div class="search-field"><input id="search-query" name="query" type="search" maxlength="300" required placeholder="Ein Gaming-PC bis CHF 650"><button type="submit">Suchen <span aria-hidden="true">↗</span></button></div>
-        <div class="actions">
-          <button type="button" class="text-button" data-mic hidden>Diktieren</button>
-          <button type="button" class="text-button" data-example>Beispiel · Samsung 990 PRO 2 TB</button>
+      <div class="search-intro"><p class="eyebrow"><span class="scope-tag">PC & Komponenten</span> Dein Kaufassistent</p><h1 id="search-title">Weniger suchen.<br><span>Besser entscheiden.</span></h1><p>Was brauchst du wirklich? Sag es UDI. Aus deinem Wunsch wird eine klare Suche – mit nachvollziehbar geprüften Angeboten.</p></div>
+      <form class="search-form composer" data-search>
+        <div class="composer-input">
+          <label for="search-query">Dein Wunsch. In deinen Worten.</label>
+          <textarea id="search-query" name="query" maxlength="300" rows="2" required placeholder="Zum Beispiel: eine Samsung 990 PRO mit 2 TB, bis CHF 500"></textarea>
+          <div class="composer-tools"><button type="button" class="voice-button" data-mic><span data-icon="mic"></span><span data-mic-label>Einsprechen</span></button><span class="input-hint">oder einfach schreiben</span><span class="keyboard-hint" aria-hidden="true">Enter zum Suchen</span></div>
+          <div class="voice-panel" data-voice hidden><p data-voice-status role="status"></p><div data-audio-preview hidden><label>Deine Aufnahme anhören<audio controls preload="metadata" data-audio></audio></label><button type="button" class="text-button" data-delete-audio>Aufnahme löschen</button></div></div>
+          <p class="voice-privacy" data-voice-privacy hidden>Beim Diktat kann dein Browser Audio an seinen Spracherkennungsdienst senden. Die Aufnahme zum Anhören wird von UDI weder hochgeladen noch dauerhaft gespeichert. Beim Suchen erhält UDI ausschliesslich den Text und deine Kriterien.</p>
         </div>
-        <details class="search-options">
-          <summary>Kaufkriterien</summary>
-          <div class="filter-fields">
-            <div><label for="max-price">Maximales Gesamtbudget in CHF</label>
-              <input id="max-price" name="maxPrice" type="text" inputmode="decimal" maxlength="14" placeholder="Aus deinem Suchwunsch"></div>
-            <div><label for="condition">Zustand</label>
-              <select id="condition" name="condition"><option value="">Aus deinem Suchwunsch</option><option value="any">Alle Zustände</option><option value="new">Nur neu</option><option value="used">Gebraucht oder generalüberholt</option></select></div>
-          </div>
+        <div class="intent-compass" id="intent-compass"><div class="compass-heading"><span data-icon="compass"></span><span>Dein Suchkompass</span><span class="compass-label">Vor dem Start</span></div><div id="intent-summary" aria-live="polite"><p class="muted">Beschreibe deinen Wunsch. Hier siehst du, wonach UDI suchen wird.</p></div><div id="intent-question" hidden></div></div>
+        <details class="search-options"><summary><span data-icon="sliders"></span>Kaufkriterien anpassen<span class="optional-label">optional</span></summary>
+          <div class="filter-fields"><div><label for="max-price">Gesamtbudget in CHF</label><input id="max-price" name="maxPrice" type="text" inputmode="decimal" maxlength="14" placeholder="Aus deinem Suchwunsch"></div><div><label for="condition">Zustand</label><select id="condition" name="condition"><option value="">Aus deinem Suchwunsch</option><option value="any">Alle Zustände</option><option value="new">Nur neu</option><option value="used">Gebraucht oder generalüberholt</option></select></div></div>
           <label class="checkbox-label"><input name="completeCostsOnly" type="checkbox">Nur Angebote mit bestätigten Gesamtkosten</label>
         </details>
+        <div class="composer-submit"><p><span data-icon="shield"></span>Du prüfst den Wunsch.<br>UDI prüft die Quelle.</p><button type="submit" class="button primary-search"><span data-icon="search"></span>Angebote suchen</button></div>
       </form>
-      <div id="results" class="stack" aria-live="polite"></div>
-      <div id="web-results" class="stack" aria-live="polite"></div>
+      <div id="search-home">
+        <div class="suggestions"><span>Zum Ausprobieren</span><button type="button" data-example>Samsung 990 PRO · 2 TB<span data-icon="plus"></span></button><button type="button" data-prompt="Mein PC braucht mehr Speicher">Ein Upgrade statt Neukauf<span data-icon="plus"></span></button></div>
+        <div class="coverage-note"><span data-icon="info"></span><p><strong>Ein fokussierter Start.</strong> Live-Direktprüfung für die Samsung 990 PRO 2 TB im Schweizer Pilot. Breite Web- und Gebrauchtmarktsuchen benötigen einen eingerichteten Suchzugang.</p></div>
+        <div id="recent-searches" hidden></div>
+        <div class="value-strip"><div><span data-icon="compass"></span><h2>Dein Wunsch zählt.</h2><p>Budget und wichtige Kriterien bleiben sichtbar.</p></div><div><span data-icon="scan"></span><h2>Belege statt Bauchgefühl.</h2><p>Prüfzeit, Quelle und offene Angaben direkt am Angebot.</p></div><div><span data-icon="bookmark"></span><h2>Heute finden. Morgen prüfen.</h2><p>Speichere deine Suche und knüpfe später daran an.</p></div></div>
+      </div>
+      <div id="results" class="stack" aria-live="polite"></div><div id="web-results" class="stack" aria-live="polite"></div>
     </section>
-    <section id="vergleich" hidden aria-labelledby="compare-title">
-      <div class="page-title"><p class="eyebrow">Händler / Gesamtkosten</p><h1 id="compare-title">Vergleich</h1></div>
-      <div id="comparison" class="stack"></div>
-    </section>
-    <section id="passport" hidden aria-labelledby="passport-title">
-      <div class="page-title"><p class="eyebrow"><a href="#vergleich">← Zum Vergleich</a></p><h1 id="passport-title">Deal Passport</h1></div>
-      <div id="detail" class="stack"></div>
-    </section>
-    <section id="watchlist" hidden aria-labelledby="watch-title">
-      <div class="page-title"><p class="eyebrow">Auf diesem Gerät</p><h1 id="watch-title">Watchlist</h1></div>
-      <div id="saved" class="stack"></div>
-    </section>
+    <section id="vergleich" hidden aria-labelledby="compare-title"><div class="page-title"><p class="eyebrow">Gleiche Variante. Klare Unterschiede.</p><h1 id="compare-title">Der direkte Vergleich<span class="period">.</span></h1><p>Artikelpreis, Gesamtkosten und Unsicherheiten nebeneinander.</p></div><div id="comparison" class="stack"></div></section>
+    <section id="passport" hidden aria-labelledby="passport-title"><div class="page-title"><p class="eyebrow"><a href="#vergleich">Zum Vergleich</a></p><h1 id="passport-title">Dein Deal Passport<span class="period">.</span></h1><p>Was wir wissen. Was offen ist. Was das für deinen Kauf bedeutet.</p></div><div id="detail" class="stack"></div></section>
+    <section id="watchlist" hidden aria-labelledby="watch-title"><div class="page-title"><p class="eyebrow">Deine Wünsche haben einen Platz.</p><h1 id="watch-title">Deine Watchlist<span class="period">.</span></h1><p>Hier geht es weiter, wenn du bereit bist.</p></div><div id="saved" class="stack"></div></section>
   </main>
-  <footer class="shell footer"><span>UDI</span><span>Schweizer Produktmarkt · Preise in CHF</span></footer>
-</body>
-</html>
+  <footer class="shell footer"><span class="footer-brand">udi.</span><span>Klare Wünsche. Nachvollziehbare Entscheidungen.</span><span>Schweizer PC-Pilot · CHF</span></footer>
+</body></html>

@@ -2,6 +2,9 @@ import { catalog, search, compare, costFields, directLink, isAmount, maxObservat
 import { criteriaFor } from './criteria.mjs';
 import { readSearches, storeSearch, removeSearch, searchStorageKey } from './saved-searches.mjs';
 import { applyChecks } from './observations.mjs';
+import { icon, mountIcons } from './ui.mjs';
+import { intentFor, addCapacity } from './intent.mjs';
+import { setupVoice } from './voice.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
@@ -20,6 +23,86 @@ let activeSearch;
 let resultsExpiry;
 let observationExpiry;
 let activeCriteria = {};
+let skippedQuestion = null;
+let suggestionReceipt = null;
+let voice;
+mountIcons();
+
+function draftInput(query = get('search-query').value.trim()) {
+  const form = get('search-query').form;
+  return { query, maxPrice: form.elements.maxPrice.value.trim(), condition: form.elements.condition.value || undefined,
+    completeCostsOnly: form.elements.completeCostsOnly.checked };
+}
+
+function refreshIntent() {
+  const input = draftInput();
+  const target = get('intent-summary');
+  const questionBox = get('intent-question');
+  questionBox.replaceChildren();
+  questionBox.hidden = true;
+  if (!input.query) {
+    target.replaceChildren(element('p', 'Beschreibe deinen Wunsch. Hier siehst du, wonach UDI suchen wird.', 'muted'));
+    return;
+  }
+  let intent;
+  try { intent = intentFor(input); }
+  catch (error) { target.replaceChildren(element('p', error.message, 'muted')); return; }
+  const origin = suggestionReceipt?.query === input.query ? suggestionReceipt.note : 'Deine Formulierung · wird unverändert gesucht';
+  target.replaceChildren(element('p', intent.query, 'intent-query'), element('p', origin, 'intent-origin'));
+  const tags = element('div', null, 'intent-tags');
+  tags.append(element('span', 'Markt: Schweiz · Pilot', 'intent-tag'));
+  const criteriaLabel = describeCriteria(intent.criteria);
+  if (criteriaLabel) tags.append(element('span', criteriaLabel, 'intent-tag'));
+  if (skippedQuestion === input.query) tags.append(element('span', 'Kapazität offen · von dir bestätigt', 'intent-tag'));
+  target.append(tags);
+  if (intent.question && skippedQuestion !== input.query) {
+    questionBox.hidden = false;
+    const title = element('h3', intent.question.title);
+    title.tabIndex = -1;
+    const choices = element('div', null, 'intent-choices');
+    for (const capacity of intent.question.options) {
+      const button = element('button', capacity);
+      button.type = 'button';
+      button.addEventListener('click', () => {
+        const next = addCapacity(input.query, capacity);
+        if (!next) { get('notice').textContent = 'Die Ergänzung passt nicht mehr in das Textfeld. Kürze deinen Wunsch.'; return; }
+        get('search-query').value = next;
+        suggestionReceipt = { query: next, note: capacity + ' · von UDI vorgeschlagen, von dir gewählt. Im Text bearbeitbar.' };
+        refreshIntent();
+        get('search-query').focus();
+      });
+      choices.append(button);
+    }
+    const skip = element('button', 'Noch offen');
+    skip.type = 'button';
+    skip.addEventListener('click', () => { skippedQuestion = input.query; refreshIntent(); get('search-query').focus(); });
+    choices.append(skip);
+    questionBox.append(title, element('p', intent.question.reason), choices);
+  }
+}
+
+function restoreSearch(request) {
+  get('max-price').value = request.maxPrice;
+  get('condition').value = request.condition;
+  get('search-query').form.elements.completeCostsOnly.checked = request.completeCostsOnly;
+  submit(request.query, request.scope ?? undefined);
+}
+
+function renderRecent() {
+  const target = get('recent-searches');
+  target.replaceChildren();
+  try {
+    const saved = readSearches(localStorage).slice(0, 3);
+    target.hidden = !saved.length;
+    if (saved.length) target.append(element('h2', 'Hier kannst du anknüpfen'));
+    for (const request of saved) {
+      const button = element('button', request.query + ' · Erneut prüfen');
+      button.type = 'button';
+      button.addEventListener('click', () => restoreSearch(request));
+      target.append(button);
+    }
+  } catch { target.hidden = true; }
+}
 
 async function updateSearches(operation) {
   const run = () => operation(localStorage);
@@ -35,6 +118,7 @@ function saveSearchButton(input) {
     try {
       await updateSearches(storage => storeSearch(storage, input));
       button.textContent = 'Suche gespeichert';
+      renderRecent();
       get('notice').textContent = 'Suchwunsch und Kaufkriterien wurden in deiner Watchlist gespeichert.';
     } catch (error) {
       button.disabled = false;
@@ -201,11 +285,21 @@ function renderWebResults(result, query) {
   const cards = result.items.map(item => {
     const box = element('article', null, 'surface offer');
     const heading = element('div', null, 'offer-heading');
-    heading.append(element('p', item.source, 'eyebrow'), element('span', 'Teilweise geprüft', 'badge'));
+    const source = element('p', item.source, 'eyebrow');
+    source.prepend(icon('shop'));
+    heading.append(source, element('span', 'Teilweise geprüft', 'badge'));
     const check = item.check;
-    box.append(heading, element('h3', item.title), element('p', money(check.total ?? check.price), 'offer-price'),
-      element('p', check.total === null ? 'Artikelpreis · Gesamtkosten noch offen' : 'Gesamtkosten inklusive bekannter Pflichtkosten', 'muted'),
-      element('p', 'Quelle meldet verfügbar · geprüft ' + date.format(new Date(check.checkedAt)) + ' (CH)', 'muted'));
+    const layout = element('div', null, 'offer-layout');
+    const identity = element('div');
+    identity.append(element('h3', item.title));
+    if (check.mpn) identity.append(element('p', check.mpn, 'price-caption'));
+    const amount = element('div', null, 'offer-cost');
+    amount.append(element('p', money(check.total ?? check.price), 'offer-price'),
+      element('p', check.total === null ? 'Artikelpreis · Gesamtkosten noch offen' : 'Gesamtkosten inklusive bekannter Pflichtkosten', 'price-caption'));
+    layout.append(identity, amount);
+    const meta = element('p', 'Quelle meldet verfügbar · geprüft ' + date.format(new Date(check.checkedAt)) + ' (CH)', 'offer-meta');
+    meta.prepend(icon('clock'));
+    box.append(heading, layout, meta);
     if (item.budgetStatus === 'unknown-total') box.append(element('p', 'Ob der Endpreis in dein Budget passt, ist noch offen.', 'muted'));
     const details = element('details');
     details.append(element('summary', 'Prüfung und offene Angaben'));
@@ -243,6 +337,14 @@ function renderWebResults(result, query) {
 }
 
 async function submit(query, scope) {
+  if (voice?.isRecording()) { voice.stop(); return; }
+  get('search-query').value = query;
+  refreshIntent();
+  if (!get('intent-question').hidden) {
+    navigate('suche');
+    get('intent-question').querySelector('h3').focus();
+    return;
+  }
   activeSearch?.abort();
   const request = new AbortController();
   activeSearch = request;
@@ -269,6 +371,8 @@ async function submit(query, scope) {
     return;
   }
   const products = search(query);
+  get('suche').classList.add('has-search');
+  get('search-home').hidden = true;
   activeCriteria = criteria;
   get('results').replaceChildren(...(products.length ? products.map(productCard) : [
     message('Dein Suchwunsch', query),
@@ -410,12 +514,7 @@ function renderWatchlist() {
       const actions = element('div', null, 'actions');
       const searchAgain = element('button', 'Erneut prüfen', 'button');
       searchAgain.type = 'button';
-      searchAgain.addEventListener('click', () => {
-        get('max-price').value = request.maxPrice;
-        get('condition').value = request.condition;
-        get('search-query').form.elements.completeCostsOnly.checked = request.completeCostsOnly;
-        submit(request.query, request.scope ?? undefined);
-      });
+      searchAgain.addEventListener('click', () => restoreSearch(request));
       const remove = element('button', 'Suche entfernen', 'text-button');
       remove.type = 'button';
       remove.addEventListener('click', async () => {
@@ -438,7 +537,7 @@ function renderWatchlist() {
     boxes.push(message('Gespeicherte Suchen nicht lesbar', 'Die gespeicherten Daten bleiben auf diesem Gerät. Prüfe die Browsereinstellungen für lokalen Speicher.'));
   }
   if (!boxes.length) {
-    const empty = message('Deine Watchlist ist leer', 'Speichere eine SSD aus ihrem Deal Passport.');
+    const empty = message('Deine Watchlist ist leer', 'Speichere deinen Suchwunsch mit Budget und Kriterien. Du kannst später mit einem Klick erneut prüfen.');
     empty.append(link('Zur Suche', '#suche'));
     boxes.push(empty);
   }
@@ -451,6 +550,8 @@ function renderRoute(focus = false) {
   const hash = location.hash.slice(1);
   const current = routes.find(id => !get(id).hidden);
   const route = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'suche' : 'suche');
+  if (route !== 'suche' && voice?.isRecording()) voice.stop();
+  if (route === 'suche') renderRecent();
   for (const id of routes) get(id).hidden = id !== route;
   for (const anchor of document.querySelectorAll('nav a')) {
     if (anchor.hash === '#' + (route === 'passport' ? 'vergleich' : route)) anchor.setAttribute('aria-current', 'page');
@@ -480,45 +581,27 @@ for (const form of document.querySelectorAll('[data-search]')) {
   });
 }
 for (const button of document.querySelectorAll('[data-example]')) {
-  button.addEventListener('click', () => submit('Samsung 990 PRO 2 TB'));
+  button.addEventListener('click', () => {
+    get('search-query').value = 'Samsung 990 PRO 2 TB';
+    refreshIntent();
+    get('search-query').focus();
+  });
 }
-const SpeechRecognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-if (SpeechRecognition) {
-  let recording;
-  for (const button of document.querySelectorAll('[data-mic]')) {
-    button.hidden = false;
-    button.title = 'Die Spracherkennung deines Browsers kann Audio an seinen Spracherkennungsdienst übertragen.';
-    button.addEventListener('click', () => {
-      if (recording) {
-        recording.abort();
-        return;
-      }
-      const input = button.closest('form').elements.query;
-      const speech = new SpeechRecognition();
-      speech.lang = 'de-CH';
-      speech.onresult = event => {
-        input.value = event.results[0][0].transcript.slice(0, input.maxLength);
-        input.focus();
-        get('notice').textContent = 'Diktat eingefügt. Du kannst den Text prüfen und dann suchen.';
-      };
-      speech.onerror = event => {
-        if (event.error !== 'aborted') get('notice').textContent = 'Diktieren war nicht möglich. Du kannst den Suchwunsch tippen.';
-      };
-      speech.onend = () => {
-        recording = null;
-        button.textContent = 'Diktieren';
-      };
-      try {
-        speech.start();
-        recording = speech;
-        button.textContent = 'Diktat stoppen';
-        get('notice').textContent = 'Mikrofon aktiv.';
-      } catch {
-        get('notice').textContent = 'Diktieren war nicht möglich. Du kannst den Suchwunsch tippen.';
-      }
-    });
+for (const button of document.querySelectorAll('[data-prompt]')) {
+  button.addEventListener('click', () => {
+    get('search-query').value = button.dataset.prompt;
+    refreshIntent(); get('search-query').focus();
+  });
+}
+const composer = get('search-query').form;
+composer.addEventListener('input', refreshIntent);
+composer.addEventListener('change', refreshIntent);
+get('search-query').addEventListener('keydown', event => {
+  if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+    event.preventDefault(); composer.requestSubmit();
   }
-}
+});
+voice = setupVoice(composer, refreshIntent);
 window.addEventListener('hashchange', event => {
   if (event.newURL === location.href) renderRoute(true);
 });
