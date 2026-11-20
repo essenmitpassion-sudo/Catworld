@@ -32,3 +32,20 @@ test('ein bekannter Produktauftrag verwendet auch bei eingerichtetem KI-Zugang d
     await new Promise(resolve => app.close(resolve));
   }
 });
+
+test('Installationsdateien werden nur aus der festen Liste geliefert und behalten Sicherheitsheader', async () => {
+  const app=server();await new Promise(resolve=>app.listen(0,'127.0.0.1',resolve));
+  try {
+    const origin='http://127.0.0.1:'+app.address().port;
+    // Build is deliberately not required before the ordinary source tests.
+    for(const path of ['/manifest.webmanifest','/assets/udi-192.png']) {
+      const result=await fetch(origin+path);
+      assert([200,503].includes(result.status));
+      if(result.status===200)assert(result.headers.get('content-type').includes(path.endsWith('.png')?'image/png':'application/manifest+json'));
+      assert.equal(result.headers.get('cache-control'),result.status===200?'no-store':null);
+      assert(result.headers.get('content-security-policy').includes("manifest-src 'self'"));
+    }
+    assert.equal((await fetch(origin+'/package-lock.json')).status,404);
+    assert.equal((await fetch(origin+'/.env')).status,404);
+  } finally {await new Promise(resolve=>app.close(resolve));}
+});

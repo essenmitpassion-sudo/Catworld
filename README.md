@@ -47,6 +47,8 @@ Das Frontend nutzt für Beobachtungen und Websuche nur seine eigene Origin. Die 
 
 ## Projektauftrag wieder aufnehmen
 
+Der [App-Startplan](docs/LAUNCH.md) wählt einen engen installierbaren PWA-Pilot aus demselben Stack. Manifest, App-Symbole und Pilothilfe werden mitgebaut. `npm run pilot:package` bereitet aus einem sauberen Git-Stand ein Betreiberpaket mit Backend/Lockdatei und Prüfsummen vor. Eine freigegebene HTTPS-Testadresse, Zugriffsschutz und tatsächliche mobile Installation sind eigene offene Abnahmen. Kein vorhandenes APK, IPA oder Store-Release. Die Pilothilfe ist in der App unter «Installation & Pilothilfe» erreichbar; der [freiwillige Testbogen](docs/PILOT-TEST.md) ersetzt eine vorzeitige Analytics-Integration.
+
 Der [Monetarisierungsauftrag](docs/requirements/2026-11-20-monetization.md) ist ebenfalls dauerhaft verankert. Die [Machbarkeitsprüfung](docs/MONETIZATION.md) trennt öffentliche Partnerprogramme von tatsächlich vorhandenen UDI-Zugängen. Es gibt derzeit keine aktivierten Affiliate-Links, Cashback-Zusagen, bezahlten Platzierungen oder bestätigten Sparsummen.
 
 Aktuelle Priorität: [App-first](docs/requirements/2026-11-20-app-first.md). Zuerst das kleinste vollständige App-Erlebnis abnehmen; keine zusätzliche Browser-/Marketing-Version entwickeln. Der technische Stand ist ein Web-Frontend ohne nativen Installations-Build. Browserprüfungen validieren dieses Frontend und sind keine behauptete Prüfung einer nativen App.

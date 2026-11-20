@@ -1,6 +1,7 @@
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
+import { appFiles } from './public-files.mjs';
 
-const files = ['index.html', 'app.mjs', 'deals.mjs', 'costs.mjs', 'criteria.mjs', 'saved-searches.mjs', 'observations.mjs', 'style.css', 'ui.mjs', 'intent.mjs', 'voice.mjs', 'assets/manrope-latin.woff2', 'assets/manrope-OFL.txt'];
+const files = appFiles.map(([path])=>path).filter(path=>path!=='observations.json');
 const observations = new URL('../public/observations.json', import.meta.url);
 const data = JSON.parse(await readFile(observations, 'utf8'));
 if (!Array.isArray(data)) throw new Error('observations.json must contain an array');

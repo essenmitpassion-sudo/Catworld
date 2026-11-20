@@ -153,6 +153,23 @@ try {
     await until(() => visible('suche'), 'search start page');
     await noOverflow();
     if (!live) {
+      const manifest = await send('Page.getAppManifest');
+      assert.equal(manifest.errors.length,0,'manifest loads without parser errors');
+      assert.equal(JSON.parse(manifest.data).display,'standalone');
+      assert(await evaluate("Promise.all([192,512].map(size=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve(i.naturalWidth===size);i.onerror=()=>resolve(false);i.src='./assets/udi-'+size+'.png'}))).then(values=>values.every(Boolean))"),'local install icons decode in browser');
+      if(width===390) {
+        const installability=await send('Page.getInstallabilityErrors');
+        console.log('Chromium installability: '+JSON.stringify(installability.installabilityErrors));
+      }
+      await click('a[href="#hilfe"]');
+      await until(()=>visible('hilfe'),'installation and pilot help');
+      assert(await evaluate("document.querySelector('main #hilfe')!==null"));
+      assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('HTTPS-Testadresse')"));
+      await noOverflow();
+      await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();await evaluate("document.documentElement.style.fontSize=''");
+      await click('#hilfe [data-example]');
+      await until(()=>visible('suche'),'pilot onboarding prepares search');
+      assert(await evaluate("!document.querySelector('#web-results').textContent"),'onboarding does not start scanning');
       assert(await evaluate("Boolean(document.querySelector('#search-query').tagName === 'TEXTAREA')"));
       await click('[data-example]');
       assert.equal(await evaluate("document.querySelector('#search-query').value"), 'Samsung 990 PRO 2 TB');

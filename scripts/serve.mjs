@@ -6,21 +6,11 @@ import { gatewaySearch } from './gateway.mjs';
 import { pageVerifier } from './verification.mjs';
 import { scan } from './scans.mjs';
 import { catalogSearch } from './catalog-search.mjs';
+import { appFiles } from './public-files.mjs';
 
-const files = new Map([
-  ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
-  ['/style.css', ['style.css', 'text/css']], ['/app.mjs', ['app.mjs', 'text/javascript']],
-  ['/deals.mjs', ['deals.mjs', 'text/javascript']], ['/observations.json', ['observations.json', 'application/json']],
-  ['/costs.mjs', ['costs.mjs', 'text/javascript']], ['/criteria.mjs', ['criteria.mjs', 'text/javascript']],
-  ['/saved-searches.mjs', ['saved-searches.mjs', 'text/javascript']],
-  ['/observations.mjs', ['observations.mjs', 'text/javascript']],
-  ['/ui.mjs', ['ui.mjs', 'text/javascript']], ['/intent.mjs', ['intent.mjs', 'text/javascript']],
-  ['/voice.mjs', ['voice.mjs', 'text/javascript']],
-  ['/assets/manrope-latin.woff2', ['assets/manrope-latin.woff2', 'font/woff2']],
-  ['/assets/manrope-OFL.txt', ['assets/manrope-OFL.txt', 'text/plain']],
-]);
+const files = new Map([['/',['index.html','text/html']],...appFiles.map(entry=>['/'+entry[0],entry])]);
 const securityHeaders = {
-  'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; media-src blob:; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",
+  'Content-Security-Policy': "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; manifest-src 'self'; media-src blob:; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'self'",
   'Referrer-Policy': 'no-referrer',
   'X-Content-Type-Options': 'nosniff',
 };

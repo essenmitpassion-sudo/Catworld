@@ -6,6 +6,7 @@ import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
 import { setupVoice } from './voice.mjs';
 import { costs } from './costs.mjs';
+import { setupInstall } from './install.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
@@ -13,7 +14,7 @@ const currency = new Intl.NumberFormat('de-CH', { style: 'currency', currency: '
 const date = new Intl.DateTimeFormat('de-CH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Zurich' });
 const money = amount => currency.format(amount / 100);
 const labels = { verified: 'Verifiziert', partial: 'Teilweise geprüft', unconfirmed: 'Unbestätigt' };
-const routes = ['radar', 'suche', 'vergleich', 'passport', 'watchlist'];
+const routes = ['radar', 'suche', 'vergleich', 'passport', 'watchlist', 'hilfe'];
 let activeProduct = null;
 let activeSeller = null;
 let observations = [];
@@ -28,6 +29,7 @@ let skippedQuestion = null;
 let suggestionReceipt = null;
 let voice;
 mountIcons();
+setupInstall();
 
 function draftInput(query = get('search-query').value.trim()) {
   const form = get('search-query').form;
@@ -623,6 +625,7 @@ for (const button of document.querySelectorAll('[data-example]')) {
   button.addEventListener('click', () => {
     get('search-query').value = 'Samsung 990 PRO 2 TB';
     refreshIntent();
+    navigate('suche');
     get('search-query').focus();
   });
 }

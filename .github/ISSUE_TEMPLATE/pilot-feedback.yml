@@ -1,0 +1,31 @@
+name: UDI Pilotfeedback
+description: Eine konkrete Unklarheit oder ein Fehlangebot melden.
+title: "UDI-Pilot: "
+body:
+  - type: markdown
+    attributes:
+      value: "Berichte können öffentlich sein. Keine Aufnahme, Zugangsdaten, genaue Adresse oder privaten Suchtexte einfügen. Ein Klick ist kein Kaufnachweis."
+  - type: dropdown
+    id: area
+    attributes:
+      label: Wo trat das Problem auf?
+      options:
+        - Installation oder Start
+        - Text- oder Spracheingabe
+        - Angebot, Prüfstatus oder Kosten
+        - Anbieterlink
+        - Gespeicherte Suche
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: Was war unklar oder hat nicht funktioniert?
+      description: Kurze allgemeine Schritte und erwartetes Ergebnis. Keine persönlichen Daten.
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Gerätetyp und Browser (freiwillig)
+      description: Keine Seriennummer oder sonstige Identifikatoren.
