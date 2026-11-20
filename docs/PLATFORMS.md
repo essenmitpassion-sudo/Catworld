@@ -20,7 +20,8 @@ Dieser Windows-Rechner hat Java 17, aber kein nachgewiesenes Android-SDK/adb/Gra
 | Ablauf | Android | iOS |
 |---|---|---|
 | Projektdateien / gebaute lokale Assets | Vorbereitet; Dateiprüfung erfolgreich | Vorbereitet; Dateiprüfung erfolgreich |
-| Nativer Debug-/Simulationsbuild und Start | Offen: SDK/Emulator | Offen: Mac/Xcode/Simulator |
+| Nativer Debug-/Simulationsbuild | Debug-APK in Standard-CI kompiliert | Unsignierte Simulator-App in Standard-CI kompiliert |
+| Installierter nativer Start / gerenderte Oberfläche | Separater Emulatortest läuft | Separater Simulatortest läuft |
 | Geschützter gemeinsamer Live-Dienst | Offen | Offen |
 | Textsuche → echtes aktuelles Angebot → externer Anbieter | Offen auf Gerät | Offen auf Gerät |
 | Sprachsuche, Aufnahmeprüfung, Verweigerung, Fehler | Offen: nativer Adapter | Offen: nativer Adapter |
@@ -39,7 +40,15 @@ Android: Projekt `android/` in geeignetem Android Studio mit JDK 21 und SDK 36 �
 
 Wichtigster Reviewbefund: Reines `cap copy` hätte nach frischem Checkout ignorierte Gradle-Eingaben nicht erzeugt. Vorbereitung führt deshalb `cap sync` für beide Plattformen aus; Check prüft die erforderlichen Cordova-Kompatibilitäts-Gradle-Dateien auch ohne installierte Plugins. Der Fehler wurde mit fehlender generierter Datei reproduziert. Betreiberpakete enthalten nun beide Quellprojekte und die Konfiguration; ihr Prüfer installiert isoliert und führt Vorbereitung/Check erneut aus. Dies ist eine Quell-/Paketprüfung, keine native Kompilierung. Generierte triviale Android-Beispieltests mit fremder Paketkennung wurden entfernt.
 
-Aktueller automatischer Nachweis: 64 Fachtests, bestehende DE/EN-Chromium-Abläufe und zusätzliche Grenzsimulationen für Android/iOS/fehlerhafte Brücke. Diese Simulationen zeigen verständliche native Zustände, gesperrte APIs/Snapshots, deaktivierte Spracheingabe und Wiederfinden gespeicherter Wünsche. Sie laufen im Desktop-Browser, ausdrücklich nicht in Android- oder iOS-Emulatoren. Die native Build-/Device-Gates bleiben offen.
+Automatischer Logik-/Browsernachweis: 64 Fachtests, bestehende DE/EN-Chromium-Abläufe und zusätzliche Grenzsimulationen für Android/iOS/fehlerhafte Brücke. Diese Simulationen zeigen verständliche native Zustände, gesperrte APIs/Snapshots, deaktivierte Spracheingabe und Wiederfinden gespeicherter Wünsche. Sie laufen im Desktop-Browser, ausdrücklich nicht in Android- oder iOS-Emulatoren. Die vollständigen Device-Gates bleiben offen.
+
+## Tatsächlich ausgeführte native Builds
+
+Stand 1546570: [beide nativen Compiler erfolgreich](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/44748663800), ebenso die [64 Fach-/Chromium-/Assettests](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/44748663646). Android: `assembleDebug`, JDK21, SDK36 auf ubuntu-24.04. iOS: Xcode26, Debug iphonesimulator, `CODE_SIGNING_ALLOWED=NO` auf macos-26. Jeweils Ausgabedatei/Verzeichnis geprüft und Binärhash im Joblog; kein IPA, keine Signieridentität, kein Store-/Testrelease und kein Binär-Upload.
+
+Die Repository-API bestätigt öffentlich. Die [GitHub-Dokumentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job) bestätigt kostenlose Standard-Runner für öffentliche Repositories; diese beiden Labels sind Standard-Runner. Workflow hat nur Leserechte, einen Sichtbarkeitsguard gegen unbemerkten privaten kostenpflichtigen Betrieb und 20 Minuten Zeitlimit. Keine grösseren kostenpflichtigen Runner, Konten oder Artefaktlagerung. Lokale fehlende SDKs verhindern somit nicht mehr den Compiler-Nachweis.
+
+Getrennte Startprüfung: echte Installation und Start in Android-Emulator/iPhone-Simulator. Android liest die Accessibility-Hierarchie; iOS liest einen nur vorübergehend im Runner gespeicherten Screenshot mit Apple Vision. Erwartet werden Suchknopf, Watchlist und der erst durch laufendes JavaScript gesetzte native Diensthinweis. Dies prüft Start/Rendering, nicht Sprachaufnahme, gespeicherte Inhalte über den Lebenszyklus, Sucherfolg, visuelle UX-Abnahme oder Gerätegleichwertigkeit. Keine Screenshots oder Binärdateien werden hochgeladen. Erster Lauf 33913f0 scheiterte vor App-Installation: SDK-Werkzeug nicht im PATH bzw. iOS-Standortdienst-Systemmigration länger als vier Minuten. Expliziter dokumentierter SDK-Pfad und begrenzte acht Minuten Erststartzeit sind umgesetzt; zweiter Lauf 41f0309 wird ausgewertet. Keine Dienste abschalten oder Schutzmechanismen umgehen.
 
 ## Internationalisierung und Fortsetzung
 

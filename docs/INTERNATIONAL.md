@@ -13,7 +13,7 @@ Entscheidung vom 20.11.2026: Deutsch und Englisch als erster vollständiger Bedi
 
 Neue Sprache: Katalog und Sprachmetadaten ergänzen, Vollständigkeit und Platzhalter prüfen, Bedarfsparser/Spracherkennung mit echten Formulierungen abnehmen, UI/Screenreader/Schrift/Zeilenumbrüche prüfen. Neue Schriftsysteme benötigen zudem Schriftabdeckung und gegebenenfalls RTL-Layouts. Ein eingeblendeter Ländername ist keine Marktintegration.
 
-Neue Region: Marktkennung, Währung und Zeitzone festlegen; getrennte Datenquellen und Kostenannahmen; Suchaufträge/Beobachtungen später ausdrücklich an ihren Markt binden. Bestehende CH-Freigabelinks dürfen nie stillschweigend unter einem anderen Markt ausgeführt werden. Sobald mehrere Märkte tatsächlich aktiv sind, Freigabe-/Speicherschema versionieren und alte Links mit explizitem CH-Kontext migrieren. Bis dahin kein Länderumschalter mit vorgetäuschten Angeboten.
+Neue Region: Marktkennung, Währung und Zeitzone festlegen; getrennte Datenquellen und Kostenannahmen. [Der gemeinsame Marktvertrag](MARKETS.md) bindet Suchaufträge, Quellen und Beobachtungen bereits ausdrücklich an CH. V2-Speicher und -Freigaben führen Lieferwunsch und CHF-Budget; historische v1-Suchen/-Links werden eindeutig CH zugeordnet. Bestehende CH-Freigabelinks dürfen nie stillschweigend unter einem anderen Markt ausgeführt werden. Neue aktive Regionen benötigen eigene Quellen-/Kostenabnahme, ohne bestehende Suchen umzudeuten. Bis dahin kein Länderumschalter mit vorgetäuschten Angeboten.
 
 ## USP ohne Behauptungen
 
