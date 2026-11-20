@@ -1,5 +1,12 @@
 import { costs } from './costs.mjs';
 
+const foreignCurrencyCodes = new Set(Intl.supportedValuesOf('currency').filter(code=>code!=='CHF'));
+function foreignCurrencyIn(query) {
+  const codes=query.matchAll(/\b([a-z]{3})\s*\d|\d\s*([a-z]{3})\b/gi);
+  return [...codes].some(match=>foreignCurrencyCodes.has((match[1]??match[2]).toUpperCase()))
+    || /(?:\b(?:Euro|dollars?|pounds?)\s*\d|\d\s*(?:Euro|dollars?|pounds?)\b|[$€£]\s*\d|\d\s*[$€£])/i.test(query);
+}
+
 function amount(value) {
   if (typeof value !== 'string' || !/^(?:\d{1,3}(?:['’]\d{3})+|\d{1,7})(?:[.,]\d{1,2})?$/.test(value)) {
     throw new Error('Gib das Budget in CHF mit höchstens zwei Nachkommastellen ein.');
@@ -11,7 +18,7 @@ function amount(value) {
 }
 
 function budgetMentions(query) {
-  const expression = /\b(bis(?:\s+zu)?|budget|maximal|max\.?|höchstens|unter)\s*[:]?\s+(?:(?:CHF|Fr\.?)\s*)?([\d'’]+(?:[.,]\d+)?)\s*(CHF|Franken|Fr\.?)?(?=$|[\s,.!?])/giu;
+  const expression = /\b(bis(?:\s+zu)?|budget|maximal|max\.?|höchstens|unter|up\s+to|under|at\s+most|maximum)\s*[:]?\s+(?:(?:CHF|Fr\.?)\s*)?([\d'’]+(?:[.,]\d+)?)\s*(CHF|Franken|Fr\.?)?(?=$|[\s,.!?])/giu;
   const mentions = [];
   for (const match of query.matchAll(expression)) {
     const tail = query.slice(match.index + match[0].length);
@@ -23,7 +30,7 @@ function budgetMentions(query) {
 
 function budgetFrom(query) {
   const budgets = budgetMentions(query).map(match =>
-    amount(match[2]) - (match[1].toLowerCase() === 'unter' ? 1 : 0));
+    amount(match[2]) - (['unter','under'].includes(match[1].toLowerCase()) ? 1 : 0));
   return budgets.length ? Math.min(...budgets) : null;
 }
 
@@ -37,8 +44,9 @@ export function withoutBudget(query) {
 
 export function criteriaFor(input) {
   const query = input.query;
-  const newOnly = /\b(?:(?:nicht|kein(?:e|en|er|es)?) gebraucht\w*|nur neu(?:ware)?|neu(?:er|en|e|es)? (?:gaming[- ]?)?(?:pc|ssd|speicher|grafikkarte))\b/i.test(query);
-  const usedOnly = /\b(?:gebraucht\w*|secondhand|second.hand|refurbished)\b/i.test(query);
+  if(foreignCurrencyIn(query))throw new Error('Der Pilot unterstützt Budgets nur in CHF. Andere Währungen werden nicht automatisch umgerechnet.');
+  const newOnly = /\b(?:(?:nicht|kein(?:e|en|er|es)?) gebraucht\w*|nur neu(?:ware)?|neu(?:er|en|e|es)? (?:gaming[- ]?)?(?:pc|ssd|speicher|grafikkarte)|(?:not|no)\s+used|new(?:\s+only)?\s+(?:gaming[- ]?)?(?:pc|ssd|ram|memory|graphics)|only\s+new)\b/i.test(query);
+  const usedOnly = /\b(?:gebraucht\w*|secondhand|second.hand|refurbished|used|pre-owned)\b/i.test(query);
   const inferred = newOnly ? 'new' : usedOnly ? 'used' : 'any';
   const condition = input.condition ?? inferred;
   if (!['any', 'new', 'used'].includes(condition)) throw new Error('Wähle einen gültigen Zustand.');

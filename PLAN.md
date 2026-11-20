@@ -12,6 +12,16 @@ Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quelle
 
 ## Aktueller Umsetzungsschritt · verständliche Suche und konsistentes Design
 
+### Deutsch/Englisch und skalierbare Märkte · Auftrag vom 20.11.2026
+
+Der konsolidierte Auftrag «USP, App-Bau, Monetarisierung und Start» bestätigt App-first, einen echten begrenzten Nutzerablauf, transparente Monetarisierung und nützliche Wiederkehr. Keine neue Browser-Version und kein unbegründeter Neubau. Internationale Abdeckung wird nicht mit Sprachumschaltung verwechselt. Selbst gemeldete Käufe bleiben Nutzerangaben, keine bestätigte Ersparnis. Bisherige Quellen-, Kosten-, Geräte- und Startfreigaben gelten weiter.
+
+- [x] Sprachetappe umgesetzt: zentraler kontrollierter DE/EN-Katalog, lokale Sprachpräferenz, HTML-lang, CHF-/Datumsformat, passende Diktatsprache und übersetzte Hilfe-, Aufnahme-, Teilen-, Installations- und Fehlerzustände. Nutzer-/Quelltexte bleiben unverändert. 54 Fachtests; DE bei 360/390/768/1365, EN bei 390/1365 Pixeln und 200 Prozent Text praktisch geprüft. Sprachwechsel bewahrt Eingabe/Kriterien und gespeicherte Suchen und startet keinen Scan. Englischer Real-DQ-Pfad bis Händlerseite am 20.11., 11.41 Uhr CH erfolgreich. Physische Geräte-/Mikrofonabnahme separat offen.
+- [x] Englische CHF-Budgets, Neu-/Gebrauchtkriterien und bedarfsgesteuerte Kapazitätsfrage im vorhandenen Suchpfad umgesetzt. Explizite andere Währungen einschliesslich nachgestellter Symbole werden abgewiesen; Regression vor Korrektur reproduziert. Matching-, Frische-, Kosten- und Quellenregeln bestehen unverändert.
+- [x] Aktiver Markt CH/CHF mit Zeitzone getrennt von UI-Sprache. Skalierungsreihenfolge und Abnahme in docs/INTERNATIONAL.md: FR/IT für CH, danach einzeln belegte neue Märkte mit Quellenrechten, Identität/Zustand, Lieferziel, Kosten, Frische und Geräteabnahme. Geteilte Suchen behalten CHF-Kriterien. Kein Länderumschalter mit nicht angebundenen Angeboten.
+- [x] Engen belegten Nutzen und Grenzen gegenüber offiziellen Alternativangeboten dokumentiert. Preisvergleich, Zweisprachigkeit oder KI begründen keinen belegten Alleinstellungsanspruch. Keine Monetarisierung oder Ersparnisse simuliert.
+- [ ] USP im Alltag und neue Märkte abnehmen: freiwillige Nutzer müssen Zeitgewinn, relevante aktuelle Treffer, richtige Links und verständliche Unsicherheit bestätigen. FR/IT, andere Länder/Währungen und native Geräte bleiben geplant, bis die jeweilige Abnahme tatsächlich erfolgt ist.
+
 ### App-Start · Auftrag vom 20.11.2026
 
 Ziel ist ein eng begrenzter, verlässlicher Start aus dem bestehenden Projekt. Die gewählte erste Auslieferungsform ist eine installierbare PWA mit derselben App-Oberfläche; kein nativer Neubau und keine zusätzliche Browser-/Marketing-Version. [Startentscheidung und Testablauf](docs/LAUNCH.md) unterscheiden Vorbereitung von tatsächlicher Verteilung und Geräteabnahme.

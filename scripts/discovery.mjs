@@ -17,9 +17,9 @@ export async function discover(input, webSearch) {
   }
   let criteria;
   try { criteria = criteriaFor({ ...input, query }); } catch (error) { throw new InvalidSearch(error.message); }
-  const secondhand = /\b(gebraucht\w*|secondhand|second.hand|refurbished|ricardo|tutti)\b/i.test(query);
+  const secondhand = /\b(gebraucht\w*|secondhand|second.hand|refurbished|ricardo|tutti|used|pre-owned)\b/i.test(query);
   const completePc = /\b(komplett.pc|gaming.pc|desktop.pc|gebraucht\w* (?:gaming[- ]?)?pc|fertig.pc)\b/i.test(query);
-  const outcome = /\b(mehr speicher|zu wenig speicher|zu langsam|pc aufrüsten)\b/i.test(query);
+  const outcome = /\b(mehr speicher|zu wenig speicher|zu langsam|pc aufrüsten|more storage|more memory|not enough storage|too slow|upgrade (?:my |a )?pc)\b/i.test(query);
   const newOnly = criteria.condition === 'new';
   if (!requestedScope && !secondhand && criteria.condition === 'any' && (outcome || completePc)) {
     return { kind: 'clarification', criteria };

@@ -33,6 +33,7 @@ async function until(read, label) {
 }
 
 const live = process.argv.includes('--live');
+const liveEnglish=live&&process.argv.includes('--english');
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 const appOptions = live ? {
   verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
@@ -57,6 +58,7 @@ let app = server(appOptions);
 let browser;
 let socket;
 let browserError = '';
+const pageErrors=[];
 try {
   app.listen(0, '127.0.0.1');
   await once(app, 'listening');
@@ -76,6 +78,8 @@ try {
   const pending = new Map();
   socket.addEventListener('message', event => {
     const reply = JSON.parse(event.data);
+    if(reply.method==='Runtime.exceptionThrown')pageErrors.push(reply.params.exceptionDetails.exception?.description??reply.params.exceptionDetails.text);
+    if(reply.method==='Runtime.consoleAPICalled' && reply.params.type==='error')pageErrors.push(reply.params.args.map(value=>value.description??value.value).join(' '));
     const finish = pending.get(reply.id);
     if (finish) finish(reply);
   });
@@ -101,14 +105,17 @@ try {
     return reply.result.value;
   }
   let origin = 'http://127.0.0.1:' + app.address().port;
+  await send('Runtime.enable');
   await send('Page.enable');
+  await send('Page.addScriptToEvaluateOnNewDocument',{source:`if(location.hostname==='127.0.0.1'){try{if(localStorage.getItem('udi.language.v1')===null)localStorage.setItem('udi.language.v1',${JSON.stringify(liveEnglish?'en':'de')})}catch{}}`});
   if (!live) await send('Page.addScriptToEvaluateOnNewDocument', {
     source: `Object.defineProperty(window, 'SpeechRecognition', { value: class {
       start() {
+        window.udiSpeechLanguage=this.lang;
         if (window.udiHoldSpeech) return;
         setTimeout(() => {
           if (window.udiSpeechError) { this.onerror({error: window.udiSpeechError}); this.onend(); return; }
-          this.onresult({ results: [[{ transcript: 'Mein PC braucht mehr Speicher' }]] });
+          this.onresult({ results: [[{ transcript: window.udiTranscript ?? 'Mein PC braucht mehr Speicher' }]] });
           this.onend();
         }, 650);
       }
@@ -231,10 +238,10 @@ try {
     }
     if (live) {
       await evaluate("document.querySelector('#search-query').focus()");
-      await type('Samsung 990 PRO 2 TB bis CHF 500');
+      await type(liveEnglish?'Samsung 990 PRO 2 TB up to CHF 500':'Samsung 990 PRO 2 TB bis CHF 500');
       await key('Enter');
       await until(() => evaluate("document.querySelector('#web-results article a')?.href.startsWith('https://www.dq-solutions.ch/')"), 'live DQ offer');
-      assert(await evaluate("document.querySelector('#web-results .cost-open')?.textContent.includes('Versand')"), 'live offer names unknown costs');
+      assert(await evaluate(`document.querySelector('#web-results .cost-open')?.textContent.includes(${JSON.stringify(liveEnglish?'Shipping':'Versand')})`), 'live offer names unknown costs');
       assert(await evaluate("!document.querySelector('#web-results .value-proof')"), 'partial live offer has no savings claim');
       await noOverflow();
       const receipt = JSON.parse(await readFile(join(profile, 'checks.json'), 'utf8')).at(-1);
@@ -285,7 +292,9 @@ try {
     await key('Enter');
     await until(() => visible('suche'), 'keyboard search submission');
     assert.equal(await evaluate('document.activeElement.tagName'), 'H2');
-    await until(() => evaluate("Boolean(document.querySelector('#web-results article a[href$=passport]'))"), 'catalog offer Passport');
+    await until(() => evaluate("Boolean(document.querySelector('#web-results article a[href$=passport]'))"), 'catalog offer Passport').catch(async error=>{
+      console.error(await evaluate("document.querySelector('#web-results').textContent"));throw error;
+    });
     assert.equal(await evaluate('document.activeElement.tagName'), 'H2', 'focus stays on visible search results');
     await click('#web-results article a[href="#passport"]');
     assert(await visible('passport'));
@@ -482,7 +491,63 @@ try {
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }
+  if(!live)for(const width of [390,1365]) {
+    await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
+    origin='http://127.0.0.1:'+app.address().port;
+    await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<500});
+    await send('Page.navigate',{url:origin+'/#suche'});await until(()=>visible('suche'),'bilingual app start');
+    await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB up to CHF 600';document.querySelector('#max-price').value='600';document.querySelector('#condition').value='used';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+    const draft=await evaluate("JSON.stringify([document.querySelector('#search-query').value,document.querySelector('#max-price').value,document.querySelector('#condition').value])");
+    await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
+    assert.equal(await evaluate("JSON.stringify([document.querySelector('#search-query').value,document.querySelector('#max-price').value,document.querySelector('#condition').value])"),draft);
+    assert.equal(await evaluate('document.documentElement.lang'),'en');
+    await evaluate("document.querySelector('#search-query').value='SSD under 500 €';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+    assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('supports budgets in CHF only')"),'foreign currency error is English in the search compass');
+    await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB up to CHF 600';document.querySelector('#condition').value='';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+    assert(await evaluate("document.querySelector('.market-label').textContent.includes('Switzerland')"));
+    assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery'))"),'language change never scans');
+    const manifest=await send('Page.getAppManifest');assert.equal(JSON.parse(manifest.data).lang,'en');assert.equal(manifest.errors.length,0);
+    await noOverflow();await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();await evaluate("document.documentElement.style.fontSize=''");
+    if(process.env.UDI_SCREENSHOT_DIR){await evaluate('scrollTo(0,0)');const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'english-start-'+width+'.png'),Buffer.from(shot.data,'base64'));}
+    await click('#suche button[type=submit]');
+    await until(()=>evaluate("Boolean(document.querySelector('#web-results article a[href=\"#passport\"]'))"),'English current offer').catch(async error=>{console.error(await evaluate("document.querySelector('#web-results').textContent"));console.error(await evaluate("document.querySelector('#results').textContent"));throw error;});
+    assert(await evaluate("document.querySelector('#web-results').textContent.includes('Recently checked') && document.querySelector('#web-results').textContent.includes('total costs still unknown')"));
+    assert(await evaluate("document.querySelector('#web-results article h3').textContent.includes('Samsung 990 PRO')"),'product identity remains unchanged');
+    assert(await evaluate("!document.querySelector('#web-results .value-proof')"),'English partial costs never imply savings');
+    const direct=await evaluate("document.querySelector('#web-results a[target=_blank]').href");
+    if(process.env.UDI_SCREENSHOT_DIR){await evaluate("document.querySelector('#web-results').scrollIntoView()");const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'english-offers-'+width+'.png'),Buffer.from(shot.data,'base64'));}
+    await click('#web-results a[href="#passport"]');assert(await visible('passport'));
+    assert(await evaluate("document.querySelector('#detail').textContent.includes('Partially checked') && document.querySelector('#detail').textContent.includes('Total cost') && document.querySelector('#detail').textContent.includes('Unknown')"));
+    assert.equal(await evaluate("document.querySelector('#detail a[target=_blank]').href"),direct);
+    await click('nav a[href="#vergleich"]');assert(await evaluate("document.querySelector('#comparison').textContent.includes('Buying decision open')"));await noOverflow();
+    await click('nav a[href="#suche"]');await click('#results button');
+    await until(()=>evaluate("document.querySelector('#results button').textContent==='Search saved'"),'English save search');
+    await click('nav a[href="#watchlist"]');const savedBefore=await evaluate("localStorage.getItem('udi.searches.v1')");
+    assert(await evaluate("document.querySelector('#saved').textContent.includes('Total budget up to CHF')"));
+    await evaluate("document.querySelector('#ui-language').value='de';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
+    assert.equal(await evaluate("localStorage.getItem('udi.searches.v1')"),savedBefore,'switching language preserves saved requests byte for byte');
+    await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
+    await send('Page.reload');await until(()=>evaluate("document.documentElement.lang==='en' && document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB up to CHF 600')"),'English preference and saved search survive restart');
+    await click('#saved .button');await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('Recently checked')"),'English saved search reruns');
+    assert.equal(await evaluate("document.querySelector('#condition').value"),'any');
+    assert(await evaluate(`(()=>{const original=Date.now;Date.now=()=>original()+300001;try{document.querySelector('#web-results a').click();return document.querySelector('#web-results').textContent.includes('expired')&&!document.querySelector('#web-results a')}finally{Date.now=original}})()`),'English expired offers are removed');
+    await evaluate("document.querySelector('#search-query').value='SSD for my PC';document.querySelector('#max-price').value='';document.querySelector('#condition').value='';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
+    assert(await evaluate("document.querySelector('#intent-question').textContent.includes('How much SSD storage')"));
+    await evaluate("document.querySelector('#search-query').value='';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}));window.udiTranscript='My PC needs more storage'");
+    await click('[data-mic]');await until(()=>evaluate("document.querySelector('#search-query').value==='My PC needs more storage' && document.querySelector('[data-mic]').getAttribute('aria-pressed')==='false'"),'English dictation with test adapter');
+    assert.equal(await evaluate('window.udiSpeechLanguage'),'en-GB');
+    await click('[data-delete-audio]');
+    await evaluate("navigator.mediaDevices.getUserMedia=()=>Promise.reject(new DOMException('denied','NotAllowedError'))");await click('[data-mic]');
+    await until(()=>evaluate("document.querySelector('[data-voice-status]').textContent.includes('No microphone access')"),'English microphone permission refusal');
+    await click('.share-search summary');await click('[data-share-prepare]');assert(await evaluate("document.querySelector('[data-share-status]').textContent.toLowerCase().includes('local test link')"));
+    await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'English installation and privacy help');
+    assert(await evaluate("document.querySelector('#hilfe').textContent.includes('Dictation needs microphone permission')"));
+    await noOverflow();
+    console.log('English workflow passed at '+width+'px (CH/CHF, persistence, expiry, dictation adapter, permissions, sharing)');
+  }
+  assert.equal(pageErrors.length,0,'no unhandled app errors or console errors');
 } catch (error) {
+  if(pageErrors.length)console.error(JSON.stringify({pageErrors}));
   if (browserError) console.error(browserError.trim());
   throw error;
 } finally {

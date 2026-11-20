@@ -1,5 +1,9 @@
 # Universal Deal Intelligence
 
+Die bestehende App ist auf Deutsch und Englisch bedienbar. Die Sprachwahl erhält Suchtext und Kriterien und wird lokal gespeichert. Sie steuert auch neue Diktate, Zeit-/Geldformat und Installationshinweise. Die Angebotsregion bleibt ausdrücklich Schweiz/CHF; Benutzer- und Quelltexte werden nicht automatisch übersetzt. Englische Wünsche wie «Samsung 990 PRO 2 TB up to CHF 500» nutzen denselben geprüften Datenpfad. Budgets mit ausdrücklich fremder Währung werden abgewiesen. [Weitere Sprachen und Märkte](docs/INTERNATIONAL.md) sind getrennt geplant.
+
+English: choose **English** in the app header. This is a Swiss CHF pilot, with local saved searches and clearly marked unknown costs. Run the commands below with Node.js 24, then open the local address. This operator package is not a native Android/iOS installer; phone installation and microphone recognition still need a separate device acceptance test. `npm run live -- --english` checks the English flow against the permitted real source without making a purchase.
+
 Mit UDI kannst du die Samsung 990 PRO 2 TB ohne Kühlkörper live bei DQ Solutions prüfen. Für bekannte konkrete Katalogprodukte wird keine KI-Suche benötigt. Gib beispielsweise «Samsung 990 PRO 2 TB» oder «Samsung 990 PRO 2 TB bis CHF 500» ein. Preis, Lagerstatus und Herstellernummer werden von der konkreten Produktseite gelesen. Nicht belegte Kosten bleiben offen. Händlervergleich, Deal Passport und gespeicherte Suchwünsche ergänzen diesen Ablauf.
 
 Die Suche berücksichtigt Budget und Zustand aus dem Kaufwunsch oder den aufklappbaren Kaufkriterien. Bekannte Kosten oberhalb des Budgets führen zum Ausschluss. Solange Gebühren offen sind, bleibt die Budgetpassung unbestätigt. Mit «Nur Angebote mit bestätigten Gesamtkosten» lassen sich solche Treffer ausblenden. Dieselben Kriterien gelten im Katalogvergleich und im Deal Passport.

@@ -5,13 +5,13 @@ export function intentFor(input) {
   const criteria = criteriaFor(input);
   const intent = { query, criteria, question: null, suggestions: [] };
   const component = /\b(ram|arbeitsspeicher|ssd)\b/i.exec(query);
-  if (!component || /\b(kapazität egal|grösse egal|größe egal)\b/i.test(query)) return intent;
+  if (!component || /\b(kapazität egal|grösse egal|größe egal|any capacity|capacity does not matter)\b/i.test(query)) return intent;
   // A complete PC's installed components are not a request for a loose component.
-  if (/\b(pc|computer|rechner)\b.*\b(mit|inklusive|inkl\.)\b/i.test(query.slice(0, component.index))) return intent;
+  if (/\b(pc|computer|rechner)\b.*\b(mit|inklusive|inkl\.|with|including)\b/i.test(query.slice(0, component.index))) return intent;
   const ram = component[1].toLowerCase() !== 'ssd';
   const hasCapacity = ram
-    ? /\b(?:ram|arbeitsspeicher)\s*(?:(?:mit|von|à|a)\s*)?(?:(?:\d+)\s*[x×]\s*)?\d+\s*gb\b|\b\d+\s*gb\s*(?:ddr\d\s*)?(?:ram|arbeitsspeicher)\b/i.test(query)
-    : /\b\d+(?:[.,]\d+)?\s*tb\b|\bssd\s*(?:(?:mit|von|à|a)\s*)?\d+\s*gb\b|\b\d+\s*gb\s*ssd\b/i.test(query);
+    ? /\b(?:ram|arbeitsspeicher)\s*(?:(?:mit|von|à|a|with)\s*)?(?:(?:\d+)\s*[x×]\s*)?\d+\s*gb\b|\b\d+\s*gb\s*(?:ddr\d\s*)?(?:ram|arbeitsspeicher)\b/i.test(query)
+    : /\b\d+(?:[.,]\d+)?\s*tb\b|\bssd\s*(?:(?:mit|von|à|a|with)\s*)?\d+\s*gb\b|\b\d+\s*gb\s*ssd\b/i.test(query);
   if (!hasCapacity) intent.question = {
     key: ram ? 'ram-capacity' : 'ssd-capacity',
     title: ram ? 'Wie viel Arbeitsspeicher soll es sein?' : 'Wie viel SSD-Speicher brauchst du?',

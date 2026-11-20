@@ -8,13 +8,13 @@ import { setupVoice } from './voice.mjs';
 import { costs } from './costs.mjs';
 import { setupInstall } from './install.mjs';
 import { setupSharing, readSharedSearch } from './share.mjs';
+import { m,t,setText,uiError,initializeLanguage,setLanguage,formatMoney,formatDate } from './i18n.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
-const currency = new Intl.NumberFormat('de-CH', { style: 'currency', currency: 'CHF' });
-const date = new Intl.DateTimeFormat('de-CH', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Zurich' });
-const money = amount => currency.format(amount / 100);
-const labels = { verified: 'Verifiziert', partial: 'Teilweise geprüft', unconfirmed: 'Unbestätigt' };
+const money = formatMoney;
+const conditionText = (value,fallback) => ['Neu','Gebraucht','Generalüberholt','Beschädigt'].includes(value) ? m(value) : value || fallback;
+const labels = { verified: m('Verifiziert'), partial: m('Teilweise geprüft'), unconfirmed: m('Unbestätigt') };
 const routes = ['radar', 'suche', 'vergleich', 'passport', 'watchlist', 'hilfe'];
 let activeProduct = null;
 let activeSeller = null;
@@ -31,6 +31,7 @@ let suggestionReceipt = null;
 let voice;
 let sharer;
 mountIcons();
+initializeLanguage();
 setupInstall();
 
 function draftInput(query = get('search-query').value.trim()) {
@@ -39,31 +40,31 @@ function draftInput(query = get('search-query').value.trim()) {
     completeCostsOnly: form.elements.completeCostsOnly.checked };
 }
 
-function refreshIntent() {
-  sharer?.invalidate();
+function refreshIntent({invalidate=true}={}) {
+  if(invalidate)sharer?.invalidate();
   const input = draftInput();
   const target = get('intent-summary');
   const questionBox = get('intent-question');
   questionBox.replaceChildren();
   questionBox.hidden = true;
   if (!input.query) {
-    target.replaceChildren(element('p', 'Beschreibe deinen Wunsch. Hier siehst du, wonach UDI suchen wird.', 'muted'));
+    target.replaceChildren(element('p', m('Beschreibe deinen Wunsch. Hier siehst du, wonach UDI suchen wird.'), 'muted'));
     return;
   }
   let intent;
   try { intent = intentFor(input); }
-  catch (error) { target.replaceChildren(element('p', error.message, 'muted')); return; }
-  const origin = suggestionReceipt?.query === input.query ? suggestionReceipt.note : 'Deine Formulierung · wird unverändert gesucht';
+  catch (error) { target.replaceChildren(element('p', uiError(error), 'muted')); return; }
+  const origin = suggestionReceipt?.query === input.query ? suggestionReceipt.note : m('Deine Formulierung · wird unverändert gesucht');
   target.replaceChildren(element('p', intent.query, 'intent-query'), element('p', origin, 'intent-origin'));
   const tags = element('div', null, 'intent-tags');
-  tags.append(element('span', 'Markt: Schweiz · Pilot', 'intent-tag'));
+  tags.append(element('span', m('Markt: Schweiz · Pilot'), 'intent-tag'));
   const criteriaLabel = describeCriteria(intent.criteria);
   if (criteriaLabel) tags.append(element('span', criteriaLabel, 'intent-tag'));
-  if (skippedQuestion === input.query) tags.append(element('span', 'Kapazität offen · von dir bestätigt', 'intent-tag'));
+  if (skippedQuestion === input.query) tags.append(element('span', m('Kapazität offen · von dir bestätigt'), 'intent-tag'));
   target.append(tags);
   if (intent.question && skippedQuestion !== input.query) {
     questionBox.hidden = false;
-    const title = element('h3', intent.question.title);
+    const title = element('h3', m(intent.question.title));
     title.tabIndex = -1;
     const choices = element('div', null, 'intent-choices');
     for (const capacity of intent.question.options) {
@@ -71,19 +72,19 @@ function refreshIntent() {
       button.type = 'button';
       button.addEventListener('click', () => {
         const next = addCapacity(input.query, capacity);
-        if (!next) { get('notice').textContent = 'Die Ergänzung passt nicht mehr in das Textfeld. Kürze deinen Wunsch.'; return; }
+        if (!next) { setText(get('notice'),m('Die Ergänzung passt nicht mehr in das Textfeld. Kürze deinen Wunsch.')); return; }
         get('search-query').value = next;
-        suggestionReceipt = { query: next, note: capacity + ' · von UDI vorgeschlagen, von dir gewählt. Im Text bearbeitbar.' };
+        suggestionReceipt = { query: next, note: m('{capacity} · von UDI vorgeschlagen, von dir gewählt. Im Text bearbeitbar.',{capacity}) };
         refreshIntent();
         get('search-query').focus();
       });
       choices.append(button);
     }
-    const skip = element('button', 'Noch offen');
+    const skip = element('button', m('Noch offen'));
     skip.type = 'button';
     skip.addEventListener('click', () => { skippedQuestion = input.query; refreshIntent(); get('search-query').focus(); });
     choices.append(skip);
-    questionBox.append(title, element('p', intent.question.reason), choices);
+    questionBox.append(title, element('p', m(intent.question.reason)), choices);
   }
 }
 
@@ -100,9 +101,9 @@ function renderRecent() {
   try {
     const saved = readSearches(localStorage).slice(0, 3);
     target.hidden = !saved.length;
-    if (saved.length) target.append(element('h2', 'Hier kannst du anknüpfen'));
+    if (saved.length) target.append(element('h2', m('Hier kannst du anknüpfen')));
     for (const request of saved) {
-      const button = element('button', request.query + ' · Erneut prüfen');
+      const button = element('button', m('{query} · Erneut prüfen',{query:request.query}));
       button.type = 'button';
       button.addEventListener('click', () => restoreSearch(request));
       target.append(button);
@@ -117,30 +118,28 @@ async function updateSearches(operation) {
 }
 
 function saveSearchButton(input) {
-  const button = element('button', 'Suche speichern', 'text-button');
+  const button = element('button', m('Suche speichern'), 'text-button');
   button.type = 'button';
   button.addEventListener('click', async () => {
     button.disabled = true;
     try {
       await updateSearches(storage => storeSearch(storage, input));
-      button.textContent = 'Suche gespeichert';
+      setText(button,m('Suche gespeichert'));
       renderRecent();
-      get('notice').textContent = 'Suchwunsch und Kaufkriterien wurden in deiner Watchlist gespeichert.';
+      setText(get('notice'),m('Suchwunsch und Kaufkriterien wurden in deiner Watchlist gespeichert.'));
     } catch (error) {
       button.disabled = false;
-      get('notice').textContent = 'Die Suche konnte auf diesem Gerät nicht gespeichert werden.';
-      button.insertAdjacentElement('afterend', element('p', error.message, 'muted'));
+      setText(get('notice'),m('Die Suche konnte auf diesem Gerät nicht gespeichert werden.'));
+      button.insertAdjacentElement('afterend', element('p', uiError(error), 'muted'));
     }
   });
   return button;
 }
 
 function describeCriteria(criteria) {
-  return [
-    criteria.maxTotal == null ? null : 'Gesamtbudget bis ' + money(criteria.maxTotal),
-    { new: 'Nur neu', used: 'Gebraucht oder generalüberholt' }[criteria.condition],
-    criteria.completeCostsOnly ? 'Nur bestätigte Gesamtkosten' : null,
-  ].filter(Boolean).join(' · ');
+  if(criteria.maxTotal==null&&!['new','used'].includes(criteria.condition)&&!criteria.completeCostsOnly)return '';
+  return m('{value}',()=>({value:[criteria.maxTotal==null?null:t('Gesamtbudget bis {amount}',{amount:money(criteria.maxTotal)}),
+    {new:t('Nur neu'),used:t('Gebraucht oder generalüberholt')}[criteria.condition],criteria.completeCostsOnly?t('Nur bestätigte Gesamtkosten'):null].filter(Boolean).join(' · ')}));
 }
 
 try {
@@ -153,7 +152,7 @@ try {
 
 function element(tag, content, className) {
   const node = document.createElement(tag);
-  if (content != null) node.textContent = content;
+  if (content != null) setText(node,content);
   if (className) node.className = className;
   return node;
 }
@@ -188,28 +187,24 @@ function message(title, body) {
 function openCosts(observation) {
   const summary = costs(observation);
   if (summary.total !== null) return null;
-  const names = costFields.filter(([key]) => summary.missing.includes(key)).map(([, label]) => label);
-  return element('p', 'Noch offen: ' + (names.join(', ') || 'vollständiger CHF-Endpreis') + '.', 'cost-open');
+  return element('p',m('Noch offen: {names}.',()=>({names:costFields.filter(([key])=>summary.missing.includes(key)).map(([,label])=>t(label)).join(', ')||t('vollständiger CHF-Endpreis')})),'cost-open');
 }
 
 function appendPriceAdvantage(target, advantage) {
   if (!advantage) return;
   const box = element('section', null, 'value-proof');
-  box.append(element('h3', 'Möglicher Preisvorteil: ' + money(advantage.amount)),
-    element('p', 'Gegenüber ' + advantage.referenceSeller + ' mit ' + money(advantage.referenceTotal)
-      + ' Gesamtkosten. Dieselbe Variante, Zustand ' + advantage.condition + ', Lieferung an '
-      + advantage.deliveryDestination.postalCode + ' (CH).', 'muted'),
-    element('p', 'Älteste Angebotsprüfung im Vergleich: ' + date.format(new Date(advantage.checkedAt))
-      + ' (CH). Ein Kauf ist nicht bestätigt; dies ist keine bereits erzielte Ersparnis.', 'muted'),
-    link('Vergleichsangebot bei ' + advantage.referenceSeller, advantage.referenceUrl, 'text-button', true));
+  box.append(element('h3',m('Möglicher Preisvorteil: {amount}',()=>({amount:money(advantage.amount)}))),
+    element('p',m('Gegenüber {seller} mit {total} Gesamtkosten. Dieselbe Variante, Zustand {condition}, Lieferung an {postalCode} (CH).',()=>({seller:advantage.referenceSeller,total:money(advantage.referenceTotal),condition:t(advantage.condition),postalCode:advantage.deliveryDestination.postalCode})),'muted'),
+    element('p',m('Älteste Angebotsprüfung im Vergleich: {checkedAt} (CH). Ein Kauf ist nicht bestätigt; dies ist keine bereits erzielte Ersparnis.',()=>({checkedAt:formatDate(advantage.checkedAt)})),'muted'),
+    link(m('Vergleichsangebot bei {seller}',{seller:advantage.referenceSeller}),advantage.referenceUrl,'text-button',true));
   target.append(box);
 }
 
 function watchAction(product, remove = false) {
-  const button = element('button', remove ? 'Entfernen' : 'Auf die Watchlist', 'text-button');
+  const button = element('button', remove ? m('Entfernen') : m('Auf die Watchlist'), 'text-button');
   button.type = 'button';
   if (!remove && watched.has(product.mpn)) {
-    button.textContent = 'Auf der Watchlist';
+    setText(button,m('Auf der Watchlist'));
     button.disabled = true;
   }
   button.addEventListener('click', () => {
@@ -220,27 +215,27 @@ function watchAction(product, remove = false) {
       localStorage.setItem(storageKey, JSON.stringify([...next]));
       watched = next;
       storageError = false;
-      get('notice').textContent = remove ? 'Produkt entfernt.' : 'Produkt gespeichert.';
+      setText(get('notice'),m(remove ? m('Produkt entfernt.') : m('Produkt gespeichert.')));
       if (remove) {
         renderWatchlist();
         get('saved').querySelector('button, a')?.focus();
       } else {
-        button.replaceWith(link('Watchlist öffnen', '#watchlist'));
+        button.replaceWith(link(m('Watchlist öffnen'), '#watchlist'));
         const anchors = get('detail').querySelectorAll('a');
         [...anchors].find(anchor => anchor.hash === '#watchlist')?.focus();
       }
     } catch {
       storageError = true;
-      get('notice').textContent = 'Die Watchlist konnte auf diesem Gerät nicht gespeichert werden.';
-      button.insertAdjacentElement('afterend', element('p', get('notice').textContent, 'muted'));
+      setText(get('notice'),m('Die Watchlist konnte auf diesem Gerät nicht gespeichert werden.'));
+      button.insertAdjacentElement('afterend', element('p', m('Die Watchlist konnte auf diesem Gerät nicht gespeichert werden.'), 'muted'));
     }
   });
   return button;
 }
 
 function productCard(product) {
-  const card = message(product.name, product.variant + ' · ' + product.mpn);
-  card.append(productAction('Händler vergleichen', 'vergleich', product));
+  const card = message(product.name,m('{variant} · {mpn}',()=>({variant:t(product.variant),mpn:product.mpn})));
+  card.append(productAction(m('Händler vergleichen'), 'vergleich', product));
   return card;
 }
 
@@ -253,17 +248,17 @@ function renderRadar() {
   target.replaceChildren();
   if (sourceState !== 'ready' || !opportunities.length) {
     const text = {
-      loading: 'Daten werden geladen …',
-      error: 'Angebotsdaten konnten nicht geladen werden. Der Produktvergleich ist weiterhin verfügbar.',
-      ready: 'Derzeit gibt es keine bestätigte Kaufempfehlung. In der Suche findest du die bekannten Händlerseiten.',
+      loading: m('Daten werden geladen …'),
+      error: m('Angebotsdaten konnten nicht geladen werden. Der Produktvergleich ist weiterhin verfügbar.'),
+      ready: m('Derzeit gibt es keine bestätigte Kaufempfehlung. In der Suche findest du die bekannten Händlerseiten.'),
     };
     target.append(element('p', text[sourceState], 'muted'));
     return;
   }
   for (const { product, recommendation } of opportunities) {
-    target.append(element('h3', product.name + ' · ' + product.variant),
-      element('p', money(recommendation.total) + ' bei ' + recommendation.seller),
-      productAction('Deal Passport ansehen', 'passport', product, recommendation.seller));
+    target.append(element('h3',m('{name} · {variant}',()=>({name:product.name,variant:t(product.variant)}))),
+      element('p',m('{amount} bei {seller}',()=>({amount:money(recommendation.total),seller:recommendation.seller}))),
+      productAction(m('Deal Passport ansehen'), 'passport', product, recommendation.seller));
   }
 }
 
@@ -274,9 +269,9 @@ function renderWebResults(result, query) {
   refreshAtExpiry();
   if (!get('passport').hidden || !get('vergleich').hidden) renderRoute();
   if (result.kind === 'clarification') {
-    const question = message('Darf ein Gebrauchtangebot dabei sein?', 'Wenn ein Upgrade allein sinnvoll ist, bleibt es im Vergleich.');
+    const question = message(m('Darf ein Gebrauchtangebot dabei sein?'), m('Wenn ein Upgrade allein sinnvoll ist, bleibt es im Vergleich.'));
     const choices = element('div', null, 'actions');
-    for (const [label, scope] of [['Neue Angebote', 'component'], ['Auch gebraucht', 'both']]) {
+    for (const [label, scope] of [[m('Neue Angebote'), 'component'], [m('Auch gebraucht'), 'both']]) {
       const button = element('button', label, 'button');
       button.addEventListener('click', () => submit(query, scope));
       choices.append(button);
@@ -288,23 +283,22 @@ function renderWebResults(result, query) {
   }
   if (result.kind !== 'results' || !result.items.length) {
     const messages = {
-      disabled: 'Die Websuche ist in dieser Installation noch nicht verbunden.',
-      busy: 'Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.',
-      unavailable: 'Die Websuche ist vorübergehend nicht erreichbar.',
-      invalid: 'Gib einen Kaufwunsch als Text ohne Webadresse ein.',
+      disabled: m('Die Websuche ist in dieser Installation noch nicht verbunden.'),
+      busy: m('Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.'),
+      unavailable: m('Die Websuche ist vorübergehend nicht erreichbar.'),
+      invalid: m('Gib einen Kaufwunsch als Text ohne Webadresse ein.'),
       results: result.excluded
-        ? 'Die geprüften Angebote erfüllen deine Kaufkriterien nicht. Du kannst dein Budget oder den Zustand anpassen.'
-        : result.unconfirmed ? 'Wir konnten die gefundenen Angebote gerade nicht aktuell bestätigen. Versuche es später erneut.'
-        : 'Keine passenden aktuellen Angebote gefunden. Ändere deinen Suchwunsch oder versuche es später erneut.',
-      expired: 'Die Angebotsprüfung ist abgelaufen. Suche erneut für den aktuellen Stand.',
+        ? m('Die geprüften Angebote erfüllen deine Kaufkriterien nicht. Du kannst dein Budget oder den Zustand anpassen.')
+        : result.unconfirmed ? m('Wir konnten die gefundenen Angebote gerade nicht aktuell bestätigen. Versuche es später erneut.')
+        : m('Keine passenden aktuellen Angebote gefunden. Ändere deinen Suchwunsch oder versuche es später erneut.'),
+      expired: m('Die Angebotsprüfung ist abgelaufen. Suche erneut für den aktuellen Stand.'),
     };
     target.replaceChildren(element('p', messages[result.kind] ?? messages.unavailable, 'surface muted'));
     return;
   }
   const intro = element('div', null, 'section-heading');
-  intro.append(element('h2', 'Aktuell geprüft'), element('span',
-    result.items.length + (result.items.length === 1 ? ' Angebot' : ' Angebote'), 'unit'));
-  if (result.sourceMode === 'catalog') intro.append(element('p', 'Prüfung der bekannten Katalogquellen', 'muted'));
+  intro.append(element('h2', m('Aktuell geprüft')), element('span',m(result.items.length===1?'{count} Angebot':'{count} Angebote',{count:result.items.length}),'unit'));
+  if (result.sourceMode === 'catalog') intro.append(element('p', m('Prüfung der bekannten Katalogquellen'), 'muted'));
   const previousCard = get('results').querySelector('.surface');
   const moveFocus = previousCard?.contains(document.activeElement);
   previousCard?.setAttribute('hidden', '');
@@ -313,35 +307,35 @@ function renderWebResults(result, query) {
     const heading = element('div', null, 'offer-heading');
     const source = element('p', item.source, 'eyebrow');
     source.prepend(icon('shop'));
-    heading.append(source, element('span', 'Teilweise geprüft', 'badge'));
+    heading.append(source, element('span', m('Teilweise geprüft'), 'badge'));
     const check = item.check;
     const layout = element('div', null, 'offer-layout');
     const identity = element('div');
     identity.append(element('h3', item.title));
     if (check.mpn) identity.append(element('p', check.mpn, 'price-caption'));
     const amount = element('div', null, 'offer-cost');
-    amount.append(element('p', money(check.total ?? check.price), 'offer-price'),
-      element('p', check.total === null ? 'Artikelpreis · Gesamtkosten noch offen' : 'Gesamtkosten inklusive bekannter Pflichtkosten', 'price-caption'));
+    amount.append(element('p',m('{value}',()=>({value:money(check.total??check.price)})), 'offer-price'),
+      element('p', check.total === null ? m('Artikelpreis · Gesamtkosten noch offen') : m('Gesamtkosten inklusive bekannter Pflichtkosten'), 'price-caption'));
     const costNote = openCosts(check);
     if (costNote) amount.append(costNote);
     const costSummary = costs(check);
     if (costSummary.total === null && costSummary.minimum > check.price) amount.append(element('p',
-      'Bisher bekannte Kosten: ' + money(costSummary.minimum) + '. Der Endpreis ist noch offen.', 'price-caption'));
+      m('Bisher bekannte Kosten: {amount}. Der Endpreis ist noch offen.',()=>({amount:money(costSummary.minimum)})), 'price-caption'));
     layout.append(identity, amount);
-    const meta = element('p', 'Quelle meldet verfügbar · geprüft ' + date.format(new Date(check.checkedAt)) + ' (CH)', 'offer-meta');
+    const meta = element('p',m('Quelle meldet verfügbar · geprüft {checkedAt} (CH)',()=>({checkedAt:formatDate(check.checkedAt)})), 'offer-meta');
     meta.prepend(icon('clock'));
     box.append(heading, layout, meta);
-    if (item.budgetStatus === 'unknown-total') box.append(element('p', 'Ob der Endpreis in dein Budget passt, ist noch offen.', 'muted'));
+    if (item.budgetStatus === 'unknown-total') box.append(element('p', m('Ob der Endpreis in dein Budget passt, ist noch offen.'), 'muted'));
     const details = element('details');
-    details.append(element('summary', 'Prüfung und offene Angaben'));
+    details.append(element('summary', m('Prüfung und offene Angaben')));
     details.append(facts([
-      ['Herstellernummer', check.mpn ?? 'Unbestätigt'],
-      ['Zustand laut Quelle', check.condition ?? 'Unbestätigt'],
-      ['Verkäufer laut Quelle', check.seller ?? 'Unbestätigt'],
-      ...costFields.map(([key, label]) => [label, isAmount(check[key]) ? money(check[key]) : 'Unbekannt']),
-      ['Funktionszustand', 'Nicht unabhängig getestet'],
+      [m('Herstellernummer'), check.mpn ?? m('Unbestätigt')],
+      [m('Zustand laut Quelle'), conditionText(check.condition,m('Unbestätigt'))],
+      [m('Verkäufer laut Quelle'), check.seller ?? m('Unbestätigt')],
+      ...costFields.map(([key, label]) => [label, isAmount(check[key]) ? money(check[key]) : m('Unbekannt')]),
+      [m('Funktionszustand'), m('Nicht unabhängig getestet')],
     ]));
-    const action = link(item.type === 'listing' ? 'Inserat öffnen' : 'Angebotsseite öffnen', item.url, 'button', true);
+    const action = link(item.type === 'listing' ? m('Inserat öffnen') : m('Angebotsseite öffnen'), item.url, 'button', true);
     action.addEventListener('click', event => {
       if (Date.now() >= Date.parse(item.expiresAt)) {
         event.preventDefault();
@@ -352,7 +346,7 @@ function renderWebResults(result, query) {
     actions.append(action);
     const knownProduct = catalog.find(product => product.sources.some(source => source.url === item.url));
     if (knownProduct && check.mpn === knownProduct.mpn) {
-      actions.append(productAction('Deal Passport', 'passport', knownProduct, item.source));
+      actions.append(productAction(m('Deal Passport'), 'passport', knownProduct, item.source));
     }
     box.append(details, actions);
     return box;
@@ -393,7 +387,7 @@ async function submit(query, scope) {
     get('max-price').removeAttribute('aria-invalid');
   } catch (error) {
     clearTimeout(resultsExpiry);
-    get('results').replaceChildren(message('Bitte prüfe deine Kaufkriterien', error.message));
+    get('results').replaceChildren(message(m('Bitte prüfe deine Kaufkriterien'), uiError(error)));
     get('web-results').replaceChildren();
     navigate('suche');
     form.querySelector('.search-options').open = true;
@@ -406,13 +400,13 @@ async function submit(query, scope) {
   get('search-home').hidden = true;
   activeCriteria = criteria;
   get('results').replaceChildren(...(products.length ? products.map(productCard) : [
-    message('Dein Suchwunsch', query),
+    message(m('Dein Suchwunsch'), query),
   ]));
   const criteriaLabel = describeCriteria(criteria);
   if (criteriaLabel) get('results').append(element('p', criteriaLabel, 'muted'));
   get('results').append(saveSearchButton(input));
   clearTimeout(resultsExpiry);
-  get('web-results').replaceChildren(element('p', 'Wir suchen und prüfen die Angebote …', 'surface muted'));
+  get('web-results').replaceChildren(element('p', m('Wir suchen und prüfen die Angebote …'), 'surface muted'));
   navigate('suche');
   const resultTitle = get('results').querySelector('h2');
   resultTitle.tabIndex = -1;
@@ -435,45 +429,45 @@ function facts(rows) {
   const list = element('dl');
   for (const [name, value] of rows) {
     const row = element('div');
-    row.append(element('dt', name), element('dd', value));
+    row.append(element('dt',m(name)), element('dd', value));
     list.append(row);
   }
   return list;
 }
 
 function recommendationText(recommendation, comparisonStatus) {
-  if (sourceState === 'loading') return 'Angebotsdaten werden geladen …';
-  if (sourceState === 'error') return 'Angebotsdaten konnten nicht geladen werden. Öffne die Händlerseite für den aktuellen Stand.';
+  if (sourceState === 'loading') return m('Angebotsdaten werden geladen …');
+  if (sourceState === 'error') return m('Angebotsdaten konnten nicht geladen werden. Öffne die Händlerseite für den aktuellen Stand.');
   if (!recommendation) {
-    if (comparisonStatus === 'missing-basis') return 'Kaufentscheid offen. Zustand oder Lieferort sind nicht für alle Angebote belegt. Ein fairer Preisvorteil lässt sich noch nicht bestätigen.';
-    if (comparisonStatus === 'different-basis') return 'Kaufentscheid offen. Zustand oder Lieferort unterscheiden sich. Diese Angebote begründen keinen gemeinsamen Preisvorteil.';
-    if (comparisonStatus === 'same-price') return 'Kaufentscheid offen. Die vergleichbaren Angebote haben dieselben Gesamtkosten; ein Preisvorteil ist nicht belegt.';
-    return 'Kaufentscheid offen. Für eine Empfehlung braucht es zwei verfügbare Angebote mit aktuellen, vollständigen Gesamtkosten, demselben Zustand und demselben belegten Lieferort.';
+    if (comparisonStatus === 'missing-basis') return m('Kaufentscheid offen. Zustand oder Lieferort sind nicht für alle Angebote belegt. Ein fairer Preisvorteil lässt sich noch nicht bestätigen.');
+    if (comparisonStatus === 'different-basis') return m('Kaufentscheid offen. Zustand oder Lieferort unterscheiden sich. Diese Angebote begründen keinen gemeinsamen Preisvorteil.');
+    if (comparisonStatus === 'same-price') return m('Kaufentscheid offen. Die vergleichbaren Angebote haben dieselben Gesamtkosten; ein Preisvorteil ist nicht belegt.');
+    return m('Kaufentscheid offen. Für eine Empfehlung braucht es zwei verfügbare Angebote mit aktuellen, vollständigen Gesamtkosten, demselben Zustand und demselben belegten Lieferort.');
   }
-  return recommendation.seller + ' hat im belegten Vergleich für denselben Zustand und Lieferort die tiefsten Gesamtkosten (' + money(recommendation.total) + ').';
+  return m('{seller} hat im belegten Vergleich für denselben Zustand und Lieferort die tiefsten Gesamtkosten ({amount}).',()=>({seller:recommendation.seller,amount:money(recommendation.total)}));
 }
 
 function factsFor(offer) {
   const observation = offer.observation;
-  const available = observation?.stock === 'in-stock' ? 'Verfügbar'
-    : observation?.stock === 'out-of-stock' ? 'Nicht verfügbar' : 'Unbestätigt';
+  const available = observation?.stock === 'in-stock' ? m('Verfügbar')
+    : observation?.stock === 'out-of-stock' ? m('Nicht verfügbar') : m('Unbestätigt');
   return [
-    ['Artikelpreis', isAmount(observation?.price) && observation.price > 0 ? money(observation.price) : 'Unbekannt'],
-    ['Gesamtkosten', offer.total === null ? 'Unbekannt' : money(offer.total)],
-    ['Zustand laut Quelle', observation?.condition || 'Nicht belegt'],
-    ['Lieferziel des Preises', observation?.deliveryDestination?.country === 'CH'
+    [m('Artikelpreis'), isAmount(observation?.price) && observation.price > 0 ? money(observation.price) : m('Unbekannt')],
+    [m('Gesamtkosten'), offer.total === null ? m('Unbekannt') : money(offer.total)],
+    [m('Zustand laut Quelle'), conditionText(observation?.condition,m('Nicht belegt'))],
+    [m('Lieferziel des Preises'), observation?.deliveryDestination?.country === 'CH'
       && /^[1-9]\d{3}$/.test(observation.deliveryDestination.postalCode)
-      ? observation.deliveryDestination.postalCode + ' (CH)' : 'Nicht belegt'],
-    ['Verfügbarkeit', available],
-    ['Prüfzeitpunkt', observation ? date.format(new Date(observation.checkedAt)) + ' (CH)' : 'Keine aktuelle Prüfung'],
+      ? observation.deliveryDestination.postalCode + ' (CH)' : m('Nicht belegt')],
+    [m('Verfügbarkeit'), available],
+    [m('Prüfzeitpunkt'), observation ? m('{checkedAt} (CH)',()=>({checkedAt:formatDate(observation.checkedAt)})) : m('Keine aktuelle Prüfung')],
   ];
 }
 
 function renderComparison() {
   const target = get('comparison');
   if (!activeProduct) {
-    const box = message('Wähle eine SSD', 'Öffne die Suche und wähle ein Produkt für den Händlervergleich.');
-    box.append(link('Zur Suche', '#suche'));
+    const box = message(m('Wähle eine SSD'), m('Öffne die Suche und wähle ein Produkt für den Händlervergleich.'));
+    box.append(link(m('Zur Suche'), '#suche'));
     target.replaceChildren(box);
     return;
   }
@@ -483,11 +477,11 @@ function renderComparison() {
     const box = element('article', null, 'surface');
     box.append(element('h3', offer.seller), element('span', labels[offer.state], 'badge ' + offer.state),
       facts(factsFor(offer)));
-    if (offer.excluded) box.append(element('p', 'Erfüllt deine Kaufkriterien nicht.', 'muted'));
-    else box.append(productAction('Deal Passport · ' + offer.seller, 'passport', activeProduct, offer.seller));
+    if (offer.excluded) box.append(element('p', m('Erfüllt deine Kaufkriterien nicht.'), 'muted'));
+    else box.append(productAction(m('Deal Passport · {seller}',{seller:offer.seller}), 'passport', activeProduct, offer.seller));
     columns.append(box);
   }
-  const heading = message(activeProduct.name + ' · ' + activeProduct.variant, activeProduct.mpn);
+  const heading = message(m('{name} · {variant}',()=>({name:activeProduct.name,variant:t(activeProduct.variant)})), activeProduct.mpn);
   const criteriaLabel = describeCriteria(activeCriteria);
   if (criteriaLabel) heading.append(element('p', criteriaLabel, 'muted'));
   heading.append(element('p', recommendationText(recommendation, comparisonStatus)));
@@ -498,79 +492,79 @@ function renderComparison() {
 function renderPassport() {
   const target = get('detail');
   if (!activeProduct || !activeSeller) {
-    const box = message('Wähle einen Händler', 'Im Vergleich findest du den Deal Passport für jede Händlerseite.');
-    box.append(link('Zum Vergleich', '#vergleich'));
+    const box = message(m('Wähle einen Händler'), m('Im Vergleich findest du den Deal Passport für jede Händlerseite.'));
+    box.append(link(m('Zum Vergleich'), '#vergleich'));
     target.replaceChildren(box);
     return;
   }
   const { offers, recommendation, priceAdvantage, comparisonStatus } = compare(activeProduct, observations, Date.now(), activeCriteria);
   const offer = offers.find(row => row.seller === activeSeller);
   if (offer.excluded) {
-    const box = message('Angebot erfüllt deine Kaufkriterien nicht', 'Suche mit angepassten Kriterien oder öffne den Vergleich.');
-    box.append(link('Zum Vergleich', '#vergleich'));
+    const box = message(m('Angebot erfüllt deine Kaufkriterien nicht'), m('Suche mit angepassten Kriterien oder öffne den Vergleich.'));
+    box.append(link(m('Zum Vergleich'), '#vergleich'));
     target.replaceChildren(box);
     return;
   }
-  const box = message(offer.seller + ' · ' + activeProduct.name, activeProduct.variant + ' · ' + activeProduct.mpn);
+  const box = message(offer.seller + ' · ' + activeProduct.name,m('{variant} · {mpn}',()=>({variant:t(activeProduct.variant),mpn:activeProduct.mpn})));
   const observation = offer.observation;
   const risk = {
-    verified: 'Preis und Bestand können sich seit der Prüfung ändern. Kontrolliere die Angaben vor dem Kauf.',
+    verified: m('Preis und Bestand können sich seit der Prüfung ändern. Kontrolliere die Angaben vor dem Kauf.'),
     partial: observation
-      ? 'Die vorliegenden Angebotsdaten sind unvollständig. Kontrolliere die offenen Angaben vor dem Kauf.'
-      : 'Die Produktvariante wurde der Händlerseite zugeordnet. Preis, Bestand, Lieferbedingungen und Weiterleitungen sind derzeit nicht aktuell bestätigt.',
-    unconfirmed: 'Die letzte Prüfung konnte dieses Angebot nicht bestätigen. Eine aktuelle passende Angebotsprüfung fehlt.',
+      ? m('Die vorliegenden Angebotsdaten sind unvollständig. Kontrolliere die offenen Angaben vor dem Kauf.')
+      : m('Die Produktvariante wurde der Händlerseite zugeordnet. Preis, Bestand, Lieferbedingungen und Weiterleitungen sind derzeit nicht aktuell bestätigt.'),
+    unconfirmed: m('Die letzte Prüfung konnte dieses Angebot nicht bestätigen. Eine aktuelle passende Angebotsprüfung fehlt.'),
   };
   const expenses = costFields.map(([key, label]) => {
     const amount = observation?.[key];
-    return [label, isAmount(amount) && (key !== 'price' || amount > 0) ? money(amount) : 'Unbekannt'];
+    return [label, isAmount(amount) && (key !== 'price' || amount > 0) ? money(amount) : m('Unbekannt')];
   });
   const delivery = typeof observation?.delivery === 'string' && observation.delivery.trim();
   box.append(element('span', labels[offer.state], 'badge ' + offer.state),
-    facts([...factsFor(offer), ...expenses, ['Lieferbedingungen', delivery || 'Unbestätigt'],
-      ['Quelle', new URL(offer.url).hostname]]), element('p', risk[offer.state], 'muted'));
+    facts([...factsFor(offer), ...expenses, [m('Lieferbedingungen'), delivery || m('Unbestätigt')],
+      [m('Quelle'), new URL(offer.url).hostname]]), element('p', risk[offer.state], 'muted'));
   const costNote = openCosts(observation);
   if (costNote) box.append(costNote);
   const actions = element('div', null, 'actions');
   const url = directLink(offer.url, activeProduct);
-  if (url && offer.state !== 'unconfirmed') actions.append(link(offer.seller + ' öffnen', url, 'button', true));
+  if (url && offer.state !== 'unconfirmed') actions.append(link(m('{seller} öffnen',{seller:offer.seller}), url, 'button', true));
   actions.append(watchAction(activeProduct));
   box.append(actions);
-  const guidance = message('Kaufentscheid', recommendationText(recommendation, comparisonStatus));
+  const guidance = message(m('Kaufentscheid'), recommendationText(recommendation, comparisonStatus));
   if (recommendation?.seller === offer.seller) appendPriceAdvantage(guidance, priceAdvantage);
-  guidance.append(element('p', activeProduct.compatibility),
-    link('Technische Daten bei Samsung', activeProduct.manufacturer, 'text-button', true),
-    link('Händler vergleichen', '#vergleich'));
+  guidance.append(element('p', m(activeProduct.compatibility)),
+    link(m('Technische Daten bei Samsung'), activeProduct.manufacturer, 'text-button', true),
+    link(m('Händler vergleichen'), '#vergleich'));
   target.replaceChildren(box, guidance);
 }
 
 function renderWatchlist() {
   const items = catalog.filter(product => watched.has(product.mpn));
   const boxes = items.map(product => {
-    const box = message(product.name, product.variant + ' · ' + product.mpn);
+    const box = message(product.name,m('{variant} · {mpn}',()=>({variant:t(product.variant),mpn:product.mpn})));
     const actions = element('div', null, 'actions');
-    actions.append(productAction('Händler vergleichen', 'vergleich', product), watchAction(product, true));
+    actions.append(productAction(m('Händler vergleichen'), 'vergleich', product), watchAction(product, true));
     box.append(actions);
     return box;
   });
   try {
     for (const request of readSearches(localStorage)) {
-      const box = message(request.query, describeCriteria(criteriaFor(request)) || 'Alle Zustände');
+      const box = message(request.query, describeCriteria(criteriaFor(request)) || m('Alle Zustände'));
       const actions = element('div', null, 'actions');
-      const searchAgain = element('button', 'Erneut prüfen', 'button');
+      const searchAgain = element('button', m('Erneut prüfen'), 'button');
       searchAgain.type = 'button';
       searchAgain.addEventListener('click', () => restoreSearch(request));
-      const remove = element('button', 'Suche entfernen', 'text-button');
+      const remove = element('button', m('Suche entfernen'), 'text-button');
       remove.type = 'button';
       remove.addEventListener('click', async () => {
         remove.disabled = true;
         try {
           await updateSearches(storage => removeSearch(storage, request));
           renderWatchlist();
-          get('notice').textContent = 'Gespeicherte Suche entfernt.';
+          setText(get('notice'),m('Gespeicherte Suche entfernt.'));
           get('saved').querySelector('button, a')?.focus();
         } catch (error) {
           remove.disabled = false;
-          box.append(element('p', 'Die Suche konnte nicht entfernt werden. ' + error.message, 'muted'));
+          box.append(element('p',m('Die Suche konnte nicht entfernt werden. {error}',()=>({error:uiError(error)})), 'muted'));
         }
       });
       actions.append(searchAgain, remove);
@@ -578,15 +572,15 @@ function renderWatchlist() {
       boxes.push(box);
     }
   } catch {
-    boxes.push(message('Gespeicherte Suchen nicht lesbar', 'Die gespeicherten Daten bleiben auf diesem Gerät. Prüfe die Browsereinstellungen für lokalen Speicher.'));
+    boxes.push(message(m('Gespeicherte Suchen nicht lesbar'), m('Die gespeicherten Daten bleiben auf diesem Gerät. Prüfe die Browsereinstellungen für lokalen Speicher.')));
   }
   if (!boxes.length) {
-    const empty = message('Deine Watchlist ist leer', 'Speichere deinen Suchwunsch mit Budget und Kriterien. Du kannst später mit einem Klick erneut prüfen.');
-    empty.append(link('Zur Suche', '#suche'));
+    const empty = message(m('Deine Watchlist ist leer'), m('Speichere deinen Suchwunsch mit Budget und Kriterien. Du kannst später mit einem Klick erneut prüfen.'));
+    empty.append(link(m('Zur Suche'), '#suche'));
     boxes.push(empty);
   }
-  boxes.push(element('p', 'Die Watchlist bleibt in diesem Browser. Automatische Benachrichtigungen sind noch nicht verfügbar.', 'muted'));
-  if (storageError) boxes.push(element('p', 'Der lokale Speicher ist zurzeit nicht lesbar oder beschreibbar.', 'muted'));
+  boxes.push(element('p', m('Die Watchlist bleibt in diesem Browser. Automatische Benachrichtigungen sind noch nicht verfügbar.'), 'muted'));
+  if (storageError) boxes.push(element('p', m('Der lokale Speicher ist zurzeit nicht lesbar oder beschreibbar.'), 'muted'));
   get('saved').replaceChildren(...boxes);
 }
 
@@ -639,6 +633,12 @@ for (const button of document.querySelectorAll('[data-prompt]')) {
   });
 }
 const composer = get('search-query').form;
+get('ui-language').addEventListener('change',event=>{
+  if(voice?.isRecording())voice.stop();
+  const saved=setLanguage(event.target.value,{persist:true});
+  refreshIntent({invalidate:false});renderRadar();renderRoute();
+  setText(get('notice'),m(saved?'Sprache geändert. Dein Suchtext und deine Kriterien bleiben erhalten.':'Sprache für diese Sitzung geändert. Die Einstellung konnte nicht gespeichert werden.'));
+});
 composer.addEventListener('input', refreshIntent);
 composer.addEventListener('change', refreshIntent);
 get('search-query').addEventListener('keydown', event => {
@@ -660,8 +660,8 @@ function importSharedSearch() {
     composer.elements.completeCostsOnly.checked=input.completeCostsOnly;
     refreshIntent();
     get('shared-notice').hidden=false;
-    get('shared-notice').textContent='Geteilte Suche übernommen. Prüfe oder ändere Text und Kriterien und starte die Prüfung bewusst. Nach einer Installation kannst du den Original-Link erneut öffnen; eine automatische Übergabe ist nicht garantiert.';
-  }catch(error){get('shared-notice').hidden=false;get('shared-notice').textContent='Geteilte Suche nicht übernommen. '+error.message+' Du kannst deinen Wunsch selbst eingeben.';}
+    setText(get('shared-notice'),m('Geteilte Suche übernommen. Prüfe oder ändere Text und Kriterien und starte die Prüfung bewusst. Nach einer Installation kannst du den Original-Link erneut öffnen; eine automatische Übergabe ist nicht garantiert.'));
+  }catch(error){get('shared-notice').hidden=false;setText(get('shared-notice'),m('Geteilte Suche nicht übernommen. {error} Du kannst deinen Wunsch selbst eingeben.',()=>({error:uiError(error)})));}
 }
 importSharedSearch();
 window.addEventListener('hashchange', event => {

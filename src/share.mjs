@@ -1,4 +1,5 @@
 import { criteriaFor } from './criteria.mjs';
+import {m,t,setText,uiError} from './i18n.mjs';
 
 function queryText(value) {
   if(typeof value!=='string'||!value.trim()||value.trim().length>300||/https?:\/\/|www\.|[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/i.test(value))throw new Error('Gib einen Kaufwunsch mit höchstens 300 Zeichen ohne Webadresse ein.');
@@ -37,21 +38,21 @@ export function setupSharing(root,getDraft) {
   root.querySelector('[data-share-prepare]').addEventListener('click',()=>{
     try {
       prepared=sharedSearchUrl(getDraft(),location.href);field.value=prepared.url;panel.hidden=false;
-      copy.textContent=prepared.localOnly?'Lokalen Testlink kopieren':'Link kopieren';
+      setText(copy,m(prepared.localOnly?m('Lokalen Testlink kopieren'):m('Link kopieren')));
       native.hidden=prepared.localOnly||typeof navigator.share!=='function';
-      status.textContent=prepared.localOnly?'Nur ein lokaler Testlink: Er funktioniert auf diesem Computer, nicht als Einladung auf andere Geräte. Eine freigegebene HTTPS-Testadresse fehlt noch.'
-        :'Prüfe den Link und deinen Suchtext vor dem Teilen. Er enthält Wunsch und Kriterien, keine Preise, Aufnahme oder Zugangsdaten. Beim Empfänger startet keine Suche automatisch.';
-    }catch(error){prepared=null;panel.hidden=false;field.value='';native.hidden=true;status.textContent=error.message;}
+      setText(status,m(prepared.localOnly?m('Nur ein lokaler Testlink: Er funktioniert auf diesem Computer, nicht als Einladung auf andere Geräte. Eine freigegebene HTTPS-Testadresse fehlt noch.')
+        :m('Prüfe den Link und deinen Suchtext vor dem Teilen. Er enthält Wunsch und Kriterien, keine Preise, Aufnahme oder Zugangsdaten. Beim Empfänger startet keine Suche automatisch.')));
+    }catch(error){prepared=null;panel.hidden=false;field.value='';native.hidden=true;setText(status,uiError(error));}
   });
   copy.addEventListener('click',async()=>{
     if(!prepared)return;
-    try {await navigator.clipboard.writeText(prepared.url);status.textContent=prepared.localOnly?'Lokaler Testlink kopiert. Nur auf diesem Computer nutzbar.':'Link kopiert. Teile ihn nur mit Personen, die deinen Suchtext sehen dürfen.';}
-    catch {field.focus();field.select();status.textContent='Automatisches Kopieren ist hier nicht möglich. Kopiere den markierten Link von Hand.';}
+    try {await navigator.clipboard.writeText(prepared.url);setText(status,m(prepared.localOnly?m('Lokaler Testlink kopiert. Nur auf diesem Computer nutzbar.'):m('Link kopiert. Teile ihn nur mit Personen, die deinen Suchtext sehen dürfen.')));}
+    catch {field.focus();field.select();setText(status,m('Automatisches Kopieren ist hier nicht möglich. Kopiere den markierten Link von Hand.'));}
   });
   native.addEventListener('click',async()=>{
     if(!prepared||prepared.localOnly)return;
-    try{await navigator.share({title:'UDI · Geteilte Suche',url:prepared.url});status.textContent='Teilen abgeschlossen. Das bestätigt keine Installation oder Nutzung.';}
-    catch(error){status.textContent=error.name==='AbortError'?'Teilen abgebrochen. Dein Suchwunsch bleibt erhalten.':'Teilen war nicht möglich. Du kannst den Link kopieren.';}
+    try{await navigator.share({title:t('UDI · Geteilte Suche'),url:prepared.url});setText(status,m('Teilen abgeschlossen. Das bestätigt keine Installation oder Nutzung.'));}
+    catch(error){setText(status,m(error.name==='AbortError'?m('Teilen abgebrochen. Dein Suchwunsch bleibt erhalten.'):m('Teilen war nicht möglich. Du kannst den Link kopieren.')));}
   });
   return {invalidate(){prepared=null;panel.hidden=true;field.value='';native.hidden=true;}};
 }
