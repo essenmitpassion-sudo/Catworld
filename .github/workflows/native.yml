@@ -15,7 +15,9 @@ permissions:
   contents: read
 concurrency:
   group: native-builds-${{ github.ref }}
-  cancel-in-progress: true
+  # Let an already running simulator finish; a later Android-only correction
+  # must not discard the other platform's startup evidence.
+  cancel-in-progress: false
 
 jobs:
   compile:
@@ -32,6 +34,9 @@ jobs:
             os: macos-15
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
+    env:
+      ANDROID_AVD_HOME: ${{ runner.temp }}/udi-avd
+      ANDROID_USER_HOME: ${{ runner.temp }}/udi-android-user
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -80,7 +85,10 @@ jobs:
           test -e /dev/kvm
           sudo chmod 666 /dev/kvm
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'emulator' 'system-images;android-36;google_apis;x86_64' < /dev/null
+          mkdir -p "$ANDROID_AVD_HOME" "$ANDROID_USER_HOME"
           printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name udi-smoke --package 'system-images;android-36;google_apis;x86_64' --force
+          test -f "$ANDROID_AVD_HOME/udi-smoke.ini"
+          "$ANDROID_HOME/emulator/emulator" -list-avds
       - name: Start installed native app and check rendered surface
         shell: bash
         run: node scripts/native-start.mjs '${{ matrix.platform }}'
