@@ -45,6 +45,8 @@ Das Frontend nutzt für Beobachtungen und Websuche nur seine eigene Origin. Die 
 
 ## Projektauftrag wieder aufnehmen
 
+Der [Monetarisierungsauftrag](docs/requirements/2026-11-20-monetization.md) ist ebenfalls dauerhaft verankert. Die [Machbarkeitsprüfung](docs/MONETIZATION.md) trennt öffentliche Partnerprogramme von tatsächlich vorhandenen UDI-Zugängen. Es gibt derzeit keine aktivierten Affiliate-Links, Cashback-Zusagen, bezahlten Platzierungen oder bestätigten Sparsummen.
+
 Aktuelle Priorität: [App-first](docs/requirements/2026-11-20-app-first.md). Zuerst das kleinste vollständige App-Erlebnis abnehmen; keine zusätzliche Browser-/Marketing-Version entwickeln. Der technische Stand ist ein Web-Frontend ohne nativen Installations-Build. Browserprüfungen validieren dieses Frontend und sind keine behauptete Prüfung einer nativen App.
 
 Der aktuelle Schwerpunkt ist [App-first](docs/requirements/2026-11-20-app-first.md). Die vorhandene App-Oberfläche wird zuerst als vollständiger, auf dem Handy verständlicher Ablauf verbessert. Eine zusätzliche Browser-/Marketing-Version wird nicht gebaut. Der aktuelle Stack ist eine Web-App; native Installationspakete und ein praktischer Nachweis auf echten Mobilgeräten stehen aus.
