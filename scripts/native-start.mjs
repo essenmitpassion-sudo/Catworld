@@ -29,14 +29,21 @@ if (platform === 'android') {
   const sdk = process.env.ANDROID_HOME;
   assert(sdk, 'Android SDK missing.');
   const adb = join(sdk, 'platform-tools/adb');
-  const emulator = spawn(join(sdk, 'emulator/emulator'), ['-avd', 'udi-smoke', '-no-window', '-no-audio', '-no-boot-anim', '-no-snapshot', '-gpu', 'swiftshader', '-memory', '2048'], { stdio: 'ignore' });
+  const emulatorPath = join(sdk, 'emulator/emulator');
+  console.log(run(emulatorPath, ['-accel-check']));
+  const avds = run(emulatorPath, ['-list-avds']);
+  console.log('Available Android devices:\n' + avds);
+  assert(avds.split(/\r?\n/).includes('udi-smoke'), 'Prepared Android virtual device is missing.');
+  const emulator = spawn(emulatorPath, ['-avd', 'udi-smoke', '-no-window', '-no-audio', '-no-boot-anim', '-no-snapshot', '-gpu', 'swiftshader', '-memory', '2048'], { stdio: ['ignore', 'inherit', 'inherit'] });
   let startError;
   emulator.on('error', error => { startError = error; });
   try {
     let booted = false;
     for (let attempt = 0; attempt < 90; attempt++) {
       assert(!startError, startError?.message);
+      assert(emulator.exitCode === null, `Android emulator exited with code ${emulator.exitCode}; see startup diagnostics above.`);
       const result = spawnSync(adb, ['-e', 'shell', 'getprop', 'sys.boot_completed'], { encoding: 'utf8', timeout: 5000 });
+      if (attempt % 15 === 0) console.log(`Android boot probe ${attempt}: ${result.stdout?.trim() ?? ''} ${result.stderr?.trim() ?? ''}`);
       if (result.status === 0 && result.stdout.trim() === '1') { booted = true; break; }
       await delay(2000);
     }
@@ -52,7 +59,7 @@ if (platform === 'android') {
     const $ = load(readFileSync(dump, 'utf8'), { xmlMode: true });
     checkSurface($('node').map((_, node) => `${$(node).attr('text') ?? ''} ${$(node).attr('content-desc') ?? ''}`).get().join('\n'));
   } finally {
-    spawnSync(adb, ['-e', 'emu', 'kill'], { timeout: 10000, stdio: 'ignore' });
+    spawnSync(adb, ['-e', 'emu', 'kill'], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' });
     emulator.kill();
   }
 } else if (platform === 'ios') {
@@ -83,7 +90,7 @@ print((request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.j
 `);
     checkSurface(run('swift', [recognizer, screenshot]));
   } finally {
-    spawnSync('xcrun', ['simctl', 'shutdown', device.udid], { timeout: 30000, stdio: 'ignore' });
+    spawnSync('xcrun', ['simctl', 'shutdown', device.udid], { timeout: 30000, killSignal: 'SIGKILL', stdio: 'ignore' });
   }
 } else {
   throw new Error('Choose android or ios.');
