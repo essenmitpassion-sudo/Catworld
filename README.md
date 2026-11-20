@@ -45,6 +45,8 @@ Das Frontend nutzt für Beobachtungen und Websuche nur seine eigene Origin. Die 
 
 ## Projektauftrag wieder aufnehmen
 
+Aktuelle Priorität: [App-first](docs/requirements/2026-11-20-app-first.md). Zuerst das kleinste vollständige App-Erlebnis abnehmen; keine zusätzliche Browser-/Marketing-Version entwickeln. Der technische Stand ist ein Web-Frontend ohne nativen Installations-Build. Browserprüfungen validieren dieses Frontend und sind keine behauptete Prüfung einer nativen App.
+
 Der aktuelle Schwerpunkt ist [App-first](docs/requirements/2026-11-20-app-first.md). Die vorhandene App-Oberfläche wird zuerst als vollständiger, auf dem Handy verständlicher Ablauf verbessert. Eine zusätzliche Browser-/Marketing-Version wird nicht gebaut. Der aktuelle Stack ist eine Web-App; native Installationspakete und ein praktischer Nachweis auf echten Mobilgeräten stehen aus.
 
 Die verbindlichen Arbeitsregeln stehen in [AGENTS.md](AGENTS.md), Anforderungen und Abnahmen in [PLAN.md](PLAN.md), tatsächlicher Fortschritt, Nachweise und Fortsetzungspunkt in [STATUS.md](STATUS.md). Die Originalaufträge zur [Suchoberfläche](docs/requirements/2026-11-20-search-experience.md) und zu [echten Angeboten](docs/requirements/2026-11-20-live-offers.md) bleiben mit der Git-Historie erhalten. Sie sind Produktanforderungen, keine Behauptung bereits vorhandener Fähigkeiten.
