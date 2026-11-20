@@ -13,7 +13,8 @@
     "smoke": "node scripts/browser.mjs",
     "live": "node scripts/browser.mjs --live",
     "icons": "node scripts/generate-icons.mjs",
-    "pilot:package": "node scripts/package-pilot.mjs"
+    "pilot:package": "node scripts/package-pilot.mjs",
+    "pilot:verify": "node scripts/verify-pilot.mjs"
   },
   "dependencies": {
     "ai": "7.0.176",
