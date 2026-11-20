@@ -18,11 +18,11 @@ function run(command, args, timeout = 120000) {
   return result.stdout;
 }
 function checkSurface(text) {
+  console.log('Rendered native surface:\n' + text);
   // The warning is populated by app.mjs; static HTML or a splash screen cannot pass.
   assert(/not\s+connected|noch\s+nicht\s+verbunden/i.test(text), 'Native service warning was not rendered.');
   assert(/Find\s+offers|Angebote\s+suchen/i.test(text), 'Search action was not rendered.');
   assert(/Watchlist/i.test(text), 'Watchlist navigation was not rendered.');
-  console.log(text);
 }
 
 if (platform === 'android') {
