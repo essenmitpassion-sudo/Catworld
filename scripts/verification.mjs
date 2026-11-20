@@ -34,11 +34,15 @@ function francs(value, currency) {
 }
 
 export function inspectPage(item, page, now = Date.now()) {
+  let source;try{source=sourceFor(new URL(item.url));}catch{}
   const check = {
+    marketId:source?.marketId??null,sourceId:source?.id??null,deliveryDestination:null,
     url: item.url, checkedAt: new Date(now).toISOString(), httpStatus: page.status ?? null,
     status: 'unconfirmed', availability: 'unknown', price: null, total: null, currency: null,
     seller: null, condition: null, reason: 'missing-evidence',
   };
+  if(!source)return {...check,reason:'url-rejected'};
+  if((Object.hasOwn(item,'marketId')&&item.marketId!==source.marketId)||(Object.hasOwn(item,'sourceId')&&item.sourceId!==source.id))return {...check,reason:'context-mismatch'};
   if ([404, 410].includes(page.status)) return { ...check, availability: 'inactive', reason: 'removed' };
   if (page.status !== 200 || typeof page.html !== 'string') {
     return { ...check, reason: page.reason ?? 'http-error' };
@@ -109,11 +113,12 @@ export function pageVerifier(domains = []) {
     const domain = url.hostname.replace(/^www\./, '');
     const source = sourceFor(url);
     if (!allowed.has(domain) || url.hostname !== 'www.' + domain || url.protocol !== 'https:'
-      || url.port || url.username || url.password || url.search || url.hash || !source?.verifiable) {
+      || url.port || url.username || url.password || url.search || url.hash || !source?.verifiable
+      || (Object.hasOwn(item,'marketId')&&item.marketId!==source.marketId) || (Object.hasOwn(item,'sourceId')&&item.sourceId!==source.id)) {
       return inspectPage(item, { reason: 'url-rejected' });
     }
     const currentTime = Date.now();
-    const key = item.url + '|' + (item.mpn ?? '');
+    const key = source.marketId+'|'+source.id+'|'+item.url + '|' + (item.mpn ?? '');
     const cached = recent.get(key);
     if (cached && currentTime - cached.completedAt < (source.interval ?? 0)) return cached.check;
     if (pending.has(key)) return pending.get(key);

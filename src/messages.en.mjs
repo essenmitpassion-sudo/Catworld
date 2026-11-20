@@ -1,5 +1,7 @@
 // Gettext-style controlled UI messages. Never use for raw merchant/user text.
 const base = {
+  "Dieser Markt oder dieses Lieferland ist noch nicht unterstützt. Deine Suche wurde nicht umgestellt.": "This market or delivery country is not supported yet. Your search was not switched to another market.",
+  "Dieser gespeicherte Suchauftrag wird nicht unterstützt.": "This saved search format is not supported.",
   "Die Watchlist bleibt in dieser App auf diesem Gerät. Automatische Benachrichtigungen sind noch nicht verfügbar.": "Your watchlist stays in this app on this device. Automatic notifications are not available yet.",
   "Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.": "Offer search is not connected in this app version yet. Saved searches remain available.",
   "Die Spracheingabe ist für diese App-Version noch nicht verfügbar. Nutze die Texteingabe.": "Voice input is not available in this app version yet. Type your request instead.",

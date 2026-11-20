@@ -6,6 +6,7 @@ const product = catalog[0];
 const [first, second] = product.sources;
 const now = Date.parse('2026-11-17T11:01:00Z');
 const observation = {
+  marketId:'CH',sourceId:first.sourceId,
   mpn: product.mpn, url: first.url, finalUrl: first.url,
   seller: first.seller, checkedAt: '2026-11-17T11:00:00Z',
   price: 20000, shipping: 0, taxes: 0, imports: 0, fees: 0,
@@ -48,7 +49,7 @@ test('only fresh, matching observations with known costs are eligible', () => {
 });
 
 test('a recommendation compares two eligible sellers by landed cost', () => {
-  const alternative = { ...observation, seller: second.seller, url: second.url,
+  const alternative = { ...observation,sourceId:second.sourceId,seller: second.seller, url: second.url,
     finalUrl: second.url, price: 19500, shipping: 1000 };
   assert.equal(compare(product, [observation], now).recommendation, null);
   assert.equal(compare(product, [observation, alternative], now).recommendation.seller, first.seller);
@@ -59,7 +60,7 @@ test('a recommendation compares two eligible sellers by landed cost', () => {
 });
 
 test('Katalogvergleich und Empfehlung müssen dieselben Kaufkriterien respektieren', () => {
-  const alternative = { ...observation, seller: second.seller, url: second.url,
+  const alternative = { ...observation,sourceId:second.sourceId,seller: second.seller, url: second.url,
     finalUrl: second.url, price: 21000 };
   for (const criteria of [{ maxTotal: 100 }, { condition: 'used' }]) {
     const result = compare(product, [observation, alternative], now, criteria);
@@ -71,7 +72,7 @@ test('Katalogvergleich und Empfehlung müssen dieselben Kaufkriterien respektier
 });
 
 test('ein Preisvorteil benötigt denselben belegten Zustand und Lieferort', () => {
-  const alternative = { ...observation, seller: second.seller, url: second.url, finalUrl: second.url, price: 21000 };
+  const alternative = { ...observation,sourceId:second.sourceId,seller: second.seller, url: second.url, finalUrl: second.url, price: 21000 };
   for (const change of [
     { condition: null }, { condition: 'Gebraucht' }, { condition: 'Generalüberholt' },
     { deliveryDestination: null }, { deliveryDestination: {country:'CH'} },
@@ -93,7 +94,7 @@ test('ein Preisvorteil benötigt denselben belegten Zustand und Lieferort', () =
 });
 
 test('Provisionen, UVP, Gleichstand, unvollständige und alte Daten begründen keinen Sparvorteil', () => {
-  const alternative = { ...observation, seller: second.seller, url: second.url, finalUrl: second.url, price:21000, commission:999999 };
+  const alternative = { ...observation,sourceId:second.sourceId,seller: second.seller, url: second.url, finalUrl: second.url, price:21000, commission:999999 };
   const best = {...observation, commission:0};
   assert.equal(compare(product,[best,alternative],now).recommendation.seller,first.seller);
   for(const change of [ {price:20000}, {shipping:null}, {stock:'out-of-stock'}, {checkedAt:'2026-11-17T10:55:00Z'} ]) {

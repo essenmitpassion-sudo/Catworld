@@ -1,4 +1,5 @@
 import { costs } from './costs.mjs';
+import {searchContext} from './markets.mjs';
 
 const foreignCurrencyCodes = new Set(Intl.supportedValuesOf('currency').filter(code=>code!=='CHF'));
 function foreignCurrencyIn(query) {
@@ -43,6 +44,7 @@ export function withoutBudget(query) {
 }
 
 export function criteriaFor(input) {
+  searchContext(input);
   const query = input.query;
   if(foreignCurrencyIn(query))throw new Error('Der Pilot unterstützt Budgets nur in CHF. Andere Währungen werden nicht automatisch umgerechnet.');
   const newOnly = /\b(?:(?:nicht|kein(?:e|en|er|es)?) gebraucht\w*|nur neu(?:ware)?|neu(?:er|en|e|es)? (?:gaming[- ]?)?(?:pc|ssd|speicher|grafikkarte)|(?:not|no)\s+used|new(?:\s+only)?\s+(?:gaming[- ]?)?(?:pc|ssd|ram|memory|graphics)|only\s+new)\b/i.test(query);

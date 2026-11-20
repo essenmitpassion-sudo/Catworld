@@ -1,9 +1,10 @@
 import { english } from './messages.en.mjs';
+import {activeMarket} from './markets.mjs';
+export {activeMarket} from './markets.mjs';
 
 // Gettext-style source messages are stable IDs. Only explicitly bound UI text
 // is translated; user input and merchant fields never pass through this layer.
 export const LANGUAGE_STORAGE_KEY='udi.language.v1';
-export const activeMarket=Object.freeze({id:'CH',currency:'CHF',timeZone:'Europe/Zurich'});
 let language='de';
 const messageTag=Symbol('udi-ui-message');
 const bindings=new WeakMap();
@@ -59,5 +60,5 @@ export function initializeLanguage() {
   setLanguage(chooseLanguage(saved,navigator.languages??[navigator.language]));
 }
 export const speechLanguage=()=>language==='en'?'en-GB':'de-CH';
-export const formatMoney=amount=>new Intl.NumberFormat(language==='en'?'en-CH':'de-CH',{style:'currency',currency:activeMarket.currency}).format(amount/100);
-export const formatDate=value=>new Intl.DateTimeFormat(language==='en'?'en-CH':'de-CH',{dateStyle:'medium',timeStyle:'short',timeZone:activeMarket.timeZone}).format(new Date(value));
+export const formatMoney=amount=>new Intl.NumberFormat(activeMarket.formatLocales[language],{style:'currency',currency:activeMarket.currency}).format(amount/100);
+export const formatDate=value=>new Intl.DateTimeFormat(activeMarket.formatLocales[language],{dateStyle:'medium',timeStyle:'short',timeZone:activeMarket.timeZone}).format(new Date(value));

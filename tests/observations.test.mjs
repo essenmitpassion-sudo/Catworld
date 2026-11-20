@@ -6,6 +6,7 @@ import { catalog, compare } from '../src/deals.mjs';
 const product = catalog[0];
 const source = product.sources.find(source => source.seller === 'DQ Solutions');
 const check = {
+  marketId:source.marketId,sourceId:source.sourceId,
   url: source.url, seller: source.seller, mpn: product.mpn,
   checkedAt: '2026-11-18T12:00:00Z', httpStatus: 200,
   price: 43900, currency: 'CHF', condition: 'Neu', availability: 'active',

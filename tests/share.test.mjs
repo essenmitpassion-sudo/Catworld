@@ -9,7 +9,7 @@ test('geteilte Suche erhält Unicode und wirksame Kriterien ohne Preise oder Zug
   assert.equal(new URL(link.url).pathname,'/app/');
   assert(!link.url.includes('secret')&&!link.url.includes('price'));
   assert.equal(link.localOnly,false);
-  assert.deepEqual(readSharedSearch(new URL(link.url).hash),{query:input.query,maxPrice:'250.00',condition:'used',completeCostsOnly:true});
+  assert.deepEqual(readSharedSearch(new URL(link.url).hash),{marketId:'CH',deliveryCountry:'CH',currency:'CHF',query:input.query,maxPrice:'250.00',condition:'used',completeCostsOnly:true});
 });
 
 test('Link teilt nur Suchabsicht, lokale Adresse ist ausdrücklich kein öffentlicher Zugang',()=>{

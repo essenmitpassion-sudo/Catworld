@@ -9,6 +9,7 @@ const candidate = { title: 'Gaming-PC', url: 'https://www.ricardo.ch/de/a/gaming
 const found = { kind: 'results', items: [candidate] };
 const now = Date.parse('2026-11-18T12:00:00Z');
 const fresh = {
+  marketId:'CH',sourceId:'ricardo.ch',
   url: candidate.url, checkedAt: new Date(now).toISOString(), httpStatus: 200,
   status: 'partial', availability: 'active', price: 50000, total: null,
   currency: 'CHF',
@@ -29,7 +30,7 @@ test('nur frisch bestätigte und bepreiste Angebote erscheinen im Suchergebnis',
 });
 
 test('Quellenausfälle und ungeprüfte Treffer verhindern keine unabhängig bestätigten Angebote', async () => {
-  const result = await scan({ ...found, items: [candidate, { ...candidate, url: candidate.url + '2' }] }, {
+  const result = await scan({ ...found, items: [candidate, { ...candidate, url: candidate.url.replace('1234567890','1234567891') }] }, {
     verify: async item => {
       if (item.url !== candidate.url) throw new Error('Quelle ausgefallen');
       return fresh;

@@ -1,5 +1,6 @@
 import { criteriaFor } from '../src/criteria.mjs';
 import { catalog } from '../src/deals.mjs';
+import {searchContext} from '../src/markets.mjs';
 import { sources as webSources } from './sources.mjs';
 const partNumbers = value => [...value.toUpperCase().matchAll(/\b[A-Z]{2,6}-[A-Z0-9]{5,}\b/g)]
   .map(match => match[0]).filter(value => /\d/.test(value));
@@ -17,16 +18,17 @@ export async function discover(input, webSearch) {
   }
   let criteria;
   try { criteria = criteriaFor({ ...input, query }); } catch (error) { throw new InvalidSearch(error.message); }
+  const context=searchContext(input);
   const secondhand = /\b(gebraucht\w*|secondhand|second.hand|refurbished|ricardo|tutti|used|pre-owned)\b/i.test(query);
   const completePc = /\b(komplett.pc|gaming.pc|desktop.pc|gebraucht\w* (?:gaming[- ]?)?pc|fertig.pc)\b/i.test(query);
   const outcome = /\b(mehr speicher|zu wenig speicher|zu langsam|pc aufrüsten|more storage|more memory|not enough storage|too slow|upgrade (?:my |a )?pc)\b/i.test(query);
   const newOnly = criteria.condition === 'new';
   if (!requestedScope && !secondhand && criteria.condition === 'any' && (outcome || completePc)) {
-    return { kind: 'clarification', criteria };
+    return { kind: 'clarification', criteria,...context };
   }
   const scope = newOnly ? 'component' : requestedScope ?? (secondhand || criteria.condition === 'used' ? 'secondhand' : 'component');
-  const sources = webSources.filter(source => scope === 'both' || Boolean(source.marketplace) === (scope === 'secondhand'));
-  const rows = await webSearch({ query, scope, domains: sources.map(source => source.domain), criteria });
+  const sources = webSources.filter(source => source.marketId===context.marketId && (scope === 'both' || Boolean(source.marketplace) === (scope === 'secondhand')));
+  const rows = await webSearch({ query, scope, domains: sources.map(source => source.domain), criteria,...context });
   const items = new Map();
   const [requestedPart] = partNumbers(query);
   for (const row of rows) {
@@ -56,11 +58,11 @@ export async function discover(input, webSearch) {
     const knownProduct = catalog.find(product => product.sources.some(source => source.url === url.href));
     const expectedPart = requestedPart ?? knownProduct?.mpn;
     items.set(id, {
-      title, url: url.href, source: source.name,
+      title, url: url.href, source: source.name,sourceId:source.id,marketId:source.marketId,
       type: source.marketplace ? 'listing' : 'shop', status: 'unconfirmed',
       ...(expectedPart ? { mpn: expectedPart } : {}),
     });
     if (items.size === 6) break;
   }
-  return { kind: 'results', items: [...items.values()], criteria };
+  return { kind: 'results', items: [...items.values()], criteria,...context };
 }

@@ -1,4 +1,5 @@
 import { criteriaFor } from './criteria.mjs';
+import {searchContext,legacySearchMarket} from './markets.mjs';
 import {m,t,setText,uiError} from './i18n.mjs';
 
 function queryText(value) {
@@ -11,7 +12,7 @@ export function sharedSearchUrl(input,base) {
   const url=new URL('./',base);
   const localOnly=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if(url.username||url.password||!(url.protocol==='https:'||(url.protocol==='http:'&&localOnly)))throw new Error('Für einen allgemeinen Freigabelink ist eine sichere UDI-Adresse nötig.');
-  const payload={v:1,q:query,maxPrice:criteria.maxTotal===null?'':(criteria.maxTotal/100).toFixed(2),condition:criteria.condition,completeCostsOnly:criteria.completeCostsOnly};
+  const payload={v:2,...searchContext(input),q:query,maxPrice:criteria.maxTotal===null?'':(criteria.maxTotal/100).toFixed(2),condition:criteria.condition,completeCostsOnly:criteria.completeCostsOnly};
   url.search='';url.hash='suche?'+new URLSearchParams({auftrag:JSON.stringify(payload)});
   return {url:url.href,localOnly};
 }
@@ -22,10 +23,11 @@ export function readSharedSearch(hash) {
   const params=new URLSearchParams(hash.slice(7));
   if([...params].length!==1||!params.has('auftrag'))throw new Error('Der geteilte Suchauftrag ist nicht eindeutig.');
   let value;try{value=JSON.parse(params.get('auftrag'));}catch{throw new Error('Der geteilte Suchauftrag ist nicht lesbar.');}
-  const keys=['v','q','maxPrice','condition','completeCostsOnly'];
-  if(!value||Array.isArray(value)||value.v!==1||Object.keys(value).some(key=>!keys.includes(key))
+  const keys=['v','q','maxPrice','condition','completeCostsOnly',...(value?.v===2?['marketId','deliveryCountry','currency']:[])];
+  if(!value||Array.isArray(value)||![1,2].includes(value.v)||Object.keys(value).some(key=>!keys.includes(key))
+    || (value.v===2&&(!Object.hasOwn(value,'marketId')||!Object.hasOwn(value,'deliveryCountry')||!Object.hasOwn(value,'currency')))
     ||typeof value.maxPrice!=='string'||typeof value.completeCostsOnly!=='boolean'||!['any','new','used'].includes(value.condition))throw new Error('Dieser geteilte Suchauftrag wird nicht unterstützt.');
-  const input={query:queryText(value.q),maxPrice:value.maxPrice,condition:value.condition,completeCostsOnly:value.completeCostsOnly};
+  const input={...searchContext(value.v===1?legacySearchMarket:value),query:queryText(value.q),maxPrice:value.maxPrice,condition:value.condition,completeCostsOnly:value.completeCostsOnly};
   criteriaFor(input);
   return input;
 }

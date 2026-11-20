@@ -12,6 +12,14 @@ Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quelle
 
 ## Aktueller Umsetzungsschritt · verständliche Suche und konsistentes Design
 
+### Expliziter Markt- und Lieferkontext · aktueller Pareto-Schritt
+
+Native Geräteabnahmen bleiben an fehlende Android-/iOS-Werkzeuge und den geschützten gemeinsamen Dienst gebunden. Als unabhängigen vollständigen Schritt den vorhandenen Schweizer Datenpfad absichern: Marktkonfiguration aus UI/i18n lösen, Markt/Lieferwunsch auf Suchaufträgen und Quellenkennung/Markt auf Beobachtungen ausdrücklich führen. Gewünschte Lieferregion ist keine bestätigte Lieferbarkeit; fehlende Endpreis-/Lieferdaten bleiben offen. Keine neuen Länder, FX oder Quellen aktivieren.
+
+- [x] CH-Marktkonfiguration aus UI/i18n gelöst. Discovery, Verifier, Scan, Cache und Vergleich prüfen ausdrücklich Markt und Quelle; CHF allein begründet keine Herkunft. Fehlende oder falsche Kennungen verhindern Empfehlung/aktive Treffer. Grenzfall vor Korrektur reproduziert.
+- [x] Speicher/Freigaben v2 mit Markt, Lieferwunsch, CHF-Budget und vollständigen Kriterien. V1 explizit historisch CH/CHF, beim Lesen kein Überschreiben. Bewusstes Entfernen bereinigt die passende alte Kopie. Unbekannte Felder/Kontexte und fehlende v2-Kriterien werden zurückgewiesen. Sprache verändert weder Kontext noch gespeicherte Beträge.
+- [x] 64 Fachtests, vollständige DE4/EN2-Abläufe, Layoutprüfung und Android-/iOS-Bündelgrenzen erfolgreich. Beide nativen Projekte erhalten 24 identische eigene UI-Dateien. Echte DQ-Suche am 20.11., 14.45 Uhr CH bis zur richtigen Seite erfolgreich, Markt/Quelle explizit und Lieferziel weiterhin null. Paket-/Git-Nachweis in STATUS. Keine native Geräteabnahme, kein vollständiger Schweizer Endpreis/zweite Quelle und kein zusätzlicher Markt behauptet.
+
 ### Gleichwertige Android-/iOS-Apps · verbindlicher Auftrag vom 20.11.2026
 
 - [x] P0-Quellvorbereitung: Stack/Werkzeuge geprüft, Capacitor 8.6.2 mit Vor-/Nachteilen entschieden; Android- und iOS-SPM-Projekt angelegt. Identische lokale UI-Assets, Netzwerk-/Snapshot-Sperre und Konfiguration geprüft; keine UI-Neuentwicklung. Native Projekte noch nicht kompiliert oder auf Gerät gestartet. Android benötigt JDK21/SDK36 statt vorhandenem Java17; iOS benötigt Mac/Xcode26+. Reproduzierbarkeitsfehler fehlender erzeugter Gradle-Eingaben gefunden, reproduziert und durch Sync behoben. Isolierte Paketprüfung prüft die Vorbereitung ohne lokale Altdateien erneut.

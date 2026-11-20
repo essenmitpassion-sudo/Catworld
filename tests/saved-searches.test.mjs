@@ -11,6 +11,7 @@ test('Suchwunsch, Budget, Zustand und Gebrauchtoption bleiben nach erneutem Lese
   const local = storage();
   storeSearch(local, { query: 'Gaming-PC bis CHF 650', scope: 'both', condition: 'used', completeCostsOnly: true });
   assert.deepEqual(readSearches(local), [{
+    schemaVersion:2,marketId:'CH',deliveryCountry:'CH',currency:'CHF',
     query: 'Gaming-PC bis CHF 650', scope: 'both', maxPrice: '650.00', condition: 'used', completeCostsOnly: true,
   }]);
   storeSearch(local, { query: 'gaming-pc bis CHF 650', scope: 'both', condition: 'used', completeCostsOnly: true });

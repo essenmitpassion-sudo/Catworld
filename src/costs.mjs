@@ -1,3 +1,4 @@
+import {activeMarket} from './markets.mjs';
 export const costFields = [
   ['price', 'Artikelpreis'], ['shipping', 'Versand'], ['taxes', 'Zusätzliche Steuern'],
   ['imports', 'Importkosten'], ['fees', 'Pflichtgebühren'],
@@ -8,7 +9,7 @@ export function costs(observation) {
   const missing = costFields.filter(([key]) =>
     !isAmount(observation?.[key]) || (key === 'price' && observation[key] === 0))
     .map(([key]) => key);
-  if (observation?.currency !== 'CHF' || missing.includes('price')) {
+  if (observation?.currency !== activeMarket.currency || missing.includes('price')) {
     return { total: null, minimum: null, missing };
   }
   const minimum = costFields.reduce((sum, [key]) =>

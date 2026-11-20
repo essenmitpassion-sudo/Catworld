@@ -9,6 +9,7 @@ import { costs } from './costs.mjs';
 import { setupInstall } from './install.mjs';
 import { setupSharing, readSharedSearch } from './share.mjs';
 import {runtimePlatform,discoverOffers,loadObservations} from './runtime.mjs';
+import {searchContext} from './markets.mjs';
 import { m,t,setText,uiError,initializeLanguage,setLanguage,formatMoney,formatDate } from './i18n.mjs';
 
 const get = id => document.getElementById(id);
@@ -45,7 +46,7 @@ setupInstall();
 
 function draftInput(query = get('search-query').value.trim()) {
   const form = get('search-query').form;
-  return { query, maxPrice: form.elements.maxPrice.value.trim(), condition: form.elements.condition.value || undefined,
+  return { ...searchContext(),query, maxPrice: form.elements.maxPrice.value.trim(), condition: form.elements.condition.value || undefined,
     completeCostsOnly: form.elements.completeCostsOnly.checked };
 }
 
@@ -276,6 +277,7 @@ function renderRadar() {
 function renderWebResults(result, query) {
   clearTimeout(resultsExpiry);
   const target = get('web-results');
+  try{searchContext(result);}catch(error){target.replaceChildren(message(m('Bitte prüfe deine Kaufkriterien'),uiError(error)));return;}
   observations = applyChecks(observations, catalog, result);
   refreshAtExpiry();
   if (!get('passport').hidden || !get('vergleich').hidden) renderRoute();
@@ -388,6 +390,7 @@ async function submit(query, scope) {
   get('search-query').value = query;
   const form = get('search-query').form;
   const input = {
+    ...searchContext(),
     query, scope,
     maxPrice: form.elements.maxPrice.value.trim(),
     condition: form.elements.condition.value || undefined,

@@ -4,6 +4,8 @@ import { dirname } from 'node:path';
 import { maxObservationAge } from '../src/deals.mjs';
 import { costs } from '../src/costs.mjs';
 import { acceptsOffer } from '../src/criteria.mjs';
+import {activeMarket,searchContext} from '../src/markets.mjs';
+import {sourceFor} from './sources.mjs';
 
 const journals = new Map();
 
@@ -36,6 +38,7 @@ async function saveScan(path, record) {
 
 export async function scan(discovery, { verify, journalPath, now = Date.now } = {}) {
   if (discovery.kind !== 'results') return discovery;
+  const context=searchContext(discovery);
   const checks = [];
   const items = [];
   let excluded = 0;
@@ -43,16 +46,21 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
   const candidates = discovery.items.slice(0, 3);
   for (const candidate of candidates) {
     let check;
-    try { check = await verify?.(candidate); } catch { /* Each source can fail independently. */ }
+    let source;try{source=sourceFor(new URL(candidate.url));}catch{}
+    const matching=source?.marketId===context.marketId && (!Object.hasOwn(candidate,'marketId')||candidate.marketId===context.marketId)
+      && (!Object.hasOwn(candidate,'sourceId')||candidate.sourceId===source.id);
+    try { if(matching)check = await verify?.(candidate); } catch { /* Each source can fail independently. */ }
     const checkedAt = typeof check?.checkedAt === 'string' ? Date.parse(check.checkedAt) : NaN;
     const currentTime = now();
     const current = Number.isFinite(checkedAt) && checkedAt <= currentTime && currentTime - checkedAt < maxObservationAge;
     const record = check ?? {
+      marketId:source?.marketId??null,sourceId:source?.id??null,
       url: candidate.url, checkedAt: new Date(currentTime).toISOString(),
       status: 'unconfirmed', availability: 'unknown', reason: 'not-checked',
     };
     checks.push(record);
-    if (current && check.url === candidate.url && check.httpStatus === 200 && check.currency === 'CHF'
+    if (matching && current && check.marketId===context.marketId && check.sourceId===source.id
+      && check.url === candidate.url && check.httpStatus === 200 && check.currency === activeMarket.currency
       && check.availability === 'active' && Number.isSafeInteger(check.price) && check.price > 0
       && check.price <= 100_000_000) {
       const summary = costs(check);
@@ -67,9 +75,10 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
     }
   }
   if (journalPath && checks.length) await saveScan(journalPath, {
+    ...context,
     id: randomUUID(), completedAt: new Date(now()).toISOString(), checks,
   });
-  return { kind: 'results', items, unconfirmed: discovery.items.length - items.length - excluded,
+  return { kind: 'results',...context,items, unconfirmed: discovery.items.length - items.length - excluded,
     excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url),
     completedAt: new Date(now()).toISOString() };
 }

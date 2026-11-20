@@ -7,6 +7,7 @@ test('ein bekannter Produktauftrag verwendet auch bei eingerichtetem KI-Zugang d
   const app = server({
     webSearch: async () => { modelCalls++; return []; },
     verify: async item => ({
+      marketId:item.marketId,sourceId:item.sourceId,
       url: item.url, checkedAt: new Date().toISOString(), httpStatus: 200, mpn: item.mpn,
       status: 'partial', availability: 'active', price: 43900, total: null, currency: 'CHF',
     }),
@@ -28,6 +29,12 @@ test('ein bekannter Produktauftrag verwendet auch bei eingerichtetem KI-Zugang d
     assert(result.items.some(item => item.source === 'DQ Solutions'));
     assert(result.items.every(item => item.check.total === null));
     assert.equal(modelCalls, 0);
+    const rejected=await fetch(origin+'/api/discovery',{
+      method:'POST',headers:{'Content-Type':'application/json',Origin:origin,'Sec-Fetch-Site':'same-origin'},
+      body:JSON.stringify({query:'SSD',marketId:'DE'}),
+    });
+    assert.equal(rejected.status,400);assert.equal(modelCalls,0,'foreign market never reaches configured model');
+    assert.equal(result.marketId,'CH');assert.equal(result.deliveryCountry,'CH');assert.equal(result.currency,'CHF');
   } finally {
     await new Promise(resolve => app.close(resolve));
   }

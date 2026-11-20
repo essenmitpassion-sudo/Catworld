@@ -1,5 +1,6 @@
 import { costs } from './costs.mjs';
 import { acceptsOffer, withoutBudget } from './criteria.mjs';
+import {activeMarket} from './markets.mjs';
 export { costFields, isAmount } from './costs.mjs';
 
 export const catalog = [{
@@ -10,9 +11,9 @@ export const catalog = [{
   manufacturer: 'https://www.samsung.com/ch/support/model/MZ-V9P2T0BW/',
   terms: 'samsung 990 pro 2tb ohne kühlkörper ohne heatsink nvme m2 2280 ssd',
   sources: [
-    { seller: 'Digitec', url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721' },
-    { seller: 'Conrad', url: 'https://www.conrad.ch/de/p/samsung-990-pro-2-tb-interne-m-2-pcie-nvme-ssd-2280-pcie-nvme-40-x4-retail-mz-v9p2t0bw-2705384.html' },
-    { seller: 'DQ Solutions', url: 'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011' },
+    { seller: 'Digitec', marketId:'CH',sourceId:'digitec.ch',url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721' },
+    { seller: 'Conrad', marketId:'CH',sourceId:'conrad.ch',url: 'https://www.conrad.ch/de/p/samsung-990-pro-2-tb-interne-m-2-pcie-nvme-ssd-2280-pcie-nvme-40-x4-retail-mz-v9p2t0bw-2705384.html' },
+    { seller: 'DQ Solutions', marketId:'CH',sourceId:'dq-solutions.ch',url: 'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011' },
   ],
 }];
 
@@ -43,13 +44,14 @@ const timestamp = value => typeof value === 'string'
 export function assess(product, source, observation, now = Date.now()) {
   const result = { ...source, state: 'partial', total: null, observation: null };
   if (!observation) return result;
+  if(source.marketId!==activeMarket.id || observation.marketId!==source.marketId || observation.sourceId!==source.sourceId)return {...result,state:'unconfirmed'};
   if (observation.mpn !== product.mpn || observation.seller !== source.seller
     || observation.url !== source.url || observation.finalUrl !== source.url
     || !directLink(source.url, product)) return { ...result, state: 'unconfirmed' };
 
   const checkedAt = timestamp(observation.checkedAt);
   if (!Number.isFinite(checkedAt) || checkedAt > now || now - checkedAt >= maxObservationAge) return result;
-  if (observation.currency !== 'CHF') return result;
+  if (observation.currency !== activeMarket.currency) return result;
   result.observation = observation;
   if (!['in-stock', 'out-of-stock'].includes(observation.stock)
     || typeof observation.delivery !== 'string' || !observation.delivery.trim()
@@ -73,7 +75,7 @@ export function compare(product, observations, now = Date.now(), criteria = {}) 
   const bases = eligible.map(offer => {
     const { condition, deliveryDestination: destination } = offer.observation;
     if (!['Neu', 'Gebraucht', 'Generalüberholt', 'Beschädigt'].includes(condition)
-      || destination?.country !== 'CH' || typeof destination.postalCode !== 'string'
+      || destination?.country !== activeMarket.deliveryCountry || typeof destination.postalCode !== 'string'
       || !/^[1-9]\d{3}$/.test(destination.postalCode)) return null;
     return condition + '|' + destination.country + '|' + destination.postalCode;
   });
@@ -83,6 +85,7 @@ export function compare(product, observations, now = Date.now(), criteria = {}) 
     : eligible[0].total === eligible[1].total ? 'same-price' : 'price-advantage';
   const recommendation = comparisonStatus === 'price-advantage' ? eligible[0] : null;
   const priceAdvantage = recommendation ? {
+    marketId:activeMarket.id,currency:activeMarket.currency,
     status: 'possible', amount: eligible[1].total - recommendation.total,
     referenceSeller: eligible[1].seller, referenceUrl: eligible[1].url,
     referenceTotal: eligible[1].total, offerTotal: recommendation.total,

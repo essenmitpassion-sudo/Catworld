@@ -278,6 +278,8 @@ try {
       const receipt = JSON.parse(await readFile(join(profile, 'checks.json'), 'utf8')).at(-1);
       const check = receipt.checks.find(check => check.seller === 'DQ Solutions');
       assert.equal(check.httpStatus, 200);
+      assert.equal(receipt.marketId,'CH');assert.equal(receipt.deliveryCountry,'CH');assert.equal(receipt.currency,'CHF');
+      assert.equal(check.marketId,'CH');assert.equal(check.sourceId,'dq-solutions.ch');assert.equal(check.deliveryDestination,null,'requested CH delivery is not a delivery proof');
       assert.equal(check.mpn, 'MZ-V9P2T0BW');
       assert.equal(check.availability, 'active');
       assert(check.price > 0);
@@ -493,6 +495,7 @@ try {
       await send('Fetch.enable', {patterns:[{urlPattern:origin+'/observations.json'}, {urlPattern:origin+'/api/discovery'}]});
       for (const matchingDestination of [true,false]) {
         fixture = catalog[0].sources.slice(0,2).map((source,index) => ({
+          marketId:source.marketId,sourceId:source.sourceId,
           mpn:catalog[0].mpn, seller:source.seller, url:source.url, finalUrl:source.url,
           checkedAt:new Date().toISOString(),currency:'CHF',stock:'in-stock',condition:'Neu',
           delivery:'Browser-Testbeobachtung',price:20000+index*1000,shipping:0,taxes:0,imports:0,fees:0,
@@ -553,10 +556,11 @@ try {
     await click('nav a[href="#vergleich"]');assert(await evaluate("document.querySelector('#comparison').textContent.includes('Buying decision open')"));await noOverflow();
     await click('nav a[href="#suche"]');await click('#results button');
     await until(()=>evaluate("document.querySelector('#results button').textContent==='Search saved'"),'English save search');
-    await click('nav a[href="#watchlist"]');const savedBefore=await evaluate("localStorage.getItem('udi.searches.v1')");
+    await click('nav a[href="#watchlist"]');const savedBefore=await evaluate("localStorage.getItem('udi.searches.v2')");
+    assert(savedBefore&&JSON.parse(savedBefore)[0].marketId==='CH','saved request has an explicit market');
     assert(await evaluate("document.querySelector('#saved').textContent.includes('Total budget up to CHF')"));
     await evaluate("document.querySelector('#ui-language').value='de';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
-    assert.equal(await evaluate("localStorage.getItem('udi.searches.v1')"),savedBefore,'switching language preserves saved requests byte for byte');
+    assert.equal(await evaluate("localStorage.getItem('udi.searches.v2')"),savedBefore,'switching language preserves saved requests byte for byte');
     await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
     await send('Page.reload');await until(()=>evaluate("document.documentElement.lang==='en' && document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB up to CHF 600')"),'English preference and saved search survive restart');
     await click('#saved .button');await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('Recently checked')"),'English saved search reruns');
@@ -579,7 +583,8 @@ try {
   if(!live&&!layoutOnly)for(const platform of ['android','ios','unsupported']) {
     await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
-    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)}};try{localStorage.setItem('udi.language.v1','en')}catch{}`});
+    const legacySearches=JSON.stringify([{query:'Samsung 990 PRO 2 TB',scope:null,maxPrice:'',condition:'any',completeCostsOnly:false}]);
+    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)}};try{localStorage.setItem('udi.language.v1','en');if(localStorage.getItem('udi.searches.v1')===null)localStorage.setItem('udi.searches.v1',${JSON.stringify(legacySearches)})}catch{}`});
     await send('Emulation.setDeviceMetricsOverride',{width:390,height:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
@@ -593,8 +598,13 @@ try {
     await evaluate("if(navigator.locks){const request=navigator.locks.request.bind(navigator.locks);navigator.locks.request=async(...args)=>{await new Promise(resolve=>setTimeout(resolve,250));return request(...args)}}");
     await click('#results button');
     await until(()=>evaluate("document.querySelector('#results button')?.textContent==='Search saved'"),'native-boundary save completion before restart');
+    assert.equal(await evaluate("localStorage.getItem('udi.searches.v1')"),legacySearches,'legacy backup is preserved during explicit native save');
+    assert(await evaluate("JSON.parse(localStorage.getItem('udi.searches.v2'))[0].marketId==='CH' && JSON.parse(localStorage.getItem('udi.searches.v2'))[0].schemaVersion===2"),'native shared code writes explicit market-bound requests');
     await click('nav a[href="#watchlist"]');await send('Page.reload');
     await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
+    await click('#saved .text-button');
+    await until(()=>evaluate("document.querySelector('#saved').textContent.includes('Your watchlist is empty')"),'native saved request removal');
+    assert(await evaluate("JSON.parse(localStorage.getItem('udi.searches.v1')).length===0 && JSON.parse(localStorage.getItem('udi.searches.v2')).length===0"),'removing a migrated request clears both versions');
     await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'native version help');
     assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));
     await noOverflow();await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:adapter.identifier});
