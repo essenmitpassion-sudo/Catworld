@@ -179,6 +179,8 @@ try {
       await type('Samsung 990 PRO 2 TB bis CHF 500');
       await key('Enter');
       await until(() => evaluate("document.querySelector('#web-results article a')?.href.startsWith('https://www.dq-solutions.ch/')"), 'live DQ offer');
+      assert(await evaluate("document.querySelector('#web-results .cost-open')?.textContent.includes('Versand')"), 'live offer names unknown costs');
+      assert(await evaluate("!document.querySelector('#web-results .value-proof')"), 'partial live offer has no savings claim');
       await noOverflow();
       const receipt = JSON.parse(await readFile(join(profile, 'checks.json'), 'utf8')).at(-1);
       const check = receipt.checks.find(check => check.seller === 'DQ Solutions');
@@ -277,6 +279,7 @@ try {
       assert(await evaluate("document.querySelector('#web-results').textContent.includes('Teilweise geprüft')"));
       assert(await evaluate("!document.querySelector('#web-results').textContent.includes('Verkaufter PC')"));
       assert(await evaluate("document.querySelector('#web-results').textContent.includes('Gesamtkosten noch offen')"));
+      assert(await evaluate("document.querySelector('#web-results .cost-open').textContent.includes('Pflichtgebühren')"));
       await noOverflow();
       if (process.env.UDI_SCREENSHOT_DIR) {
         await evaluate("document.querySelector('#web-results').scrollIntoView()");
@@ -377,6 +380,50 @@ try {
       await until(() => evaluate("Boolean(document.querySelector('[data-mic]')?.disabled)"), 'unsupported browser offers text fallback');
       assert(await evaluate("document.querySelector('[data-voice-status]').textContent.includes('Textfeld')"));
       await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: unsupported.identifier });
+    }
+    if (!live && [390,1365].includes(width)) {
+      // Trusted-publication fixtures are intercepted only in this isolated test
+      // browser. Production observations and real merchant pages stay untouched.
+      let fixture = [];
+      const intercept = async event => {
+        const message = JSON.parse(event.data);
+        if (message.method !== 'Fetch.requestPaused') return;
+        const body = message.params.request.url.includes('/observations.json') ? fixture
+          : {kind:'results',items:[],attemptedUrls:[]};
+        await send('Fetch.fulfillRequest', {requestId:message.params.requestId,responseCode:200,
+          responseHeaders:[{name:'Content-Type',value:'application/json'}],
+          body:Buffer.from(JSON.stringify(body)).toString('base64')});
+      };
+      socket.addEventListener('message', intercept);
+      await send('Fetch.enable', {patterns:[{urlPattern:origin+'/observations.json'}, {urlPattern:origin+'/api/discovery'}]});
+      for (const matchingDestination of [true,false]) {
+        fixture = catalog[0].sources.slice(0,2).map((source,index) => ({
+          mpn:catalog[0].mpn, seller:source.seller, url:source.url, finalUrl:source.url,
+          checkedAt:new Date().toISOString(),currency:'CHF',stock:'in-stock',condition:'Neu',
+          delivery:'Browser-Testbeobachtung',price:20000+index*1000,shipping:0,taxes:0,imports:0,fees:0,
+          deliveryDestination:{country:'CH',postalCode:index && !matchingDestination?'3000':'8000'},
+        }));
+        const evidenceQuery = '?evidence=' + (matchingDestination ? 'matching' : 'different');
+        await send('Page.navigate',{url:origin+'/'+evidenceQuery+'#suche'});
+        await until(()=>evaluate(`location.search === ${JSON.stringify(evidenceQuery)} && document.readyState === 'complete' && document.getElementById('suche')?.hidden === false`),'comparison evidence start');
+        await evaluate("document.querySelector('#search-query').focus()");
+        await type('Samsung 990 PRO 2 TB'); await key('Enter');
+        await until(()=>evaluate("Boolean(document.querySelector('#results .button'))"),'product comparison action');
+        await click('#results a[href="#vergleich"]');
+        if (matchingDestination) {
+          await until(()=>evaluate("document.querySelector('#comparison .value-proof')?.textContent.includes('Möglicher Preisvorteil')"),'possible price advantage with traceable basis');
+          const proof=await evaluate("document.querySelector('#comparison .value-proof').textContent");
+          assert(proof.includes('CHF') && proof.includes('10.00') && proof.includes('8000') && proof.includes('keine bereits erzielte Ersparnis'));
+          assert.equal(await evaluate("document.querySelector('#comparison .value-proof a').href"),catalog[0].sources[1].url);
+        } else {
+          await until(()=>evaluate("document.querySelector('#comparison').textContent.includes('Zustand oder Lieferort sind nicht') || document.querySelector('#comparison').textContent.includes('Zustand oder Lieferort')"),'different destinations explained');
+          assert(await evaluate("!document.querySelector('#comparison .value-proof')"));
+          assert(await evaluate("document.querySelector('#comparison').textContent.includes('Kaufentscheid offen')"));
+        }
+        await noOverflow();
+      }
+      await send('Fetch.disable');
+      socket.removeEventListener('message',intercept);
     }
     console.log('Browser workflow passed at ' + width + 'px');
   }

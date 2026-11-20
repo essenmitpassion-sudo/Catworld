@@ -70,6 +70,26 @@ export function compare(product, observations, now = Date.now(), criteria = {}) 
   });
   const eligible = offers.filter(offer => !offer.excluded && offer.state === 'verified' && offer.observation.stock === 'in-stock')
     .sort((left, right) => left.total - right.total);
-  const recommendation = eligible.length >= 2 && eligible[0].total < eligible[1].total ? eligible[0] : null;
-  return { offers, recommendation };
+  const bases = eligible.map(offer => {
+    const { condition, deliveryDestination: destination } = offer.observation;
+    if (!['Neu', 'Gebraucht', 'Generalüberholt', 'Beschädigt'].includes(condition)
+      || destination?.country !== 'CH' || typeof destination.postalCode !== 'string'
+      || !/^[1-9]\d{3}$/.test(destination.postalCode)) return null;
+    return condition + '|' + destination.country + '|' + destination.postalCode;
+  });
+  const comparisonStatus = eligible.length < 2 ? 'insufficient'
+    : bases.some(basis => basis === null) ? 'missing-basis'
+    : new Set(bases).size !== 1 ? 'different-basis'
+    : eligible[0].total === eligible[1].total ? 'same-price' : 'price-advantage';
+  const recommendation = comparisonStatus === 'price-advantage' ? eligible[0] : null;
+  const priceAdvantage = recommendation ? {
+    status: 'possible', amount: eligible[1].total - recommendation.total,
+    referenceSeller: eligible[1].seller, referenceUrl: eligible[1].url,
+    referenceTotal: eligible[1].total, offerTotal: recommendation.total,
+    condition: recommendation.observation.condition,
+    deliveryDestination: { ...recommendation.observation.deliveryDestination },
+    checkedAt: new Date(Math.min(...eligible.map(offer => timestamp(offer.observation.checkedAt)))).toISOString(),
+    comparedAt: new Date(now).toISOString(),
+  } : null;
+  return { offers, recommendation, priceAdvantage, comparisonStatus };
 }

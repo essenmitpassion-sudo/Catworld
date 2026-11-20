@@ -10,6 +10,7 @@ const observation = {
   seller: first.seller, checkedAt: '2026-11-17T11:00:00Z',
   price: 20000, shipping: 0, taxes: 0, imports: 0, fees: 0,
   currency: 'CHF', stock: 'in-stock', delivery: '2 Werktage', condition: 'Neu',
+  deliveryDestination: { country: 'CH', postalCode: '8000' },
 };
 
 test('search keeps model variants distinct', () => {
@@ -67,4 +68,37 @@ test('Katalogvergleich und Empfehlung müssen dieselben Kaufkriterien respektier
   }
   const passing = compare(product, [observation, alternative], now, { maxTotal: 20000, condition: 'new' });
   assert.equal(passing.offers[0].excluded, false);
+});
+
+test('ein Preisvorteil benötigt denselben belegten Zustand und Lieferort', () => {
+  const alternative = { ...observation, seller: second.seller, url: second.url, finalUrl: second.url, price: 21000 };
+  for (const change of [
+    { condition: null }, { condition: 'Gebraucht' }, { condition: 'Generalüberholt' },
+    { deliveryDestination: null }, { deliveryDestination: {country:'CH'} },
+    { deliveryDestination: {country:'CH',postalCode:'3000'} },
+    { deliveryDestination: {country:'DE',postalCode:'8000'} },
+  ]) {
+    const result = compare(product, [observation, {...alternative,...change}], now);
+    assert.equal(result.recommendation, null, JSON.stringify(change));
+    assert.equal(result.priceAdvantage, null);
+  }
+  const result = compare(product, [observation,alternative], now);
+  assert.equal(result.priceAdvantage.amount, 1000);
+  assert.equal(result.priceAdvantage.status, 'possible');
+  assert.equal(result.priceAdvantage.referenceSeller, second.seller);
+  assert.equal(result.priceAdvantage.referenceUrl, second.url);
+  assert.deepEqual(result.priceAdvantage.deliveryDestination, observation.deliveryDestination);
+  assert.equal(Date.parse(result.priceAdvantage.checkedAt), Date.parse(observation.checkedAt));
+  assert.equal(result.priceAdvantage.confirmedSavings, undefined);
+});
+
+test('Provisionen, UVP, Gleichstand, unvollständige und alte Daten begründen keinen Sparvorteil', () => {
+  const alternative = { ...observation, seller: second.seller, url: second.url, finalUrl: second.url, price:21000, commission:999999 };
+  const best = {...observation, commission:0};
+  assert.equal(compare(product,[best,alternative],now).recommendation.seller,first.seller);
+  for(const change of [ {price:20000}, {shipping:null}, {stock:'out-of-stock'}, {checkedAt:'2026-11-17T10:55:00Z'} ]) {
+    const result=compare(product,[best,{...alternative,...change}],now);
+    assert.equal(result.priceAdvantage,null);
+  }
+  assert.equal(compare(product,[{...best,listPrice:999999}],now).priceAdvantage,null);
 });

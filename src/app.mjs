@@ -5,6 +5,7 @@ import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
 import { setupVoice } from './voice.mjs';
+import { costs } from './costs.mjs';
 
 const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
@@ -179,6 +180,26 @@ function message(title, body) {
   return box;
 }
 
+function openCosts(observation) {
+  const summary = costs(observation);
+  if (summary.total !== null) return null;
+  const names = costFields.filter(([key]) => summary.missing.includes(key)).map(([, label]) => label);
+  return element('p', 'Noch offen: ' + (names.join(', ') || 'vollständiger CHF-Endpreis') + '.', 'cost-open');
+}
+
+function appendPriceAdvantage(target, advantage) {
+  if (!advantage) return;
+  const box = element('section', null, 'value-proof');
+  box.append(element('h3', 'Möglicher Preisvorteil: ' + money(advantage.amount)),
+    element('p', 'Gegenüber ' + advantage.referenceSeller + ' mit ' + money(advantage.referenceTotal)
+      + ' Gesamtkosten. Dieselbe Variante, Zustand ' + advantage.condition + ', Lieferung an '
+      + advantage.deliveryDestination.postalCode + ' (CH).', 'muted'),
+    element('p', 'Älteste Angebotsprüfung im Vergleich: ' + date.format(new Date(advantage.checkedAt))
+      + ' (CH). Ein Kauf ist nicht bestätigt; dies ist keine bereits erzielte Ersparnis.', 'muted'),
+    link('Vergleichsangebot bei ' + advantage.referenceSeller, advantage.referenceUrl, 'text-button', true));
+  target.append(box);
+}
+
 function watchAction(product, remove = false) {
   const button = element('button', remove ? 'Entfernen' : 'Auf die Watchlist', 'text-button');
   button.type = 'button';
@@ -296,6 +317,11 @@ function renderWebResults(result, query) {
     const amount = element('div', null, 'offer-cost');
     amount.append(element('p', money(check.total ?? check.price), 'offer-price'),
       element('p', check.total === null ? 'Artikelpreis · Gesamtkosten noch offen' : 'Gesamtkosten inklusive bekannter Pflichtkosten', 'price-caption'));
+    const costNote = openCosts(check);
+    if (costNote) amount.append(costNote);
+    const costSummary = costs(check);
+    if (costSummary.total === null && costSummary.minimum > check.price) amount.append(element('p',
+      'Bisher bekannte Kosten: ' + money(costSummary.minimum) + '. Der Endpreis ist noch offen.', 'price-caption'));
     layout.append(identity, amount);
     const meta = element('p', 'Quelle meldet verfügbar · geprüft ' + date.format(new Date(check.checkedAt)) + ' (CH)', 'offer-meta');
     meta.prepend(icon('clock'));
@@ -410,11 +436,16 @@ function facts(rows) {
   return list;
 }
 
-function recommendationText(recommendation) {
+function recommendationText(recommendation, comparisonStatus) {
   if (sourceState === 'loading') return 'Angebotsdaten werden geladen …';
   if (sourceState === 'error') return 'Angebotsdaten konnten nicht geladen werden. Öffne die Händlerseite für den aktuellen Stand.';
-  if (!recommendation) return 'Kaufentscheid offen. Für eine Empfehlung braucht es zwei verfügbare Angebote mit aktuellen, vollständigen Gesamtkosten und einen eindeutigen Preisvorteil.';
-  return recommendation.seller + ' hat unter den geprüften, verfügbaren Angeboten die tiefsten Gesamtkosten (' + money(recommendation.total) + ').';
+  if (!recommendation) {
+    if (comparisonStatus === 'missing-basis') return 'Kaufentscheid offen. Zustand oder Lieferort sind nicht für alle Angebote belegt. Ein fairer Preisvorteil lässt sich noch nicht bestätigen.';
+    if (comparisonStatus === 'different-basis') return 'Kaufentscheid offen. Zustand oder Lieferort unterscheiden sich. Diese Angebote begründen keinen gemeinsamen Preisvorteil.';
+    if (comparisonStatus === 'same-price') return 'Kaufentscheid offen. Die vergleichbaren Angebote haben dieselben Gesamtkosten; ein Preisvorteil ist nicht belegt.';
+    return 'Kaufentscheid offen. Für eine Empfehlung braucht es zwei verfügbare Angebote mit aktuellen, vollständigen Gesamtkosten, demselben Zustand und demselben belegten Lieferort.';
+  }
+  return recommendation.seller + ' hat im belegten Vergleich für denselben Zustand und Lieferort die tiefsten Gesamtkosten (' + money(recommendation.total) + ').';
 }
 
 function factsFor(offer) {
@@ -424,6 +455,10 @@ function factsFor(offer) {
   return [
     ['Artikelpreis', isAmount(observation?.price) && observation.price > 0 ? money(observation.price) : 'Unbekannt'],
     ['Gesamtkosten', offer.total === null ? 'Unbekannt' : money(offer.total)],
+    ['Zustand laut Quelle', observation?.condition || 'Nicht belegt'],
+    ['Lieferziel des Preises', observation?.deliveryDestination?.country === 'CH'
+      && /^[1-9]\d{3}$/.test(observation.deliveryDestination.postalCode)
+      ? observation.deliveryDestination.postalCode + ' (CH)' : 'Nicht belegt'],
     ['Verfügbarkeit', available],
     ['Prüfzeitpunkt', observation ? date.format(new Date(observation.checkedAt)) + ' (CH)' : 'Keine aktuelle Prüfung'],
   ];
@@ -437,7 +472,7 @@ function renderComparison() {
     target.replaceChildren(box);
     return;
   }
-  const { offers, recommendation } = compare(activeProduct, observations, Date.now(), activeCriteria);
+  const { offers, recommendation, priceAdvantage, comparisonStatus } = compare(activeProduct, observations, Date.now(), activeCriteria);
   const columns = element('div', null, 'columns');
   for (const offer of offers) {
     const box = element('article', null, 'surface');
@@ -450,7 +485,8 @@ function renderComparison() {
   const heading = message(activeProduct.name + ' · ' + activeProduct.variant, activeProduct.mpn);
   const criteriaLabel = describeCriteria(activeCriteria);
   if (criteriaLabel) heading.append(element('p', criteriaLabel, 'muted'));
-  heading.append(element('p', recommendationText(recommendation)));
+  heading.append(element('p', recommendationText(recommendation, comparisonStatus)));
+  appendPriceAdvantage(heading, priceAdvantage);
   target.replaceChildren(heading, columns);
 }
 
@@ -462,7 +498,7 @@ function renderPassport() {
     target.replaceChildren(box);
     return;
   }
-  const { offers, recommendation } = compare(activeProduct, observations, Date.now(), activeCriteria);
+  const { offers, recommendation, priceAdvantage, comparisonStatus } = compare(activeProduct, observations, Date.now(), activeCriteria);
   const offer = offers.find(row => row.seller === activeSeller);
   if (offer.excluded) {
     const box = message('Angebot erfüllt deine Kaufkriterien nicht', 'Suche mit angepassten Kriterien oder öffne den Vergleich.');
@@ -487,12 +523,15 @@ function renderPassport() {
   box.append(element('span', labels[offer.state], 'badge ' + offer.state),
     facts([...factsFor(offer), ...expenses, ['Lieferbedingungen', delivery || 'Unbestätigt'],
       ['Quelle', new URL(offer.url).hostname]]), element('p', risk[offer.state], 'muted'));
+  const costNote = openCosts(observation);
+  if (costNote) box.append(costNote);
   const actions = element('div', null, 'actions');
   const url = directLink(offer.url, activeProduct);
   if (url && offer.state !== 'unconfirmed') actions.append(link(offer.seller + ' öffnen', url, 'button', true));
   actions.append(watchAction(activeProduct));
   box.append(actions);
-  const guidance = message('Kaufentscheid', recommendationText(recommendation));
+  const guidance = message('Kaufentscheid', recommendationText(recommendation, comparisonStatus));
+  if (recommendation?.seller === offer.seller) appendPriceAdvantage(guidance, priceAdvantage);
   guidance.append(element('p', activeProduct.compatibility),
     link('Technische Daten bei Samsung', activeProduct.manufacturer, 'text-button', true),
     link('Händler vergleichen', '#vergleich'));
