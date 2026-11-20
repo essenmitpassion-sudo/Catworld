@@ -1,0 +1,8 @@
+{
+  "appId": "stream.soundweave.udi",
+  "appName": "UDI",
+  "webDir": "native-dist",
+  "loggingBehavior": "none",
+  "includePlugins": [],
+  "server": { "cleartext": false }
+}

@@ -575,6 +575,27 @@ try {
     await noOverflow();
     console.log('English workflow passed at '+width+'px (CH/CHF, persistence, expiry, dictation adapter, permissions, sharing)');
   }
+  if(!live&&!layoutOnly)for(const platform of ['android','ios','unsupported']) {
+    await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
+    origin='http://127.0.0.1:'+app.address().port;
+    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)}};try{localStorage.setItem('udi.language.v1','en')}catch{}`});
+    await send('Emulation.setDeviceMetricsOverride',{width:390,height:780,deviceScaleFactor:1,mobile:true});
+    await send('Page.navigate',{url:origin+'/#suche'});
+    await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
+    assert(await evaluate("document.querySelector('#native-runtime-status').textContent.includes('not connected')"));
+    assert(await evaluate("document.querySelector('[data-mic]').disabled"),'native voice is not pretended from browser support');
+    await evaluate("document.querySelector('#search-query').focus()");await type('Samsung 990 PRO 2 TB');await pointerClick('.primary-search');
+    await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('not connected')"),'native search explains missing service');
+    assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');
+    assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery')&&!entry.name.includes('observations.json'))"),'native path never falls back to device API or bundled observations');
+    assert(await evaluate("document.querySelector('#native-runtime-status').getBoundingClientRect().height>0"),'service warning survives submitted search');
+    await click('#results button');await click('nav a[href="#watchlist"]');await send('Page.reload');
+    await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
+    await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'native version help');
+    assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));
+    await noOverflow();await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:adapter.identifier});
+    console.log('Native boundary simulation passed for '+platform+' (browser test; no native emulator/device claim)');
+  }
   assert.equal(pageErrors.length,0,'no unhandled app errors or console errors');
 } catch (error) {
   if(pageErrors.length)console.error(JSON.stringify({pageErrors}));

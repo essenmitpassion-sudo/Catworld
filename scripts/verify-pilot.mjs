@@ -27,6 +27,11 @@ for(const [path,expected]of Object.entries(receipt.files)) {
 assert(receipt.files['package-lock.json']&&receipt.files['scripts/serve.mjs']&&receipt.files['dist/manifest.webmanifest']);
 assert(process.env.npm_execpath,'Run through npm run pilot:verify');
 await execFile(process.execPath,[process.env.npm_execpath,'ci','--ignore-scripts','--no-audit','--no-fund'],{cwd:unpacked,windowsHide:true,maxBuffer:1_048_576});
+let nativeSourcePreparationVerified=false;
+if(receipt.files['capacitor.config.json']) {
+  for(const script of ['scripts/build-native.mjs','scripts/check-native.mjs'])await execFile(process.execPath,[script],{cwd:unpacked,windowsHide:true,maxBuffer:1_048_576});
+  nativeSourcePreparationVerified=true;
+}
 const {server}=await import(pathToFileURL(join(unpacked,'scripts/serve.mjs')));
 const app=server();await new Promise(resolve=>app.listen(0,'127.0.0.1',resolve));
 try {
@@ -35,5 +40,5 @@ try {
   assert.equal((await response.json()).short_name,'UDI');
   const scan=await fetch(origin+'/api/discovery',{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,'Sec-Fetch-Site':'same-origin'},body:JSON.stringify({query:'Samsung 990 PRO 2 TB'})});
   assert.equal(scan.status,200);assert.equal((await scan.json()).items.length,0,'without verifier, no offer is invented');
-  console.log(JSON.stringify({commit:receipt.commit,archiveIntegrity:true,unpackedFiles:entries.length,lockfileInstalled:true,backendManifestStatus:200,catalogApiStatus:200,liveSourceCalls:false,unpacked}));
+  console.log(JSON.stringify({commit:receipt.commit,archiveIntegrity:true,unpackedFiles:entries.length,lockfileInstalled:true,nativeSourcePreparationVerified,nativeCompilationVerified:false,backendManifestStatus:200,catalogApiStatus:200,liveSourceCalls:false,unpacked}));
 } finally {await new Promise(resolve=>app.close(resolve));}

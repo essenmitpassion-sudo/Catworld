@@ -1,7 +1,16 @@
 import {m,setText} from './i18n.mjs';
+import {runtimePlatform} from './runtime.mjs';
 export function setupInstall(root = document) {
   const button=root.querySelector('[data-install]');
   const status=root.querySelector('[data-install-status]');
+  if(runtimePlatform()!=='web') {
+    button.hidden=true;
+    const card=status.closest('.surface');
+    card.querySelectorAll('p:not([data-install-status])').forEach(node=>{node.hidden=true;});
+    setText(card.querySelector('h2'),m('Deine App-Version'));
+    setText(status,m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'));
+    return;
+  }
   let invitation;
   const installed=()=>window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   function update() {

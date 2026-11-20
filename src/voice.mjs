@@ -1,5 +1,6 @@
 // Browser-native dictation plus a temporary, local recording for review.
 import {m,setText,t,speechLanguage} from './i18n.mjs';
+import {runtimePlatform} from './runtime.mjs';
 export function setupVoice(root, onInput) {
   const button = root.querySelector('[data-mic]');
   const input = root.elements.query;
@@ -9,7 +10,8 @@ export function setupVoice(root, onInput) {
   const audio = root.querySelector('[data-audio]');
   const label = root.querySelector('[data-mic-label]');
   const Recognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-  const supported = !!(Recognition && navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
+  const native=runtimePlatform()!=='web';
+  const supported = !native&&!!(Recognition && navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
   let session = null;
   let audioUrl;
   let recordingVersion = 0;
@@ -53,7 +55,7 @@ export function setupVoice(root, onInput) {
   button.setAttribute('aria-pressed', 'false');
   if (!supported) {
     button.disabled = true;
-    button.dataset.i18nTitle='Dieser Browser unterstützt Aufnahme und Diktat nicht gemeinsam. Nutze die Texteingabe.';
+    button.dataset.i18nTitle=native?'Die Spracheingabe ist für diese App-Version noch nicht verfügbar. Nutze die Texteingabe.':'Dieser Browser unterstützt Aufnahme und Diktat nicht gemeinsam. Nutze die Texteingabe.';
     button.title=t(button.dataset.i18nTitle);
     tell(m('Diktieren ist hier nicht verfügbar. Beschreibe deinen Wunsch im Textfeld.'));
   }

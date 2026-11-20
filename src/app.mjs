@@ -8,6 +8,7 @@ import { setupVoice } from './voice.mjs';
 import { costs } from './costs.mjs';
 import { setupInstall } from './install.mjs';
 import { setupSharing, readSharedSearch } from './share.mjs';
+import {runtimePlatform,discoverOffers,loadObservations} from './runtime.mjs';
 import { m,t,setText,uiError,initializeLanguage,setLanguage,formatMoney,formatDate } from './i18n.mjs';
 
 const get = id => document.getElementById(id);
@@ -32,6 +33,14 @@ let voice;
 let sharer;
 mountIcons();
 initializeLanguage();
+const platform=runtimePlatform();
+document.documentElement.dataset.platform=platform;
+if(platform!=='web') {
+  const nativeStatus=document.createElement('p');nativeStatus.className='shared-notice';nativeStatus.id='native-runtime-status';
+  setText(nativeStatus,m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'));
+  get('suche').querySelector('.search-intro').after(nativeStatus);
+  get('suche').querySelector('.coverage-note').hidden=true;
+}
 setupInstall();
 
 function draftInput(query = get('search-query').value.trim()) {
@@ -47,7 +56,7 @@ function refreshIntent({invalidate=true}={}) {
   const panel = get('intent-compass');
   panel.hidden = true;
   target.replaceChildren();
-  get('suche').querySelector('.share-search').hidden = !input.query;
+  get('suche').querySelector('.share-search').hidden = !input.query || platform!=='web';
   const questionBox = get('intent-question');
   questionBox.replaceChildren();
   questionBox.hidden = true;
@@ -286,6 +295,7 @@ function renderWebResults(result, query) {
   if (result.kind !== 'results' || !result.items.length) {
     const messages = {
       disabled: m('Die Websuche ist in dieser Installation noch nicht verbunden.'),
+      'native-unavailable':m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'),
       busy: m('Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.'),
       unavailable: m('Die Websuche ist vorübergehend nicht erreichbar.'),
       invalid: m('Gib einen Kaufwunsch als Text ohne Webadresse ein.'),
@@ -414,13 +424,9 @@ async function submit(query, scope) {
   resultTitle.tabIndex = -1;
   resultTitle.focus();
   try {
-    const response = await fetch('./api/discovery', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
+    const result = await discoverOffers(input, {
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),
     });
-    const result = await response.json();
     if (!request.signal.aborted) renderWebResults(result, query);
   } catch {
     if (!request.signal.aborted) renderWebResults({ kind: 'unavailable' }, query);
@@ -581,7 +587,7 @@ function renderWatchlist() {
     empty.append(link(m('Zur Suche'), '#suche'));
     boxes.push(empty);
   }
-  boxes.push(element('p', m('Die Watchlist bleibt in diesem Browser. Automatische Benachrichtigungen sind noch nicht verfügbar.'), 'muted'));
+  boxes.push(element('p', m(platform==='web'?'Die Watchlist bleibt in diesem Browser. Automatische Benachrichtigungen sind noch nicht verfügbar.':'Die Watchlist bleibt in dieser App auf diesem Gerät. Automatische Benachrichtigungen sind noch nicht verfügbar.'), 'muted'));
   if (storageError) boxes.push(element('p', m('Der lokale Speicher ist zurzeit nicht lesbar oder beschreibbar.'), 'muted'));
   get('saved').replaceChildren(...boxes);
 }
@@ -676,10 +682,7 @@ window.addEventListener('storage', event => {
 renderRoute();
 
 try {
-  const response = await fetch('./observations.json', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
-  if (!response.ok) throw new Error('Observation data unavailable');
-  const data = await response.json();
-  if (!Array.isArray(data)) throw new Error('Invalid observation data');
+  const data = await loadObservations({signal:AbortSignal.timeout(5000)});
   const currentUrls = new Set(observations.map(row => row?.url));
   observations = [...data.filter(row => !currentUrls.has(row?.url)), ...observations];
   sourceState = 'ready';

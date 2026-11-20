@@ -18,3 +18,5 @@ jobs:
       - run: npm run build
       - run: npm run smoke
       - run: npm run test:layout
+      - run: npm run native:prepare
+      - run: npm run native:check
