@@ -590,6 +590,10 @@ try {
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
     assert(await evaluate("document.querySelector('#native-runtime-status').textContent.includes('not connected')"));
     assert(await evaluate("document.querySelector('[data-mic]').disabled"),'native voice is not pretended from browser support');
+    assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Describe what you need.')"),'native introduction must not promise unavailable voice input');
+    await evaluate("document.querySelector('#ui-language').value='de';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
+    assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Beschreibe deinen Wunsch.')"),'native text-first introduction follows German language selection');
+    await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
     await evaluate("document.querySelector('#search-query').focus()");await type('Samsung 990 PRO 2 TB');await pointerClick('.primary-search');
     await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('not connected')"),'native search explains missing service');
     assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');

@@ -37,6 +37,7 @@ initializeLanguage();
 const platform=runtimePlatform();
 document.documentElement.dataset.platform=platform;
 if(platform!=='web') {
+  setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Quelle, Prüfzeit und offene Kosten direkt am Angebot.'));
   const nativeStatus=document.createElement('p');nativeStatus.className='shared-notice';nativeStatus.id='native-runtime-status';
   setText(nativeStatus,m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'));
   get('suche').querySelector('.search-intro').after(nativeStatus);

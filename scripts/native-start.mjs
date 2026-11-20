@@ -1,11 +1,10 @@
 // Native startup proof only: no live offers, purchases or microphone claims.
 // Screenshots/accessibility dumps stay in the ephemeral CI runner.
 import { spawnSync, spawn } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
-import { load } from 'cheerio';
 
 const platform = process.argv[2];
 const temp = process.env.RUNNER_TEMP;
@@ -23,6 +22,49 @@ function checkSurface(text) {
   assert(/not\s+connected|noch\s+nicht\s+verbunden/i.test(text), 'Native service warning was not rendered.');
   assert(/Find\s+offers|Angebote\s+suchen/i.test(text), 'Search action was not rendered.');
   assert(/Watchlist/i.test(text), 'Watchlist navigation was not rendered.');
+  assert(/Describe\s+what\s+you\s+need|Beschreibe\s+deinen\s+Wunsch/i.test(text), 'Native introduction still promises unavailable voice input.');
+}
+
+async function androidSurface(port) {
+  const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`, { signal: AbortSignal.timeout(10000) })).json();
+  const page = targets.find(target => target.type === 'page' && /^https?:\/\/localhost(?:\/|$)/.test(target.url));
+  assert(page, 'No local UDI WebView debugging target; a process alone is not a startup proof.');
+  const url = new URL(page.webSocketDebuggerUrl);
+  assert(url.protocol === 'ws:' && url.pathname.startsWith('/devtools/page/'), 'Unexpected WebView debugger address.');
+  // Always connect to the adb-assigned loopback port, never a host in metadata.
+  url.hostname = '127.0.0.1'; url.port = String(port);
+  const socket = new WebSocket(url);
+  try {
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('WebView connection timed out.')), 10000);
+      socket.addEventListener('open', () => { clearTimeout(timer); resolve(); }, { once: true });
+      socket.addEventListener('error', () => { clearTimeout(timer); reject(new Error('WebView connection failed.')); }, { once: true });
+    });
+    const expression = `(() => ({ platform: window.Capacitor?.getPlatform(), ready: document.readyState,
+      nodes: ['#native-runtime-status', '.primary-search', 'nav a[href="#watchlist"]', '.search-intro p'].map(selector => {
+        const node = document.querySelector(selector);
+        node?.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+        const rect = node?.getBoundingClientRect();
+        const inView = !!rect?.width && !!rect?.height && rect.left >= 0 && rect.top >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight;
+        const hit = inView && document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        return { selector, text: node?.textContent, reachable: inView && getComputedStyle(node).visibility !== 'hidden' && (hit === node || node.contains(hit)) };
+      }) }))()`;
+    const surface = await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('WebView surface probe timed out.')), 10000);
+      socket.addEventListener('message', event => {
+        const reply = JSON.parse(event.data); if (reply.id !== 1) return;
+        clearTimeout(timer);
+        if (reply.error || reply.result?.exceptionDetails) reject(new Error(JSON.stringify(reply)));
+        else resolve(reply.result?.result?.value);
+      });
+      socket.send(JSON.stringify({ id: 1, method: 'Runtime.evaluate', params: { expression, returnByValue: true } }));
+    });
+    console.log('Installed Android WebView:', JSON.stringify(surface));
+    assert.equal(surface?.platform, 'android', 'Android bridge did not initialize.');
+    assert.equal(surface.ready, 'complete');
+    assert(surface.nodes.every(node => node.reachable), 'Native controls cannot be brought into view without obstruction.');
+    checkSurface(surface.nodes.map(node => node.text).join('\n'));
+  } finally { socket.close(); }
 }
 
 if (platform === 'android') {
@@ -52,12 +94,18 @@ if (platform === 'android') {
     run(adb, ['-e', 'install', '-r', resolve('android/app/build/outputs/apk/debug/app-debug.apk')]);
     console.log(run(adb, ['-e', 'shell', 'am', 'start', '-W', '-n', `${appId}/.MainActivity`]));
     await delay(8000);
-    assert(run(adb, ['-e', 'shell', 'pidof', appId]).trim(), 'Android app is not running.');
-    run(adb, ['-e', 'shell', 'uiautomator', 'dump', '/sdcard/udi-window.xml']);
-    const dump = join(temp, 'udi-window.xml');
-    run(adb, ['-e', 'pull', '/sdcard/udi-window.xml', dump]);
-    const $ = load(readFileSync(dump, 'utf8'), { xmlMode: true });
-    checkSurface($('node').map((_, node) => `${$(node).attr('text') ?? ''} ${$(node).attr('content-desc') ?? ''}`).get().join('\n'));
+    const pid = run(adb, ['-e', 'shell', 'pidof', appId]).trim();
+    assert(/^\d+$/.test(pid), 'Android app is not running.');
+    // Capacitor enables this only for the debug APK. Android's generic
+    // UIAutomator dump did not expose WebView text, so inspect the installed
+    // app's own rendered DOM and native bridge; no desktop-browser substitute.
+    const port = run(adb, ['-e', 'forward', 'tcp:0', `localabstract:webview_devtools_remote_${pid}`]).trim();
+    assert(/^\d+$/.test(port), 'Invalid adb loopback port.');
+    try { await androidSurface(port); }
+    catch (error) {
+      console.log(run(adb, ['-e', 'logcat', '-d', '-s', 'Capacitor/Console', 'chromium', 'AndroidRuntime']).slice(-12000));
+      throw error;
+    } finally { spawnSync(adb, ['-e', 'forward', '--remove', `tcp:${port}`], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' }); }
   } finally {
     spawnSync(adb, ['-e', 'emu', 'kill'], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' });
     emulator.kill();
