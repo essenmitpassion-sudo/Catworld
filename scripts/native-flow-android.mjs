@@ -4,7 +4,8 @@ const wishes=['Samsung 990 PRO 2 TB','Samsung 990 PRO 2 TB bis CHF 500'];
 export async function androidFlow({send,evaluate},afterRestart) {
   const wait=async expression=>{
     const until=Date.now()+10000;do {if(await evaluate(expression))return;await delay(100);}while(Date.now()<until);
-    throw new Error('Native Android UI condition failed: '+expression);
+    const state=await evaluate("JSON.stringify({query:document.querySelector('#search-query').value,saved:localStorage.getItem('udi.searches.v2'),headings:Array.from(document.querySelectorAll('#saved .surface h2')).map(n=>n.textContent),notice:document.querySelector('#notice').textContent})");
+    throw new Error('Native Android UI condition failed: '+expression+'; QA state: '+state);
   };
   const tap=async selector=>{
     const point=await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});n?.scrollIntoView({block:'center',behavior:'instant'});const r=n?.getBoundingClientRect();return r?{x:r.left+r.width/2,y:r.top+r.height/2}:null;})()`);
@@ -27,6 +28,7 @@ export async function androidFlow({send,evaluate},afterRestart) {
     await evaluate(`document.querySelector('#ui-language').value=${JSON.stringify(language)};document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}));`);
     await tap('#search-query');
     await send('Input.insertText',{text:wishes[index]});
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),wishes[index],'native input must contain the exact new wish');
     await tap('.primary-search');
     await wait(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(language==='en'?'not connected':'noch nicht verbunden')})`);
     assert(await evaluate("!document.querySelector('#web-results article a')"),'no invented live result or purchase link');

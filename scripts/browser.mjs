@@ -9,6 +9,7 @@ import { setTimeout as pause } from 'node:timers/promises';
 import { server } from './serve.mjs';
 import { inspectPage, pageVerifier } from './verification.mjs';
 import { catalog } from '../src/deals.mjs';
+import { androidFlow } from './native-flow-android.mjs';
 
 const browserPath = process.env.UDI_BROWSER || [
   'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
@@ -588,6 +589,12 @@ try {
     await send('Emulation.setDeviceMetricsOverride',{width:390,height:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
+    if(process.argv.includes('--native-flow-simulation')&&platform==='android') {
+      await evaluate("localStorage.removeItem('udi.searches.v1');localStorage.removeItem('udi.searches.v2')");
+      await androidFlow({send,evaluate},false);
+      console.log('Desktop simulation of Android QA sequence passed; this is not device acceptance.');
+      break;
+    }
     assert(await evaluate("document.querySelector('#native-runtime-status').textContent.includes('not connected')"));
     assert(await evaluate("document.querySelector('[data-mic]').disabled"),'native voice is not pretended from browser support');
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Describe what you need.')"),'native introduction must not promise unavailable voice input');
