@@ -23,7 +23,12 @@ final class UDIFlowTests: XCTestCase {
                 else if app.toolbars.buttons["Fertig"].exists { app.toolbars.buttons["Fertig"].tap() }
             } else { app.staticTexts[language].firstMatch.tap() }
             let field = app.webViews.textViews.firstMatch
-            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index] + "\n")
+            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
+            XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")
+            let submit = app.buttons[index == 0 ? "Find offers" : "Angebote finden"].firstMatch
+            XCTAssertTrue(submit.waitForExistence(timeout: 5))
+            if !submit.isHittable { app.webViews.firstMatch.swipeUp() }
+            submit.tap()
             let save = app.buttons[index == 0 ? "Save search" : "Suche speichern"].firstMatch
             XCTAssertTrue(save.waitForExistence(timeout: 10))
             let unavailable = NSPredicate(format: "label CONTAINS %@", index == 0 ? "not connected" : "noch nicht verbunden")
