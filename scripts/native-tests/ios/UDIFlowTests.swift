@@ -14,6 +14,7 @@ final class UDIFlowTests: XCTestCase {
             let selectors = app.webViews.otherElements.matching(NSPredicate(format: "label == %@ OR label == %@", "Interface language", "Oberflächensprache"))
             XCTAssertTrue(selectors.firstMatch.waitForExistence(timeout: 5))
             let selector = try XCTUnwrap(selectors.allElementsBoundByIndex.first(where: { $0.isHittable }))
+            if app.statusBars.firstMatch.exists { XCTAssertGreaterThanOrEqual(selector.frame.minY, app.statusBars.firstMatch.frame.maxY, "Language control must clear the status bar") }
             selector.tap()
             if app.buttons[language].firstMatch.waitForExistence(timeout: 2) { app.buttons[language].firstMatch.tap() }
             else if app.pickerWheels.firstMatch.exists {

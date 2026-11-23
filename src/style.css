@@ -3,6 +3,7 @@
 * { box-sizing: border-box; } [hidden] { display: none !important; }
 body { margin: 0; height: 100vh; height: 100dvh; display: grid; grid-template-rows: auto auto minmax(0,1fr); grid-template-areas: 'header' 'navigation' 'content'; overflow: hidden; }
 .site-header { grid-area: header; }
+body { padding-top: env(safe-area-inset-top,0px); padding-left: env(safe-area-inset-left,0px); padding-right: env(safe-area-inset-right,0px); }
 .primary-nav { grid-area: navigation; justify-self: center; justify-content: center; width: 100%; background: var(--paper); border-bottom: 1px solid var(--line); padding: .35rem; }
 .app-content { grid-area: content; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; scroll-padding-block: 1.25rem; scrollbar-gutter: stable; }
 a { color: inherit; text-underline-offset: .25em; } button, input, select, textarea { font: inherit; }

@@ -3,6 +3,6 @@
   "appName": "UDI",
   "webDir": "native-dist",
   "loggingBehavior": "none",
-  "includePlugins": [],
+  "includePlugins": ["@capacitor/preferences"],
   "server": { "cleartext": false }
 }

@@ -1,6 +1,7 @@
 import { catalog, search, compare, costFields, directLink, isAmount, maxObservationAge } from './deals.mjs';
 import { criteriaFor } from './criteria.mjs';
 import { readSearches, storeSearch, removeSearch, searchStorageKey } from './saved-searches.mjs';
+import {createSearchPersistence,nativeSearchPreferences} from './search-persistence.mjs';
 import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
@@ -35,7 +36,15 @@ let sharer;
 mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
-document.documentElement.dataset.platform=platform;
+let searchPersistence;
+try {
+  const preferences=['android','ios'].includes(platform)?nativeSearchPreferences(globalThis.Capacitor):undefined;
+  let timer;
+  try {searchPersistence=await Promise.race([createSearchPersistence({storage:localStorage,preferences}),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Gespeicherte Suchen konnten nicht gelesen werden.')),5000);})]);}
+  finally {clearTimeout(timer);}
+} catch(error) {
+  searchPersistence={storage:{getItem(){throw error;}},update:async()=>{throw error;}};
+}
 if(platform!=='web') {
   setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Quelle, Prüfzeit und offene Kosten direkt am Angebot.'));
   const nativeStatus=document.createElement('p');nativeStatus.className='shared-notice';nativeStatus.id='native-runtime-status';
@@ -112,7 +121,7 @@ function renderRecent() {
   const target = get('recent-searches');
   target.replaceChildren();
   try {
-    const saved = readSearches(localStorage).slice(0, 3);
+    const saved = readSearches(searchPersistence.storage).slice(0, 3);
     target.hidden = !saved.length;
     if (saved.length) target.append(element('h2', m('Hier kannst du anknüpfen')));
     for (const request of saved) {
@@ -125,7 +134,7 @@ function renderRecent() {
 }
 
 async function updateSearches(operation) {
-  const run = () => operation(localStorage);
+  const run = () => searchPersistence.update(operation);
   if (navigator.locks) return navigator.locks.request(searchStorageKey, run);
   return run();
 }
@@ -570,7 +579,7 @@ function renderWatchlist() {
     return box;
   });
   try {
-    for (const request of readSearches(localStorage)) {
+    for (const request of readSearches(searchPersistence.storage)) {
       const box = message(request.query, describeCriteria(criteriaFor(request)) || m('Alle Zustände'));
       const actions = element('div', null, 'actions');
       const searchAgain = element('button', m('Erneut prüfen'), 'button');
@@ -695,6 +704,7 @@ window.addEventListener('storage', event => {
   if (event.key === searchStorageKey && !get('watchlist').hidden) renderWatchlist();
 });
 renderRoute();
+document.documentElement.dataset.platform=platform;
 
 try {
   const data = await loadObservations({signal:AbortSignal.timeout(5000)});

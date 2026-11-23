@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-23 18:55:18 UTC",
+  "commit": "b438697cfec274495735eddfa534cf630c73bd00",
+  "scope": "Project continuity and isolated source recovery; extended native acceptance remains open",
+  "previousAcceptedMilestone": {
+    "tag": "milestone/udi-client-contract-2026-11-23",
+    "commit": "c0f4b38d333ff0dc7092261695376ca376ba3154",
+    "evidence": "2026-11-23-8780d584969c.json"
+  },
+  "standardCI": {
+    "id": 45242945599,
+    "sha": "b438697cfec274495735eddfa534cf630c73bd00",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45242945599"
+  },
+  "localChecks": {
+    "unitTestsPassed": 76,
+    "typecheck": true,
+    "build": true,
+    "chromiumGermanWidths": [
+      360,
+      390,
+      768,
+      1365
+    ],
+    "chromiumEnglishWidths": [
+      390,
+      1365
+    ],
+    "layoutAndLargeText": true,
+    "workflowValidation": true,
+    "qaSequenceDesktopSimulation": true
+  },
+  "recovery": {
+    "archive": "artifacts/udi-pilot-b438697cfec2.tar.gz",
+    "sha256": "1470a407f583731f2ce744922e8cc4feb318236ab298e486651f52b1505ff490",
+    "verifiedAt": "2026-11-23T18:52:44.863Z",
+    "unpackedFiles": 193,
+    "archiveIntegrity": true,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "nativeCompilationVerified": false,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false,
+    "secondPackagingReusedIdenticalBytes": true,
+    "archiveUploaded": false
+  },
+  "failedNativeAttempts": [
+    {
+      "runId": 45240417306,
+      "sha": "438b1c010986b41bcbab65f8d696c828bfba08a8",
+      "androidJob": 137923215082,
+      "iosJob": 137923214670,
+      "conclusion": "failure",
+      "findings": [
+        "Android English search, real missing-service error and saved wish passed; second German wish not found exactly.",
+        "iOS UI harness compiled and launched the installed app; test selected its language branch before navigation content was ready."
+      ]
+    },
+    {
+      "runId": 45241605673,
+      "sha": "ccd1a9069c8e611f78e4eefde1d12814b8d3ee6f",
+      "jobs": [
+        {
+          "id": 137928708354,
+          "name": "compile (ios, macos-15)",
+          "status": "completed",
+          "conclusion": "failure",
+          "completedAt": "2026-11-23T18:53:41Z"
+        },
+        {
+          "id": 137928708882,
+          "name": "compile (android, ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "completedAt": "2026-11-23T18:50:07Z"
+        }
+      ],
+      "findings": [
+        "Android second input is initially exact; at failure field is blank and only first wish is saved. Root cause remains under diagnosis.",
+        "iOS app compiled; simulator installation timed out before UI testing."
+      ]
+    },
+    {
+      "runId": 45242945247,
+      "sha": "b438697cfec274495735eddfa534cf630c73bd00",
+      "jobs": [
+        {
+          "id": 137932919485,
+          "name": "compile (ios, macos-15)",
+          "status": "completed",
+          "conclusion": "failure",
+          "completedAt": "2026-11-23T18:59:42Z"
+        },
+        {
+          "id": 137932919876,
+          "name": "compile (android, ubuntu-24.04)",
+          "status": "completed",
+          "conclusion": "failure",
+          "completedAt": "2026-11-23T18:57:29Z"
+        }
+      ],
+      "findings": [
+        "Android EN and DE text search, missing-service error, saving and exact wishes all pass before force-stop. After immediate force-stop/relaunch, WebView storage contains only the first wish.",
+        "iOS navigation readiness correction passes. Language control is at y16 inside the status-bar area; tapping it does not open the options. Full flow remains failed."
+      ]
+    }
+  ],
+  "boundaries": {
+    "extendedNativeAcceptance": false,
+    "physicalDeviceAcceptance": false,
+    "liveSharedService": false,
+    "nativeVoice": false,
+    "publicRelease": false,
+    "newMarkets": false
+  },
+  "nextAction": "Test native Preferences persistence and safe-area correction on both installed apps; no full native or live-service acceptance yet."
+}

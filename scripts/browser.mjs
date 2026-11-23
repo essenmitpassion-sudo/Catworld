@@ -59,6 +59,13 @@ const appOptions = live ? {
   }) + '</script>',
 }) };
 let app = server(appOptions);
+async function closeTestServer() {
+  const closed=new Promise(resolve=>app.close(resolve));
+  // Chromium can retain a speculative connection with no request. This server
+  // belongs only to the completed scenario; do not wait indefinitely for it.
+  app.closeAllConnections();
+  await closed;
+}
 let browser;
 let socket;
 let browserError = '';
@@ -160,7 +167,7 @@ try {
   }
   for (const width of live ? [390] : nativeOnly?[]:[360, 390, 768, 1365]) {
     if (width !== (live ? 390 : 360)) {
-      await new Promise(resolve => app.close(resolve));
+      await closeTestServer();
       app = server(appOptions);
       app.listen(0, '127.0.0.1');
       await once(app, 'listening');
@@ -527,7 +534,7 @@ try {
     console.log('Browser workflow passed at ' + width + 'px');
   }
   if(!live&&!layoutOnly&&!nativeOnly)for(const width of [390,1365]) {
-    await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
+    await closeTestServer();app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
     await send('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<500});
     await send('Page.navigate',{url:origin+'/#suche'});await until(()=>visible('suche'),'bilingual app start');
@@ -582,10 +589,11 @@ try {
     console.log('English workflow passed at '+width+'px (CH/CHF, persistence, expiry, dictation adapter, permissions, sharing)');
   }
   if(!live&&!layoutOnly)for(const platform of ['android','ios','unsupported']) {
-    await new Promise(resolve=>app.close(resolve));app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
+    await closeTestServer();app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
     const legacySearches=JSON.stringify([{query:'Samsung 990 PRO 2 TB',scope:null,maxPrice:'',condition:'any',completeCostsOnly:false}]);
-    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)}};try{localStorage.setItem('udi.language.v1','en');if(localStorage.getItem('udi.searches.v1')===null)localStorage.setItem('udi.searches.v1',${JSON.stringify(legacySearches)})}catch{}`});
+    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)},Plugins:{Preferences:{get:async({key})=>({value:localStorage.getItem('udi.qa.pref:'+key)}),set:async({key,value})=>{localStorage.setItem('udi.qa.pref:'+key,value)}}}};try{localStorage.setItem('udi.language.v1','en');if(localStorage.getItem('udi.searches.v1')===null)localStorage.setItem('udi.searches.v1',${JSON.stringify(legacySearches)})}catch{}`});
+    const savedRows=platform==='unsupported'?"JSON.parse(localStorage.getItem('udi.searches.v2'))":"JSON.parse(JSON.parse(localStorage.getItem('udi.qa.pref:udi.searches.native.v1')).values['udi.searches.v2'])";
     await send('Emulation.setDeviceMetricsOverride',{width:390,height:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
@@ -610,12 +618,12 @@ try {
     await click('#results button');
     await until(()=>evaluate("document.querySelector('#results button')?.textContent==='Search saved'"),'native-boundary save completion before restart');
     assert.equal(await evaluate("localStorage.getItem('udi.searches.v1')"),legacySearches,'legacy backup is preserved during explicit native save');
-    assert(await evaluate("JSON.parse(localStorage.getItem('udi.searches.v2'))[0].marketId==='CH' && JSON.parse(localStorage.getItem('udi.searches.v2'))[0].schemaVersion===2"),'native shared code writes explicit market-bound requests');
+    assert(await evaluate(`(${savedRows})[0].marketId==='CH' && (${savedRows})[0].schemaVersion===2`),'native shared code writes explicit market-bound requests');
     await click('nav a[href="#watchlist"]');await send('Page.reload');
     await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
     await click('#saved .text-button');
     await until(()=>evaluate("document.querySelector('#saved').textContent.includes('Your watchlist is empty')"),'native saved request removal');
-    assert(await evaluate("JSON.parse(localStorage.getItem('udi.searches.v1')).length===0 && JSON.parse(localStorage.getItem('udi.searches.v2')).length===0"),'removing a migrated request clears both versions');
+    assert(await evaluate(`JSON.parse(localStorage.getItem('udi.searches.v1')).length===0 && (${savedRows}).length===0`),'removing a migrated request clears both versions');
     await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'native version help');
     assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));
     await noOverflow();await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:adapter.identifier});
@@ -640,7 +648,7 @@ try {
     else browser.kill();
     await Promise.race([closed, pause(2500)]);
   }
-  app.close();
+  await closeTestServer();
   assert(resolve(profile).startsWith(resolve(tmpdir())+sep)&&basename(profile).startsWith('udi-browser-'),'cleanup stays inside this test profile');
   await rm(profile, { recursive: true, force: true, maxRetries: 4, retryDelay: 200 });
 }

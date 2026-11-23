@@ -20,8 +20,10 @@ export async function androidFlow({send,evaluate},afterRestart) {
     assert.equal(await evaluate("localStorage.getItem('udi.language.v1')"),'de','native language persists');
     await tap('nav a[href="#watchlist"]');
     for(const wish of wishes)await wait(`Array.from(document.querySelectorAll('#saved .surface h2')).some(node=>node.textContent===${JSON.stringify(wish)})`);
-    assert.deepEqual(await evaluate("JSON.parse(localStorage.getItem('udi.searches.v2')).map(row=>row.query).sort()"),[...wishes].sort(),'both distinct requests survived');
-    assert(await evaluate("JSON.parse(localStorage.getItem('udi.searches.v2')).every(row=>row.schemaVersion===2&&row.marketId==='CH'&&row.deliveryCountry==='CH'&&row.currency==='CHF')"));
+    const record=await evaluate("Capacitor.Plugins.Preferences.get({key:'udi.searches.native.v1'}).then(({value})=>JSON.parse(value))");
+    const rows=JSON.parse(record.values['udi.searches.v2']);
+    assert.deepEqual(rows.map(row=>row.query).sort(),[...wishes].sort(),'both distinct native requests survived');
+    assert(rows.every(row=>row.schemaVersion===2&&row.marketId==='CH'&&row.deliveryCountry==='CH'&&row.currency==='CHF'));
     console.log('Android: saved searches and CH context survived force-stop/relaunch; German selection preserved.');return;
   }
   for(const [index,language] of ['en','de'].entries()) {
