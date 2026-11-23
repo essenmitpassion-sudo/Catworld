@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-23 18:36:01 UTC",
+  "commit": "8780d584969cb762036ac84f69f78adfe7820a40",
+  "scope": "Typed client, native startup and source recovery; no live service or voice acceptance",
+  "runs": [
+    {
+      "id": 45238275312,
+      "name": "UDI native builds",
+      "sha": "8780d584969cb762036ac84f69f78adfe7820a40",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45238275312"
+    },
+    {
+      "id": 45238275560,
+      "name": "UDI CI",
+      "sha": "8780d584969cb762036ac84f69f78adfe7820a40",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45238275560"
+    }
+  ],
+  "nativeJobs": [
+    {
+      "id": 137915718802,
+      "name": "compile (android, ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-23T18:25:46Z",
+      "completedAt": "2026-11-23T18:28:50Z"
+    },
+    {
+      "id": 137915719335,
+      "name": "compile (ios, macos-15)",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-23T18:25:47Z",
+      "completedAt": "2026-11-23T18:32:49Z"
+    }
+  ],
+  "localChecks": {
+    "unitTestsPassed": 76,
+    "typecheck": true,
+    "chromiumGermanWidths": [
+      360,
+      390,
+      768,
+      1365
+    ],
+    "chromiumEnglishWidths": [
+      390,
+      1365
+    ],
+    "layoutAndLargeText": true,
+    "independentRestore": true,
+    "archiveReusedWithoutChange": true
+  },
+  "backup": {
+    "file": "artifacts/udi-pilot-8780d584969c.tar.gz",
+    "sha256": "1c37570c9681998c954c441df1d68a7760713921f07d623360c3077aa8d86ac0",
+    "files": 188,
+    "verification": "artifacts/udi-pilot-8780d584969c.verified.json"
+  },
+  "liveServiceVerified": false,
+  "nativeSpeechVerified": false,
+  "physicalDevicesVerified": false
+}
