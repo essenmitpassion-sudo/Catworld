@@ -1,10 +1,12 @@
 // Native startup proof only: no live offers, purchases or microphone claims.
 // Screenshots/accessibility dumps stay in the ephemeral CI runner.
 import { spawnSync, spawn } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, readFileSync, mkdirSync, copyFileSync, openSync, closeSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
+import {withAndroidPage} from './native-cdp.mjs';
+import {androidFlow} from './native-flow-android.mjs';
 
 const platform = process.argv[2];
 const temp = process.env.RUNNER_TEMP;
@@ -101,11 +103,17 @@ if (platform === 'android') {
     // app's own rendered DOM and native bridge; no desktop-browser substitute.
     const port = run(adb, ['-e', 'forward', 'tcp:0', `localabstract:webview_devtools_remote_${pid}`]).trim();
     assert(/^\d+$/.test(port), 'Invalid adb loopback port.');
-    try { await androidSurface(port); }
+    try { await androidSurface(port);await withAndroidPage(port,page=>androidFlow(page,false)); }
     catch (error) {
       console.log(run(adb, ['-e', 'logcat', '-d', '-s', 'Capacitor/Console', 'chromium', 'AndroidRuntime']).slice(-12000));
       throw error;
     } finally { spawnSync(adb, ['-e', 'forward', '--remove', `tcp:${port}`], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' }); }
+    run(adb,['-e','shell','am','force-stop',appId]);
+    run(adb,['-e','shell','am','start','-W','-n',`${appId}/.MainActivity`]);await delay(3000);
+    const restartedPid=run(adb,['-e','shell','pidof',appId]).trim();assert(/^\d+$/.test(restartedPid));
+    const restartedPort=run(adb,['-e','forward','tcp:0',`localabstract:webview_devtools_remote_${restartedPid}`]).trim();
+    try {await withAndroidPage(restartedPort,page=>androidFlow(page,true));}
+    finally {spawnSync(adb,['-e','forward','--remove',`tcp:${restartedPort}`],{timeout:10000,killSignal:'SIGKILL',stdio:'ignore'});}
   } finally {
     spawnSync(adb, ['-e', 'emu', 'kill'], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' });
     emulator.kill();
@@ -137,6 +145,15 @@ try VNImageRequestHandler(url: URL(fileURLWithPath: CommandLine.arguments[1]), o
 print((request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.joined(separator: "\\n"))
 `);
     checkSurface(run('swift', [recognizer, screenshot]));
+    const flow=join(temp,'udi-flow');mkdirSync(flow,{recursive:true});
+    for(const name of ['project.yml','UDIFlowTests.swift'])copyFileSync(resolve('scripts/native-tests/ios/'+name),join(flow,name));
+    run(join(temp,'udi-tools/xcodegen/bin/xcodegen'),['generate','--spec',join(flow,'project.yml'),'--project',flow]);
+    const log=join(temp,'udi-native-flow.log'),fd=openSync(log,'w');let result;
+    try {result=spawnSync('xcodebuild',['test','-project',join(flow,'UDIFlow.xcodeproj'),'-scheme','UDIFlow','-destination',`platform=iOS Simulator,id=${device.udid}`,
+      '-derivedDataPath',join(temp,'udi-flow-build'),'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO'],
+      {stdio:['ignore',fd,fd],timeout:360000,killSignal:'SIGKILL'});}finally{closeSync(fd);}
+    console.log(readFileSync(log,'utf8').slice(-18000));
+    assert(!result.error&&result.status===0,'iOS native flow test failed; see Xcode log above.');
   } finally {
     spawnSync('xcrun', ['simctl', 'shutdown', device.udid], { timeout: 30000, killSignal: 'SIGKILL', stdio: 'ignore' });
   }

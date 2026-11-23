@@ -90,7 +90,14 @@ jobs:
           printf 'no\n' | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd --name udi-smoke --package 'system-images;android-36;google_apis;x86_64' --force
           test -f "$ANDROID_AVD_HOME/udi-smoke.ini"
           "$ANDROID_HOME/emulator/emulator" -list-avds
-      - name: Start installed native app and check rendered surface
+      - name: Prepare checksum-pinned iOS UI test generator
+        if: matrix.platform == 'ios'
+        shell: bash
+        run: |
+          curl --fail --location --silent --show-error https://github.com/yonaskolb/XcodeGen/releases/download/2.48.0/xcodegen.zip --output "$RUNNER_TEMP/xcodegen.zip"
+          printf '%s  %s\n' '620c9f0dc10849f94728ab5df52d225ebab8187439dd6fee1925e59e80dff892' "$RUNNER_TEMP/xcodegen.zip" | shasum -a 256 -c -
+          unzip -q "$RUNNER_TEMP/xcodegen.zip" -d "$RUNNER_TEMP/udi-tools"
+      - name: Exercise installed native UI and persistence without a service
         shell: bash
         run: node scripts/native-start.mjs '${{ matrix.platform }}'
       # Deliberately no artifact upload, release, signing account or deployment.
