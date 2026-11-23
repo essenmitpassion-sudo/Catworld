@@ -2,6 +2,8 @@
 
 Stand: Client implementiert, kein erreichbarer geschützter Dienst konfiguriert. Android und iOS benutzen `createDealClient` aus derselben Codebasis. Die App enthält weder Endpunkt noch Token, Schlüssel oder Testangebote. Der lokale Node-Prüfserver und dessen Host-/Origin-Schutz bleiben unverändert; er ist kein bereitgestellter nativer Dienst.
 
+Selbstprüfung vom23.11.: `scripts/serve.mjs` implementiert den lokalen Pfad `/api/discovery`, jedoch weder `/api/v1/search` noch eine persönliche Anmeldung/Tokenprüfung. Es fehlen daher **Serverimplementierung und Zugriff**, nicht bloss eine URL-Einstellung. Der vorhandene Such-/Prüfkern kann wiederverwendet werden; Versionierung/Antwortvertrag, Authentifizierung, Zugriffstrennung und Quoten benötigen vor der nativen Live-Anbindung eine eigene Abnahme. Hostingfreigabe allein ist noch kein funktionierender Angebotsdienst. Native Anmeldung und geschützte Tokenablage sind ebenfalls nicht durch den Token-Callback erledigt.
+
 ## Integration
 
 Der Betreiber muss einen geprüften öffentlichen HTTPS-Origin und exakt `https://<freigegebener-host>/api/v1/search` bereitstellen. Keine Benutzerinfo, Query, Fragmente, IP-/lokale Ziele oder Umleitungen. `approvedOrigin` muss unabhängig ausdrücklich passen. Es gibt keine automatische Wiederholung oder HTTP-Ausweichverbindung. Die native CSP bleibt bis zur tatsächlichen Dienstabnahme bei `connect-src 'none'`; eine beliebige URL aus einem Suchwunsch wird niemals zum Dienstziel.
