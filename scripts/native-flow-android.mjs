@@ -10,11 +10,25 @@ export async function androidFlow({send,evaluate},afterRestart) {
     throw new Error('Native Android UI condition failed: '+expression+'; QA state: '+state);
   };
   const tap=async selector=>{
-    const point=await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});n?.scrollIntoView({block:'center',behavior:'instant'});const r=n?.getBoundingClientRect();return r?{x:r.left+r.width/2,y:r.top+r.height/2}:null;})()`);
+    await evaluate(`document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({block:'center',behavior:'instant'})`);
+    // The real IME resizes/pans the WebView after focus. A point sampled during
+    // that transition can hit the textarea even though the button was visible.
+    let previous='',stableSince=Date.now(),point;const deadline=Date.now()+4000;
+    do {
+      const box=await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)}),r=n?.getBoundingClientRect(),v=visualViewport;return r?{x:r.left+r.width/2,y:r.top+r.height/2,width:r.width,height:r.height,viewport:[innerWidth,innerHeight,v?.height,v?.offsetTop,v?.offsetLeft]}:null;})()`);
+      assert(box,'Missing native UI action: '+selector);
+      const signature=JSON.stringify(box);if(signature!==previous){previous=signature;stableSince=Date.now();}
+      point={x:box.x,y:box.y};
+      if(Date.now()-stableSince>=500)break;
+      await delay(100);
+    }while(Date.now()<deadline);
+    assert(Date.now()-stableSince>=500,'Native layout did not settle: '+selector);
     assert(point,'Missing native UI action: '+selector);
     assert(await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)}),hit=document.elementFromPoint(${point.x},${point.y});return n===hit||n?.contains(hit);})()`),'Native UI action obscured');
+    await evaluate(`window.udiQATap=null;document.addEventListener('click',e=>{const n=document.querySelector(${JSON.stringify(selector)});window.udiQATap=n===e.target||n?.contains(e.target);},{capture:true,once:true})`);
     await send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
     await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
+    await wait('window.udiQATap!==null');assert.equal(await evaluate('window.udiQATap'),true,'Native click must reach '+selector);
   };
   if(afterRestart) {
     assert.equal(await evaluate("localStorage.getItem('udi.language.v1')"),'de','native language persists');
