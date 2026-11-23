@@ -25,7 +25,7 @@ final class UDIFlowTests: XCTestCase {
             let field = app.webViews.textViews.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")
-            let submit = app.buttons[index == 0 ? "Find offers" : "Angebote finden"].firstMatch
+            let submit = app.buttons[index == 0 ? "Find offers" : "Angebote suchen"].firstMatch
             XCTAssertTrue(submit.waitForExistence(timeout: 5))
             if !submit.isHittable { app.webViews.firstMatch.swipeUp() }
             submit.tap()
