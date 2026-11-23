@@ -1,3 +1,7 @@
+import {createDealClient} from './deal-client.mjs';
+// No deployment/auth configuration is invented. Both native apps use this
+// shared client; a future verified integration supplies endpoint + token provider.
+const nativeClient=createDealClient();
 // Platform boundaries are independent of search criteria, language and market.
 export function runtimePlatform(bridge=globalThis.Capacitor,bundle=globalThis.document?.querySelector('meta[name=udi-runtime]')?.content) {
   if(bridge==null)return bundle==='native'?'unsupported':'web';
@@ -7,7 +11,8 @@ export function runtimePlatform(bridge=globalThis.Capacitor,bundle=globalThis.do
 
 // A bundled native UI does not contain the Node service. Until authenticated
 // native transport is approved, never fall back to a device-local API or host.
-export async function discoverOffers(input,{platform=runtimePlatform(),signal,fetchImpl=globalThis.fetch}={}) {
+export async function discoverOffers(input,{platform=runtimePlatform(),signal,fetchImpl=globalThis.fetch,client=nativeClient}={}) {
+  if(['android','ios'].includes(platform))return client.search(input,{signal});
   if(platform!=='web')return {kind:'native-unavailable'};
   const response=await fetchImpl('./api/discovery',{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal,

@@ -11,6 +11,15 @@ const check = {
   checkedAt: '2026-11-18T12:00:00Z', httpStatus: 200,
   price: 43900, currency: 'CHF', condition: 'Neu', availability: 'active',
 };
+test('Testantworten verändern weder echte Beobachtungen noch Vergleich und Passport',()=>{
+  const previous=[{...check,stock:'in-stock',finalUrl:source.url}];
+  for(const items of [[],[{url:source.url,check:{...check,price:100}}]]) {
+    const updated=applyChecks(previous,catalog,{kind:'results',testData:true,items,attemptedUrls:[source.url],completedAt:'2026-11-18T12:00:15Z'});
+    assert.deepEqual(updated,previous);
+    const offer=compare(product,updated,Date.parse('2026-11-18T12:00:16Z')).offers.find(offer=>offer.url===source.url);
+    assert.equal(offer.observation.price,43900);
+  }
+});
 
 test('ein erfolgreicher Live-Check wird im bestehenden Passport aus denselben Fakten dargestellt', () => {
   const observations = applyChecks([], catalog, {

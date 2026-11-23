@@ -8,6 +8,7 @@ on:
       - 'android/**'
       - 'ios/**'
       - 'package*.json'
+      - 'tsconfig*.json'
       - 'capacitor.config.json'
       - '.github/workflows/native.yml'
 

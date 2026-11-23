@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "node --test --test-isolation=none tests/*.test.mjs",
+    "typecheck": "tsc -p tsconfig.client.json",
     "build": "node scripts/build.mjs",
     "dev": "node scripts/serve.mjs",
     "smoke": "node scripts/browser.mjs",
@@ -29,6 +30,7 @@
     "ipaddr.js": "2.5.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "8.6.2"
+    "@capacitor/cli": "8.6.2",
+    "typescript": "7.0.2"
   }
 }

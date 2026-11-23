@@ -279,7 +279,7 @@ function renderWebResults(result, query) {
   clearTimeout(resultsExpiry);
   const target = get('web-results');
   try{searchContext(result);}catch(error){target.replaceChildren(message(m('Bitte prüfe deine Kaufkriterien'),uiError(error)));return;}
-  observations = applyChecks(observations, catalog, result);
+  if(!result.testData)observations = applyChecks(observations, catalog, result);
   refreshAtExpiry();
   if (!get('passport').hidden || !get('vergleich').hidden) renderRoute();
   if (result.kind === 'clarification') {
@@ -299,6 +299,15 @@ function renderWebResults(result, query) {
     const messages = {
       disabled: m('Die Websuche ist in dieser Installation noch nicht verbunden.'),
       'native-unavailable':m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'),
+      'configuration-error':m('Der Angebotsdienst ist noch nicht richtig verbunden. Gespeicherte Suchen bleiben verfügbar.'),
+      'authentication-required':m('Für diese Suche fehlt eine gültige Anmeldung am Angebotsdienst.'),
+      'authentication-expired':m('Deine Anmeldung am Angebotsdienst ist abgelaufen. Verbinde die App erneut.'),
+      'access-denied':m('Deine Anmeldung hat keinen Zugriff auf diesen Angebotsdienst.'),
+      'invalid-response':m('Die Antwort konnte nicht sicher geprüft werden. Es werden keine Angebote angezeigt.'),
+      timeout:m('Die Suche dauert zu lange. Versuche es erneut.'),
+      offline:m('Du bist offline. Gespeicherte Suchen bleiben verfügbar.'),
+      'network-error':m('Die Verbindung zum Angebotsdienst ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.'),
+      cancelled:m('Die Suche wurde abgebrochen. Dein Suchtext bleibt erhalten.'),
       busy: m('Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.'),
       unavailable: m('Die Websuche ist vorübergehend nicht erreichbar.'),
       invalid: m('Gib einen Kaufwunsch als Text ohne Webadresse ein.'),
@@ -312,7 +321,7 @@ function renderWebResults(result, query) {
     return;
   }
   const intro = element('div', null, 'section-heading');
-  intro.append(element('h2', m('Aktuell geprüft')), element('span',m(result.items.length===1?'{count} Angebot':'{count} Angebote',{count:result.items.length}),'unit'));
+  intro.append(element('h2', m(result.testData?'Testantwort':'Aktuell geprüft')), element('span',m(result.items.length===1?'{count} Angebot':'{count} Angebote',{count:result.items.length}),'unit'));
   if (result.sourceMode === 'catalog') intro.append(element('p', m('Prüfung der bekannten Katalogquellen'), 'muted'));
   const previousCard = get('results').querySelector('.surface');
   const moveFocus = previousCard?.contains(document.activeElement);
@@ -337,7 +346,7 @@ function renderWebResults(result, query) {
     if (costSummary.total === null && costSummary.minimum > check.price) amount.append(element('p',
       m('Bisher bekannte Kosten: {amount}. Der Endpreis ist noch offen.',()=>({amount:money(costSummary.minimum)})), 'price-caption'));
     layout.append(identity, amount);
-    const meta = element('p',m('Quelle meldet verfügbar · geprüft {checkedAt} (CH)',()=>({checkedAt:formatDate(check.checkedAt)})), 'offer-meta');
+    const meta = element('p',m(result.testData?'Testdaten · beispielhafte Prüfzeit {checkedAt}':'Quelle meldet verfügbar · geprüft {checkedAt} (CH)',()=>({checkedAt:formatDate(check.checkedAt)})), 'offer-meta');
     meta.prepend(icon('clock'));
     box.append(heading, layout, meta);
     if (item.budgetStatus === 'unknown-total') box.append(element('p', m('Ob der Endpreis in dein Budget passt, ist noch offen.'), 'muted'));
@@ -350,7 +359,8 @@ function renderWebResults(result, query) {
       ...costFields.map(([key, label]) => [label, isAmount(check[key]) ? money(check[key]) : m('Unbekannt')]),
       [m('Funktionszustand'), m('Nicht unabhängig getestet')],
     ]));
-    const action = link(item.type === 'listing' ? m('Inserat öffnen') : m('Angebotsseite öffnen'), item.url, 'button', true);
+    const action = result.testData?element('p',m('Testdaten: Anbieterlink deaktiviert.'),'muted')
+      :link(item.type === 'listing' ? m('Inserat öffnen') : m('Angebotsseite öffnen'), item.url, 'button', true);
     action.addEventListener('click', event => {
       if (Date.now() >= Date.parse(item.expiresAt)) {
         event.preventDefault();
@@ -360,13 +370,14 @@ function renderWebResults(result, query) {
     const actions = element('div', null, 'actions');
     actions.append(action);
     const knownProduct = catalog.find(product => product.sources.some(source => source.url === item.url));
-    if (knownProduct && check.mpn === knownProduct.mpn) {
+    if (!result.testData && knownProduct && check.mpn === knownProduct.mpn) {
       actions.append(productAction(m('Deal Passport'), 'passport', knownProduct, item.source));
     }
     box.append(details, actions);
     return box;
   });
   target.replaceChildren(intro, ...cards);
+  if(result.testData)target.prepend(element('p',m('TESTDATEN – keine aktuellen Kaufangebote. Es wurde kein Anbieter geprüft.'),'surface shared-notice'));
   if (moveFocus && !get('suche').hidden) {
     const title = intro.querySelector('h2');
     title.tabIndex = -1;

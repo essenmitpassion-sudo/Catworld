@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { mkdtemp, readFile, rm, writeFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve, basename, sep } from 'node:path';
 import { once } from 'node:events';
 import { setTimeout as pause } from 'node:timers/promises';
 import { server } from './serve.mjs';
@@ -620,12 +620,20 @@ try {
   if (browserError) console.error(browserError.trim());
   throw error;
 } finally {
+  // Closing the browser through its own protocol lets child processes flush
+  // their profile databases. Killing just the launcher left locked WAL files.
+  if(socket?.readyState===WebSocket.OPEN) {
+    socket.send(JSON.stringify({id:2147483647,method:'Browser.close'}));
+    await Promise.race([once(socket,'close'),pause(2500)]);
+  }
   socket?.close();
   if (browser?.pid && browser.exitCode === null) {
     const closed = once(browser, 'exit');
-    browser.kill();
+    if(process.platform==='win32')spawnSync('taskkill',['/PID',String(browser.pid),'/T','/F'],{windowsHide:true,stdio:'ignore',timeout:5000});
+    else browser.kill();
     await Promise.race([closed, pause(2500)]);
   }
   app.close();
+  assert(resolve(profile).startsWith(resolve(tmpdir())+sep)&&basename(profile).startsWith('udi-browser-'),'cleanup stays inside this test profile');
   await rm(profile, { recursive: true, force: true, maxRetries: 4, retryDelay: 200 });
 }

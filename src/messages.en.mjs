@@ -1,5 +1,18 @@
 // Gettext-style controlled UI messages. Never use for raw merchant/user text.
 const base = {
+  "Testdaten · beispielhafte Prüfzeit {checkedAt}": "Test data · example check time {checkedAt}",
+  "Der Angebotsdienst ist noch nicht richtig verbunden. Gespeicherte Suchen bleiben verfügbar.": "The offer service is not configured correctly yet. Saved searches remain available.",
+  "Für diese Suche fehlt eine gültige Anmeldung am Angebotsdienst.": "A valid sign-in to the offer service is needed for this search.",
+  "Deine Anmeldung am Angebotsdienst ist abgelaufen. Verbinde die App erneut.": "Your sign-in to the offer service has expired. Connect the app again.",
+  "Deine Anmeldung hat keinen Zugriff auf diesen Angebotsdienst.": "Your sign-in does not have access to this offer service.",
+  "Die Antwort konnte nicht sicher geprüft werden. Es werden keine Angebote angezeigt.": "The response could not be checked safely. No offers are shown.",
+  "Die Suche dauert zu lange. Versuche es erneut.": "The search is taking too long. Try again.",
+  "Du bist offline. Gespeicherte Suchen bleiben verfügbar.": "You are offline. Saved searches remain available.",
+  "Die Verbindung zum Angebotsdienst ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.": "The connection to the offer service failed. Check your connection and try again.",
+  "Die Suche wurde abgebrochen. Dein Suchtext bleibt erhalten.": "The search was cancelled. Your search text is preserved.",
+  "Testantwort": "Test response",
+  "Testdaten: Anbieterlink deaktiviert.": "Test data: seller link disabled.",
+  "TESTDATEN – keine aktuellen Kaufangebote. Es wurde kein Anbieter geprüft.": "TEST DATA – no current offers. No seller was checked.",
   "Beschreibe deinen Wunsch. Quelle, Prüfzeit und offene Kosten direkt am Angebot.": "Describe what you need. See the source, check time and unknown costs with each offer.",
   "Dieser Markt oder dieses Lieferland ist noch nicht unterstützt. Deine Suche wurde nicht umgestellt.": "This market or delivery country is not supported yet. Your search was not switched to another market.",
   "Dieser gespeicherte Suchauftrag wird nicht unterstützt.": "This saved search format is not supported.",

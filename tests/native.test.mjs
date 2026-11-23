@@ -18,6 +18,13 @@ test('Android und iOS starten ohne freigegebenen Dienst keine API- oder Snapshot
     assert.deepEqual(await loadObservations({platform,fetchImpl}),[]);
   }
 });
+test('beide Apps verwenden denselben Client; eine unbekannte Brücke bleibt auch mit Client gesperrt',async()=>{
+  let calls=0;const controller=new AbortController(),input={query:'Samsung 990 PRO 2 TB'};
+  const client={async search(value,options){calls++;assert.equal(value,input);assert.equal(options.signal,controller.signal);return {kind:'authentication-required'};}};
+  assert.deepEqual(await discoverOffers(input,{platform:'unsupported',client,signal:controller.signal}),{kind:'native-unavailable'});assert.equal(calls,0);
+  for(const platform of ['android','ios'])assert.deepEqual(await discoverOffers(input,{platform,client,signal:controller.signal}),{kind:'authentication-required'});
+  assert.equal(calls,2);
+});
 test('bestehender lokaler Datenpfad bewahrt Origin, Kriterien und Abbruchsignal',async()=>{
   const controller=new AbortController(),input={query:'Samsung 990 PRO 2 TB',maxPrice:'500',condition:'new'};
   const fetchImpl=async(url,options)=>{

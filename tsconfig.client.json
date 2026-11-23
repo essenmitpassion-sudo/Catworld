@@ -1,0 +1,1 @@
+{"compilerOptions":{"allowJs":true,"noEmit":true,"strict":true,"target":"ES2024","module":"NodeNext","moduleResolution":"NodeNext","lib":["ES2024","DOM","DOM.Iterable"],"skipLibCheck":true},"files":["src/deal-client.mjs","src/deal-contract.mjs","src/deal-types.d.ts"]}

@@ -1,6 +1,7 @@
 import {searchContext} from './markets.mjs';
 export function applyChecks(observations, catalog, result) {
   let updated = [...observations];
+  if(result.testData===true)return updated;
   try{searchContext(result);}catch{return updated;}
   if (result.kind !== 'results') return updated;
   const productsByUrl = new Map(catalog.flatMap(product => product.sources.map(source => [source.url, product])));
