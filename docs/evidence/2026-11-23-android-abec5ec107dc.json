@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-23 19:35:45 UTC",
+  "scope": "Installed Android DE/EN text search, real missing-service error, saved requests and immediate process restart; no live offers",
+  "commit": "abec5ec107dcfda916114599bc6591c08b0416dc",
+  "restoreRef": "abec5ec107dcfda916114599bc6591c08b0416dc",
+  "run": {
+    "id": 45249415432,
+    "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45249415432",
+    "completeRunConclusion": "not yet complete at recording; iOS is separate"
+  },
+  "job": {
+    "id": 137955340583,
+    "name": "compile (android, ubuntu-24.04)",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-11-23T19:30:09Z",
+    "completedAt": "2026-11-23T19:33:39Z"
+  },
+  "environment": {
+    "platform": "Android",
+    "api": 36,
+    "emulator": "x86_64",
+    "surface": "320x640 installed WebView; actual native bridge and OS force-stop/relaunch",
+    "driver": "adb and CDP to the installed debug app, not a desktop browser"
+  },
+  "checks": {
+    "englishExactTextSearch": true,
+    "germanExactTextSearch": true,
+    "realUnconfiguredServiceError": true,
+    "noInventedPurchaseResults": true,
+    "saveBothDistinctRequests": true,
+    "watchlistBothExactTitlesAfterForceStop": true,
+    "nativePreferencesBothQueriesAfterForceStop": true,
+    "schema2AndCHDeliveryCurrency": true,
+    "germanLanguageSelectionAfterRestart": true,
+    "clickTargetsConfirmedAfterKeyboardLayout": true
+  },
+  "binary": {
+    "pathOnDisposableRunner": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "fda0a4bef194356a456528c42ed6c97c0390c60733c4cf9d8d9667d9ab90c768",
+    "installedAndStarted": true,
+    "downloadedToUserWorkspace": false,
+    "published": false
+  },
+  "limits": {
+    "physicalDevice": false,
+    "iosVerifiedByThisRecord": false,
+    "realSharedService": false,
+    "currentOffers": false,
+    "externalOfferNavigation": false,
+    "nativeSpeech": false,
+    "fullProductAcceptance": false
+  },
+  "conclusions": [
+    "Previously observed last-search loss after immediate process death no longer occurs in this verified Android run.",
+    "Stable scrolling and confirmation of actual click targets prevent keyboard transitions from being mistaken for a successful second search.",
+    "First complete test-app remains P0-open until the actual live service and useful goal example are demonstrated."
+  ]
+}
