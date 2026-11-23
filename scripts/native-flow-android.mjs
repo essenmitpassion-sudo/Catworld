@@ -15,9 +15,9 @@ export async function androidFlow({send,evaluate},afterRestart) {
     // that transition can hit the textarea even though the button was visible.
     let previous='',stableSince=Date.now(),point;const deadline=Date.now()+4000;
     do {
-      const box=await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)}),r=n?.getBoundingClientRect(),v=visualViewport;return r?{x:r.left+r.width/2,y:r.top+r.height/2,width:r.width,height:r.height,viewport:[innerWidth,innerHeight,v?.height,v?.offsetTop,v?.offsetLeft]}:null;})()`);
+      const box=await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});n?.scrollIntoView({block:'center',behavior:'instant'});const r=n?.getBoundingClientRect(),v=visualViewport,x=r?.left+r?.width/2,y=r?.top+r?.height/2,hit=document.elementFromPoint(x,y);return r?{x,y,width:r.width,height:r.height,visible:n===hit||n.contains(hit),viewport:[innerWidth,innerHeight,v?.height,v?.offsetTop,v?.offsetLeft]}:null;})()`);
       assert(box,'Missing native UI action: '+selector);
-      const signature=JSON.stringify(box);if(signature!==previous){previous=signature;stableSince=Date.now();}
+      const signature=JSON.stringify(box);if(signature!==previous||!box.visible){previous=signature;stableSince=Date.now();}
       point={x:box.x,y:box.y};
       if(Date.now()-stableSince>=500)break;
       await delay(100);
