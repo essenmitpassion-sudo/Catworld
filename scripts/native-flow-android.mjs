@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
 const wishes=['Samsung 990 PRO 2 TB','Samsung 990 PRO 2 TB bis CHF 500'];
 export async function androidFlow({send,evaluate},afterRestart) {
+  // Only synthetic CI wishes enter this bounded diagnostic trace.
+  await evaluate("window.udiQATrace=[];for(const type of ['input','change','click','submit'])document.addEventListener(type,e=>{window.udiQATrace.push({type,target:e.target.id||e.target.className,query:document.querySelector('#search-query').value});window.udiQATrace=window.udiQATrace.slice(-20)},true)");
   const wait=async expression=>{
     const until=Date.now()+10000;do {if(await evaluate(expression))return;await delay(100);}while(Date.now()<until);
-    const state=await evaluate("JSON.stringify({query:document.querySelector('#search-query').value,saved:localStorage.getItem('udi.searches.v2'),headings:Array.from(document.querySelectorAll('#saved .surface h2')).map(n=>n.textContent),notice:document.querySelector('#notice').textContent})");
+    const state=await evaluate("JSON.stringify({query:document.querySelector('#search-query').value,saved:localStorage.getItem('udi.searches.v2'),headings:Array.from(document.querySelectorAll('#saved .surface h2')).map(n=>n.textContent),notice:document.querySelector('#notice').textContent,trace:window.udiQATrace})");
     throw new Error('Native Android UI condition failed: '+expression+'; QA state: '+state);
   };
   const tap=async selector=>{
@@ -30,6 +32,7 @@ export async function androidFlow({send,evaluate},afterRestart) {
     await send('Input.insertText',{text:wishes[index]});
     assert.equal(await evaluate("document.querySelector('#search-query').value"),wishes[index],'native input must contain the exact new wish');
     await tap('.primary-search');
+    await wait("document.querySelector('#results button')?.disabled===false");
     await wait(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(language==='en'?'not connected':'noch nicht verbunden')})`);
     assert(await evaluate("!document.querySelector('#web-results article a')"),'no invented live result or purchase link');
     await tap('#results button');

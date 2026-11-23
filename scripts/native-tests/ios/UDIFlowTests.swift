@@ -9,9 +9,9 @@ final class UDIFlowTests: XCTestCase {
         XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 15))
         let wishes = ["Samsung 990 PRO 2 TB", "Samsung 990 PRO 2 TB bis CHF 500"]
         for (index, language) in ["English", "Deutsch"].enumerated() {
-            if app.links["Search"].firstMatch.exists { app.links["Search"].firstMatch.tap() }
-            else { app.links["Suche"].firstMatch.tap() }
-            let selectors = app.webViews.descendants(matching: .any).matching(NSPredicate(format: "label == %@ OR label == %@", "Interface language", "Oberflächensprache"))
+            let search = app.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Search", "Suche")).firstMatch
+            XCTAssertTrue(search.waitForExistence(timeout: 15)); search.tap()
+            let selectors = app.webViews.otherElements.matching(NSPredicate(format: "label == %@ OR label == %@", "Interface language", "Oberflächensprache"))
             XCTAssertTrue(selectors.firstMatch.waitForExistence(timeout: 5))
             let selector = try XCTUnwrap(selectors.allElementsBoundByIndex.first(where: { $0.isHittable }))
             selector.tap()
