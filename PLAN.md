@@ -17,7 +17,7 @@ Dies ist eine begründete Produktentscheidung aus vorhandenem Verhalten, kein me
 - [x] P1/P2: kompakte Sprach-/Marktauswahl mit vollen Endonymen/aktivem Zustand, zugänglichem Namen und Entwurfserhalt umgesetzt; fehlender Dienst neben Aktion lesbar, nur ein Beispiel, gespeicherte Wünsche im eigenen Reiter. [Belege](docs/evidence/2026-11-24-search-focus.json); keine neue Funktions-/Live-Zusage.
 - [x] P3/P4 gemeinsame UI-QA: erster Aufruf, Auswahl/Sprachwechsel/Entwurf, Eingabe/Fehler ohne Textverlust, Beispiel, Kriterien, Speichern/Wiederfinden,320/390px und200Prozent-Text samt geöffneter Auswahl; Vorher/Nachher angesehen. Gefundenen Überlauf korrigiert, Regression grün.
 - [ ] P3/P4 native Abnahme: neue Auswahlrolle/Bedienung und echte Tastatur auf Android/iOS getrennt praktisch belegen. Native Prüfskripte angepasst; Browser-Höhenänderung360px und Android-Sequenzsimulation sind keine native Tastatur-/Geräteabnahme. Keine Tutorial-Handhabung ergänzen.
-- [ ] Fortschritt/Nachweis/Original dauerhaft versionieren, normale Commits/Push-Referenzen und Wiederherstellung prüfen. Keine öffentliche Veröffentlichung, Kosten oder SOUNDWEAVE-Zugriffe.
+- [x] Fortschritt/Nachweis/Original dauerhaft versioniert; normaler Push/Remotea45f751 und [257-Dateien-Wiederherstellung](docs/evidence/2026-11-24-search-focus-recovery.json) geprüft. Keine öffentliche Veröffentlichung, Kosten oder SOUNDWEAVE-Zugriffe.
 
 ## Ergänzung · intuitive App und autonomer Arbeitsmodus ·24.11.2026
 

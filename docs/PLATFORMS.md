@@ -1,5 +1,13 @@
 # UDI · Android und iOS gleich priorisieren
 
+## Aktuelle mobile Anordnung ·24.11.2026, a45f751
+
+Der neue [Gestaltungsvergleich](requirements/2026-11-24-mobile-design-directions.md) ersetzt den früheren permanenten Zwei-Sprachen-Kopf: kompakte aufklappbare Sprach-/Marktauswahl, volle Endonyme/aktiver Zustand im geöffneten Bereich, sichtbarer Sprachname auch im zugänglichen Namen. Suchfokus mit einem ausdrücklich benannten Beispiel; gespeicherte Wünsche bleiben im eigenen Reiter. Fehlende Live-Anbindung bleibt an der Suchaktion lesbar. Keine Änderung von Bundle-IDs, Signaturen, Quellen-/Marktvertrag oder Netzwerkfreigaben.
+
+[Vorher/Nachher und Prüfgrenzen](evidence/2026-11-24-search-focus.json):113 Fachtests/Typen/Build, gemeinsame Chromium-Oberfläche DE/EN bei320/390px,200Prozent CSS-Text samt geöffneter Auswahl und360px-Viewport mit Eingabe/erreichbarer Aktion. Gefundenen Auswahlüberlauf und zugänglichen Namen korrigiert; Follow-up-Review ohne wichtige Befunde. Browsergrössenänderung/Android-Sequenzsimulation sind keine native Tastatur-/Geräteprüfung. Neue echte native Abläufe laufen separat unter45460007629, Ergebnis bis zur tatsächlichen Fertigstellung offen. Die folgenden Abschnitte bewahren frühere Schritte und Nachweise.
+
+Lokaler Umgebungscheck nach Wiederaufnahme: Windows, JDK17 statt benötigtem21, adb nicht verfügbar, kein Xcode (macOS erforderlich). Keine lokale native Ausführung behaupten; tatsächliche Emulator-/Simulatorprüfungen erfolgen auf den bestehenden CI-Läufern. [Isolierte257-Dateien-Quellwiederherstellung](evidence/2026-11-24-search-focus-recovery.json) ist getrennt von einer APK/IPA oder Installationsabnahme.
+
 ## Aktueller nativer Testweg · integriertes App-Projekt
 
 Folgebefund59c8d7a: [Englischer Teil erreicht, deutscher Tastatur-/Fokuswechsel noch nicht bestanden](evidence/2026-11-24-ios-focus-59c8d7a.json). Browser-Gegenprobe zeigt Fokusverlust schon bei pointerdown; nun bleibt der Entwurf bis zum vollständigen Sprachklick fokussiert, erst nach Wahl wird die Tastatur geschlossen. XCTest wartet auf tatsächlichen aktiven Wert und bestätigt Leeren vor Ersatztext; definierter echter Caret-End-Tap vor Backspaces. Kein falscher Zustand wird akzeptiert. Unvollständiger Ergebnisordner nach ungefähr360s legt Berichtskürzung nahe, bisheriger Fehlercode fehlte; künftig explizit protokolliert. Begrenztes8min-Testbudget und25min äusserer Job berücksichtigen tatsächlichen Kaltstart/Export/Bereinigung. Bildkanal bis4MiB bei16MiB Log-/12MP-Flächengrenze; vorherige Grössenablehnung wird jetzt mit Bytezahl erfasst.113 Tests, Browser-/320px-/Android-Sequenzsimulation, Workflowprüfung und Review bestanden; reale neue iOS-Prüfung offen.

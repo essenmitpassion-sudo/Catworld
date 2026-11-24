@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "a45f7518392493314ff38250355760c5758433be",
+  "remoteHeadReadBack": true,
+  "requirementGitBlobHashVerified": true,
+  "previousApprovalFailure": "Usage limit prevented automatic approval review; Git was not executed then. Resumed after user reported recovery; ordinary protected commit/push now completed.",
+  "localRecovery": {
+    "verifiedAt": "2026-11-24T18:29:32.214Z",
+    "commit": "a45f7518392493314ff38250355760c5758433be",
+    "archiveSha256": "145edbc37c58472c6542d7960fa179bd39022b3d18536a96c7b941350eab55a2",
+    "archiveIntegrity": true,
+    "unpackedFiles": 257,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "nativeCompilationVerified": false,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false
+  },
+  "archive": "artifacts/udi-pilot-a45f75183924.tar.gz",
+  "externallyUploaded": false,
+  "containsApkOrIpa": false,
+  "nativeRuns": {
+    "general": 45460010411,
+    "native": 45460007629,
+    "status": "started; results pending at this checkpoint"
+  },
+  "limits": "Source recovery is not native compilation, a device flow, live offers or public release."
+}
