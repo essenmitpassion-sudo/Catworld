@@ -311,6 +311,15 @@ const extra = {
   "Der Pilot unterstützt Budgets nur in CHF. Andere Währungen werden nicht automatisch umgerechnet.":"The pilot supports budgets in CHF only. Other currencies are not automatically converted.",
   "Sprache geändert. Dein Suchtext und deine Kriterien bleiben erhalten.":"Language changed. Your request and criteria are preserved.",
   "Sprache für diese Sitzung geändert. Die Einstellung konnte nicht gespeichert werden.":"Language changed for this session. The preference could not be saved.",
+  "Was brauchst du?":"What do you need?",
+  "Zum Beispiel: 2 TB mehr Speicher für meinen PC, bis CHF 200.":"For example: 2 TB more storage for my PC, up to CHF 200.",
+  "Deine Suchwünsche bleiben in dieser App auf diesem Gerät. Automatische Hinweise sind noch nicht verfügbar.":"Your searches stay in this app on this device. Automatic alerts are not available yet.",
+  "Beschreibe deinen Wunsch. Ein Produkt oder ein Ziel reicht.":"Describe what you need. A product or a goal is enough.",
+  "Diese App zeigt noch keine aktuellen Angebote. Deine Suchwünsche kannst du speichern.":"This app cannot show current offers yet. You can save your searches.",
+  "Gespeichert":"Saved",
+  "Deine Suchen":"Your searches",
+  "Hilfe & Datenschutz":"Help & privacy",
+  "Noch keine Suchwünsche gespeichert":"No saved searches yet",
   "Oberflächensprache":"Interface language"
   ,"Mein PC braucht mehr Speicher":"My PC needs more storage"
 };

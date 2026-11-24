@@ -2,6 +2,7 @@ import { catalog, search, compare, costFields, directLink, isAmount, maxObservat
 import { criteriaFor } from './criteria.mjs';
 import { readSearches, storeSearch, removeSearch, searchStorageKey } from './saved-searches.mjs';
 import {createSearchPersistence,nativeSearchPreferences} from './search-persistence.mjs';
+import {configureNativeUI} from './native-ui.mjs';
 import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
@@ -36,6 +37,7 @@ let sharer;
 mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
+document.documentElement.toggleAttribute('data-native-ui',platform!=='web');
 let searchPersistence;
 try {
   const preferences=['android','ios'].includes(platform)?nativeSearchPreferences(globalThis.Capacitor):undefined;
@@ -46,11 +48,7 @@ try {
   searchPersistence={storage:{getItem(){throw error;}},update:async()=>{throw error;}};
 }
 if(platform!=='web') {
-  setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Quelle, Prüfzeit und offene Kosten direkt am Angebot.'));
-  const nativeStatus=document.createElement('p');nativeStatus.className='shared-notice';nativeStatus.id='native-runtime-status';
-  setText(nativeStatus,m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'));
-  get('suche').querySelector('.search-intro').after(nativeStatus);
-  get('suche').querySelector('.coverage-note').hidden=true;
+  configureNativeUI(document);
 }
 setupInstall();
 
@@ -607,11 +605,11 @@ function renderWatchlist() {
     boxes.push(message(m('Gespeicherte Suchen nicht lesbar'), m('Die gespeicherten Daten bleiben auf diesem Gerät. Prüfe die Browsereinstellungen für lokalen Speicher.')));
   }
   if (!boxes.length) {
-    const empty = message(m('Deine Watchlist ist leer'), m('Speichere deinen Suchwunsch mit Budget und Kriterien. Du kannst später mit einem Klick erneut prüfen.'));
+    const empty = message(m(platform==='web'?'Deine Watchlist ist leer':'Noch keine Suchwünsche gespeichert'), m('Speichere deinen Suchwunsch mit Budget und Kriterien. Du kannst später mit einem Klick erneut prüfen.'));
     empty.append(link(m('Zur Suche'), '#suche'));
     boxes.push(empty);
   }
-  boxes.push(element('p', m(platform==='web'?'Die Watchlist bleibt in diesem Browser. Automatische Benachrichtigungen sind noch nicht verfügbar.':'Die Watchlist bleibt in dieser App auf diesem Gerät. Automatische Benachrichtigungen sind noch nicht verfügbar.'), 'muted'));
+  boxes.push(element('p', m(platform==='web'?'Die Watchlist bleibt in diesem Browser. Automatische Benachrichtigungen sind noch nicht verfügbar.':'Deine Suchwünsche bleiben in dieser App auf diesem Gerät. Automatische Hinweise sind noch nicht verfügbar.'), 'muted'));
   if (storageError) boxes.push(element('p', m('Der lokale Speicher ist zurzeit nicht lesbar oder beschreibbar.'), 'muted'));
   get('saved').replaceChildren(...boxes);
 }
@@ -624,7 +622,8 @@ function renderRoute(focus = false) {
   if (route === 'suche') renderRecent();
   for (const id of routes) get(id).hidden = id !== route;
   for (const anchor of document.querySelectorAll('nav a')) {
-    if (anchor.hash === '#' + (route === 'passport' ? 'vergleich' : route)) anchor.setAttribute('aria-current', 'page');
+    const tab=platform==='web'?(route==='passport'?'vergleich':route):(route==='watchlist'?'watchlist':'suche');
+    if (anchor.hash === '#' + tab) anchor.setAttribute('aria-current', 'page');
     else anchor.removeAttribute('aria-current');
   }
   if (route === 'vergleich') renderComparison();

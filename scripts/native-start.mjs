@@ -1,5 +1,6 @@
 // Native startup proof only: no live offers, purchases or microphone claims.
-// Screenshots/accessibility dumps stay in the ephemeral CI runner.
+// Only synthetic disposable-runner screens are emitted as bounded PNG records
+// in existing CI logs. No artifact-storage service or app release is enabled.
 import { spawnSync, spawn } from 'node:child_process';
 import { writeFileSync, readFileSync, mkdirSync, copyFileSync, openSync, closeSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -7,11 +8,15 @@ import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
 import {withAndroidPage} from './native-cdp.mjs';
 import {androidFlow} from './native-flow-android.mjs';
+import {screenRecords} from './native-screens.mjs';
 
 const platform = process.argv[2];
 const temp = process.env.RUNNER_TEMP;
 assert(temp, 'Run native startup checks on the disposable CI runner.');
 const appId = 'stream.soundweave.udi';
+function recordScreen(label,path) {
+  for(const line of screenRecords(label,readFileSync(path)))console.log(line);
+}
 function run(command, args, timeout = 120000) {
   const result = spawnSync(command, args, { encoding: 'utf8', timeout, killSignal: 'SIGKILL', maxBuffer: 8 * 1024 * 1024 });
   assert(!result.error && result.status === 0,
@@ -21,9 +26,9 @@ function run(command, args, timeout = 120000) {
 function checkSurface(text) {
   console.log('Rendered native surface:\n' + text);
   // The warning is populated by app.mjs; static HTML or a splash screen cannot pass.
-  assert(/not\s+connected|noch\s+nicht\s+verbunden/i.test(text), 'Native service warning was not rendered.');
+  assert(/cannot\s+show\s+current\s+offers|keine\s+aktuellen\s+Angebote/i.test(text), 'Native service warning was not rendered.');
   assert(/Find\s+offers|Angebote\s+suchen/i.test(text), 'Search action was not rendered.');
-  assert(/Watchlist/i.test(text), 'Watchlist navigation was not rendered.');
+  assert(/Saved|Gespeichert/i.test(text), 'Saved searches navigation was not rendered.');
   assert(/Describe\s+what\s+you\s+need|Beschreibe\s+deinen\s+Wunsch/i.test(text), 'Native introduction still promises unavailable voice input.');
 }
 
@@ -103,7 +108,17 @@ if (platform === 'android') {
     // app's own rendered DOM and native bridge; no desktop-browser substitute.
     const port = run(adb, ['-e', 'forward', 'tcp:0', `localabstract:webview_devtools_remote_${pid}`]).trim();
     assert(/^\d+$/.test(port), 'Invalid adb loopback port.');
-    try { await androidSurface(port);await withAndroidPage(port,page=>androidFlow(page,false)); }
+    try {
+      await androidSurface(port);
+      await withAndroidPage(port,async page=>{
+        await page.evaluate("document.querySelector('main').scrollTop=0");
+        assert(await page.evaluate("(()=>{const r=document.querySelector('.primary-search').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return r.top>=0&&r.bottom<=nav.top})()"),'Initial native search action must fit above navigation');
+        const png=spawnSync(adb,['-e','exec-out','screencap','-p'],{timeout:15000,maxBuffer:2*1024*1024});
+        assert(!png.error&&png.status===0,'Android screenshot failed');
+        const shot=join(temp,'udi-android-start.png');writeFileSync(shot,png.stdout);recordScreen('android-start',shot);
+        await androidFlow(page,false);
+      });
+    }
     catch (error) {
       console.log(run(adb, ['-e', 'logcat', '-d', '-s', 'Capacitor/Console', 'chromium', 'AndroidRuntime']).slice(-12000));
       throw error;
@@ -121,20 +136,40 @@ if (platform === 'android') {
 } else if (platform === 'ios') {
   const devices = JSON.parse(run('xcrun', ['simctl', 'list', 'devices', 'available', '--json'])).devices;
   const candidates = Object.entries(devices).filter(([runtime]) => runtime.includes('iOS')).sort(([a], [b]) => b.localeCompare(a, 'en', { numeric: true }));
-  const device = candidates.flatMap(([, rows]) => rows).find(row => row.isAvailable && row.name.startsWith('iPhone'));
-  assert(device, 'No available iPhone simulator.');
-  console.log(`Starting ${device.name} (${device.udid}).`);
+  const selected=candidates.map(([runtime,rows])=>({runtime,template:rows.find(row=>row.isAvailable&&row.name.startsWith('iPhone'))})).find(row=>row.template);
+  assert(selected,'No available iPhone simulator template.');
+  const types=JSON.parse(run('xcrun',['simctl','list','devicetypes','--json'])).devicetypes;
+  const deviceType=selected.template.deviceTypeIdentifier??types.find(row=>row.name===selected.template.name)?.identifier;
+  assert(deviceType?.startsWith('com.apple.CoreSimulator.SimDeviceType.iPhone'),'Unexpected simulator device type');
+  assert(selected.runtime.startsWith('com.apple.CoreSimulator.SimRuntime.iOS-'),'Unexpected simulator runtime');
+  // Repeated installs stalled on the image's precreated device. Test a clean
+  // device on the same runtime instead of erasing any existing simulator.
+  const createdId=run('xcrun',['simctl','create','UDI-UI-'+Date.now(),deviceType,selected.runtime]).trim();
+  assert(/^[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}$/.test(createdId),'Invalid created simulator ID');
+  const device={...selected.template,udid:createdId,state:'Shutdown'};
+  console.log(`Starting fresh ${device.name} on ${selected.runtime} (${device.udid}).`);
   try {
     if (device.state !== 'Booted') run('xcrun', ['simctl', 'boot', device.udid]);
     // A fresh hosted simulator performs its own data migration before our app
     // is installed. The first probe exhausted four minutes in locationd's
     // migrator; allow a bounded eight minutes without disabling system services.
-    run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 480000);
-    run('xcrun', ['simctl', 'install', device.udid, join(temp, 'udi-ios/Build/Products/Debug-iphonesimulator/App.app')]);
+    console.log(run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 480000));
+    try {run('xcrun', ['simctl', 'install', device.udid, join(temp, 'udi-ios/Build/Products/Debug-iphonesimulator/App.app')]);}
+    catch(error) {
+      // Collect the actual simulator state instead of blindly extending a timeout.
+      const services=spawnSync('xcrun',['simctl','spawn',device.udid,'launchctl','list'],{encoding:'utf8',timeout:15000,maxBuffer:256*1024});
+      console.log('iOS install diagnostics: '+(services.stdout??'').split('\n').filter(line=>/installd|SpringBoard|backboard|FrontBoard|runningboard|container/i.test(line)).slice(-25).join('\n'));
+      const installLog=spawnSync('xcrun',['simctl','spawn',device.udid,'log','show','--last','2m','--style','compact','--predicate','process == "installd"'],{encoding:'utf8',timeout:15000,maxBuffer:256*1024});
+      console.log('iOS installd log: '+(installLog.stdout??'').slice(-6000));
+      try {const shot=join(temp,'udi-ios-install-timeout.png');run('xcrun',['simctl','io',device.udid,'screenshot',shot],15000);recordScreen('ios-install-timeout',shot);}
+      catch {console.log('iOS installation screenshot unavailable; no visual claim.');}
+      throw error;
+    }
     console.log(run('xcrun', ['simctl', 'launch', device.udid, appId]));
     await delay(8000);
     const screenshot = join(temp, 'udi-ios-start.png');
     run('xcrun', ['simctl', 'io', device.udid, 'screenshot', screenshot]);
+    recordScreen('ios-start',screenshot);
     const recognizer = join(temp, 'udi-recognize.swift');
     writeFileSync(recognizer, `import Foundation
 import Vision
@@ -156,6 +191,7 @@ print((request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.j
     assert(!result.error&&result.status===0,'iOS native flow test failed; see Xcode log above.');
   } finally {
     spawnSync('xcrun', ['simctl', 'shutdown', device.udid], { timeout: 30000, killSignal: 'SIGKILL', stdio: 'ignore' });
+    spawnSync('xcrun',['simctl','delete',createdId],{timeout:30000,killSignal:'SIGKILL',stdio:'ignore'});
   }
 } else {
   throw new Error('Choose android or ios.');

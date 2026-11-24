@@ -42,6 +42,24 @@ Antwort:
 
 Antwort:
 
+## Gestaltung und Verständlichkeit
+
+Dieselbe Skala 1–5 oder **— = nicht geprüft** verwenden. Für „Würde ich die App für eine weitere Suche öffnen?“ gilt Aussage11 oben; nicht doppelt bewerten.
+
+| Aussage | Deine Bewertung (1–5 oder —) |
+|---|---|
+| UDI wirkt hochwertig und vertrauenswürdig. | |
+| Es war sofort klar, wie ich starten soll. | |
+| Suche und Ergebnisse waren leicht zu verstehen. | |
+
+**Gab es einen Moment, der verwirrend oder überladen wirkte?**
+
+Antwort:
+
+**Was müsste sich ändern, damit du UDI regelmässig nutzen möchtest?**
+
+Antwort:
+
 ## Praktische Beobachtungen
 
 | Beobachtung | Antwort |

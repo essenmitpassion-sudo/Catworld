@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "recordedClientDate": "2026-11-24",
+  "recordedAtUTC": "2026-11-23 23:50:13 UTC",
+  "commit": "abec5ec107dcfda916114599bc6591c08b0416dc",
+  "runId": 45249415432,
+  "scope": "Observed iOS installation blocker, not a failed or successful live search",
+  "attempts": [
+    {
+      "runAttempt": 1,
+      "jobId": 137955339488,
+      "status": "completed",
+      "conclusion": "failure",
+      "startedAt": "2026-11-23T19:30:12Z",
+      "completedAt": "2026-11-23T19:35:54Z",
+      "observedFailure": "simctl install timed out after 120000ms before the UI test"
+    },
+    {
+      "runAttempt": 2,
+      "jobId": 137960332782,
+      "status": "completed",
+      "conclusion": "failure",
+      "startedAt": "2026-11-23T19:38:23Z",
+      "completedAt": "2026-11-23T19:45:20Z",
+      "observedFailure": "simctl install timed out after 120000ms before the UI test"
+    }
+  ],
+  "appCompilationSucceeded": true,
+  "currentFlowPracticallyVerified": false,
+  "physicalDevice": false,
+  "liveService": false,
+  "preservedAndroidEvidence": "2026-11-23-android-abec5ec107dc.json",
+  "nextAction": "Test a newly created isolated iPhone simulator on the same available runtime; record boot and installd diagnostics and bounded PNGs if installation still fails. Never erase an existing simulator or keep retrying unchanged.",
+  "unresolvedAtRecording": true
+}

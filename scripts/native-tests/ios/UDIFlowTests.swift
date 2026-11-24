@@ -36,7 +36,7 @@ final class UDIFlowTests: XCTestCase {
             if !save.isHittable { app.webViews.firstMatch.swipeUp() }
             save.tap()
             XCTAssertTrue(app.buttons[index == 0 ? "Search saved" : "Suche gespeichert"].waitForExistence(timeout: 5))
-            app.links["Watchlist"].firstMatch.tap()
+            app.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Saved", "Gespeichert")).firstMatch.tap()
             XCTAssertTrue(app.staticTexts[wishes[index]].firstMatch.waitForExistence(timeout: 5))
             print("iOS \(language): text search, real missing-service error and saved search passed")
             // Replace the textarea contents before the next language case.
@@ -47,7 +47,7 @@ final class UDIFlowTests: XCTestCase {
         }
         app.terminate(); app.launch()
         XCTAssertTrue(app.links["Suche"].firstMatch.waitForExistence(timeout: 10), "German selection survives relaunch")
-        app.links["Watchlist"].firstMatch.tap()
+        app.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Saved", "Gespeichert")).firstMatch.tap()
         for wish in wishes { XCTAssertTrue(app.staticTexts[wish].firstMatch.waitForExistence(timeout: 5)) }
         print("iOS: saved wishes and German UI survived terminate/relaunch; no live service or voice claim")
     }

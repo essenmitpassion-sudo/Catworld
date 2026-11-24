@@ -57,7 +57,12 @@ export function setupVoice(root, onInput) {
     button.disabled = true;
     button.dataset.i18nTitle=native?'Die Spracheingabe ist für diese App-Version noch nicht verfügbar. Nutze die Texteingabe.':'Dieser Browser unterstützt Aufnahme und Diktat nicht gemeinsam. Nutze die Texteingabe.';
     button.title=t(button.dataset.i18nTitle);
-    tell(m('Diktieren ist hier nicht verfügbar. Beschreibe deinen Wunsch im Textfeld.'));
+    if(native) {
+      // This native build has no verified speech adapter. Keep its first action
+      // usable rather than leading with a disabled microphone and error panel.
+      root.querySelector('.composer-tools').hidden=true;
+      panel.hidden=true;
+    } else tell(m('Diktieren ist hier nicht verfügbar. Beschreibe deinen Wunsch im Textfeld.'));
   }
   button.addEventListener('click', async () => {
     if (session) { stop(m('Aufnahme beendet. Prüfe deinen Text und höre die Aufnahme an.')); return; }

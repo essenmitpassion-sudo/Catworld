@@ -23,7 +23,7 @@ await mkdir(new URL('assets/',target),{recursive:true});
 for(const file of files)await copyFile(new URL('../dist/'+file,import.meta.url),new URL(file,target));
 const path=new URL('index.html',target);
 const policy="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; media-src blob:; connect-src 'none'; manifest-src 'self'; base-uri 'none'; form-action 'none'";
-const html=(await readFile(path,'utf8')).replace('<head>','<head>\n<meta name="udi-runtime" content="native">\n<meta http-equiv="Content-Security-Policy" content="'+policy+'">');
+const html=(await readFile(path,'utf8')).replace('<html lang="de-CH">','<html lang="de-CH" data-native-ui="">').replace('<head>','<head>\n<meta name="udi-runtime" content="native">\n<meta http-equiv="Content-Security-Policy" content="'+policy+'">');
 if(!html.includes('name="udi-runtime"'))throw new Error('Native runtime marker missing');
 await writeFile(path,html);
 const run=promisify(execFile),cli=fileURLToPath(new URL('../node_modules/@capacitor/cli/bin/capacitor',import.meta.url));

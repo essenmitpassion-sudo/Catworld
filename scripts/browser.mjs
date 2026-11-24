@@ -38,6 +38,18 @@ const liveEnglish=live&&process.argv.includes('--english');
 const layoutBaseline=process.argv.includes('--layout-baseline');
 const layoutOnly=layoutBaseline||process.argv.includes('--layout-only');
 const nativeOnly=process.argv.includes('--native-only');
+const nativeSmall=process.argv.includes('--native-small');
+const captureLabel=process.argv.find(value=>value.startsWith('--capture-native-boundary='))?.split('=')[1];
+if(captureLabel)assert(['before','after'].includes(captureLabel),'Use a fixed UI comparison label');
+async function captureBoundary(platform,language,send) {
+  if(!captureLabel||!['android','ios'].includes(platform))return;
+  await mkdir(new URL('../artifacts/ux/',import.meta.url),{recursive:true});
+  const capture=await send('Page.captureScreenshot',{format:'png'});
+  const target=`../artifacts/ux/browser-boundary-${platform}-${language}-${captureLabel}${nativeSmall?'-320':''}`;
+  await writeFile(new URL(target+'.png',import.meta.url),Buffer.from(capture.data,'base64'));
+  const layout=await send('Runtime.evaluate',{expression:"(()=>{const rect=s=>{const r=document.querySelector(s).getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:r.height}};return {width:innerWidth,height:innerHeight,composer:rect('.composer'),primary:rect('.primary-search'),navigation:rect('nav'),voice:rect('[data-voice]'),tools:rect('.composer-tools')}})()",returnByValue:true});
+  await writeFile(new URL(target+'.json',import.meta.url),JSON.stringify({scope:'desktop browser boundary simulation, not a native device screenshot',...layout.result.value},null,2)+'\n');
+}
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 const appOptions = live ? {
   verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
@@ -594,20 +606,26 @@ try {
     const legacySearches=JSON.stringify([{query:'Samsung 990 PRO 2 TB',scope:null,maxPrice:'',condition:'any',completeCostsOnly:false}]);
     const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)},Plugins:{Preferences:{get:async({key})=>({value:localStorage.getItem('udi.qa.pref:'+key)}),set:async({key,value})=>{localStorage.setItem('udi.qa.pref:'+key,value)}}}};try{localStorage.setItem('udi.language.v1','en');if(localStorage.getItem('udi.searches.v1')===null)localStorage.setItem('udi.searches.v1',${JSON.stringify(legacySearches)})}catch{}`});
     const savedRows=platform==='unsupported'?"JSON.parse(localStorage.getItem('udi.searches.v2'))":"JSON.parse(JSON.parse(localStorage.getItem('udi.qa.pref:udi.searches.native.v1')).values['udi.searches.v2'])";
-    await send('Emulation.setDeviceMetricsOverride',{width:390,height:780,deviceScaleFactor:1,mobile:true});
+    await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
+    await captureBoundary(platform,'en',send);
     if(process.argv.includes('--native-flow-simulation')&&platform==='android') {
       await evaluate("localStorage.removeItem('udi.searches.v1');localStorage.removeItem('udi.searches.v2')");
       await androidFlow({send,evaluate},false);
       console.log('Desktop simulation of Android QA sequence passed; this is not device acceptance.');
       break;
     }
-    assert(await evaluate("document.querySelector('#native-runtime-status').textContent.includes('not connected')"));
+    assert(await evaluate("document.querySelector('#native-runtime-status').textContent.includes('cannot show current offers')"));
+    assert.equal(await evaluate("document.querySelectorAll('nav a:not([hidden])').length"),2,'native navigation has the two usable main destinations');
+    assert.equal(await evaluate("document.querySelector('nav a[href=\"#watchlist\"]').textContent.trim()"),'Saved');
     assert(await evaluate("document.querySelector('[data-mic]').disabled"),'native voice is not pretended from browser support');
+    assert(await evaluate("document.querySelector('.composer-tools').hidden&&document.querySelector('[data-voice]').hidden"),'native entry offers text without inactive microphone or desktop keyboard hints');
+    assert(await evaluate("document.querySelector('.primary-search').getBoundingClientRect().bottom<=document.querySelector('nav').getBoundingClientRect().top"),'native primary action fits above navigation without an initial scroll');
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Describe what you need.')"),'native introduction must not promise unavailable voice input');
     await evaluate("document.querySelector('#ui-language').value='de';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Beschreibe deinen Wunsch.')"),'native text-first introduction follows German language selection');
+    await captureBoundary(platform,'de',send);
     await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
     await evaluate("document.querySelector('#search-query').focus()");await type('Samsung 990 PRO 2 TB');await pointerClick('.primary-search');
     await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('not connected')"),'native search explains missing service');
@@ -621,11 +639,15 @@ try {
     assert(await evaluate(`(${savedRows})[0].marketId==='CH' && (${savedRows})[0].schemaVersion===2`),'native shared code writes explicit market-bound requests');
     await click('nav a[href="#watchlist"]');await send('Page.reload');
     await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
+    await captureBoundary(platform,'en-saved',send);
     await click('#saved .text-button');
-    await until(()=>evaluate("document.querySelector('#saved').textContent.includes('Your watchlist is empty')"),'native saved request removal');
+    await until(()=>evaluate("document.querySelector('#saved').textContent.includes('No saved searches yet')"),'native saved request removal');
     assert(await evaluate(`JSON.parse(localStorage.getItem('udi.searches.v1')).length===0 && (${savedRows}).length===0`),'removing a migrated request clears both versions');
     await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'native version help');
     assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));
+    assert(await evaluate("document.querySelector('[data-help-voice]').textContent.includes('not available in this app version')"),'native help explains actual voice availability');
+    await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();
+    await evaluate("document.documentElement.style.fontSize=''");
     await noOverflow();await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:adapter.identifier});
     console.log('Native boundary simulation passed for '+platform+' (browser test; no native emulator/device claim)');
   }

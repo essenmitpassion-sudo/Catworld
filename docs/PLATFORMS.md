@@ -1,5 +1,13 @@
 # UDI · Android und iOS gleich priorisieren
 
+## Gestaltungsetappe · 24.11.2026
+
+Native Einstiege priorisieren jetzt Zieleingabe und gespeicherte Suchen: zwei Haupttabs, Kontextwege zum Vergleich, kompakte Statushinweise, ruhige gemeinsame Gestaltung und vorhandene Wünsche vor Beispielen. Nicht verfügbare Spracheingabe und Desktop-Enter-Hinweise sind im Einstieg verborgen; die Einschränkung steht in der Hilfe. Dienstlücke bleibt sichtbar. [Vorher/Nachher mit Layoutwerten](evidence/2026-11-24-native-ui/README.md) sind Browser-QA derselben Oberfläche, keine nativen Screenshots oder Nutzerbewertungen. DE/EN, 320/390 Pixel, 200 Prozent CSS-Text und bisherige Browserabläufe sind geprüft; Systemschriftgrösse und Screenreader auf Geräten bleiben offen.
+
+Android abec5ec besteht den echten EN/DE-Text-/Speicher-/Neustartablauf: [unveränderter Nachweis](evidence/2026-11-23-android-abec5ec107dc.json). Die neue Gestaltung benötigt eine eigene native Abnahme. iOS kompilierte, aber die Installation scheiterte auch auf einem frischen Runner erneut am Zeitlimit: [beide Versuche](evidence/2026-11-24-ios-install-blocker.json). Der nächste kontrollierte Versuch verwendet einen neu angelegten Simulator derselben Runtime, löscht ausschliesslich dieses selbst erstellte Gerät und protokolliert bei weiterem Fehler Start-/Installationsdiagnosen. Keine fortgesetzten unveränderten Wiederholungen.
+
+scripts/native-start.mjs erzeugt nur auf isolierten CI-Testgeräten begrenzte PNG-Protokolle der leeren App bzw. des Installationszustands. Keine realen Nutzerbildschirme, Audio, Schlüssel oder Binärbuilds werden übertragen. Bilder stehen in vorhandenen Testlogs; kein zusätzlicher Artefaktspeicher oder Release aktiviert. Normale Logs zählen nicht zum Artefaktspeicher. [GitHub-Dokumentation](https://docs.github.com/en/billing/concepts/product-billing/github-actions#examples-of-how-usage-is-measured). Lokal: Joblog unter artifacts speichern, dann `node scripts/native-screens.mjs artifacts/<job>.log <quellcommit>-<jobnummer>`. Decoder prüft Grösse, PNG, Teilefolge und SHA-256 und überschreibt keine abweichenden Dateien. Quelle/Job zusätzlich prüfen und Bild ansehen, bevor es als Nachweis gilt; Dekodierung allein ist keine Geräteabnahme.
+
 Verbindliche Entscheidung vom 20.11.2026. Bestehender Stack: modulare lokale HTML/CSS/JS-Oberfläche, gemeinsame Such-/Kosten-/Frischelogik, lokales Node-Backend und zulässiger DQ-Adapter. DE/EN sind unabhängig vom expliziten Markt-/Lieferland-/Währungsvertrag modelliert; aktiv bleibt ausschliesslich CH/CH/CHF. Weitere Märkte benötigen eigene Quellen- und Kostenabnahme. Der alte PWA-Entscheid wird durch diese native Plattformstrategie ergänzt und als alleiniger Startweg abgelöst.
 
 | Weg | Vorteil | Nachteil / Entscheidung |

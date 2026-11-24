@@ -118,3 +118,56 @@ h1 { overflow-wrap: anywhere; }
 .language-control select { min-height: 2.8rem; max-width: 8rem; padding: .45rem .6rem; border: 1px solid var(--line); border-radius: .55rem; color: var(--ink); background: white; font-size: .875rem; }
 .masthead .language-control { display: inline-flex; }
 @media(max-width:45rem) { .masthead { gap: .5rem; } .market-label { font-size: .7rem; } .language-control select { font-size: .8rem; padding-inline: .4rem; } }
+
+/* Native app: one wish, one action, then saved searches. No extra data claims. */
+html[data-native-ui] { --ink:#183333; --muted:#526664; --line:#dce5df; --paper:#fff; --blue:#176d62; --soft:#e9f2ed; color:var(--ink); background:#f3f6f2; }
+html[data-native-ui] body { grid-template-rows:auto minmax(0,1fr) auto; grid-template-areas:'header' 'content' 'navigation'; }
+html[data-native-ui] .shell { width:min(100% - 2rem,44rem); }
+html[data-native-ui] .site-header { border-color:var(--line); }
+html[data-native-ui] .masthead { min-height:4rem; padding-block:.65rem; flex-wrap:wrap; gap:.5rem .75rem; }
+html[data-native-ui] .brand { font-size:1.8rem; min-height:2.75rem; margin-right:auto; }
+html[data-native-ui] .brand-mark { width:2rem; height:2rem; border-radius:.6rem; transform:none; }
+html[data-native-ui] .brand-caption { display:none; }
+html[data-native-ui] .masthead .market-label { margin-left:0; font-size:.75rem; }
+html[data-native-ui] .language-control select { min-height:2.75rem; border-color:transparent; background:#f0f5f1; font-size:.8125rem; }
+html[data-native-ui] .search-intro { padding-block:1.4rem .8rem; }
+html[data-native-ui] .search-intro h1 { font-size:clamp(1.8rem,5vw,2.15rem); font-weight:800; letter-spacing:-.045em; }
+html[data-native-ui] .search-intro > p { margin-top:.5rem; font-size:.875rem; max-width:38ch; }
+html[data-native-ui] #native-runtime-status { margin:0 0 .9rem; padding:.55rem 0 .55rem .75rem; border-left:2px solid #b9cbc2; background:transparent; font-size:.8125rem; line-height:1.55; color:var(--muted); }
+html[data-native-ui] .composer { border-color:#cbdad1; border-radius:.85rem; }
+html[data-native-ui] .composer:focus-within { border-color:var(--blue); outline:1px solid var(--blue); }
+html[data-native-ui] .composer-input { padding:1rem 1rem .5rem; }
+html[data-native-ui] textarea { color:var(--ink); font-size:1rem; line-height:1.6; }
+html[data-native-ui] textarea::placeholder { color:#5c706a; }
+html[data-native-ui] .search-options { margin-inline:1rem; }
+html[data-native-ui] .search-options summary { min-height:3rem; font-size:.8125rem; color:var(--muted); }
+html[data-native-ui] .optional-label { color:var(--muted); }
+html[data-native-ui] .composer-submit { padding:.6rem 1rem 1rem; }
+html[data-native-ui] .primary-search { min-height:3.25rem; border-radius:.6rem; box-shadow:none; font-size:.9375rem; }
+html[data-native-ui] .button:hover { background:#10594f; border-color:#10594f; }
+html[data-native-ui] .intent-refinement { margin-inline:1rem; }
+html[data-native-ui] .suggestions { display:block; margin-top:1.4rem; }
+html[data-native-ui] .suggestions > span { display:block; margin-bottom:.35rem; color:var(--muted); font-size:.75rem; }
+html[data-native-ui] .suggestions button { display:flex; justify-content:space-between; gap:1rem; width:100%; min-height:2.9rem; padding:.65rem 0; border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; text-align:left; color:var(--ink); }
+html[data-native-ui] #recent-searches { margin-top:1.4rem; }
+html[data-native-ui] #recent-searches h2 { font-size:1rem; }
+html[data-native-ui] #recent-searches button { border:0; border-bottom:1px solid var(--line); border-radius:0; padding:.8rem 0; background:transparent; color:var(--ink); overflow-wrap:anywhere; }
+html[data-native-ui] .primary-nav { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); grid-area:navigation; width:100%; padding:.35rem 1rem calc(.35rem + env(safe-area-inset-bottom)); gap:.6rem; border-top:1px solid var(--line); border-bottom:0; background:var(--paper); }
+html[data-native-ui] .primary-nav a { min-width:0; min-height:3rem; max-width:none; justify-content:center; flex-direction:row; flex-wrap:wrap; gap:.4rem .6rem; padding:.6rem; border-radius:.6rem; font-size:.8125rem; color:var(--muted); }
+html[data-native-ui] .primary-nav a[aria-current] { background:var(--soft); color:#125a51; }
+html[data-native-ui] .primary-nav a > span:last-child { min-width:0; max-width:100%; overflow-wrap:anywhere; }
+html[data-native-ui] .primary-nav .icon { width:1.2rem; height:1.2rem; }
+html[data-native-ui] .page-title { padding-block:1.5rem .75rem; margin-bottom:.5rem; }
+html[data-native-ui] .page-title h1 { font-size:1.85rem; letter-spacing:-.04em; }
+html[data-native-ui] .page-title > p:last-child { font-size:.875rem; }
+html[data-native-ui] #saved { grid-template-columns:minmax(0,1fr); gap:0; }
+html[data-native-ui] #saved > .surface { border:0; border-bottom:1px solid var(--line); border-radius:0; padding:1rem 0; background:transparent; }
+html[data-native-ui] #saved h2 { font-size:1.0625rem; line-height:1.5; overflow-wrap:anywhere; }
+html[data-native-ui] #saved .actions { gap:.75rem; }
+html[data-native-ui] #saved .text-button { color:var(--muted); }
+html[data-native-ui] .text-button { display:inline-flex; align-items:center; min-height:2.75rem; }
+html[data-native-ui] #saved > p { padding-block:1rem; font-size:.8125rem; line-height:1.6; }
+html[data-native-ui] .surface h2 { overflow-wrap:anywhere; }
+html[data-native-ui] .footer { padding-block:1rem; margin-top:1.25rem; justify-content:flex-start; }
+html[data-native-ui] .footer > :not(a) { display:none; }
+html[data-native-ui] .footer a { display:inline-flex; align-items:center; min-height:2.75rem; color:var(--muted); font-size:.8125rem; }

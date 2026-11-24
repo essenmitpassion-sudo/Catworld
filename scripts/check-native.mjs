@@ -18,6 +18,7 @@ for(const file of files) {
 for(const destination of ['native-dist/',...destinations]) {
   const index=await readFile(new URL('../'+destination+'index.html',import.meta.url),'utf8');
   assert(index.includes('name="udi-runtime" content="native"'));assert(index.includes("connect-src 'none'"));
+  assert(index.includes('data-native-ui=""'));
   await assert.rejects(lstat(new URL('../'+destination+'observations.json',import.meta.url)),{code:'ENOENT'});
 }
 const manifest=await readFile(new URL('../android/app/src/main/AndroidManifest.xml',import.meta.url),'utf8');
