@@ -31,8 +31,12 @@ final class UDIFlowTests: XCTestCase {
             submit.tap()
             let save = app.buttons[index == 0 ? "Save search" : "Suche speichern"].firstMatch
             XCTAssertTrue(save.waitForExistence(timeout: 10))
+            let initialStatus = index == 0
+                ? "This app cannot show current offers yet. You can save your searches."
+                : "Diese App zeigt noch keine aktuellen Angebote. Deine Suchwünsche kannst du speichern."
+            XCTAssertTrue(app.staticTexts[initialStatus].firstMatch.waitForExistence(timeout: 5), "The entry status must describe the actual service limitation")
             let unavailable = NSPredicate(format: "label CONTAINS %@", index == 0 ? "not connected" : "noch nicht verbunden")
-            XCTAssertGreaterThanOrEqual(app.staticTexts.matching(unavailable).count, 2, "Banner and submitted-search error must both be present")
+            XCTAssertTrue(app.staticTexts.matching(unavailable).firstMatch.waitForExistence(timeout: 5), "The submitted search must show its own missing-service error")
             if !save.isHittable { app.webViews.firstMatch.swipeUp() }
             save.tap()
             XCTAssertTrue(app.buttons[index == 0 ? "Search saved" : "Suche gespeichert"].waitForExistence(timeout: 5))
