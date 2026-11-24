@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "a45f7518392493314ff38250355760c5758433be",
+  "runId": 45460007629,
+  "jobId": 138679691913,
+  "result": "success",
+  "platform": "Android emulator, not physical device",
+  "apk": {
+    "pathOnRunner": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "206bfeff3e5ae592e2c2719e4ca61cc150cdbf2914f76ffd2b95a56ba32034a1",
+    "downloaded": false,
+    "publiclyReleased": false
+  },
+  "milestones": [
+    "2026-11-24T18:32:09.4660149Z Android en: typed search, actual unconfigured-service error, save and Watchlist passed.",
+    "2026-11-24T18:32:14.7625385Z Android de: typed search, actual unconfigured-service error, save and Watchlist passed.",
+    "2026-11-24T18:32:22.1590547Z Android: saved searches and CH context survived force-stop/relaunch; German selection preserved.",
+    "2026-11-24T18:32:22.1690697Z Native android startup passed. Full device/search/voice acceptance remains separate."
+  ],
+  "screenshot": {
+    "path": "docs/evidence/2026-11-24-search-focus/android-native-start.png",
+    "width": 320,
+    "height": 640,
+    "sha256": "f693b619767eaa87eda580954d2dfefb46e9c7140534dd3138c10f0eef0e4823",
+    "actualNativeEmulator": true,
+    "decodedFromCompletedJob": true,
+    "visuallyInspected": true,
+    "scope": "English initial app screen before DE/EN workflow; not an image of every test state"
+  },
+  "checked": [
+    "Built debug APK, installed and launched",
+    "Actual pointer language/market disclosure; English and German selection",
+    "Exact text search, real missing-service error, no fake offer link",
+    "Confirmed native save, both wishes survive force-stop/relaunch with explicit CH/CH/CHF context and German language"
+  ],
+  "notChecked": [
+    "Physical Android device, native dictation/permissions, true OS text-scale/screenreader, actual live-offer or provider-return flow",
+    "New iOS result still separate and pending"
+  ],
+  "sourceRecovery": "docs/evidence/2026-11-24-search-focus-recovery.json"
+}
