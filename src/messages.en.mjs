@@ -323,6 +323,10 @@ const extra = {
   "Oberflächensprache":"Interface language",
   "Sprache und Markt: {language}":"Language and market: {language}",
   "Beispielsuche":"Example search"
+  ,"Dein Wunsch":"Your request"
+  ,"Budget und Zustand":"Budget and condition"
+  ,"Zum Beispiel: Samsung 990 PRO mit 2 TB, bis CHF 500.":"For example: Samsung 990 PRO with 2 TB, up to CHF 500."
+  ,"Deine Wünsche bleiben hier. Suche weiter, wenn es für dich passt.":"Your requests stay here. Pick them up when it suits you."
   ,"Mein PC braucht mehr Speicher":"My PC needs more storage"
 };
 export const english=Object.freeze({...base,...extra});

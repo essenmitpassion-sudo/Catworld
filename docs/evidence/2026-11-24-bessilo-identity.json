@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-24T19:00:04.212Z",
+  "baselineCommit": "d9d34b5c342451d87e3d3eb61d04833e91fa64d1",
+  "namingCheckpoint": "52640cf",
+  "source": "this commit; see Git history",
+  "name": {
+    "display": "Bessilo",
+    "status": "reversible unpublished test identity",
+    "research": "docs/BRAND.md",
+    "officialReadOnlyReceipts": [
+      "docs/evidence/2026-11-24-name-registers.json",
+      "docs/evidence/2026-11-24-name-play.json"
+    ],
+    "limitations": "No complete trademark/phonetic/language/handle clearance. RDAP404 is not purchase availability. No public release or domain registration."
+  },
+  "implementation": [
+    "Owned UI templates branded before interpolation; user and merchant parameters preserved",
+    "Shared own B waymark and native/PWA icons, warm paper/ink/citrus visual system",
+    "Visible request label and contiguous high-contrast field focus; primary action follows field",
+    "Consistent search/saved/error/empty/help states; truthful service limitation retained",
+    "Stable package/bundle/API/storage/scheme identifiers and existing data contracts"
+  ],
+  "checks": {
+    "unit": {
+      "passed": 115,
+      "failed": 0
+    },
+    "typecheck": true,
+    "build": true,
+    "fullChromium": {
+      "de": [
+        360,
+        390,
+        768,
+        1365
+      ],
+      "en": [
+        390,
+        1365
+      ]
+    },
+    "nativeBoundary": {
+      "widths": [
+        320,
+        390
+      ],
+      "largeText": "200% CSS, including expanded settings",
+      "shortHeight": 360,
+      "draftPreservedOnError": true,
+      "saveReloadRemove": true
+    },
+    "nativeAssetPreparation": {
+      "filesPerPlatform": 30,
+      "identical": true,
+      "networkDisabled": true
+    },
+    "regressions": [
+      "Display-brand test failed before implementation; DE/EN own templates change, user UDI text remains unchanged",
+      "Review identified clipped adaptive launcher monogram; actual PNG alpha/safe-zone test failed before fix, passed after transparent .72-scale foreground. All115 tests rerun."
+    ],
+    "review": "Independent naming and visual follow-up reviews: no remaining important findings; real launchers and native update migration still unverified."
+  },
+  "visual": {
+    "files": [
+      {
+        "path": "docs/evidence/2026-11-24-bessilo-ui/browser-boundary-ios-en-before-320.png",
+        "sha256": "bfa80e1b0d504155e020c8de049c96191d1acae56c35906ae326d8f4a0ea674e",
+        "scope": "Chromium shared native-boundary QA; not an iOS/Android device screenshot"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-bessilo-ui/browser-boundary-ios-en-after-320.png",
+        "sha256": "f56065181ee42b3ee5269e99cea9dc9933e1e1995639ba5fab2a844854fc667b",
+        "scope": "Chromium shared native-boundary QA; not an iOS/Android device screenshot"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-bessilo-ui/browser-boundary-ios-de-after.png",
+        "sha256": "80606d33b86e60cb0253af7b3bbd7e5b43ee0650b0baba67a27e300eed2867d6",
+        "scope": "Chromium shared native-boundary QA; not an iOS/Android device screenshot"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-bessilo-ui/browser-boundary-ios-en-saved-after.png",
+        "sha256": "c7c5c73ed64cb84c077ec25a6fd7ce3f9361f57250e55be307a591125b42d5ab",
+        "scope": "Chromium shared native-boundary QA; not an iOS/Android device screenshot"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-bessilo-ui/browser-boundary-ios-en-empty-after.png",
+        "sha256": "caa5dcdb2064c11d2d3c12c6141a473b11a9c02bfcde1de0d29eed91ee27fb0a",
+        "scope": "Chromium shared native-boundary QA; not an iOS/Android device screenshot"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-bessilo-ui/browser-boundary-ios-en-error-after.png",
+        "sha256": "cf92cf14a993e1e7e30c553dd9dbef3e6806ba71b1b14a0fd49b50b3c4dc7e78",
+        "scope": "Chromium shared native-boundary QA; not an iOS/Android device screenshot"
+      }
+    ],
+    "contrast": [
+      {
+        "name": "body",
+        "foreground": "202c25",
+        "background": "f7f7ef",
+        "ratio": 13.47
+      },
+      {
+        "name": "muted",
+        "foreground": "59665b",
+        "background": "f7f7ef",
+        "ratio": 5.61
+      },
+      {
+        "name": "placeholder",
+        "foreground": "5a695d",
+        "background": "fffef9",
+        "ratio": 5.76
+      },
+      {
+        "name": "primary",
+        "foreground": "ffffff",
+        "background": "244b3c",
+        "ratio": 9.78
+      },
+      {
+        "name": "selection",
+        "foreground": "202c25",
+        "background": "daedaa",
+        "ratio": 11.51
+      }
+    ]
+  },
+  "native": {
+    "status": "New appearance is not yet device-verified. Previous Android success belongs to a45f751 before rename, previous iOS compiled but CoreLocation migration blocked simulator boot.",
+    "actualKeyboardOrScreenreaderAccepted": false,
+    "physicalDevices": false
+  },
+  "open": [
+    "Full iOS flow and real launcher/update checks",
+    "Live native offers, authenticated separately authorized UDI service and native voice",
+    "Complete costs/second source/real human usability and USP benchmarks"
+  ],
+  "safety": "No SOUNDWEAVE access, app-ID/signature mutation, public release, domain purchase or new external costs"
+}

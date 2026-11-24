@@ -4,8 +4,8 @@
 
 Nutzer fordert ausdrücklich Fortsetzung der offenen Namens-/Gestaltungsarbeit. [Recherche, Shortlist, Grenzen und Entscheidung](docs/BRAND.md): Bessilo als reversibler **Anzeigename der Testapp**, interne UDI-Verträge/IDs erhalten. Keine Markenfreigabe, neue Leistungszusage, Domain-/Store-Veröffentlichung oder SOUNDWEAVE-Nutzung. Frühere UDI-Arbeitsnamenregel wird für die sichtbare Testoberfläche durch diese vorläufige Entscheidung ersetzt; öffentliche Namensfestlegung bleibt offen.
 
-- [ ] Namen zentral auf eigene UI-Templates/Anzeigenamen anwenden; Nutzertexte/Quellen/Markt/Speicher/IDs erhalten. DE/EN und wörtliche UDI-Parameter als Gegenprobe, Build/Tests/Browser, lokalen Commit sichern.
-- [ ] Bestehende native Oberfläche mit eigener Wortmarke/Signet, Papier/Tinte/Zitronenakzent und weniger Formularwirkung weiterentwickeln; Suche/Gespeichert/Fehler/Hilfe konsistent, keine toten Funktionen. Laufende Vorher/Nachher-Bilder320/390, vergrösserter Text, Tastaturbedienung, reale Fehler-/Speicherabläufe und Kontrast prüfen, wichtigste Schwäche korrigieren.
+- [x] Namen zentral auf eigene UI-Templates/Anzeigenamen angewendet, Nutzertexte/Quellen/Markt/Speicher/IDs erhalten. DE/EN-Gegenprobe mit wörtlichem UDI-Parameter zuerst fehlgeschlagen, danach grün; vollständige Regression, lokaler Commit52640cf. Nur Testmarke, öffentliche Freigabe weiter offen.
+- [x] Native Oberfläche mit Wortmarke/Signet, Papier/Tinte/Zitronenakzent umgesetzt; Suche/Gespeichert/Fehler/Leer/Hilfe gemeinsam geprüft. [Sechs aktuelle Bilder,115 Tests/Build/Typen/30 identische Assets und Grenzen](docs/evidence/2026-11-24-bessilo-identity.json). Adaptive Android-Maske nach fehlschlagender Pixelprobe korrigiert. Browser-QA/200Prozent CSS-Text ist keine native Tastatur-/Systemschrift-/Geräteabnahme.
 - [ ] Originalrecherchen/Nachweise/Status, normale Commits/Remote-Readback und isolierte Wiederherstellung sichern. Neue native Ergebnisse separat abnehmen; iOS-Umgebungsblocker bleibt offen bis echtem Beleg. Danach unabhängige echte Quellen-/Kostenarbeit fortsetzen, fehlenden getrennten UDI-Dienst konkret halten.
 
 ## Mobile Gestaltungsrichtungen ·24.11.2026

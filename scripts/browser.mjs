@@ -668,6 +668,7 @@ try {
     await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('not connected')"),'native search explains missing service');
     assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','service failure preserves the exact editable wish');
     await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
+    await captureBoundary(platform,'en-error',send);
     assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');
     assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery')&&!entry.name.includes('observations.json'))"),'native path never falls back to device API or bundled observations');
     assert(await evaluate("document.querySelector('#native-runtime-status').getBoundingClientRect().height>0"),'service warning survives submitted search');
@@ -682,6 +683,7 @@ try {
     await captureBoundary(platform,'en-saved',send);
     await click('#saved .text-button');
     await until(()=>evaluate("document.querySelector('#saved').textContent.includes('No saved searches yet')"),'native saved request removal');
+    await captureBoundary(platform,'en-empty',send);
     assert(await evaluate(`JSON.parse(localStorage.getItem('udi.searches.v1')).length===0 && (${savedRows}).length===0`),'removing a migrated request clears both versions');
     await click('a[href="#hilfe"]');await until(()=>visible('hilfe'),'native version help');
     assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));

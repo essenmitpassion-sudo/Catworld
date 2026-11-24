@@ -1,9 +1,11 @@
 import {m,setText,t} from './i18n.mjs';
+import {icon} from './ui.mjs';
 
 // Presentation only. Search, markets, evidence and storage stay in their modules.
 export function configureNativeUI(document) {
   const get=id=>document.getElementById(id);
   document.documentElement.setAttribute('data-native-ui','');
+  document.querySelector('.brand-mark').replaceChildren(icon('waymark'));
   const language=get('ui-language'),languageGroup=document.createElement('div');
   const settings=document.createElement('details'),toggle=document.createElement('summary');
   settings.className='native-settings';toggle.id='native-settings-toggle';
@@ -43,8 +45,11 @@ export function configureNativeUI(document) {
   setText(get('suche').querySelector('h1'),m('Was brauchst du?'));
   setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Ein Produkt oder ein Ziel reicht.'));
   const input=get('search-query');
-  input.dataset.i18nPlaceholder='Zum Beispiel: 2 TB mehr Speicher für meinen PC, bis CHF 200.';
+  const inputLabel=document.querySelector('label[for="search-query"]');
+  inputLabel.classList.remove('sr-only');setText(inputLabel,m('Dein Wunsch'));
+  input.dataset.i18nPlaceholder='Zum Beispiel: Samsung 990 PRO mit 2 TB, bis CHF 500.';
   input.placeholder=t(input.dataset.i18nPlaceholder);
+  setText(get('suche').querySelector('.search-options summary'),m('Budget und Zustand'));
   const status=document.createElement('p');status.id='native-runtime-status';status.className='shared-notice';
   setText(status,m('Diese App zeigt noch keine aktuellen Angebote. Deine Suchwünsche kannst du speichern.'));
   get('suche').querySelector('.composer-submit').after(status);
@@ -54,6 +59,7 @@ export function configureNativeUI(document) {
   for(const route of ['radar','vergleich'])document.querySelector(`nav a[href="#${route}"]`).hidden=true;
   setText(document.querySelector('nav a[href="#watchlist"] [data-i18n]'),m('Gespeichert'));
   setText(get('watchlist').querySelector('h1'),m('Deine Suchen'));
+  setText(get('watchlist').querySelector('.page-title > p:last-child'),m('Deine Wünsche bleiben hier. Suche weiter, wenn es für dich passt.'));
   setText(document.querySelector('.footer a'),m('Hilfe & Datenschutz'));
   const examples=get('search-home').querySelector('.suggestions');
   examples.querySelector('[data-prompt]').remove();
