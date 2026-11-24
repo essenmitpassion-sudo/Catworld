@@ -667,7 +667,9 @@ try {
     await noOverflow();await pointerClick('.primary-search');
     await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('not connected')"),'native search explains missing service');
     assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','service failure preserves the exact editable wish');
+    assert(await evaluate("(()=>{const title=document.querySelector('#results h2').getBoundingClientRect(),main=document.querySelector('main').getBoundingClientRect();return title.top>=main.top && title.top<=main.top+30})()"),'a submitted search reveals the outcome instead of leaving it below the composer');
     await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
+    assert(await evaluate("(()=>{const button=document.querySelector('#results button'),r=button.getBoundingClientRect(),main=document.querySelector('main').getBoundingClientRect();return r.top>=main.top && r.bottom<=main.bottom && button.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})()"),'save action is visible and unobscured after showing the submitted outcome');
     await captureBoundary(platform,'en-error',send);
     assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');
     assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery')&&!entry.name.includes('observations.json'))"),'native path never falls back to device API or bundled observations');

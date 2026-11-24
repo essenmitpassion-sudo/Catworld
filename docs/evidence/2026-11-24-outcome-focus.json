@@ -1,0 +1,32 @@
+{
+  "baseline": "5312ae3a8caecaf80c99fe0649549d4971c149c3",
+  "source": "this commit; Git history contains final identity",
+  "cause": "Explicit submission only focused an already partly visible result heading. Native WebKit did not necessarily scroll its container; iOS AX isHittable also accepted the clipped save element.",
+  "change": "Focus outcome without implicit scroll, explicitly reveal its start immediately on conscious submit. No extra async focus action. Preserve editable query, criteria, normal native scroll and navigation layout.",
+  "regression": {
+    "before": "Native-boundary Chromium320: outcome near top assertion false before app change.",
+    "after": "320/390 shared UI boundaries show outcome at content start and entire save action within main with real hit-test. Failure retains exact editable request."
+  },
+  "iosTest": "After actual8322c50 failure, require save frame fully inside main with6pt margin and isHittable before actual tap; at most3 real swipes. No tutorial or OS service manipulation.",
+  "checks": {
+    "unit": 115,
+    "typecheck": true,
+    "nativeAssets": 30,
+    "nativeNetworkDisabled": true,
+    "browser": "Full DE4/EN2 plus Android/iOS/unsupported boundaries; small320 checked separately"
+  },
+  "limits": [
+    "Current native compiler/device results pending",
+    "No claim of native live offers, recognition or physical-device keyboard acceptance"
+  ],
+  "requirements": [
+    "docs/requirements/2026-11-24-brand-usp-ui-usability.md",
+    "docs/requirements/2026-11-24-domain-authorization.md"
+  ],
+  "screenshot": {
+    "path": "docs/evidence/2026-11-24-neutral-ui/outcome-browser-ios-320.png",
+    "sha256": "f70e5a451e76771fc48429d7534b51aaf7ebcfb3d73a445b9ef218c98464e748",
+    "visuallyInspected": true,
+    "scope": "Shared Chromium UI at320x640 with iOS boundary simulation, not native iOS screenshot"
+  }
+}

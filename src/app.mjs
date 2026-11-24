@@ -449,7 +449,9 @@ async function submit(query, scope) {
   navigate('suche');
   const resultTitle = get('results').querySelector('h2');
   resultTitle.tabIndex = -1;
-  resultTitle.focus();
+  resultTitle.focus({preventScroll:true});
+  // Explicit submission moves to its outcome; async updates never steal focus.
+  resultTitle.scrollIntoView({block:'start',behavior:'instant'});
   try {
     const result = await discoverOffers(input, {
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),

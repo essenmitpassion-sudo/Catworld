@@ -48,7 +48,15 @@ final class UDIFlowTests: XCTestCase {
             XCTAssertTrue(web.staticTexts[initialStatus].firstMatch.waitForExistence(timeout: 5), "The entry status must describe the actual service limitation")
             let unavailable = NSPredicate(format: "label CONTAINS %@", index == 0 ? "not connected" : "noch nicht verbunden")
             XCTAssertTrue(web.staticTexts.matching(unavailable).firstMatch.waitForExistence(timeout: 5), "The submitted search must show its own missing-service error")
-            if !save.isHittable { web.swipeUp() }
+            // WebKit can report a clipped offscreen element as hittable.
+            // Bound the actual frame to the scrollable content, not the nav.
+            let content = web.otherElements["main"].firstMatch
+            XCTAssertTrue(content.exists)
+            for _ in 0..<3 {
+                if save.isHittable && content.frame.insetBy(dx: 0, dy: 6).contains(save.frame) { break }
+                web.swipeUp()
+            }
+            XCTAssertTrue(save.isHittable && content.frame.insetBy(dx: 0, dy: 6).contains(save.frame), "Save action must be fully visible above navigation before tapping")
             save.tap()
             XCTAssertTrue(web.buttons[index == 0 ? "Search saved" : "Suche gespeichert"].waitForExistence(timeout: 5))
             web.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Saved", "Gespeichert")).firstMatch.tap()

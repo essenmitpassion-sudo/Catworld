@@ -1,12 +1,28 @@
 # Universal Deal Intelligence
 
-## Aktive Etappe · neutrale Identität und echter App-Nutzen ·24.11.2026
+## Neuester Auftrag · Marke, USP, UI und Bedienung
+
+[Unverändert gespeicherter Auftrag](docs/requirements/2026-11-24-brand-usp-ui-usability.md) ersetzt die neutrale sichtbare Identität durch austauschbare Arbeitsmarke `udi.`; keine weiteren Namensrunden, keine technischen Identitätswechsel. Frühere Belege bleiben historische Zustände.
+
+| Reihenfolge / Abschnitte | Konkreter Umfang | Abnahme |
+|---|---|---|
+| P0/P1 ·1,5,6,8 | Größte belegte Hürde: Ergebnis und Speicheraktion nach Textsuche erreichbar machen; keine Start-Autofokussierung, Bearbeiten/IME/Enter/Kriterien erhalten. | Gegenprobe vor Änderung rot; UI DE/EN, schmal/kurz/grosse Schrift, Fokus/Entwurf und sichtbare Aktionspunkte geprüft. Android/iOS echte Tastatur, Safe Areas, Suche/Fehler/Speichern/Neustart getrennt nachweisen; Browser ersetzt keine Geräteabnahme. |
+| P0 ·2,8 | Bedarf statt Produktname als USP-Hypothese, konkretes 2TB/CHF200-Ziel und aktuelle Wettbewerbsfunktionen prüfen. | Primärquellen mit Datum und tatsächlichem Funktionsumfang; reale vergleichbare Suchversuche, Relevanz/Kosten/Zeit und Grenzen dokumentieren. Keine Einzigartigkeit oder Alternativensuche ohne Beleg. |
+| P1 ·1,2,5 | Wunsch → erkannte/editierbare Kriterien → passende Optionen/Alternativen → Grund/Kosten/Quelle/Aktualität → nächster Schritt. | Echter Datenablauf; exakte/ähnliche/alternative Treffer erkennbar. Unbekannte Kosten/Quellen/Verfügbarkeit offen. Leer/Fehler mit sinnvoller Folgeaktion; keine Attrappen. |
+| P2 ·3,4,5 | Zentrale Arbeitsmarke udi., DE Produkt- und Angebotssuche / EN Find what you need.; ruhige Wortmarke/Lupen-Suchweg mit Fundpunkt. Bestehende Grün/Papier-Gestaltung erhalten. | Logo24/32px, hell/dunkel/einfarbig im tatsächlichen UI geprüft; zentrale Konfiguration für Anzeigenamen/Icons, Bundle-/Paket-/Speicher-IDs identisch. Kein neuer Store oder behauptete Markenfreigabe. Funktionshinweis ohne unbelegtes Live-Versprechen. |
+| P3 ·2,7,8 | Tatsächlicher geschützter Dienst und zugelassene Quellen; Sprache/Markt/Lieferland/Währung trennen, DE/EN und CH/CH/CHF erhalten. | Kein Sprachwechsel ändert Markt; Preis/Gutschein/Lieferung/Provision/Datenschutz wahrheitsgemäss. Neu freigegebene Domain nur ohne Bestandsschaden getrennt prüfen. Keine Kosten/Veröffentlichung/Umgehung; fehlende Zugänge exakt dokumentieren. |
+| P4 ·8,Arbeitsweise | Änderungen, Regressionen, praktische Plattformprüfungen, Wiederherstellung und nächste Aufgabe fortlaufend sichern. | Nachvollziehbare normale Commits und autorisierte Remoteprüfung, STATUS mit konkreten Nachweisen. Keine Hintergrundarbeit behaupten; echte Menschen-/Tastatur-/Live-Abnahmen ausdrücklich offen bis Nachweis. |
+
+
+
+## Vorherige Etappe · neutrale Identität und echter App-Nutzen ·24.11.2026
 
 [Neue ausdrückliche Nutzeranweisung](docs/requirements/2026-11-24-neutral-identity.md) ersetzt die sichtbare Kandidatenmarke. Namenssuche wird separat abgeschlossen; **keine weiteren Namensrunden**. UDI nur intern. Neutrale Anzeige-/Installationsnamen und Logo zentral in src/brand.mjs; scripts/sync-identity.mjs und die native Icon-Erzeugung synchronisieren die Ausgabe. Technische IDs, Signaturen, Speicher, Such-/Quellenverträge bleiben erhalten. [Frühere Namensrecherche](docs/BRAND.md) ist Historie und blockiert keine Entwicklung.
 
 - [x] Sichtbare Kandidatenmarke entfernt, DE/EN-Deskriptoren und neutrales Suchrahmen-Symbol zentral konfiguriert. Frühe Regression zunächst fehlgeschlagen, dann grün; Nutzerwünsche mit UDI bleiben unverändert. Anzeigenamen/Manifeste/OS-Metadaten generiert, technische IDs erhalten.
 - [x] Überarbeitete Papier-/Tinten-/Zitronen-Oberfläche erhalten; Suche/Gespeichert/Fehler/Leer/Hilfe, Entwurf/Sprachwahl/Kriterien/Speichern/Reload,320/390px und200Prozent CSS-Text geprüft. Keine neue Sprache/Live-Funktion vorgetäuscht. Browser-Höhenänderung ist keine native Tastaturabnahme.
 - [x] Sicherung korrigiert: vollständiger Manifestvergleich statt Namenskonstante, nach Build erneut sauberer Quellstand verlangt. Neutraler Commit8322c50/Remote geprüft; [frisches280-Dateien-Paket](docs/evidence/2026-11-24-neutral-recovery.json) isoliert bestanden. Fehlgeschlagenes274-Dateien-Paket bleibt als Fehlversuch dokumentiert.
+- [ ] Aktuelle Bedienkorrektur: nach bewusstem Absenden Ergebnisanfang im Inhaltsfenster zeigen, Entwurf erhalten und keine späte asynchrone Fokusübernahme. Speicheraktion darf nach realem Scrollen nicht durch Navigation verdeckt sein; iOS-Tap zusätzlich gegen sichtbares main-/Navigationsrechteck prüfen. Abnahme: Browser-Gegenprobe zuerst fehlgeschlagen, dann DE/EN/kleine Ansicht grün; tatsächliche Android-/iOS-Läufe separat.
 - [ ] Danach wichtigste App-Lücke: echte native Ziel→Angebot→Kosten→Anbieter-Suche über getrennt autorisierten Dienst. UI-/Eingabearbeit unabhängig fortsetzen; neue native Ergebnisse Android/iOS separat, iOS-CoreLocation-Bootblocker bleibt offen. SOUNDWEAVE unverändert, keine Kosten/Veröffentlichung.
 
 ## Mobile Gestaltungsrichtungen ·24.11.2026
