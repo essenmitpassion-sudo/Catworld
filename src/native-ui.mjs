@@ -17,10 +17,13 @@ export function configureNativeUI(document) {
     button.textContent=option.textContent;button.lang=option.value;
     button.dataset.languageValue=option.value;
     button.setAttribute('aria-pressed',String(language.value===option.value));
+    // Keep the editing viewport stable until the complete tap commits. A
+    // pointer-down focus change can dismiss/pan the iOS keyboard before click.
+    button.addEventListener('pointerdown',event=>{if(event.button===0)event.preventDefault();});
     button.addEventListener('click',()=>{
       const focused=document.activeElement;
-      if(focused?.matches('textarea,input'))focused.blur();
       language.value=option.value;language.dispatchEvent(new Event('change',{bubbles:true}));
+      if(focused?.matches('textarea,input'))focused.blur();
     });
     languageGroup.append(button);
   }

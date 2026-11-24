@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "commit": "59c8d7a19c51d8b39f1a404bfba8553cbc01e0ef",
+  "remoteHeadReadBack": true,
+  "checks": {
+    "fullUnitTestsPassed": 112,
+    "nativeScreenTransportTestsPassed": 6,
+    "typecheck": true,
+    "build": true,
+    "fullDe4En2ChromiumRegression": true,
+    "generalCi": {
+      "runId": 45410462787,
+      "conclusion": "success"
+    },
+    "independentReview": "Actual Switch roles confirmed from70fece9 log; XCTest APIs/selector/PNG path bounds reviewed, no important findings"
+  },
+  "correction": "Use actual iOS Switch accessibility role and selected value1. Capture explicit XCTest app screenshot before cleanup, export only its marked safe PNG; existing bounded image transport and diagnostic fallback retained.",
+  "localRecovery": {
+    "verifiedAt": "2026-11-24T14:10:17.750Z",
+    "commit": "59c8d7a19c51d8b39f1a404bfba8553cbc01e0ef",
+    "archiveSha256": "aafa88356f9d8f14c4606fb0906585fb8b85883ba1b5d819bf7adb87f1cc270c",
+    "archiveIntegrity": true,
+    "unpackedFiles": 242,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "nativeCompilationVerified": false,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false,
+    "archive": "artifacts/udi-pilot-59c8d7a19c51.tar.gz",
+    "externallyUploaded": false,
+    "containsApkOrIpa": false
+  },
+  "limits": "Actual iOS outcome, attachment manifest format and screenshot remain unverified until native run45410462797 completes. Metadata fixtures are not native app screenshots. Android is separate; no native live search/speech/release claim."
+}

@@ -52,3 +52,10 @@ test('Screenshotkanal akzeptiert keine beliebigen Dateinamen, Formate oder riesi
   const huge=Buffer.from(fixture);huge.writeUInt32BE(100000,16);assert.throws(()=>screenRecords('ios-start',huge));
   assert.throws(()=>screenRecords('ios-start',Buffer.alloc(1024*1024+1)));
 });
+
+test('grössere echte Simulator-PNGs bleiben begrenzt transportierbar statt still verloren zu gehen',()=>{
+  // Padded transport fixture only, never a real screenshot or visual acceptance.
+  const larger=Buffer.concat([fixture,Buffer.alloc(1536*1024)]);
+  assert.deepEqual(parseScreens(screenRecords('ios-flow',larger).join('\n'))[0].png,larger);
+  assert.throws(()=>screenRecords('ios-flow',Buffer.concat([fixture,Buffer.alloc(5*1024*1024)])));
+});

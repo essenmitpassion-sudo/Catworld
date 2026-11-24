@@ -626,7 +626,10 @@ try {
     assert(await evaluate("Array.from(document.querySelectorAll('[data-language-value]')).length===2&&Array.from(document.querySelectorAll('[data-language-value]')).every(node=>{const r=node.getBoundingClientRect();return r.width>=44&&r.height>=44})"),'both native language actions have usable touch targets');
     assert(await evaluate("['de','en'].every(code=>{const b=document.querySelector('[data-language-value='+code+']'),r=b?.getBoundingClientRect();return b?.tagName==='BUTTON'&&r.width>=44&&r.height>=44})"),'native languages must be directly reachable touch actions');
     await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB';document.querySelector('#search-query').focus()");
-    await pointerClick('[data-language-value=de]');
+    const languagePoint=await evaluate("(()=>{const r=document.querySelector('[data-language-value=de]').getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2}})()");
+    await send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...languagePoint});
+    assert.equal(await evaluate('document.activeElement.id'),'search-query','pressing a language action must not dismiss editing before the click can commit');
+    await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...languagePoint});
     assert.equal(await evaluate("document.documentElement.lang"),'de-CH');
     assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','language tap preserves editing draft');
     assert.equal(await evaluate("document.querySelector('[data-language-value=de]').getAttribute('aria-pressed')"),'true');

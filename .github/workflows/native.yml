@@ -34,7 +34,9 @@ jobs:
           - platform: ios
             os: macos-26
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    # Eight-minute cold boot + eight-minute full XCTest budget, with finite
+    # room for compilation, result export and owned-simulator cleanup.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -27,7 +27,8 @@ final class UDIFlowTests: XCTestCase {
             XCTAssertTrue(selector.isHittable, "Language action must be directly reachable while editing")
             if app.statusBars.firstMatch.exists { XCTAssertGreaterThanOrEqual(selector.frame.minY, app.statusBars.firstMatch.frame.maxY, "Language control must clear the status bar") }
             selector.tap()
-            XCTAssertEqual(selector.value as? String, "1", "The chosen UI language must remain selected")
+            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "1"), object: selector)
+            XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed, "The chosen UI language must remain selected")
             let field = web.textViews.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")
@@ -52,7 +53,16 @@ final class UDIFlowTests: XCTestCase {
             // Replace the textarea contents before the next language case.
             if index == 0 {
                 web.links["Search"].firstMatch.tap(); field.tap()
+                // Put the caret after the known single-line CI wish before
+                // deleting; a centre tap alone does not guarantee caret position.
+                field.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
                 field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: wishes[index].count))
+                let cleared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                    guard field.exists else { return false }
+                    let value = field.value as? String
+                    return value == nil || value == "" || value == field.placeholderValue
+                }, object: nil)
+                XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 5), .completed, "Replacing the wish must clear the previous text")
             }
         }
         app.terminate(); app.launch()

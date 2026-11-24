@@ -6,7 +6,7 @@ import {readFile,mkdir,writeFile,realpath,lstat} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {resolve,join,sep} from 'node:path';
 const labels=new Set(['android-start','ios-start','ios-flow','ios-install-timeout']);
-const maximum=1024*1024,chunkSize=4096;
+const maximum=4*1024*1024,chunkSize=4096;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 export function resultScreenshotName(manifest) {
   assert(Array.isArray(manifest)&&manifest.length<=100,'Invalid XCTest attachment manifest');
@@ -19,7 +19,7 @@ export function resultScreenshotName(manifest) {
   return file;
 }
 function metadata(png) {
-  assert(Buffer.isBuffer(png)&&png.length>=33&&png.length<=maximum,'Screenshot size invalid');
+  assert(Buffer.isBuffer(png)&&png.length>=33&&png.length<=maximum,`Screenshot size invalid (${Buffer.isBuffer(png)?png.length:'not-buffer'} bytes; maximum ${maximum})`);
   assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a','Screenshot must be PNG');
   assert.equal(png.toString('ascii',12,16),'IHDR');
   const width=png.readUInt32BE(16),height=png.readUInt32BE(20);

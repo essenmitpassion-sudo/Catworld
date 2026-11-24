@@ -161,8 +161,11 @@ if (platform === 'android') {
     const log=join(temp,'udi-native-flow.log'),fd=openSync(log,'w');let result;
     try {result=spawnSync('xcodebuild',['test','-project',resolve('ios/App/App.xcodeproj'),'-scheme','App','-destination',`platform=iOS Simulator,id=${device.udid}`,
       '-derivedDataPath',join(temp,'udi-ios'),'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO'],
-      {stdio:['ignore',fd,fd],timeout:360000,killSignal:'SIGKILL'});}finally{closeSync(fd);}
-    console.log(readFileSync(log,'utf8').slice(-18000));
+      {stdio:['ignore',fd,fd],timeout:480000,killSignal:'SIGKILL'});}finally{closeSync(fd);}
+    const flowLog=readFileSync(log,'utf8');
+    console.log('iOS flow milestones:\n'+flowLog.split(/\r?\n/).filter(line=>/\biOS(?::| (?:English:|Deutsch:))/.test(line)).join('\n'));
+    console.log(flowLog.slice(-18000));
+    console.log('iOS runner result: '+JSON.stringify({status:result.status,signal:result.signal,error:result.error?.code}));
     let captured=false;
     try {
       // Capture while XCTest still owns the foreground app. Only the explicitly

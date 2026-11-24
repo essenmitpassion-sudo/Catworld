@@ -1,0 +1,10 @@
+{
+  "schemaVersion":1,
+  "commit":"59c8d7a19c51d8b39f1a404bfba8553cbc01e0ef",
+  "runId":45410462797,
+  "android":{"jobId":138502504895,"conclusion":"success"},
+  "ios":{"jobId":138502505190,"conclusion":"failure","nativeCompilation":"success","firstEnglishIteration":"Passed sequential criteria before entering second Deutsch iteration; full console tail does not retain every progress marker","failure":"Swift30: after tapping Deutsch Switch its value remained0, English remained1; textarea was still keyboard-focused","fullGermanAndRelaunch":"not reached","image":"xcresult Info.plist missing, fallback PNG rejected old size bound; exact byte length was not logged"},
+  "timing":"xcodebuild phase consumed approximately its configured360s. Incomplete xcresult suggests deadline truncation; execution error code was not logged, so this cause is not independently confirmed. New diagnostics record it.",
+  "corrections":{"pointerFocus":"Browser regression proves pointer-down previously moved focus before click; preserve editing until the complete language tap commits, then blur","selection":"Wait up to5s for actual selected state1, do not accept wrong state","editing":"Use real caret-end tap/backspaces for known single-line test wish and assert actual clearing before replacement","budgets":"XCTest480s, boot480s, outer job25min, finite export/cleanup; all functional assertions retained","image":"4MiB maximum within unchanged16MiB log/12MP dimension limits;1.5MiB transport fixture accepted,5MiB rejected. Real image still requires hash/visual inspection."},
+  "limits":"No successful full iOS flow inferred. Two actual regressions failed before correction; new native execution required. No voice/live service/release/cost claim."
+}
