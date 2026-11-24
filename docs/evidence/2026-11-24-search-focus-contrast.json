@@ -1,0 +1,37 @@
+{
+  "sourceCommit": "a45f7518392493314ff38250355760c5758433be",
+  "checkedAt": "2026-11-24T18:38:05.882Z",
+  "scope": "Declared CSS text/background pairs. Not a full WCAG, native raster, screenreader, dynamic-type or human usability acceptance.",
+  "checks": [
+    {
+      "label": "body",
+      "foreground": "#183333",
+      "background": "#f3f6f2",
+      "ratio": 12.35
+    },
+    {
+      "label": "secondary",
+      "foreground": "#526664",
+      "background": "#f3f6f2",
+      "ratio": 5.6
+    },
+    {
+      "label": "placeholder",
+      "foreground": "#5c706a",
+      "background": "#ffffff",
+      "ratio": 5.28
+    },
+    {
+      "label": "primary",
+      "foreground": "#ffffff",
+      "background": "#176d62",
+      "ratio": 6.18
+    },
+    {
+      "label": "active navigation",
+      "foreground": "#125a51",
+      "background": "#e9f2ed",
+      "ratio": 7.05
+    }
+  ]
+}

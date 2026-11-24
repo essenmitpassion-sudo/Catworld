@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "a45f7518392493314ff38250355760c5758433be",
+  "runId": 45460007629,
+  "jobId": 138679692174,
+  "result": "failure",
+  "completedAt": "2026-11-24T18:40:21Z",
+  "nativeCompile": true,
+  "simulatorBoot": false,
+  "installedAndStarted": false,
+  "xctestReached": false,
+  "flowPassed": false,
+  "screenshotAvailable": false,
+  "log": {
+    "local": "artifacts/native-138679692174.log",
+    "sha256": "0e8737d0c72d8e6688aeb6d376461f853857db5c42458d18436b43b2695c0f38",
+    "bytes": 130836
+  },
+  "diagnosis": {
+    "buildEvidence": "** BUILD SUCCEEDED **",
+    "failure": "xcrun simctl bootstatus <owned-simulator> -b failed: spawnSync xcrun ETIMEDOUT",
+    "osStage": "Running plugin com.apple.locationd.migrator (CoreLocationMigrator.migrator)",
+    "scope": "Simulator initialization before app installation/UI test, not proof of an app flow defect or successful native operation."
+  },
+  "decision": "No identical rerun, OS-service suppression or keyboard tutorial handling. Need a healthy Mac/Xcode simulator or supported physical iPhone to verify compact disclosure and full flow. Keep Android and iOS results separate.",
+  "limits": "No physical-device, iOS full flow, native live offer or voice acceptance."
+}
