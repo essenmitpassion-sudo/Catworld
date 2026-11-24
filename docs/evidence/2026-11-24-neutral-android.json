@@ -1,0 +1,38 @@
+{
+  "sourceCommit": "8322c505fd506a85e8c0809fb5a50ded41aecaa9",
+  "runId": 45468013647,
+  "jobId": 138708027866,
+  "result": "success",
+  "platform": "Actual Android emulator, not physical device",
+  "display": "Neutral Search/Suche and configurable search-frame glyph, candidate name absent",
+  "milestones": [
+    "2026-11-24T19:17:36.5698271Z Android en: typed search, actual unconfigured-service error, save and Watchlist passed.",
+    "2026-11-24T19:17:42.4149033Z Android de: typed search, actual unconfigured-service error, save and Watchlist passed.",
+    "2026-11-24T19:17:54.0531630Z Android: saved searches and CH context survived force-stop/relaunch; German selection preserved.",
+    "2026-11-24T19:17:54.0699100Z Native android startup passed. Full device/search/voice acceptance remains separate."
+  ],
+  "apk": {
+    "pathOnRunner": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "7e0f74a40acc7ed4035a013640d0f1ccfa935235ce0ece63e8f7c4b3e30e9e9d",
+    "downloaded": false,
+    "publiclyReleased": false
+  },
+  "screenshot": {
+    "path": "docs/evidence/2026-11-24-neutral-ui/android-native-start.png",
+    "sha256": "74abb3dcf4f3abb9f18027c2c8786cec0ee0b3fd2ef2b7777874e112d573c773",
+    "width": 320,
+    "height": 640,
+    "visuallyInspected": true,
+    "scope": "Initial installed app screen before DE/EN workflow; no screenshot of every state implied"
+  },
+  "checked": [
+    "Built, installed, launched",
+    "Actual language disclosure, EN/DE typing and real unconfigured-service state",
+    "Native save, force-stop/relaunch, both distinct wishes and CH context preserved"
+  ],
+  "limits": [
+    "Later save-retry error fix and IME hint are not part of this source commit",
+    "No live native offers, voice, physical-device/launcher mask or iOS acceptance"
+  ],
+  "sourceRecovery": "docs/evidence/2026-11-24-neutral-recovery.json"
+}

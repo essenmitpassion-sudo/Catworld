@@ -140,8 +140,10 @@ async function updateSearches(operation) {
 
 function saveSearchButton(input) {
   const button = element('button', m('Suche speichern'), 'text-button');
+  let errorNote;
   button.type = 'button';
   button.addEventListener('click', async () => {
+    errorNote?.remove();
     button.disabled = true;
     try {
       await updateSearches(storage => storeSearch(storage, input));
@@ -151,7 +153,9 @@ function saveSearchButton(input) {
     } catch (error) {
       button.disabled = false;
       setText(get('notice'),m('Die Suche konnte auf diesem Gerät nicht gespeichert werden.'));
-      button.insertAdjacentElement('afterend', element('p', uiError(error), 'muted'));
+      errorNote=element('p',uiError(error),'muted');
+      errorNote.setAttribute('role','alert');
+      button.insertAdjacentElement('afterend',errorNote);
     }
   });
   return button;

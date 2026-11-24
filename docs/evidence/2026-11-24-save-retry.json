@@ -1,0 +1,40 @@
+{
+  "source": "this commit; Git history contains final identity",
+  "baseline": "c8e74330bc3d833e0d305c05682385bd64dd9bfe",
+  "change": "Replace obsolete visible save-error note at retry start; create one accessible alert on failure. Persistence and publish-on-confirmation semantics unchanged.",
+  "regression": {
+    "environment": "Chromium shared UI with explicitly test-only native Preferences adapter, not an actual native disk failure",
+    "before": "Two failed save attempts displayed2 identical generic error paragraphs; assertion2!==1 failed.",
+    "after": "One error, retryable save button, exact editable query preserved, internal rejection text hidden, no false saved state. Restored adapter succeeds; old error removed, saved/reload/remove still pass."
+  },
+  "checks": {
+    "unit": 115,
+    "typecheck": true,
+    "build": true,
+    "nativeAssets": 30,
+    "browser": {
+      "de": [
+        360,
+        390,
+        768,
+        1365
+      ],
+      "en": [
+        390,
+        1365
+      ],
+      "nativeBoundary": [
+        320,
+        390
+      ]
+    },
+    "review": "Independent focused review: no important findings"
+  },
+  "keyboard": {
+    "requestedHint": "enterkeyhint=search on existing textarea",
+    "enterAndCompositionHandlerChanged": false,
+    "actualOsImeLabelVerified": false,
+    "customKeyboardOrTutorial": false
+  },
+  "limits": "No new native live search, voice, physical-device or iOS success implied."
+}

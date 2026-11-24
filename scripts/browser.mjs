@@ -672,9 +672,21 @@ try {
     assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');
     assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery')&&!entry.name.includes('observations.json'))"),'native path never falls back to device API or bundled observations');
     assert(await evaluate("document.querySelector('#native-runtime-status').getBoundingClientRect().height>0"),'service warning survives submitted search');
+    if(['android','ios'].includes(platform)) {
+      await evaluate("window.udiQASave=Capacitor.Plugins.Preferences.set;Capacitor.Plugins.Preferences.set=async()=>{throw new Error('QA_STORAGE_FAILURE_do_not_display')}");
+      for(let retry=0;retry<2;retry++) {
+        await click('#results button');
+        await until(()=>evaluate("document.querySelector('#results button').disabled===false && document.querySelector('#notice').textContent.includes('could not be saved')"),'failed native-boundary save remains retryable');
+      }
+      assert.equal(await evaluate("Array.from(document.querySelectorAll('#results p')).filter(p=>p.textContent==='This action could not be completed. Try again.').length"),1,'retries must replace the visible save failure instead of stacking identical messages');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','a storage failure must preserve the editable request');
+      assert(await evaluate("!document.querySelector('main').textContent.includes('QA_STORAGE_FAILURE') && document.querySelector('#results button').textContent!=='Search saved'"),'failure must not expose internal details or claim a successful save');
+      await evaluate("Capacitor.Plugins.Preferences.set=window.udiQASave");
+    }
     await evaluate("if(navigator.locks){const request=navigator.locks.request.bind(navigator.locks);navigator.locks.request=async(...args)=>{await new Promise(resolve=>setTimeout(resolve,250));return request(...args)}}");
     await click('#results button');
     await until(()=>evaluate("document.querySelector('#results button')?.textContent==='Search saved'"),'native-boundary save completion before restart');
+    assert(await evaluate("!Array.from(document.querySelectorAll('#results p')).some(p=>p.textContent==='This action could not be completed. Try again.')"),'successful retry clears the obsolete error');
     assert.equal(await evaluate("localStorage.getItem('udi.searches.v1')"),legacySearches,'legacy backup is preserved during explicit native save');
     assert(await evaluate(`(${savedRows})[0].marketId==='CH' && (${savedRows})[0].schemaVersion===2`),'native shared code writes explicit market-bound requests');
     await click('nav a[href="#watchlist"]');await send('Page.reload');

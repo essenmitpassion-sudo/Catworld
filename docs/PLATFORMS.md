@@ -1,5 +1,9 @@
 # UDI · Android und iOS gleich priorisieren
 
+## Neuester neutraler Stand ·24.11.2026, 8322c50
+
+[Android](evidence/2026-11-24-neutral-android.json): gebaut/installiert/gestartet; beide Sprachen, exakte Wünsche, echter Dienstfehler, bestätigtes Speichern und Force-stop-Neustart bestanden. Originalbild angesehen, APK-Hash protokolliert; keine APK heruntergeladen/veröffentlicht. [iOS](evidence/2026-11-24-neutral-ios.json): gebaut/installiert/gestartet; Englisch samt Speicherung bestanden, Deutsch bis Text/Dienstfehler. Test scheitert an fehlender Speicherbestätigung. Endbild/AX-Baum zeigen Speicherknopf unterhalb des scrollbaren Inhaltsfensters; isHittable verhindert im Test den nötigen Scrollschritt. Noch keine Diagnose als Datenspeicherfehler und keine vollständige iOS-Abnahme. Ergebnis-/Aktionsführung als nächster sinnvoller Schritt, tatsächliche Sichtbarkeit vor Tap absichern. Keine Systemtutorial-Manipulation. Spätere Speicherfehlerkorrektur/IME-Hinweis sind nicht Teil dieses Quellstands.
+
 ## Aktuelle mobile Anordnung ·24.11.2026, a45f751
 
 Der neue [Gestaltungsvergleich](requirements/2026-11-24-mobile-design-directions.md) ersetzt den früheren permanenten Zwei-Sprachen-Kopf: kompakte aufklappbare Sprach-/Marktauswahl, volle Endonyme/aktiver Zustand im geöffneten Bereich, sichtbarer Sprachname auch im zugänglichen Namen. Suchfokus mit einem ausdrücklich benannten Beispiel; gespeicherte Wünsche bleiben im eigenen Reiter. Fehlende Live-Anbindung bleibt an der Suchaktion lesbar. Keine Änderung von Bundle-IDs, Signaturen, Quellen-/Marktvertrag oder Netzwerkfreigaben.

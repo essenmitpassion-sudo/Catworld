@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "8322c505fd506a85e8c0809fb5a50ded41aecaa9",
+  "runId": 45468013647,
+  "jobId": 138708028450,
+  "result": "partial; native UI test failed",
+  "platform": "Actual iPhone 17 Pro simulator, not physical device",
+  "passed": [
+    "App compiled, installed and launched",
+    "English exact text, real missing-service error and confirmed saved wish",
+    "German selection, exact text and actual missing-service error reached"
+  ],
+  "failure": {
+    "at": "2026-11-24T19:20:44.7684550Z",
+    "file": "scripts/native-tests/ios/UDIFlowTests.swift:53",
+    "assertion": "German Search saved confirmation absent after save.tap()",
+    "observed": "Final accessibility tree has Suche speichern at y787..832 while main viewport ends at776 and navigation starts776. XCTest isHittable did not trigger its conditional swipe. Screenshot shows unscrolled lower content clipped; distinguish scroll/tap path from actual persistence failure before changing storage.",
+    "notReached": [
+      "German confirmed save",
+      "Both wishes and German language after terminate/relaunch"
+    ]
+  },
+  "screenshot": {
+    "path": "docs/evidence/2026-11-24-neutral-ui/ios-native-partial.png",
+    "sha256": "4580e27cb816326d7c5f20cd1d0665c89e4db08146985d23ee41146dd7bbb582",
+    "width": 1206,
+    "height": 2622,
+    "visuallyInspected": true,
+    "scope": "Actual failing German state, not full acceptance"
+  },
+  "ci": {
+    "runId": 45468013585,
+    "conclusion": "success"
+  },
+  "limits": [
+    "No complete iOS flow acceptance",
+    "No live native offers or native voice",
+    "Later save-retry fix and IME hint not in this source commit"
+  ],
+  "next": "Make submitted outcome and useful next action readily reachable; verify actual visible content bounds before native tap. No keyboard tutorial handling."
+}
