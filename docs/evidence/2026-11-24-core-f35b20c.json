@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "commit": "f35b20c5b78c0d7ac111d2895c85b42d242e1955",
+  "restoreRef": "f35b20c5b78c0d7ac111d2895c85b42d242e1955",
+  "remoteHeadReadBack": true,
+  "coreFixCommit": "8a60279",
+  "checks": {
+    "initialVariantRegressionFailed": true,
+    "rejectUnconfirmedAdapterData": true,
+    "rejectExplicitIdentityMismatch": true,
+    "rejectMissingOrWrongRequestedMpn": true,
+    "knownUrlRejectsBothWrongMpns": true,
+    "validKnownAndGenericCandidatesRemain": true,
+    "unknownCostsRemainUnknown": true,
+    "fullUnitTestsPassed": 91,
+    "typecheckAndBuild": true,
+    "germanBrowserFlows": [360, 390, 768, 1365],
+    "englishBrowserFlows": [390, 1365],
+    "browserNativeBoundarySimulations": ["android", "ios", "unsupported"],
+    "nativeScreenshotPipeTests": ["large output then immediate process exit", "delayed write acknowledgements"],
+    "independentReadOnlyReview": "No important actionable findings in 2423c9b..f35b20c; reviewer separately ran11 affected tests. Native execution remains a separate gate."
+  },
+  "localRecovery": {
+    "archive": "artifacts/udi-pilot-f35b20c5b78c.tar.gz",
+    "sha256": "db45bb2a1f6f9d483e2a186729b791db9517dea02b6840809570316d3821db53",
+    "files": 216,
+    "verifiedAt": "2026-11-24T08:04:32.502Z",
+    "isolatedRestore": true,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCallsDuringRestore": false,
+    "containsApkOrIpa": false,
+    "externallyUploaded": false
+  },
+  "limits": "No actual new offers from a shared native service, native voice, signed builds or physical-device acceptance. Browser checks and source recovery do not substitute for native execution."
+}

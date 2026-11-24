@@ -1,5 +1,11 @@
 # Quellenrealität · UDI-Pilot
 
+## Erneute Einzelprüfung · 24.11.2026
+
+[Unveränderter Nachweis](evidence/2026-11-24-source-dq-f35b20c.json): laufender englischer Chromium-Prüfstand → echte DQ-Produktprüfung → Deal Passport → tatsächliche Händlerseite mit passender MPN. Beobachtung um09:07:58 Uhr Schweiz: MZ-V9P2T0BW, Neu, Quelle meldet aktiv, Artikelpreis CHF439.–. Versand/Gebühren/Gesamtkosten und Lieferziel bleiben unbekannt; keine Ersparnis oder Empfehlung. Das ist ein zeitgebundener historischer Quellenbeleg, kein dauerhaft aktuelles Angebot und keine native Dienstanbindung.
+
+Robots und öffentliche AGB am selben Tag erneut gelesen, jeweils HTTP200; Produktpfad nicht ausgeschlossen, Crawl-delay10s eingehalten. Minimaler bestehender Pilot, keine Datenlizenz oder Freigabe zur Ausweitung daraus ableiten. Keine KI-Aufrufe, Käufe oder Schutzumgehung. Zweite unabhängige Quelle und vollständige Kosten bleiben offen. Die folgenden Tabellen halten den früheren Recherchestand fest.
+
 Stand: 20.11.2026. Ein vorhandener URL-Parser ist keine funktionierende Quellenanbindung. Die App zeigt ausschliesslich frische, ausreichend eindeutige Detailseitenprüfungen; vollständig bestätigte Gesamtkosten und Kaufempfehlungen haben strengere Voraussetzungen.
 
 | Quelle / Angebotsart | Tatsächlich erreichbar und getestet | Aktualisierung / Anbindung | Einschränkung |
