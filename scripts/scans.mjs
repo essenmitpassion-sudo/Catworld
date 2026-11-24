@@ -9,9 +9,10 @@ import {sourceFor} from './sources.mjs';
 
 const journals = new Map();
 
-async function saveScan(path, record) {
+async function saveScan(path, record, signal) {
   const previous = journals.get(path) ?? Promise.resolve();
   const pending = previous.catch(() => {}).then(async () => {
+    signal?.throwIfAborted();
     let history = [];
     try {
       history = JSON.parse(await readFile(path, 'utf8'));
@@ -19,10 +20,13 @@ async function saveScan(path, record) {
     } catch (error) {
       if (error.code !== 'ENOENT') throw error;
     }
+    signal?.throwIfAborted();
     await mkdir(dirname(path), { recursive: true });
+    signal?.throwIfAborted();
     const temporary = path + '.' + randomUUID() + '.tmp';
     try {
-      await writeFile(temporary, JSON.stringify([...history.slice(-199), record]), { mode: 0o600 });
+      await writeFile(temporary, JSON.stringify([...history.slice(-199), record]), { mode: 0o600, signal });
+      signal?.throwIfAborted();
       await rename(temporary, path);
     } finally {
       await unlink(temporary).catch(error => {
@@ -36,7 +40,8 @@ async function saveScan(path, record) {
   }
 }
 
-export async function scan(discovery, { verify, journalPath, now = Date.now } = {}) {
+export async function scan(discovery, { verify, journalPath, now = Date.now, signal } = {}) {
+  signal?.throwIfAborted();
   if (discovery.kind !== 'results') return discovery;
   const context=searchContext(discovery);
   const checks = [];
@@ -45,6 +50,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
   // Bound detail-page requests independently of the number of search results.
   const candidates = discovery.items.slice(0, 3);
   for (const candidate of candidates) {
+    signal?.throwIfAborted();
     let check;
     let source;try{source=sourceFor(new URL(candidate.url));}catch{}
     const matching=source?.marketId===context.marketId && (!Object.hasOwn(candidate,'marketId')||candidate.marketId===context.marketId)
@@ -54,6 +60,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
       return known.hostname.replace(/^www\./,'')===target.hostname.replace(/^www\./,'')&&known.pathname===target.pathname;
     }));
     try { if(matching)check = await verify?.(candidate); } catch { /* Each source can fail independently. */ }
+    signal?.throwIfAborted();
     const checkedAt = typeof check?.checkedAt === 'string' ? Date.parse(check.checkedAt) : NaN;
     const currentTime = now();
     const current = Number.isFinite(checkedAt) && checkedAt <= currentTime && currentTime - checkedAt < maxObservationAge;
@@ -80,10 +87,12 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
         expiresAt: new Date(checkedAt + maxObservationAge).toISOString() });
     }
   }
+  signal?.throwIfAborted();
   if (journalPath && checks.length) await saveScan(journalPath, {
     ...context,
     id: randomUUID(), completedAt: new Date(now()).toISOString(), checks,
-  });
+  }, signal);
+  signal?.throwIfAborted();
   return { kind: 'results',...context,items, unconfirmed: discovery.items.length - items.length - excluded,
     excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url),
     completedAt: new Date(now()).toISOString() };

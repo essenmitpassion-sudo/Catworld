@@ -112,3 +112,18 @@ test('Scan-Ergebnisse werden nachvollziehbar und ohne Suchtext gespeichert', asy
     await rm(folder, { recursive: true, force: true });
   }
 });
+
+test('Abbruch während der Speicherwarteschlange verändert kein Journal und blockiert keine späteren Scans',async()=>{
+  const folder=await mkdtemp(join(tmpdir(),'udi-scan-cancel-test-'));
+  try {
+    const journalPath=join(folder,'checks.json'),controller=new AbortController();
+    await scan(found,{verify:async()=>fresh,journalPath,now:()=>now});
+    const before=await readFile(journalPath,'utf8');
+    const pending=scan(found,{verify:async()=>fresh,journalPath,now:()=>now,signal:controller.signal});
+    await Promise.resolve();controller.abort();
+    await assert.rejects(pending,{name:'AbortError'});
+    assert.equal(await readFile(journalPath,'utf8'),before);
+    await scan(found,{verify:async()=>({...fresh,availability:'inactive'}),journalPath,now:()=>now});
+    assert.equal(JSON.parse(await readFile(journalPath,'utf8')).length,2);
+  } finally {await rm(folder,{recursive:true,force:true});}
+});
