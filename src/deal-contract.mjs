@@ -14,6 +14,14 @@ function record(value) {if(!value||typeof value!=='object'||Array.isArray(value)
 function text(value,max=200) {if(typeof value!=='string'||!value.trim()||value.length>max||/[\u0000-\u001f\u007f\u202a-\u202e\u2066-\u2069]/.test(value))throw new Error('Invalid text');return value;}
 /** @param {unknown} value */
 function stamp(value) {const s=text(value,40);if(!Number.isFinite(Date.parse(s)))throw new Error('Invalid timestamp');return s;}
+/** @param {unknown} value @returns {Observation['deliveryDestination']} */
+function deliveryDestination(value) {
+  if(value==null)return null;
+  const destination=record(value);
+  if(Object.keys(destination).some(key=>!['country','postalCode'].includes(key))||destination.country!=='CH'
+    ||typeof destination.postalCode!=='string'||!/^[1-9]\d{3}$/.test(destination.postalCode))throw new Error('Invalid delivery destination');
+  return {country:'CH',postalCode:destination.postalCode};
+}
 /** @param {SearchInput} input @returns {SearchInput & import('./deal-types.d.ts').SearchContext} */
 export function prepareSearch(input) {
   const fields=['query','marketId','deliveryCountry','currency','scope','maxPrice','condition','completeCostsOnly'];
@@ -59,7 +67,8 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
     /** @type {Observation} */const observation={url:url.href,marketId:'CH',sourceId:source.id,status:'http-200',productMatch:true,availability:'active',checkedAt,currency:'CHF',
       seller:text(check.seller),condition:/** @type {Observation['condition']} */(check.condition),price:/** @type {number} */(check.price),
       shipping:/** @type {number|null} */(check.shipping),taxes:/** @type {number|null} */(check.taxes),imports:/** @type {number|null} */(check.imports),fees:/** @type {number|null} */(check.fees),
-      deliveryDestination:check.deliveryDestination==null?null:text(check.deliveryDestination,40),total:summary.total,minimum:/** @type {number} */(summary.minimum),missing:summary.missing,
+      delivery:check.delivery==null?null:text(check.delivery,500),deliveryDestination:deliveryDestination(check.deliveryDestination),
+      total:summary.total,minimum:/** @type {number} */(summary.minimum),missing:summary.missing,
       ...(check.mpn===undefined?{}:{mpn:text(check.mpn,100)})};
     const title=text(item.title),key=url.href;
     if(expires<=now||now-checked>=300000){stale++;continue;}

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "commit": "3c5d6fa9267d3cc05fcf989c9e4e3cdd2d610160",
+  "restoreRef": "3c5d6fa9267d3cc05fcf989c9e4e3cdd2d610160",
+  "nativeRun": 45364950099,
+  "generalCi": {"runId": 45364950094, "conclusion": "success"},
+  "android": {"jobId": 138344154185, "conclusion": "success", "completedAt": "2026-11-24T09:28:43Z", "scope": "Native emulator EN/DE text, actual unavailable-service error, confirmed preference writes and both searches after process restart"},
+  "ios": {"jobId": 138344153787, "conclusion": "failure", "completedAt": "2026-11-24T09:35:24Z", "nativeAppCompilation": "success", "failure": "Fresh simulator bootstatus timed out after480s, waiting on com.apple.locationd.migrator data migration", "testTargetExecuted": false, "fullSearchAndPersistenceVerified": false, "screenshotRecords": 0},
+  "localRecovery": {"archive": "artifacts/udi-pilot-3c5d6fa9267d.tar.gz", "files": 225, "sha256": "637ff938bf26e28f7af9ef68fd9838c8f2f33938567060eb0af1b9af0cedbae9", "verifiedAt": "2026-11-24T09:26:52.328Z", "isolatedRestore": true, "lockfileInstalled": true, "typecheckVerified": true, "nativeSourcePreparationVerified": true, "nativeCompilationVerified": false, "backendManifestStatus": 200, "catalogApiStatus": 200, "liveSourceCalls": false, "externallyUploaded": false, "containsApkOrIpa": false},
+  "remoteMilestones": [{"tag": "milestone/udi-service-codec-2026-11-24", "tagObject": "5ead81970f41550df1a15ed975f4d31b24d8bce7c", "commit": "fc74963c6f52ce59c57a3a2cb09bc9903a9ecfad", "scope": "Internal codec only,96 unit tests; no hosted/authenticated service"}],
+  "limits": "Xcode integrated UI-test project did compile its app target; UI-test execution was never reached because simulator boot failed. No unchanged retry or device-parity claim. Existing historical screenshot and earlier failed UI query remain separate evidence."
+}

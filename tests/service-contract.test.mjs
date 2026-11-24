@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readServiceRequest,serializeScanReply} from '../scripts/service-contract.mjs';
 import {parseDealReply} from '../src/deal-contract.mjs';
-import {catalog} from '../src/deals.mjs';
+import {catalog,compare} from '../src/deals.mjs';
+import {applyChecks} from '../src/observations.mjs';
 import {criteriaFor} from '../src/criteria.mjs';
 import {discover} from '../scripts/discovery.mjs';
 import {scan} from '../scripts/scans.mjs';
@@ -79,5 +80,51 @@ test('bestehende Discovery und Seitenprüfung erreichen den Clientvertrag mit pa
     const accepted=parseDealReply(wire,request.input,now,false,requestId);
     assert.equal(accepted.items.length,mpn===product.mpn?1:0);
     if(mpn!==product.mpn)assert.equal(accepted.unconfirmed,1);
+  }
+});
+
+function completeFixture() {
+  const result=fixture();
+  result.items=product.sources.slice(0,2).map((entry,index)=>({
+    ...result.items[0],url:entry.url,sourceId:entry.sourceId,
+    check:{...result.items[0].check,url:entry.url,sourceId:entry.sourceId,seller:entry.seller,
+      price:10000+index*2000,shipping:0,taxes:0,imports:0,fees:0,total:10000+index*2000,
+      delivery:'UNIT TEST – 2 Werktage',deliveryDestination:{country:'CH',postalCode:'8000'}},
+  }));
+  return result;
+}
+
+test('belegte Lieferbedingungen und strukturiertes Lieferziel erreichen den tatsächlichen Vergleich unverändert',()=>{
+  const result=completeFixture(),before=structuredClone(result);
+  const wire=serializeScanReply(result,{requestId,input},now);
+  const accepted=parseDealReply(wire,input,now,false,requestId);
+  const comparison=compare(product,applyChecks([],catalog,accepted),now);
+  assert.equal(comparison.comparisonStatus,'price-advantage');
+  assert.equal(comparison.recommendation.seller,product.sources[0].seller);
+  assert.equal(comparison.priceAdvantage.amount,2000);
+  assert.equal(comparison.priceAdvantage.confirmedSavings,undefined);
+  assert.equal(accepted.items[0].check.delivery,result.items[0].check.delivery);
+  assert.deepEqual(comparison.priceAdvantage.deliveryDestination,{country:'CH',postalCode:'8000'});
+  assert.notEqual(accepted.items[0].check.deliveryDestination,result.items[0].check.deliveryDestination);
+  assert.deepEqual(result,before);
+});
+
+test('fehlende Lieferbelege bleiben unbekannt; fremde oder mehrdeutige Ziele werden nicht auf CH umgedeutet',()=>{
+  for(const field of ['delivery','deliveryDestination']) {
+    const result=completeFixture();delete result.items[0].check[field];
+    const wire=serializeScanReply(result,{requestId,input},now);
+    const accepted=parseDealReply(wire,input,now,false,requestId);
+    assert.equal(accepted.items[0].check[field],null);
+    assert.equal(compare(product,applyChecks([],catalog,accepted),now).recommendation,null);
+  }
+  for(const destination of ['CH 8000',[],{country:'DE',postalCode:'8000'},{country:'CH'},
+    {country:'CH',postalCode:8000},{country:'CH',postalCode:'0800'},{country:'CH',postalCode:'80000'},
+    {country:'CH',postalCode:'8000',street:'unnecessary personal data'}]) {
+    const result=completeFixture();result.items[0].check.deliveryDestination=destination;
+    assert.throws(()=>serializeScanReply(result,{requestId,input},now));
+  }
+  for(const delivery of ['',true,'\u202ehidden']) {
+    const result=completeFixture();result.items[0].check.delivery=delivery;
+    assert.throws(()=>serializeScanReply(result,{requestId,input},now));
   }
 });
