@@ -21,14 +21,18 @@ final class UDIFlowTests: XCTestCase {
         for (index, language) in ["English", "Deutsch"].enumerated() {
             let search = web.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Search", "Suche")).firstMatch
             XCTAssertTrue(search.waitForExistence(timeout: 15)); search.tap()
+            let settings = web.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ OR label BEGINSWITH %@", "Language and market:", "Sprache und Markt:")).firstMatch
+            XCTAssertTrue(settings.waitForExistence(timeout: 5)); settings.tap()
             // WebKit exposes aria-pressed buttons as native accessibility switches.
             let selector = web.switches[language].firstMatch
             XCTAssertTrue(selector.waitForExistence(timeout: 5))
-            XCTAssertTrue(selector.isHittable, "Language action must be directly reachable while editing")
+            XCTAssertTrue(selector.isHittable, "Language action must be reachable in the opened settings")
             if app.statusBars.firstMatch.exists { XCTAssertGreaterThanOrEqual(selector.frame.minY, app.statusBars.firstMatch.frame.maxY, "Language control must clear the status bar") }
             selector.tap()
+            settings.tap() // Reopen to inspect the actual selected state, then close.
             let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "1"), object: selector)
             XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed, "The chosen UI language must remain selected")
+            settings.tap()
             let field = web.textViews.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")

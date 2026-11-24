@@ -43,6 +43,7 @@ const captureLabel=process.argv.find(value=>value.startsWith('--capture-native-b
 if(captureLabel)assert(['before','after'].includes(captureLabel),'Use a fixed UI comparison label');
 async function captureBoundary(platform,language,send) {
   if(!captureLabel||!['android','ios'].includes(platform))return;
+  await pause(200); // Capture the settled color transition, not an intermediate frame.
   await mkdir(new URL('../artifacts/ux/',import.meta.url),{recursive:true});
   const capture=await send('Page.captureScreenshot',{format:'png'});
   const target=`../artifacts/ux/browser-boundary-${platform}-${language}-${captureLabel}${nativeSmall?'-320':''}`;
@@ -609,6 +610,8 @@ try {
     await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
+    assert(await evaluate("!!document.querySelector('.native-settings summary') && !document.querySelector('.native-settings').open"),'market and language are available through one closed compact control');
+    assert(await evaluate("document.querySelector('#recent-searches').hidden && document.querySelectorAll('.suggestions button').length===1"),'saved searches have their own destination and only one example competes with input');
     await captureBoundary(platform,'en',send);
     if(process.argv.includes('--native-flow-simulation')&&platform==='android') {
       await evaluate("localStorage.removeItem('udi.searches.v1');localStorage.removeItem('udi.searches.v2')");
@@ -627,6 +630,9 @@ try {
     assert(await evaluate("document.querySelector('.search-options').open && document.querySelector('#max-price').getBoundingClientRect().height>0"),'optional criteria remain available below the primary action');
     await pointerClick('.search-options summary');
     await pointerClick('#search-query');await type('Samsung 990 PRO 2 TB');
+    await pointerClick('.native-settings summary');
+    assert(await evaluate("document.querySelector('.native-settings').open"),'settings open through a real pointer action');
+    await captureBoundary(platform,'en-settings',send);
     assert(await evaluate("Array.from(document.querySelectorAll('[data-language-value]')).length===2&&Array.from(document.querySelectorAll('[data-language-value]')).every(node=>{const r=node.getBoundingClientRect();return r.width>=44&&r.height>=44})"),'both native language actions have usable touch targets');
     assert(await evaluate("['de','en'].every(code=>{const b=document.querySelector('[data-language-value='+code+']'),r=b?.getBoundingClientRect();return b?.tagName==='BUTTON'&&r.width>=44&&r.height>=44})"),'native languages must be directly reachable touch actions');
     await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB';document.querySelector('#search-query').focus()");
@@ -637,8 +643,17 @@ try {
     assert.equal(await evaluate("document.documentElement.lang"),'de-CH');
     assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','language tap preserves editing draft');
     assert.equal(await evaluate("document.querySelector('[data-language-value=de]').getAttribute('aria-pressed')"),'true');
+    assert(await evaluate("!document.querySelector('.native-settings').open && document.querySelector('[data-language-current]').textContent==='Deutsch'"),'language selection closes disclosure and updates its visible label');
+    assert(await evaluate("document.querySelector('.native-settings summary').getAttribute('aria-label').includes(document.querySelector('[data-language-current]').textContent)"),'settings accessible name includes the visible current language for voice control');
+    await pointerClick('.native-settings summary');
     await pointerClick('[data-language-value=en]');
     assert.equal(await evaluate("document.querySelector('[data-language-value=de]').getAttribute('aria-pressed')"),'false');
+    await pointerClick('.native-settings summary');await send('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});
+    assert(await evaluate("!document.querySelector('.native-settings').open && document.activeElement.id==='native-settings-toggle'"),'Escape closes settings and restores focus');
+    await pointerClick('.native-settings summary');await pointerClick('.brand');
+    assert(await evaluate("!document.querySelector('.native-settings').open"),'outside brand tap closes settings without trapping focus');
+    await pointerClick('.suggestions [data-example]');
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','the single example prepares an editable wish without automatically searching');
     assert(await evaluate("document.querySelector('#ui-language').closest('label').hidden"),'old picker is not a second visible control');
     await evaluate("document.querySelector('#search-query').value='';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Describe what you need.')"),'native introduction must not promise unavailable voice input');
@@ -646,8 +661,12 @@ try {
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Beschreibe deinen Wunsch.')"),'native text-first introduction follows German language selection');
     await captureBoundary(platform,'de',send);
     await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
-    await evaluate("document.querySelector('#search-query').focus()");await type('Samsung 990 PRO 2 TB');await pointerClick('.primary-search');
+    await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:360,deviceScaleFactor:1,mobile:true});
+    await evaluate("document.querySelector('#search-query').focus()");await type('Samsung 990 PRO 2 TB');
+    await noOverflow();await pointerClick('.primary-search');
     await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('not connected')"),'native search explains missing service');
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','service failure preserves the exact editable wish');
+    await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
     assert(await evaluate("!document.querySelector('.share-search').offsetHeight && !document.querySelector('#web-results article a')"),'no fake live or sharing actions');
     assert(await evaluate("performance.getEntriesByType('resource').every(entry=>!entry.name.includes('/api/discovery')&&!entry.name.includes('observations.json'))"),'native path never falls back to device API or bundled observations');
     assert(await evaluate("document.querySelector('#native-runtime-status').getBoundingClientRect().height>0"),'service warning survives submitted search');
@@ -667,6 +686,9 @@ try {
     assert(await evaluate("document.querySelector('[data-install-status]').textContent.includes('not connected') && document.querySelector('[data-install]').hidden"));
     assert(await evaluate("document.querySelector('[data-help-voice]').textContent.includes('not available in this app version')"),'native help explains actual voice availability');
     await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();
+    await pointerClick('.native-settings summary');await noOverflow();
+    assert(await evaluate("(()=>{const r=document.querySelector('.native-settings-panel').getBoundingClientRect();return r.left>=0 && r.right<=innerWidth})()"),'settings remain within the screen with enlarged text');
+    await pointerClick('.native-settings summary');
     await evaluate("document.documentElement.style.fontSize=''");
     await noOverflow();await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:adapter.identifier});
     console.log('Native boundary simulation passed for '+platform+' (browser test; no native emulator/device claim)');

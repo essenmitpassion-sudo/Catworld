@@ -43,6 +43,7 @@ export async function androidFlow({send,evaluate},afterRestart) {
   for(const [index,language] of ['en','de'].entries()) {
     await tap('nav a[href="#suche"]');
     // Tap the visible language action in the installed app.
+    await tap('.native-settings summary');
     await tap(`[data-language-value="${language}"]`);
     assert.equal(await evaluate("document.documentElement.lang"),language==='de'?'de-CH':'en');
     await tap('#search-query');

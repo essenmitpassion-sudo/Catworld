@@ -5,13 +5,25 @@ export function configureNativeUI(document) {
   const get=id=>document.getElementById(id);
   document.documentElement.setAttribute('data-native-ui','');
   const language=get('ui-language'),languageGroup=document.createElement('div');
+  const settings=document.createElement('details'),toggle=document.createElement('summary');
+  settings.className='native-settings';toggle.id='native-settings-toggle';
+  toggle.setAttribute('aria-label',t('Sprache und Markt: {language}',{language:language.selectedOptions[0].textContent}));
+  const current=document.createElement('span');current.dataset.languageCurrent='';
+  current.textContent=language.selectedOptions[0].textContent;
+  toggle.append(current);settings.append(toggle);
+  const panel=document.createElement('div');panel.className='native-settings-panel';
+  const market=document.querySelector('.market-label');
+  const heading=document.createElement('p');setText(heading,m('Oberflächensprache'));
+  panel.append(heading,languageGroup,market);settings.append(panel);
+  language.closest('label').after(settings);
+  // A non-modal disclosure: normal tab order, Escape and outside taps close it.
+  document.addEventListener('pointerdown',event=>{if(settings.open&&!settings.contains(event.target))settings.open=false;});
+  settings.addEventListener('keydown',event=>{if(event.key==='Escape'){settings.open=false;toggle.focus();event.preventDefault();}});
   languageGroup.className='native-languages';languageGroup.setAttribute('role','group');
   languageGroup.dataset.i18nAriaLabel='Oberflächensprache';
   languageGroup.setAttribute('aria-label',t('Oberflächensprache'));
-  // Both supported languages are direct actions. Keep the existing selection
-  // contract hidden, without opening a platform picker while editing a wish.
+  // Keep full endonyms and the existing language contract inside one disclosure.
   language.closest('label').hidden=true;
-  language.closest('label').after(languageGroup);
   for(const option of language.options) {
     const button=document.createElement('button');button.type='button';
     button.textContent=option.textContent;button.lang=option.value;
@@ -23,6 +35,7 @@ export function configureNativeUI(document) {
     button.addEventListener('click',()=>{
       const focused=document.activeElement;
       language.value=option.value;language.dispatchEvent(new Event('change',{bubbles:true}));
+      settings.open=false;toggle.focus({preventScroll:true});
       if(focused?.matches('textarea,input'))focused.blur();
     });
     languageGroup.append(button);
@@ -34,14 +47,15 @@ export function configureNativeUI(document) {
   input.placeholder=t(input.dataset.i18nPlaceholder);
   const status=document.createElement('p');status.id='native-runtime-status';status.className='shared-notice';
   setText(status,m('Diese App zeigt noch keine aktuellen Angebote. Deine Suchwünsche kannst du speichern.'));
-  get('suche').querySelector('.search-intro').after(status);
+  get('suche').querySelector('.composer-submit').after(status);
+  input.setAttribute('aria-describedby',status.id);
   get('suche').querySelector('.coverage-note').hidden=true;
   setText(get('hilfe').querySelector('[data-help-voice]'),m('Die Spracheingabe ist für diese App-Version noch nicht verfügbar. Nutze die Texteingabe.'));
   for(const route of ['radar','vergleich'])document.querySelector(`nav a[href="#${route}"]`).hidden=true;
   setText(document.querySelector('nav a[href="#watchlist"] [data-i18n]'),m('Gespeichert'));
   setText(get('watchlist').querySelector('h1'),m('Deine Suchen'));
   setText(document.querySelector('.footer a'),m('Hilfe & Datenschutz'));
-  get('search-home').prepend(get('recent-searches'));
   const examples=get('search-home').querySelector('.suggestions');
-  examples.querySelector('[data-example]').before(examples.querySelector('[data-prompt]'));
+  examples.querySelector('[data-prompt]').remove();
+  setText(examples.querySelector('span'),m('Beispielsuche'));
 }

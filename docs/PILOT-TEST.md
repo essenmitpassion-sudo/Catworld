@@ -19,6 +19,8 @@ Pro Aufgabe festhalten: Methode, Datum/Uhrzeit, Plattform/Build, Prüfzeit, rele
 
 ## Für die Testperson · Ablauf
 
+Zusatz für die neue mobile Startansicht (freiwillig, keine Antworten vorwegnehmen): Findest du die Suche sofort? Ist «Beispielsuche» klar von deinen eigenen gespeicherten Suchen getrennt? Findest du Sprache und Markt sowie deine gespeicherten Wünsche? Verstehst du den Hinweis auf die derzeit fehlende Live-Verbindung, bevor du suchst? Hält dich etwas Unnötiges auf? Bitte pro Frage eigene Beobachtung oder «nicht getestet» festhalten. Der Gestaltungsvergleich Suchfokus/geführt ist bisher eine interne Entscheidung, keine Bewertung echter Nutzer.
+
 Beschreibe ein Ziel, das dir tatsächlich hilft, zum Beispiel mehr Speicher für deinen vorhandenen PC. Beantworte eine Rückfrage nur, falls UDI sie stellt. Prüfe angezeigte Ergebnisse und ihre Quelle, öffne einen passenden Anbieterlink, speichere die Suche und öffne die App erneut. Du musst nichts kaufen. Wenn ein Schritt nicht verfügbar ist oder fehlschlägt, halte genau das fest und fahre nur mit möglichen Schritten fort. Testangebote sind keine Kaufangebote.
 
 Bewerte nur, was du selbst ausprobiert hast: **1 = trifft gar nicht zu, 2 = eher nicht, 3 = teils/teils, 4 = eher ja, 5 = trifft völlig zu**. Verwende **— = nicht geprüft / nicht verfügbar**, statt eine fehlende Funktion zu bewerten. Es gibt keine richtigen Antworten.

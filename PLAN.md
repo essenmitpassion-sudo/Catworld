@@ -1,5 +1,24 @@
 # Universal Deal Intelligence
 
+## Mobile Gestaltungsrichtungen ·24.11.2026
+
+[Unveränderter Auftrag](docs/requirements/2026-11-24-mobile-design-directions.md). P0: Heute können native Apps Wünsche interpretieren/speichern und den fehlenden Angebotsdienst ehrlich erklären; ein besseres Suchergebnis als Standardsuche ist noch nicht belegt. Die native Startseite soll genau einen Wunsch aufnehmen; gespeicherte Wünsche gehören in «Gespeichert», Beispiele sind keine Empfehlungen oder Suchhistorie.
+
+| Kriterium | A: Suchfokus (gewählt) | B: geführter Einstieg |
+|---|---|---|
+| Zweck / Start | Wunschfeld und eine Hauptaktion zuerst; ein klar als Beispiel benannter Startpunkt | Mehrere Ziel-/Produktbeispiele erklären Möglichkeiten, verlangen aber eine zusätzliche Wahl |
+| Aufmerksamkeit / Wiederholung | Nur ein Beispiel; gespeicherte Wünsche ausschliesslich im eigenen Reiter | Beispiele neben gespeicherten Wünschen wiederholen bekannte Produkte und wirken wie Empfehlungen |
+| Glaubwürdigkeit ohne Live-Dienst | Einschränkung direkt an Aktion, lesbar und ohne Warnkarte; keine besseren Angebote behaupten | Viele Kategorien/Beispiele könnten derzeit nicht verfügbare Quellenabdeckung suggerieren |
+| Schmal / Tastatur | Ein kompakter Sprach-/Marktzugang; weniger Inhalt vor der Aktion | Zusätzliche Einstiegselemente kosten Höhe; echte Tastaturprüfung bleibt in beiden Ansätzen nötig |
+| Deutsch / Englisch | Identische Struktur; volle Sprachnamen erst nach Öffnen der Auswahl | Mehr Texte/Labels brauchen mehr Platz und Übersetzungen |
+
+Dies ist eine begründete Produktentscheidung aus vorhandenem Verhalten, kein menschlicher Nutzertest. Bestehende Suchlogik, CH/CHF-Kontext, Schriftgrössen und beide Sprachen erhalten.
+
+- [x] P1/P2: kompakte Sprach-/Marktauswahl mit vollen Endonymen/aktivem Zustand, zugänglichem Namen und Entwurfserhalt umgesetzt; fehlender Dienst neben Aktion lesbar, nur ein Beispiel, gespeicherte Wünsche im eigenen Reiter. [Belege](docs/evidence/2026-11-24-search-focus.json); keine neue Funktions-/Live-Zusage.
+- [x] P3/P4 gemeinsame UI-QA: erster Aufruf, Auswahl/Sprachwechsel/Entwurf, Eingabe/Fehler ohne Textverlust, Beispiel, Kriterien, Speichern/Wiederfinden,320/390px und200Prozent-Text samt geöffneter Auswahl; Vorher/Nachher angesehen. Gefundenen Überlauf korrigiert, Regression grün.
+- [ ] P3/P4 native Abnahme: neue Auswahlrolle/Bedienung und echte Tastatur auf Android/iOS getrennt praktisch belegen. Native Prüfskripte angepasst; Browser-Höhenänderung360px und Android-Sequenzsimulation sind keine native Tastatur-/Geräteabnahme. Keine Tutorial-Handhabung ergänzen.
+- [ ] Fortschritt/Nachweis/Original dauerhaft versionieren, normale Commits/Push-Referenzen und Wiederherstellung prüfen. Keine öffentliche Veröffentlichung, Kosten oder SOUNDWEAVE-Zugriffe.
+
 ## Ergänzung · intuitive App und autonomer Arbeitsmodus ·24.11.2026
 
 Originale: [intuitive App](docs/requirements/2026-11-24-intuitive-app.md), [autonomes Arbeiten](docs/requirements/2026-11-24-autonomous-work.md). Bestehende Produkt-/Sicherheitsabnahmen gelten; kein Neustart, keine zusätzliche Browser-App.

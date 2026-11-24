@@ -320,7 +320,9 @@ const extra = {
   "Deine Suchen":"Your searches",
   "Hilfe & Datenschutz":"Help & privacy",
   "Noch keine Suchwünsche gespeichert":"No saved searches yet",
-  "Oberflächensprache":"Interface language"
+  "Oberflächensprache":"Interface language",
+  "Sprache und Markt: {language}":"Language and market: {language}",
+  "Beispielsuche":"Example search"
   ,"Mein PC braucht mehr Speicher":"My PC needs more storage"
 };
 export const english=Object.freeze({...base,...extra});

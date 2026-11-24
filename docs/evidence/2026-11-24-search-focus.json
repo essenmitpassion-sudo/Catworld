@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-11-24T15:15:36.614Z",
+  "baselineCommit": "7fd3f838c4194f011d7fbb27f02a7fedc46f46c0",
+  "source": "this commit; final identity in Git history",
+  "requirement": {
+    "path": "docs/requirements/2026-11-24-mobile-design-directions.md",
+    "sha256": "994168d0ef8526e6acc799c07449e36dc1787488db0c6979bc334f871955f1ca",
+    "attachmentBytesMatch": true
+  },
+  "decision": {
+    "selected": "Search focus",
+    "alternative": "Guided entry with examples and saved-wish shortcuts",
+    "reason": "One task and one labelled example; saved wishes have their own destination. Avoid suggesting unavailable category coverage. Qualitative internal product decision, not a human study.",
+    "comparison": "PLAN.md mobile design directions table"
+  },
+  "implemented": [
+    "Compact language/market disclosure with full endonyms and selected state",
+    "Current visible language included in accessible name; Escape/outside/selection close the non-modal disclosure",
+    "Truthful service limitation adjacent to action; aria-describedby on input",
+    "One labelled example; no duplicate saved searches on entry; saved tab and persistence retained"
+  ],
+  "checks": {
+    "unitTests": {
+      "passed": 113,
+      "failed": 0
+    },
+    "typecheck": true,
+    "build": true,
+    "nativeAssets": {
+      "perPlatform": 29,
+      "identical": true,
+      "networkDisabled": true
+    },
+    "browser": {
+      "de": [
+        360,
+        390,
+        768,
+        1365
+      ],
+      "en": [
+        390,
+        1365
+      ],
+      "nativeBoundary": [
+        320,
+        390
+      ],
+      "enlargedText": "200% CSS including opened settings; not native system text",
+      "reducedHeight": "360px viewport with focused editing, scroll to action, actual missing-service error, exact draft preserved; not an OS keyboard test",
+      "flows": [
+        "First entry and compact closed settings",
+        "Pointer open/language switch preserves draft and updates selected state/visible and accessible names",
+        "Escape closes with summary focus, outside brand tap closes",
+        "Example prepares editable exact request without automatic search",
+        "Optional criteria still work within existing search form",
+        "Actual unconfigured service, saved/reload/remove, CH context and language retained"
+      ],
+      "simulatedAndroidSequence": "Both languages text/error/save: browser simulation only"
+    }
+  },
+  "visual": {
+    "files": [
+      {
+        "path": "docs/evidence/2026-11-24-search-focus/browser-boundary-ios-en-before-320.png",
+        "sha256": "59c8c0de93a66348981162635f2350e3be4d2fd71cf32c57280a83f10dc00b5b"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-search-focus/browser-boundary-ios-en-after-320.png",
+        "sha256": "019414ec04e57b849de8626748fa9f6d2c3a16a7c05768b4fe71c402d820b2ea"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-search-focus/browser-boundary-ios-de-after.png",
+        "sha256": "f6ef47b34d4317906226ffd09ca174c3434e3836134bdd05ec21f70afceeaae5"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-search-focus/browser-boundary-ios-en-settings-after-320.png",
+        "sha256": "900bd9e8ff3c525792f552f6ed5ac9d194cf06052818d2439c9908fa4d324e9c"
+      }
+    ],
+    "before": {
+      "scope": "desktop browser boundary simulation, not a native device screenshot",
+      "width": 320,
+      "height": 640,
+      "composer": {
+        "top": 296.609375,
+        "bottom": 525.328125,
+        "height": 228.71875
+      },
+      "primary": {
+        "top": 395.203125,
+        "bottom": 447.203125,
+        "height": 52
+      },
+      "navigation": {
+        "top": 579.8125,
+        "bottom": 640,
+        "height": 60.1875
+      },
+      "voice": {
+        "top": 0,
+        "bottom": 0,
+        "height": 0
+      },
+      "tools": {
+        "top": 0,
+        "bottom": 0,
+        "height": 0
+      }
+    },
+    "after": {
+      "scope": "desktop browser boundary simulation, not a native device screenshot",
+      "width": 320,
+      "height": 640,
+      "composer": {
+        "top": 172.34375,
+        "bottom": 454.140625,
+        "height": 281.796875
+      },
+      "primary": {
+        "top": 270.9375,
+        "bottom": 322.9375,
+        "height": 52
+      },
+      "navigation": {
+        "top": 579.8125,
+        "bottom": 640,
+        "height": 60.1875
+      },
+      "voice": {
+        "top": 0,
+        "bottom": 0,
+        "height": 0
+      },
+      "tools": {
+        "top": 0,
+        "bottom": 0,
+        "height": 0
+      }
+    },
+    "primaryTopImprovementPx": 124.265625,
+    "scope": "Viewed running Chromium shared UI: before/after320, German390 and settings320. Not native Android/iOS images."
+  },
+  "corrections": [
+    "Compact-settings requirement failed on old UI, then passed after implementation",
+    "Opened settings at200% escaped screen in initial layout; anchor changed to masthead with bounded panel, repeat320/390 passed",
+    "Independent review found visible language missing from accessible name; corrected localized name, regression and Swift selector. Follow-up review: no important findings."
+  ],
+  "native": {
+    "android": "New disclosure flow scripts prepared, actual new installed-app flow pending. Previous cfaf69c Android job138540390037 passed.",
+    "ios": "New disclosure Swift selector prepared; actual summary role/hit targets/full flow pending. Previous cfaf69c job138540390545 failed; no success or specific new failure cause claimed."
+  },
+  "open": [
+    "Native live search/auth/hosting and voice unavailable",
+    "Actual keyboard/native accessibility, full iOS/restart, physical devices and human feedback not verified",
+    "Second lawful source, complete costs and proven better search remain open"
+  ],
+  "safety": "No SOUNDWEAVE access, domain/hosting mutation, publication or new cost commitments"
+}

@@ -118,6 +118,7 @@ function restoreSearch(request) {
 function renderRecent() {
   const target = get('recent-searches');
   target.replaceChildren();
+  if(platform!=='web'){target.hidden=true;return;}
   try {
     const saved = readSearches(searchPersistence.storage).slice(0, 3);
     target.hidden = !saved.length;
