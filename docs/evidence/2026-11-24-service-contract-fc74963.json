@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "commit": "fc74963c6f52ce59c57a3a2cb09bc9903a9ecfad",
+  "restoreRef": "fc74963c6f52ce59c57a3a2cb09bc9903a9ecfad",
+  "codecCommit": "e2795e1",
+  "scope": "Internal request/scan-response codec, not a hosted or authenticated endpoint",
+  "remoteHeadReadBack": true,
+  "checks": {
+    "fullUnitTestsPassed": 96,
+    "targetedCodecTestsPassed": 5,
+    "typecheckBuildAndBrowserRegression": true,
+    "integration": "Existing discover -> inspectPage -> scan -> serializeScanReply -> actual parseDealReply, using explicitly synthetic unit HTML only",
+    "explicitVersionRequestIdAndMarket": true,
+    "unknownFieldsAndUserUrlsRejected": true,
+    "testMarkersIncludingNestedRejected": true,
+    "wrongKnownVariantAndBothWrongMpnsRejected": true,
+    "foreignContextAndCriteriaNotOverwritten": true,
+    "staleEvidenceNotRefreshed": true,
+    "contradictoryTotalsNotRepairedSilently": true,
+    "unknownCostsRemainNull": true,
+    "inputEvidenceNotMutated": true,
+    "independentReadOnlyReview": "No important actionable findings; reviewer independently ran all5 targeted tests"
+  },
+  "generalCi": {
+    "runId": 45360613922,
+    "conclusion": "success"
+  },
+  "localRecovery": {
+    "archive": "artifacts/udi-pilot-fc74963c6f52.tar.gz",
+    "sha256": "32aa127c56f4f5c74d8e6bb45baed63e3252aad47e42f39afa19974a942f9f3c",
+    "files": 223,
+    "verifiedAt": "2026-11-24T09:01:22.406Z",
+    "isolatedRestore": true,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCallsDuringRestore": false,
+    "containsApkOrIpa": false,
+    "externallyUploaded": false
+  },
+  "limits": "HTTP route, authentication/provider access, per-user isolation/quotas, HTTPS hosting, secure native token storage and native live search remain separate work. Caller must bind each actual scan to its request. No new source or native networking activated."
+}

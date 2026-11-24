@@ -2,7 +2,7 @@
 // Only synthetic disposable-runner screens are emitted as bounded PNG records
 // in existing CI logs. No artifact-storage service or app release is enabled.
 import { spawnSync, spawn } from 'node:child_process';
-import { writeFileSync, readFileSync, mkdirSync, copyFileSync, openSync, closeSync } from 'node:fs';
+import { writeFileSync, readFileSync, openSync, closeSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
@@ -153,26 +153,14 @@ if (platform === 'android') {
     // A fresh hosted simulator performs its own data migration before our app
     // is installed. The first probe exhausted four minutes in locationd's
     // migrator; allow a bounded eight minutes without disabling system services.
-    console.log(run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 480000));
-    try {run('xcrun', ['simctl', 'install', device.udid, join(temp, 'udi-ios/Build/Products/Debug-iphonesimulator/App.app')]);}
-    catch(error) {
-      // Collect the actual simulator state instead of blindly extending a timeout.
-      const services=spawnSync('xcrun',['simctl','spawn',device.udid,'launchctl','list'],{encoding:'utf8',timeout:15000,maxBuffer:256*1024});
-      console.log('iOS install diagnostics: '+(services.stdout??'').split('\n').filter(line=>/installd|SpringBoard|backboard|FrontBoard|runningboard|container/i.test(line)).slice(-25).join('\n'));
-      const installLog=spawnSync('xcrun',['simctl','spawn',device.udid,'log','show','--last','2m','--style','compact','--predicate','process == "installd"'],{encoding:'utf8',timeout:15000,maxBuffer:256*1024});
-      console.log('iOS installd log: '+(installLog.stdout??'').slice(-6000));
-      try {const shot=join(temp,'udi-ios-install-timeout.png');run('xcrun',['simctl','io',device.udid,'screenshot',shot],15000);await recordScreen('ios-install-timeout',shot);}
-      catch {console.log('iOS installation screenshot unavailable; no visual claim.');}
-      throw error;
-    }
-    // XCTest owns AUT launch, native UI interaction and relaunch. A separate
-    // simctl launch gate duplicated it and stalled before tests could run.
-    const flow=join(temp,'udi-flow');mkdirSync(flow,{recursive:true});
-    for(const name of ['project.yml','UDIFlowTests.swift'])copyFileSync(resolve('scripts/native-tests/ios/'+name),join(flow,name));
-    run(join(temp,'udi-tools/xcodegen/bin/xcodegen'),['generate','--spec',join(flow,'project.yml'),'--project',flow]);
+    const boot=run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 480000);
+    writeFileSync(join(temp,'udi-ios-boot.log'),boot);
+    await new Promise((done,fail)=>process.stdout.write('iOS boot status tail:\n'+boot.slice(-4000)+'\n',error=>error?fail(error):done()));
+    // The real App scheme owns its UI-test target and target application.
+    // Xcode installs and launches both; no separate installer or generated project.
     const log=join(temp,'udi-native-flow.log'),fd=openSync(log,'w');let result;
-    try {result=spawnSync('xcodebuild',['test','-project',join(flow,'UDIFlow.xcodeproj'),'-scheme','UDIFlow','-destination',`platform=iOS Simulator,id=${device.udid}`,
-      '-derivedDataPath',join(temp,'udi-flow-build'),'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO'],
+    try {result=spawnSync('xcodebuild',['test','-project',resolve('ios/App/App.xcodeproj'),'-scheme','App','-destination',`platform=iOS Simulator,id=${device.udid}`,
+      '-derivedDataPath',join(temp,'udi-ios'),'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO'],
       {stdio:['ignore',fd,fd],timeout:360000,killSignal:'SIGKILL'});}finally{closeSync(fd);}
     console.log(readFileSync(log,'utf8').slice(-18000));
     let captured=false;

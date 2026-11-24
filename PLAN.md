@@ -68,6 +68,8 @@ Bestehende ESM-Oberfläche und beide nativen Projekte erhalten. Zuerst gemeinsam
 
 ### Native Kompilierung ohne lokale SDKs
 
+Qualitätskorrektur24.11.: UI-Tests direkt als Testtarget im vorhandenen iOS-App-Projekt mit geteilter App-Scheme führen. Xcode übernimmt Bau/Installation/Start des zu testenden Produkts; separates Testprojekt/XcodeGen und vorgeschaltetes simctl-install entfallen. App-Runtime und EN/DE-/Fehler-/Speicher-/Neustartkriterien erhalten; UITest-Bundle nicht in App/Release einbetten. Vor Umbau Quellstandfc74963 samt223 Dateien isoliert wiederhergestellt. Abnahme: Projekt/Scheme syntaktisch prüfen, tatsächlichen Xcodebuild und Simulatorlauf verfolgen, echtes Bild ansehen; keine erfolgreiche Gerätefunktion aus Projektdateien ableiten.
+
 Nach abgeschlossenem Marktvertrag nächster Pareto-Schritt: beide Projekte tatsächlich mit nativen Compilern ausführen. Repository-Sichtbarkeit per API öffentlich bestätigt. Offizielle GitHub-Dokumentation bestätigt kostenlose Standard-Runner für öffentliche Repositories; Ubuntu24.04 und macos26 sind solche Labels und enthalten passende SDKs/Xcode. Neuer Workflow mit ausschliesslich lesenden Rechten, festem öffentlichem Sichtbarkeitsguard, gleichen Prioritäten, Zeitlimit und ohne Binär-Upload/Release/Deployment. Kein kostenpflichtiger Runner oder Konto wird angelegt.
 
 - [x] Android-Debug-APK und iOS-Simulator-App ohne Signierung auf Standard-Runnern tatsächlich kompiliert: Stand 1546570, [beide Jobs erfolgreich](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/44748663800); Hashes in Joblogs. Kein IPA, Gerätesupport oder veröffentlichter Testbuild daraus ableiten. Binärdateien bleiben im kurzlebigen Runner.

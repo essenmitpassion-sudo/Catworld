@@ -1,5 +1,11 @@
 # UDI · Android und iOS gleich priorisieren
 
+## Aktueller nativer Testweg · integriertes App-Projekt
+
+Nach dem [erneuten Installationsaufruf-Timeoutfc74963](evidence/2026-11-24-ios-install-fc74963.json) ist die Testarchitektur vereinfacht: UDIFlowTests ist jetzt ein getrenntes UI-Testziel im bestehenden App.xcodeproj; die geteilte App-Scheme führt es unter Test aus. Xcode installiert und startet die zu testende App selbst. Separates generiertes Projekt, XcodeGen-Download und vorgeschaltetes simctl-install entfallen. [Apple: Testziele hinzufügen](https://developer.apple.com/documentation/xcode/adding-tests-to-your-xcode-project), [Tests ausführen](https://developer.apple.com/documentation/xcode/running-tests-and-interpreting-results).
+
+App-Target/Quellen/Ressourcen wurden mit dem tatsächlich vorhandenen PBX-Parser gegen den vorherigen Git-Stand identisch geprüft; nur das Testziel hängt von App ab. Testbundle nicht in App/Archiv eingebettet, SKIP_INSTALL=YES. Scheme-XML, beide Konfigurationen, Quellpfad, Workflow und29 identische native UI-Dateien geprüft; unabhängiges Review ohne wichtige Befunde. Ein einmaliger lokaler SPM-Schreibfehler trat im nächsten begrenzten Durchlauf nicht mehr auf; Plugininhalt weiterhin korrekt. Kompilierung und praktische Ausführung der neuen Projektkonfiguration bleiben bis zum tatsächlichen CI-Ergebnis offen. Kein Geräteerfolg aus dem Parser ableiten.
+
 ## Gestaltungsetappe · 24.11.2026
 
 Native Einstiege priorisieren jetzt Zieleingabe und gespeicherte Suchen: zwei Haupttabs, Kontextwege zum Vergleich, kompakte Statushinweise, ruhige gemeinsame Gestaltung und vorhandene Wünsche vor Beispielen. Nicht verfügbare Spracheingabe und Desktop-Enter-Hinweise sind im Einstieg verborgen; die Einschränkung steht in der Hilfe. Dienstlücke bleibt sichtbar. [Vorher/Nachher mit Layoutwerten](evidence/2026-11-24-native-ui/README.md) sind Browser-QA derselben Oberfläche, keine nativen Screenshots oder Nutzerbewertungen. DE/EN, 320/390 Pixel, 200 Prozent CSS-Text und bisherige Browserabläufe sind geprüft; Systemschriftgrösse und Screenreader auf Geräten bleiben offen.

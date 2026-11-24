@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "commit": "fc74963c6f52ce59c57a3a2cb09bc9903a9ecfad",
+  "restoreRef": "fc74963c6f52ce59c57a3a2cb09bc9903a9ecfad",
+  "runId": 45360613882,
+  "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45360613882",
+  "android": {"jobId": 138329432203, "conclusion": "success", "completedAt": "2026-11-24T09:00:43Z"},
+  "ios": {
+    "jobId": 138329432312,
+    "conclusion": "failure",
+    "completedAt": "2026-11-24T09:09:44Z",
+    "environment": "macos-26, Xcode26.6, fresh iPhone17Pro/iOS26.5 simulator",
+    "nativeCompilation": "success",
+    "failure": "Separate xcrun simctl install timed out after120s before XCTest",
+    "screenshotRecords": 0,
+    "webViewScopingHypothesisTested": false,
+    "fullSearchAndPersistenceVerified": false
+  },
+  "architecturalCorrection": "Integrate UI test target into the actual App project/shared scheme. Let xcodebuild test install and launch its own target application; remove generated standalone project, XcodeGen binary dependency and separate simctl-install gate. Preserve all UI assertions and bounds. Parse project/scheme locally and require actual native compilation and execution before acceptance.",
+  "limits": "No unchanged retry, fabricated screenshot, inferred successful iOS test, new hosting access, public app release or cost. Historical native visual acceptance remains limited to the actual812152b screenshot."
+}
