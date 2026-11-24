@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "commit": "65d2618f7e2c90675e48f8968545c5387a830ffa",
+  "restoreRef": "65d2618f7e2c90675e48f8968545c5387a830ffa",
+  "remoteHeadReadBack": true,
+  "localArchive": "artifacts/udi-pilot-65d2618f7e2c.tar.gz",
+  "archiveSha256": "819bc1219cd2491dca6598e686dc6b5137647a4a5922a280402dee9511c03456",
+  "verifiedAt": "2026-11-24T07:46:32.367Z",
+  "files": 214,
+  "isolatedRestore": true,
+  "lockfileInstalled": true,
+  "typecheckVerified": true,
+  "nativeSourcePreparationVerified": true,
+  "backendManifestStatus": 200,
+  "catalogApiStatus": 200,
+  "liveSourceCalls": false,
+  "nativeCompilationVerifiedByRestore": false,
+  "externallyUploaded": false,
+  "containsApkOrIpa": false,
+  "scope": "Source/operator recovery including Android visual evidence and the controlled iOS environment change; not a native or live-service acceptance record."
+}

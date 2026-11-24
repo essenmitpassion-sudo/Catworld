@@ -8,14 +8,14 @@ import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
 import {withAndroidPage} from './native-cdp.mjs';
 import {androidFlow} from './native-flow-android.mjs';
-import {screenRecords} from './native-screens.mjs';
+import {writeScreen} from './native-screens.mjs';
 
 const platform = process.argv[2];
 const temp = process.env.RUNNER_TEMP;
 assert(temp, 'Run native startup checks on the disposable CI runner.');
 const appId = 'stream.soundweave.udi';
-function recordScreen(label,path) {
-  for(const line of screenRecords(label,readFileSync(path)))console.log(line);
+async function recordScreen(label,path) {
+  await writeScreen(label,readFileSync(path));
 }
 function run(command, args, timeout = 120000) {
   const result = spawnSync(command, args, { encoding: 'utf8', timeout, killSignal: 'SIGKILL', maxBuffer: 8 * 1024 * 1024 });
@@ -115,7 +115,7 @@ if (platform === 'android') {
         assert(await page.evaluate("(()=>{const r=document.querySelector('.primary-search').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return r.top>=0&&r.bottom<=nav.top})()"),'Initial native search action must fit above navigation');
         const png=spawnSync(adb,['-e','exec-out','screencap','-p'],{timeout:15000,maxBuffer:2*1024*1024});
         assert(!png.error&&png.status===0,'Android screenshot failed');
-        const shot=join(temp,'udi-android-start.png');writeFileSync(shot,png.stdout);recordScreen('android-start',shot);
+        const shot=join(temp,'udi-android-start.png');writeFileSync(shot,png.stdout);await recordScreen('android-start',shot);
         await androidFlow(page,false);
       });
     }
@@ -161,7 +161,7 @@ if (platform === 'android') {
       console.log('iOS install diagnostics: '+(services.stdout??'').split('\n').filter(line=>/installd|SpringBoard|backboard|FrontBoard|runningboard|container/i.test(line)).slice(-25).join('\n'));
       const installLog=spawnSync('xcrun',['simctl','spawn',device.udid,'log','show','--last','2m','--style','compact','--predicate','process == "installd"'],{encoding:'utf8',timeout:15000,maxBuffer:256*1024});
       console.log('iOS installd log: '+(installLog.stdout??'').slice(-6000));
-      try {const shot=join(temp,'udi-ios-install-timeout.png');run('xcrun',['simctl','io',device.udid,'screenshot',shot],15000);recordScreen('ios-install-timeout',shot);}
+      try {const shot=join(temp,'udi-ios-install-timeout.png');run('xcrun',['simctl','io',device.udid,'screenshot',shot],15000);await recordScreen('ios-install-timeout',shot);}
       catch {console.log('iOS installation screenshot unavailable; no visual claim.');}
       throw error;
     }
@@ -169,17 +169,10 @@ if (platform === 'android') {
     await delay(8000);
     const screenshot = join(temp, 'udi-ios-start.png');
     run('xcrun', ['simctl', 'io', device.udid, 'screenshot', screenshot]);
-    recordScreen('ios-start',screenshot);
-    const recognizer = join(temp, 'udi-recognize.swift');
-    writeFileSync(recognizer, `import Foundation
-import Vision
-let request = VNRecognizeTextRequest()
-request.recognitionLevel = .accurate
-request.recognitionLanguages = ["en-US", "de-DE"]
-try VNImageRequestHandler(url: URL(fileURLWithPath: CommandLine.arguments[1]), options: [:]).perform([request])
-print((request.results ?? []).compactMap { $0.topCandidates(1).first?.string }.joined(separator: "\\n"))
-`);
-    checkSurface(run('swift', [recognizer, screenshot]));
+    await recordScreen('ios-start',screenshot);
+    // The hosted GPU makes Vision OCR hang after a successful native launch.
+    // Check the rendered content through XCTest accessibility below instead;
+    // preserve the actual screenshot for separate visual inspection.
     const flow=join(temp,'udi-flow');mkdirSync(flow,{recursive:true});
     for(const name of ['project.yml','UDIFlowTests.swift'])copyFileSync(resolve('scripts/native-tests/ios/'+name),join(flow,name));
     run(join(temp,'udi-tools/xcodegen/bin/xcodegen'),['generate','--spec',join(flow,'project.yml'),'--project',flow]);

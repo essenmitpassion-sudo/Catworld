@@ -1,9 +1,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {screenRecords,parseScreens} from '../scripts/native-screens.mjs';
+import {execFile as execute} from 'node:child_process';
+import {promisify} from 'node:util';
+import {Writable} from 'node:stream';
+import {screenRecords,parseScreens,writeScreen} from '../scripts/native-screens.mjs';
 // Transport test fixture, not a native application screenshot.
 const fixture=await readFile(new URL('../src/assets/udi-192.png',import.meta.url));
+
+test('grosse Bildnachweise werden vor einem sofortigen Prozessende vollständig in eine echte Pipe geschrieben',async()=>{
+  const script=`import{readFileSync}from'node:fs';import{writeScreen}from'./scripts/native-screens.mjs';
+    const png=Buffer.concat([readFileSync('src/assets/udi-192.png'),Buffer.alloc(256*1024,7)]);
+    await writeScreen('ios-start',png);process.exit(0);`;
+  const {stdout}=await promisify(execute)(process.execPath,['--input-type=module','-e',script],{
+    cwd:new URL('../',import.meta.url),windowsHide:true,maxBuffer:2*1024*1024,timeout:10000,
+  });
+  const [result]=parseScreens(stdout);
+  assert(result.png.length>64*1024);assert.deepEqual(result.png,Buffer.concat([fixture,Buffer.alloc(256*1024,7)]));
+});
+
+test('Bildtransport wartet auch bei verzögerten Pipe-Schreibbestätigungen auf das vollständige Ende',async()=>{
+  const chunks=[];
+  const output=new Writable({highWaterMark:16,write(chunk,_encoding,done){setImmediate(()=>{chunks.push(Buffer.from(chunk));done();});}});
+  await writeScreen('ios-start',fixture,output);
+  const [result]=parseScreens(Buffer.concat(chunks).toString('utf8'));
+  assert.deepEqual(result.png,fixture);
+});
 test('native PNG-Prüfnachweise überleben Zeitstempel/Logpräfixe bytegleich',()=>{
   const records=screenRecords('android-start',fixture);
   const log=records.map(line=>'2026-11-24T00:00:00Z job\t'+line).join('\n');

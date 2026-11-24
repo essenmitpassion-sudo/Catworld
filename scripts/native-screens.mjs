@@ -22,6 +22,13 @@ export function screenRecords(label,png) {
   for(let index=0;index<count;index++)lines.push(`UDI_SCREEN_CHUNK ${label} ${index} ${base64.slice(index*chunkSize,(index+1)*chunkSize)}`);
   lines.push(`UDI_SCREEN_END ${label} ${info.sha256}`);return lines;
 }
+export async function writeScreen(label,png,output=process.stdout) {
+  // A native command can block the event loop next. Drain each pipe write
+  // before starting it, so a later failure cannot lose buffered image chunks.
+  for(const line of screenRecords(label,png))await new Promise((resolve,reject)=>{
+    output.write(line+'\n',error=>error?reject(error):resolve());
+  });
+}
 export function parseScreens(log) {
   assert(typeof log==='string'&&Buffer.byteLength(log,'utf8')<=16*1024*1024,'QA log too large');
   const pending=new Map(),finished=new Set(),screens=[];

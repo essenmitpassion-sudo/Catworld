@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "commit": "65d2618f7e2c90675e48f8968545c5387a830ffa",
+  "restoreRef": "65d2618f7e2c90675e48f8968545c5387a830ffa",
+  "runId": 45350468920,
+  "jobId": 138295323987,
+  "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45350468920/job/138295323987",
+  "conclusion": "failure",
+  "completedAt": "2026-11-24T07:57:45Z",
+  "environment": {
+    "image": "macos-26-arm64",
+    "imageVersion": "20261117.0516.1",
+    "xcode": "26.6",
+    "simulator": "fresh iPhone17Pro, iOS26.5"
+  },
+  "observations": {
+    "nativeCompilation": "success",
+    "bootStatus": "finished after approximately 6m47s",
+    "installation": "simctl returned successfully",
+    "launch": "07:55:09Z: stream.soundweave.udi: 16442",
+    "visionRecognition": "swift udi-recognize.swift timed out after120s; output included AppleM2ScalerParavirtDriver diagnostic",
+    "nativeFlowTests": "not reached because the preceding OCR gate failed"
+  },
+  "screenshot": {
+    "runnerProducedPng": true,
+    "declaredBytes": 244057,
+    "expectedChunks": 80,
+    "loggedChunks": 16,
+    "endRecordPresent": false,
+    "decoderRejectedIncompleteEvidence": true,
+    "visuallyInspected": false,
+    "scope": "A PNG prefix is not a complete screenshot or visual acceptance. No image reconstructed from missing bytes."
+  },
+  "nextCorrection": {
+    "ocrGate": "Replace Vision prerequisite with explicit XCTest accessibility assertions for the rendered introduction, actual service warning and actionable search; retain native interaction and persistence requirements.",
+    "imageTransport": "Await write callbacks for every bounded PNG log record before running blocking child commands. Test actual pipe/immediate exit and delayed write acknowledgements.",
+    "duplicateRun": "45350904074 cancelled after this upstream OCR failure; its later warning assertion change could not address that preceding gate."
+  },
+  "limits": {
+    "fullIosFlow": false,
+    "iosPersistence": false,
+    "realOffers": false,
+    "nativeSpeech": false,
+    "physicalDevice": false
+  }
+}

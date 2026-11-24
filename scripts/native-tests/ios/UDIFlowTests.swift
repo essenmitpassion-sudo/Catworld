@@ -7,6 +7,8 @@ final class UDIFlowTests: XCTestCase {
         addTeardownBlock { if self.testRun?.hasSucceeded == false { print(app.debugDescription) } }
         app.launch()
         XCTAssertTrue(app.webViews.firstMatch.waitForExistence(timeout: 15))
+        let introduction = NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "Describe what you need", "Beschreibe deinen Wunsch")
+        XCTAssertTrue(app.staticTexts.matching(introduction).firstMatch.waitForExistence(timeout: 15), "Native UI must finish rendering without promising unavailable voice input")
         let wishes = ["Samsung 990 PRO 2 TB", "Samsung 990 PRO 2 TB bis CHF 500"]
         for (index, language) in ["English", "Deutsch"].enumerated() {
             let search = app.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Search", "Suche")).firstMatch
