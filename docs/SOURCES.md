@@ -2,6 +2,8 @@
 
 ## Erneute Einzelprüfung · 24.11.2026
 
+Erneut um14:43:04 Uhr Schweiz am Stand70fece9 geprüft: [Quellenbeleg](evidence/2026-11-24-source-dq-70fece9.json). Englischer tatsächlicher Chromium-Ablauf öffnet wieder den passenden Passport und die konkrete DQ-Seite mit MZ-V9P2T0BW; Artikelpreis unverändert CHF439.– gegenüber der Morgenprobe. Versand/Endpreis/Lieferziel weiterhin unbekannt. Keine native Live-Suche oder automatische Preisverlauf-/Meldungsfunktion daraus ableiten; fünfminütige Frischegrenze gilt auch hier, historisch speichern statt als dauerhaft aktuell ausliefern.
+
 [Unveränderter Nachweis](evidence/2026-11-24-source-dq-f35b20c.json): laufender englischer Chromium-Prüfstand → echte DQ-Produktprüfung → Deal Passport → tatsächliche Händlerseite mit passender MPN. Beobachtung um09:07:58 Uhr Schweiz: MZ-V9P2T0BW, Neu, Quelle meldet aktiv, Artikelpreis CHF439.–. Versand/Gebühren/Gesamtkosten und Lieferziel bleiben unbekannt; keine Ersparnis oder Empfehlung. Das ist ein zeitgebundener historischer Quellenbeleg, kein dauerhaft aktuelles Angebot und keine native Dienstanbindung.
 
 Robots und öffentliche AGB am selben Tag erneut gelesen, jeweils HTTP200; Produktpfad nicht ausgeschlossen, Crawl-delay10s eingehalten. Minimaler bestehender Pilot, keine Datenlizenz oder Freigabe zur Ausweitung daraus ableiten. Keine KI-Aufrufe, Käufe oder Schutzumgehung. Zweite unabhängige Quelle und vollständige Kosten bleiben offen. Die folgenden Tabellen halten den früheren Recherchestand fest.

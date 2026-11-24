@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "commit": "70fece945c44e3937eb3db1950ec5adf8c7c5e4f",
+  "remoteHeadReadBack": true,
+  "scope": "Native presentation change; browser preflight acceptance only until actual native job outcome",
+  "change": "Two direct endonym language buttons replace the visible native select/picker; existing selection/event contract retained internally",
+  "checks": {"oldUiFailedNewInteractionRegression":true,"fullUnitTestsPassed":105,"typecheck":true,"build":true,"fullDe4En2ChromiumRegression":true,"browserNativeBoundary320And390":true,"cssText200PercentNoOverflow":true,"draftPreservedAfterPointerLanguageAction":true,"ariaPressedRestoredAfterReload":true,"minimumLanguageTouchTargetPx":44,"browserAndroidFlowSimulation":true,"nativeAssetsPerPlatform":29,"nativeNetworkingDisabled":true,"independentReview":"No important findings; real native keyboard/VoiceOver/TalkBack acceptance still open"},
+  "images": {"scope":"Browser boundary simulation, not a device screenshot","visuallyInspected":true,"width390":"2026-11-24-native-ui/language-actions-browser-390.png","width320":"2026-11-24-native-ui/language-actions-browser-320.png"},
+  "localRecovery": {"archive":"artifacts/udi-pilot-70fece945c44.tar.gz","files":232,"sha256":"6a0d3a7dae494f713971a2e28390dd0b7a745597cc08b2973de3676c0d3203cc","verifiedAt":"2026-11-24T13:40:30.986Z","isolatedRestore":true,"lockfileInstalled":true,"typecheckVerified":true,"nativeSourcePreparationVerified":true,"backendManifestStatus":200,"catalogApiStatus":200,"liveSourceCalls":false,"containsApkOrIpa":false,"externallyUploaded":false},
+  "limits": "Actual Android and iOS jobs for70fece9 must still run. These screenshots/tests do not establish native parity, speech, live offers, secure authentication or pilot release readiness."
+}

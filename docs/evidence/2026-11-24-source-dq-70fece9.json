@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "commit": "70fece945c44e3937eb3db1950ec5adf8c7c5e4f",
+  "scope": "Repeat real-source QA in running Chromium; no native live-service claim",
+  "command": "npm run live -- --english",
+  "exitCode": 0,
+  "observation": {"marketId":"CH","sourceId":"dq-solutions.ch","deliveryDestination":null,"url":"https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011","checkedAt":"2026-11-24T13:43:04.782Z","httpStatus":200,"status":"partial","availability":"active","price":43900,"total":null,"currency":"CHF","seller":"DQ Solutions","condition":"Neu","reason":"page-data","mpn":"MZ-V9P2T0BW"},
+  "browserPage": {"url":"https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011","title":"Samsung 2 TB SSD 990 Pro NVMe M.2 SSD; MZ-V9P2T0BW | DQ-Solutions"},
+  "checks": {"realSourceNoInjectedOffer":true,"passportToActualMerchantPage":true,"noModelCalls":true,"noPurchase":true,"unknownCostsRemainUnknown":true,"matchingKnownMpn":true},
+  "comparisonWithEarlierQa": "Same43900-rappen item price as historical08:07:58.973Z observation; not an implemented price-history/scan/alert feature",
+  "limits": "Historical bounded source evidence, expires for active use after5min. No confirmed landed cost, delivery destination, recommendation, savings, second source or native offer. Not bundled as current app data."
+}

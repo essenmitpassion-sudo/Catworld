@@ -1,5 +1,7 @@
 # Zieleingabe und gespeicherte Suchen · 24.11.2026
 
+Spätere Sprachwahlkorrektur70fece9: [390px](language-actions-browser-390.png) und [320px](language-actions-browser-320.png) zeigen direkte Deutsch-/English-Tasten in der tatsächlich laufenden Browser-QA. Beide Bilder angesehen; klare44px-Aktionen statt zusätzlichem Systempicker, laufende Texteingabe bleibt erhalten. **Keine nativen Bilder oder neue iOS-Abnahme.** [Prüf-/Wiederherstellungsnachweis](../2026-11-24-language-ui-70fece9.json). Die folgenden früheren Vorher-/Nachher- und echten nativen Nachweise bleiben unverändert historisch erhalten.
+
 Die folgenden Vorher-/Nachher-Bilder zeigen die laufende gemeinsame App-Oberfläche in Chromium mit einem ausdrücklich simulierten Android-Brückenadapter. **Diese drei Vergleichsbilder sind keine nativen Gerätebilder und keine Geräteabnahme.** Der gespeicherte Samsung-Wunsch ist eine synthetische QA-Eingabe, kein Angebot und kein Kunde. Der separate echte Android-Nachweis steht weiter unten.
 
 Vorher und nachher: Englisch, 390 × 780 Pixel. Der frühere Build zeigte eine deaktivierte Spracheingabe samt Fehlerfläche. Der neue Einstieg priorisiert Zieleingabe, Hauptaktion und gespeicherte Wünsche; Radar-/Vergleichsrouten bleiben kontextuell erhalten. Aktuelle Angebote und native Sprache sind weiterhin nicht verfügbar und werden nicht als funktionierend ausgegeben.
