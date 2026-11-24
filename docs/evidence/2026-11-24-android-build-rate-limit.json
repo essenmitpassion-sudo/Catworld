@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "5312ae3a8caecaf80c99fe0649549d4971c149c3",
+  "runId": 45470321506,
+  "jobId": 138716212304,
+  "result": "failed before app installation",
+  "cause": "Maven Central dependency requests returned HTTP429 Too Many Requests (multiple required Gradle dependencies). Build stopped in1m17s.",
+  "at": "2026-11-24T19:28:41.9873164Z",
+  "limits": [
+    "No native app flow executed for this commit",
+    "Does not show a source compilation error or success",
+    "Earlier8322c50 Android proof remains historical and valid only for its source"
+  ],
+  "next": "Allow already queued substantive outcome-fix build to run; no protection bypass, dependency-source substitution or blind retry loop."
+}

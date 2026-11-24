@@ -1,0 +1,14 @@
+{
+  "verifiedAt": "2026-11-24T19:34:44.003Z",
+  "commit": "7d72470bb248c807865a1fdce4a58bcfcd2d5bd4",
+  "archiveSha256": "cd483195a2d56c15ce016430fba9c8bbf89dce3c3500f3d85831bf470936ad42",
+  "archiveIntegrity": true,
+  "unpackedFiles": 291,
+  "lockfileInstalled": true,
+  "typecheckVerified": true,
+  "nativeSourcePreparationVerified": true,
+  "nativeCompilationVerified": false,
+  "backendManifestStatus": 200,
+  "catalogApiStatus": 200,
+  "liveSourceCalls": false
+}

@@ -1,0 +1,68 @@
+{
+  "checkedAt": "2026-11-24T19:33:34.3167419Z",
+  "scope": "Public Google DNS-over-HTTPS only; no account or DNS writes",
+  "queries": [
+    {
+      "name": "soundweave.stream",
+      "type": "NS",
+      "dnsStatus": 0,
+      "answer": [
+        {
+          "name": "soundweave.stream.",
+          "type": 2,
+          "TTL": 21600,
+          "data": "wells.ns.cloudflare.com."
+        },
+        {
+          "name": "soundweave.stream.",
+          "type": 2,
+          "TTL": 21600,
+          "data": "imani.ns.cloudflare.com."
+        }
+      ],
+      "authority": []
+    },
+    {
+      "name": "soundweave.stream",
+      "type": "A",
+      "dnsStatus": 0,
+      "answer": [],
+      "authority": [
+        {
+          "name": "soundweave.stream.",
+          "type": 6,
+          "TTL": 1800,
+          "data": "imani.ns.cloudflare.com. dns.cloudflare.com. 2416725648 10000 2400 604800 1800"
+        }
+      ]
+    },
+    {
+      "name": "soundweave.stream",
+      "type": "AAAA",
+      "dnsStatus": 0,
+      "answer": [],
+      "authority": [
+        {
+          "name": "soundweave.stream.",
+          "type": 6,
+          "TTL": 1800,
+          "data": "imani.ns.cloudflare.com. dns.cloudflare.com. 2416725648 10000 2400 604800 1800"
+        }
+      ]
+    },
+    {
+      "name": "udi.soundweave.stream",
+      "type": "A",
+      "dnsStatus": 3,
+      "answer": [],
+      "authority": [
+        {
+          "name": "soundweave.stream.",
+          "type": 6,
+          "TTL": 1800,
+          "data": "imani.ns.cloudflare.com. dns.cloudflare.com. 2416725648 10000 2400 604800 1800"
+        }
+      ]
+    }
+  ]
+}

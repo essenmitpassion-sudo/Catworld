@@ -2,6 +2,14 @@
 
 Stand: Client implementiert, kein erreichbarer geschützter Dienst konfiguriert. Android und iOS benutzen `createDealClient` aus derselben Codebasis. Die App enthält weder Endpunkt noch Token, Schlüssel oder Testangebote. Der lokale Node-Prüfserver und dessen Host-/Origin-Schutz bleiben unverändert; er ist kein bereitgestellter nativer Dienst.
 
+## Neu freigegebene Domain ·24.11.2026
+
+[Ausdrückliche erneute Freigabe](requirements/2026-11-24-domain-authorization.md): soundweave.stream darf für UDI verwendet werden. [Öffentliche DNS-Prüfung19:33:34Z](evidence/2026-11-24-domain-public.json) bestätigt Cloudflare-Nameserver. Apex-A/AAAA liefern NOERROR ohne Adressantwort; udi.soundweave.stream/A liefert NXDOMAIN. Dies belegt weder freie Zone noch ungenutzte Mail-/andere Subdomains, kein Hostingkonto oder geschützter Dienst. Bestehende Einträge werden nicht verändert. Ein erster Node-DNS-Versuch scheiterte am lokalen Resolvertransport; die dokumentierte HTTPS-DNS-Antwort ist davon getrennt.
+
+Vorgesehener getrennter Kandidat: https://udi.soundweave.stream/api/v1/search, ausdrücklich noch nicht verbunden und nicht in native CSP aufgenommen. Erforderlich: Zugang zu genau diesem Cloudflare-DNS-Bereich sowie ein separat UDI zugeordnetes Hostingprojekt mit HTTPS und tatsächlicher persönlicher Tokenprüfung. Kein SOUNDWEAVE-Teamzugriff daraus ableiten. Erst konkreten Host prüfen, dessen tatsächliches DNS-Ziel/Verifikation übernehmen und bestehende Apex/MX/TXT/Projekte erhalten. Kein pauschaler Vercel-CNAME, Nameserverwechsel oder öffentlicher Start.
+
+Der vorhandene Node-Dienst hat prozesslokale Grenzen. Ein einzelner kontrollierter Pilotprozess wäre die kleinste Betriebsform; horizontale/serverlose Instanzen benötigen vorher gemeinsame Quoten/Kostenreservierung. Domainfreigabe löst diese Betriebs- und Anmeldelücken nicht. Keine Kosten, Kontoanlage oder Veröffentlichung durchgeführt.
+
 ## HTTP-Vorbereitung · 24.11.2026
 
 `scripts/search-service.mjs` stellt jetzt `createSearchService({authenticate,search,timeoutMs})` als separate, nicht gestartete Node-Serverbibliothek bereit. Nur exakt `/api/v1/search`, kein Frontend, keine automatische Bereitstellung und keine Änderung des bisherigen lokalen Prüfservers. Fehlt einer der beiden vertrauenswürdigen Betreiberadapter, antwortet die Hülle503 und führt keine Suche aus. `authenticate(token,{signal})` muss das persönliche kurzlebige Token **tatsächlich** prüfen, insbesondere Signatur/Issuer/Audience/Ablauf/Sperre nach dem später gewählten Verfahren, und eine stabile opake Kennung oder null liefern. Diese reale Anmeldeintegration fehlt weiterhin; ein Testcallback beweist sie nicht. `search(input,{subject,requestId,signal})` muss den zugehörigen tatsächlichen Scan ausführen und abbrechbar begrenzen; keine benutzerübergreifenden Rohdaten/Journale zurückgeben.
