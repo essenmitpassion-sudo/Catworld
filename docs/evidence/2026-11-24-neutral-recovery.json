@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "8322c505fd506a85e8c0809fb5a50ded41aecaa9",
+  "remoteHeadReadBack": true,
+  "localRecovery": {
+    "verifiedAt": "2026-11-24T19:14:20.107Z",
+    "commit": "8322c505fd506a85e8c0809fb5a50ded41aecaa9",
+    "archiveSha256": "d296eee31ad5d7f8d0184289f7f0b1f3c6eed1cdb04b3cf6949271bf3e4149e7",
+    "archiveIntegrity": true,
+    "unpackedFiles": 280,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "nativeCompilationVerified": false,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false
+  },
+  "archive": "artifacts/udi-pilot-8322c505fd50.tar.gz",
+  "externallyUploaded": false,
+  "containsApkOrIpa": false,
+  "previousFailure": {
+    "source": "bac5160",
+    "result": "274-file package verification failed on obsolete fixed short_name UDI assertion; no successful verification receipt claimed."
+  },
+  "correction": "Restored service manifest checked deeply against packaged source; post-build Git cleanliness guards commit provenance. Fresh280-file isolated restore now passed.",
+  "limits": "No live-source request, native compilation or device acceptance in recovery test."
+}

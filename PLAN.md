@@ -6,7 +6,7 @@
 
 - [x] Sichtbare Kandidatenmarke entfernt, DE/EN-Deskriptoren und neutrales Suchrahmen-Symbol zentral konfiguriert. Frühe Regression zunächst fehlgeschlagen, dann grün; Nutzerwünsche mit UDI bleiben unverändert. Anzeigenamen/Manifeste/OS-Metadaten generiert, technische IDs erhalten.
 - [x] Überarbeitete Papier-/Tinten-/Zitronen-Oberfläche erhalten; Suche/Gespeichert/Fehler/Leer/Hilfe, Entwurf/Sprachwahl/Kriterien/Speichern/Reload,320/390px und200Prozent CSS-Text geprüft. Keine neue Sprache/Live-Funktion vorgetäuscht. Browser-Höhenänderung ist keine native Tastaturabnahme.
-- [ ] Sicherung abschliessen: veraltete feste UDI-Namensannahme in Wiederherstellungsprüfung durch vollständigen Vergleich mit tatsächlich gepacktem Manifest ersetzen; neuen Commit normal pushen und isoliertes Paket praktisch prüfen. Fehlgeschlagenes früheres Paket ausdrücklich nicht als verifiziert führen.
+- [x] Sicherung korrigiert: vollständiger Manifestvergleich statt Namenskonstante, nach Build erneut sauberer Quellstand verlangt. Neutraler Commit8322c50/Remote geprüft; [frisches280-Dateien-Paket](docs/evidence/2026-11-24-neutral-recovery.json) isoliert bestanden. Fehlgeschlagenes274-Dateien-Paket bleibt als Fehlversuch dokumentiert.
 - [ ] Danach wichtigste App-Lücke: echte native Ziel→Angebot→Kosten→Anbieter-Suche über getrennt autorisierten Dienst. UI-/Eingabearbeit unabhängig fortsetzen; neue native Ergebnisse Android/iOS separat, iOS-CoreLocation-Bootblocker bleibt offen. SOUNDWEAVE unverändert, keine Kosten/Veröffentlichung.
 
 ## Mobile Gestaltungsrichtungen ·24.11.2026
