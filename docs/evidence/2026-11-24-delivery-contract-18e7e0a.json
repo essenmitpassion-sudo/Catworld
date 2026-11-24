@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "commit": "18e7e0afbed4414c6de1b119e45a4eb728bf2bb6",
+  "remoteHeadReadBack": true,
+  "scope": "Preserve explicitly evidenced delivery terms and structured Swiss destination through service codec/client/observation/comparison",
+  "checks": {"fullUnitTestsPassed": 98, "targetedServiceContractTestsPassed": 7, "regressionsFailedBeforeCorrection": 2, "typecheck": true, "build": true, "fullDe4En2ChromiumRegression": true, "nativeSourcePreparation": true, "nativeUiFilesPerPlatform": 29, "nativeNetworkRemainsDisabled": true, "independentReview": "No important actionable findings; reviewer separately ran7 targeted tests"},
+  "behavior": "Unknown delivery remains null. Foreign/ambiguous/free-form/overspecified destinations are rejected. Same evidenced destination, matching product/condition and complete costs permit only possible price advantage; missing evidence prevents recommendation. No UI-language/market inference or confirmed savings.",
+  "localRecovery": {"archive": "artifacts/udi-pilot-18e7e0afbed4.tar.gz", "files": 226, "sha256": "f8eb6412643555a36f82f8b27dd7f040169eda453b8876d095a761b9f383fbfc", "verifiedAt": "2026-11-24T09:44:14.310Z", "isolatedRestore": true, "lockfileInstalled": true, "typecheckVerified": true, "nativeSourcePreparationVerified": true, "backendManifestStatus": 200, "catalogApiStatus": 200, "liveSourceCalls": false, "externallyUploaded": false, "containsApkOrIpa": false},
+  "limits": "Cross-layer offer fixtures are synthetic unit data, never app offers or live seller evidence. No protected service deployment, authentication integration, native live search or iOS device-parity claim."
+}
