@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Bessilo",
+    "url": "https://play.google.com/store/search?q=Bessilo&c=apps&hl=en&gl=CH",
+    "checkedAt": "2026-11-24T18:48:39.775Z",
+    "status": 200,
+    "exactTextOccurrences": 14,
+    "apps": [
+      "/store/apps/details?id=com.bikablo.bikabloapp",
+      "/store/apps/details?id=net.gosolo.app",
+      "/store/apps/details?id=it.blesplo.app",
+      "/store/apps/details?id=com.londonbusinessschool.jlmuqvzp",
+      "/store/apps/details?id=silverGames.JGameDev.BlobiBlob",
+      "/store/apps/details?id=com.bebelelo.app",
+      "/store/apps/details?id=fr.neocity.capesterrebelleeau",
+      "/store/apps/details?id=com.oceanicadeseguros.hcoc",
+      "/store/apps/details?id=com.rtrk.oblosmarthome",
+      "/store/apps/details?id=com.briliadult",
+      "/store/apps/details?id=lionelo.smart",
+      "/store/apps/details?id=com.bualo.ai"
+    ],
+    "limit": "Public search page only; rank/index completeness and legal rights not established. Search term echoes are not app matches."
+  },
+  {
+    "name": "Bessli",
+    "url": "https://play.google.com/store/search?q=Bessli&c=apps&hl=en&gl=CH",
+    "checkedAt": "2026-11-24T18:48:39.970Z",
+    "status": 200,
+    "exactTextOccurrences": 14,
+    "apps": [
+      "/store/apps/details?id=com.aicsm.a50000gkquestionshindi",
+      "/store/apps/details?id=com.devthakur.allindiagk",
+      "/store/apps/details?id=com.gkinhindiofflince.a30000gkquestion",
+      "/store/apps/details?id=com.gkinhindi.inventioninhindi"
+    ],
+    "limit": "Public search page only; rank/index completeness and legal rights not established. Search term echoes are not app matches."
+  }
+]

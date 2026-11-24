@@ -1,5 +1,13 @@
 # Universal Deal Intelligence
 
+## Aktive Etappe · persönliche Marke und visuelle Identität ·24.11.2026
+
+Nutzer fordert ausdrücklich Fortsetzung der offenen Namens-/Gestaltungsarbeit. [Recherche, Shortlist, Grenzen und Entscheidung](docs/BRAND.md): Bessilo als reversibler **Anzeigename der Testapp**, interne UDI-Verträge/IDs erhalten. Keine Markenfreigabe, neue Leistungszusage, Domain-/Store-Veröffentlichung oder SOUNDWEAVE-Nutzung. Frühere UDI-Arbeitsnamenregel wird für die sichtbare Testoberfläche durch diese vorläufige Entscheidung ersetzt; öffentliche Namensfestlegung bleibt offen.
+
+- [ ] Namen zentral auf eigene UI-Templates/Anzeigenamen anwenden; Nutzertexte/Quellen/Markt/Speicher/IDs erhalten. DE/EN und wörtliche UDI-Parameter als Gegenprobe, Build/Tests/Browser, lokalen Commit sichern.
+- [ ] Bestehende native Oberfläche mit eigener Wortmarke/Signet, Papier/Tinte/Zitronenakzent und weniger Formularwirkung weiterentwickeln; Suche/Gespeichert/Fehler/Hilfe konsistent, keine toten Funktionen. Laufende Vorher/Nachher-Bilder320/390, vergrösserter Text, Tastaturbedienung, reale Fehler-/Speicherabläufe und Kontrast prüfen, wichtigste Schwäche korrigieren.
+- [ ] Originalrecherchen/Nachweise/Status, normale Commits/Remote-Readback und isolierte Wiederherstellung sichern. Neue native Ergebnisse separat abnehmen; iOS-Umgebungsblocker bleibt offen bis echtem Beleg. Danach unabhängige echte Quellen-/Kostenarbeit fortsetzen, fehlenden getrennten UDI-Dienst konkret halten.
+
 ## Mobile Gestaltungsrichtungen ·24.11.2026
 
 [Unveränderter Auftrag](docs/requirements/2026-11-24-mobile-design-directions.md). P0: Heute können native Apps Wünsche interpretieren/speichern und den fehlenden Angebotsdienst ehrlich erklären; ein besseres Suchergebnis als Standardsuche ist noch nicht belegt. Die native Startseite soll genau einen Wunsch aufnehmen; gespeicherte Wünsche gehören in «Gespeichert», Beispiele sind keine Empfehlungen oder Suchhistorie.

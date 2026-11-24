@@ -1,5 +1,7 @@
 # Universal Deal Intelligence
 
+**Sichtbare Testmarke: Bessilo.** [Namensentscheidung und Recherchegrenzen](docs/BRAND.md). Reversibler Anzeigename ohne Markenfreigabe; interne UDI-Verträge, Paketkennungen, gespeicherte Suchen und Repository bleiben erhalten. Keine Domain registriert oder App öffentlich veröffentlicht.
+
 **Entwicklungsstand 24.11.2026:** Android-Text-/Fehler-/Speicher-/Neustartablauf praktisch geprüft; vollständiger iOS-Ablauf noch in Abnahme. Der lokale Angebotskern liefert echte, zeitlich begrenzte DQ-Teilbelege; HTTP-Hülle und Auftragsadapter sind vorbereitet. Reale persönliche Anmeldung, Hosting und sichere native Tokenablage fehlen. **Die nativen Apps haben noch keine Live-Angebotssuche oder eigene Spracheingabe.** Aktueller Fortsetzungspunkt: [STATUS.md](STATUS.md), Dienstgrenzen: [SERVICE.md](docs/SERVICE.md). Kein veröffentlichter Testbuild oder bestandener Erstnutzertest.
 
 Markt und Sprache sind getrennt: Suchaufträge binden CH, gewünschtes Lieferland CH und CHF-Budget ausdrücklich. Quellen-/Marktkennungen werden vor aktiven Treffern und Preisempfehlungen geprüft. V2-Suchen und -Freigaben behalten diesen Kontext; alte Schweizer Suchen bleiben lesbar, ohne beim Lesen überschrieben zu werden. Gewünschte Lieferung ist kein Liefernachweis. Weitere Länder oder Währungen sind nicht aktiviert. [Datenvertrag und Migration](docs/MARKETS.md).

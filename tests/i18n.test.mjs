@@ -7,6 +7,15 @@ import { readFile } from 'node:fs/promises';
 import { load } from 'cheerio';
 import { intentFor } from '../src/intent.mjs';
 
+test('sichtbare Testmarke wechselt in beiden Sprachen ohne Nutzerwünsche umzubenennen',()=>{
+  try {
+    setLanguage('de');assert.equal(t('UDI · Zur Suche'),'Bessilo · Zur Suche');
+    assert.equal(t('{query} · Erneut prüfen',{query:'UDI camera udi.'}),'UDI camera udi. · Erneut prüfen');
+    setLanguage('en');assert.equal(t('UDI · Zur Suche'),'Bessilo · Go to search');
+    assert.equal(t('{query} · Erneut prüfen',{query:'UDI camera udi.'}),'UDI camera udi. · Check again');
+  } finally {setLanguage('de');}
+});
+
 test('Sprache ändert weder aktiven Markt noch CHF-Preisgrundlage',()=>{
   try {
     setLanguage('en');assert.equal(getLanguage(),'en');assert.equal(t('Suche'),'Search');assert.equal(speechLanguage(),'en-GB');

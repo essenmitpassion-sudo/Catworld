@@ -1,0 +1,92 @@
+[
+  {
+    "name": "bessilo",
+    "kind": "apple-ch",
+    "url": "https://itunes.apple.com/search?term=bessilo&entity=software&country=ch&limit=20",
+    "checkedAt": "2026-11-24T18:48:02.029Z",
+    "status": 200,
+    "resultCount": 0,
+    "names": []
+  },
+  {
+    "name": "bessilo",
+    "kind": "apple-us",
+    "url": "https://itunes.apple.com/search?term=bessilo&entity=software&country=us&limit=20",
+    "checkedAt": "2026-11-24T18:48:02.308Z",
+    "status": 200,
+    "resultCount": 4,
+    "names": [
+      "inVolo",
+      "CULL Recap – Travel Stories",
+      "Le Mie Scadenze - Promemoria",
+      "Pizzico: Salva Ricette con AI"
+    ]
+  },
+  {
+    "name": "bessilo",
+    "kind": "com",
+    "url": "https://rdap.verisign.com/com/v1/domain/bessilo.com",
+    "checkedAt": "2026-11-24T18:48:02.440Z",
+    "status": 404
+  },
+  {
+    "name": "bessilo",
+    "kind": "app",
+    "url": "https://pubapi.registry.google/rdap/domain/bessilo.app",
+    "checkedAt": "2026-11-24T18:48:02.650Z",
+    "status": 404,
+    "errorCode": 404,
+    "title": "Not Found"
+  },
+  {
+    "name": "fandlo",
+    "kind": "apple-ch",
+    "url": "https://itunes.apple.com/search?term=fandlo&entity=software&country=ch&limit=20",
+    "checkedAt": "2026-11-24T18:48:02.836Z",
+    "status": 200,
+    "resultCount": 0,
+    "names": []
+  },
+  {
+    "name": "fandlo",
+    "kind": "apple-us",
+    "url": "https://itunes.apple.com/search?term=fandlo&entity=software&country=us&limit=20",
+    "checkedAt": "2026-11-24T18:48:03.325Z",
+    "status": 200,
+    "resultCount": 15,
+    "names": [
+      "Yalla Ludo - Ludo&Jackaroo",
+      "Fandango - Movies & Series",
+      "NaukNauk: Bring Fandom to Life",
+      "FanFiction Plus & AO3 Reader",
+      "FanX Salt Lake 2026",
+      "Fanding",
+      "Fave - For Passionate Fans",
+      "Stoyco",
+      "Filmoo",
+      "Fanhubble",
+      "Fanmire App",
+      "MyLoto",
+      "fanzilo",
+      "FanReader - AO3 unofficial",
+      "FanStreamApp"
+    ]
+  },
+  {
+    "name": "fandlo",
+    "kind": "com",
+    "url": "https://rdap.verisign.com/com/v1/domain/fandlo.com",
+    "checkedAt": "2026-11-24T18:48:03.458Z",
+    "status": 200,
+    "domain": "FANDLO.COM"
+  },
+  {
+    "name": "fandlo",
+    "kind": "app",
+    "url": "https://pubapi.registry.google/rdap/domain/fandlo.app",
+    "checkedAt": "2026-11-24T18:48:03.620Z",
+    "status": 404,
+    "errorCode": 404,
+    "title": "Not Found"
+  }
+]

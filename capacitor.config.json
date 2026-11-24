@@ -1,6 +1,6 @@
 {
   "appId": "stream.soundweave.udi",
-  "appName": "UDI",
+  "appName": "Bessilo",
   "webDir": "native-dist",
   "loggingBehavior": "none",
   "includePlugins": ["@capacitor/preferences"],
