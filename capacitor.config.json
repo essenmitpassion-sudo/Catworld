@@ -1,8 +1,12 @@
 {
   "appId": "stream.soundweave.udi",
-  "appName": "Bessilo",
+  "appName": "Offer search",
   "webDir": "native-dist",
   "loggingBehavior": "none",
-  "includePlugins": ["@capacitor/preferences"],
-  "server": { "cleartext": false }
+  "includePlugins": [
+    "@capacitor/preferences"
+  ],
+  "server": {
+    "cleartext": false
+  }
 }

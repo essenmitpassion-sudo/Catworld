@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Bessilo",
-  "short_name": "Bessilo",
+  "name": "Angebotssuche",
+  "short_name": "Suche",
   "description": "Konkrete SSD-Angebote prüfen, offene Kosten verstehen und Suchen speichern. Schweizer Pilot mit begrenzter Quellenabdeckung.",
   "lang": "de-CH",
   "start_url": "./#suche",

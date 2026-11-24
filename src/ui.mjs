@@ -1,6 +1,7 @@
+import {brand} from './brand.mjs';
 // Original, consistently drawn symbols. External data never becomes HTML.
 const paths = {
-  waymark: ['path', {d:'M6 20V4h6a4 4 0 0 1 0 8H6m0 0h7a4 4 0 0 1 0 8H6'}],
+  waymark: brand.logo.strokes.flatMap(points=>['polyline',{points:points.map(p=>p.join(',')).join(' ')}]),
   search: ['circle', { cx: 10.5, cy: 10.5, r: 6.5 }, 'path', { d: 'm16 16 4.5 4.5' }],
   mic: ['rect', { x: 9, y: 2, width: 6, height: 13, rx: 3 }, 'path', { d: 'M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8' }],
   radar: ['circle', { cx: 12, cy: 12, r: 9 }, 'path', { d: 'M12 7a5 5 0 1 0 5 5M12 12l7-7' }],
@@ -18,7 +19,7 @@ const paths = {
 export function icon(name) {
   const ns = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
-  for (const [k, v] of Object.entries({ viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false', class: 'icon' })) svg.setAttribute(k, v);
+  for (const [k, v] of Object.entries({ viewBox: name==='waymark'?`0 0 ${brand.logo.size} ${brand.logo.size}`:'0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': name==='waymark'?String(brand.logo.strokeWidth):'1.7', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true', focusable: 'false', class: 'icon' })) svg.setAttribute(k, v);
   const parts = paths[name] ?? paths.search;
   for (let i = 0; i < parts.length; i += 2) {
     const part = document.createElementNS(ns, parts[i]);

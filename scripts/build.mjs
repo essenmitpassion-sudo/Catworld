@@ -1,5 +1,8 @@
 import { copyFile, mkdir, readFile } from 'node:fs/promises';
 import { appFiles } from './public-files.mjs';
+import {syncIdentity} from './sync-identity.mjs';
+
+await syncIdentity();
 
 const files = appFiles.map(([path])=>path).filter(path=>path!=='observations.json');
 const observations = new URL('../public/observations.json', import.meta.url);

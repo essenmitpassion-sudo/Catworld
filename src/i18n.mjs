@@ -19,7 +19,7 @@ export function t(key,params={}) {
   if(!hasMessage(key))throw new Error('Missing UI translation: '+key);
   const values=typeof params==='function'?params():params;
   // Apply identity only to our template, before external/user parameters enter.
-  return brandTemplate(language==='en'?english[key]:key).replace(/\{(\w+)\}/g,(_,name)=>{
+  return brandTemplate(language==='en'?english[key]:key,language).replace(/\{(\w+)\}/g,(_,name)=>{
     if(!Object.hasOwn(values,name))throw new Error('Missing translation value: '+name);
     return String(values[name]);
   });
@@ -43,7 +43,7 @@ export function setText(node,value) {
 }
 export function applyLanguage(root=document) {
   document.documentElement.lang=language==='de'?'de-CH':'en';
-  for(const node of root.querySelectorAll('[data-brand-wordmark]'))node.textContent=brand.wordmark;
+  for(const node of root.querySelectorAll('[data-brand-wordmark]'))node.textContent=brand.labels[language].shortName;
   for(const node of root.querySelectorAll('[data-i18n]')) {
     const binding=bindings.get(node);setText(node,m(node.dataset.i18n,binding?.params??{}));
   }

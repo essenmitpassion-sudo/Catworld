@@ -453,7 +453,7 @@ try {
       assert.equal(await evaluate("document.querySelector('#web-results').textContent"), previousResults);
       await click('#intent-question button:nth-child(2)');
       assert.equal(await evaluate("document.querySelector('#search-query').value"), 'RAM 32 GB für meinen PC');
-      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('von Bessilo vorgeschlagen, von dir gewählt')"));
+      assert(await evaluate("document.querySelector('#intent-summary').textContent.includes('von der App vorgeschlagen, von dir gewählt')"));
       assert(await evaluate("document.querySelector('#intent-question').hidden"));
       await evaluate("document.querySelector('#search-query').value='RAM für meinen PC'; document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
       await click('#intent-question button:last-child');
@@ -610,7 +610,7 @@ try {
     await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
-    assert(await evaluate("document.querySelector('.brand').textContent.includes('bessilo') && document.title.includes('Bessilo')"),'the reversible display brand is consistent in the app and accessibility name');
+    assert(await evaluate("document.querySelector('.brand').textContent.includes('Search') && document.title.includes('Offer search')"),'the neutral English identity is consistent and has no fixed candidate brand');
     assert(await evaluate("!!document.querySelector('.native-settings summary') && !document.querySelector('.native-settings').open"),'market and language are available through one closed compact control');
     assert(await evaluate("document.querySelector('#recent-searches').hidden && document.querySelectorAll('.suggestions button').length===1"),'saved searches have their own destination and only one example competes with input');
     await captureBoundary(platform,'en',send);

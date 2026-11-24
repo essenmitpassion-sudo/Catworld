@@ -12,6 +12,8 @@ const git=async args=>(await execFile('git',args,{cwd:root,windowsHide:true})).s
 if(await git(['status','--porcelain'])) throw new Error('Save the reviewed, tested changes in Git before packaging.');
 const commit=await git(['rev-parse','HEAD']);
 if(!/^[a-f0-9]{40}$/.test(commit))throw new Error('Invalid Git commit');
+await import('./build.mjs');
+if(await git(['status','--porcelain']))throw new Error('Build updated generated files. Review and commit them before packaging this source identity.');
 const dir=new URL('../artifacts/',import.meta.url);await mkdir(dir,{recursive:true});
 const key=commit.slice(0,12),archive=new URL('udi-pilot-'+key+'.tar.gz',dir),receipt=new URL('udi-pilot-'+key+'.json',dir);
 const exists=async url=>{try{await lstat(url);return true;}catch(error){if(error.code==='ENOENT')return false;throw error;}};
@@ -23,7 +25,6 @@ if(await exists(archive)||await exists(receipt)) {
   console.log(JSON.stringify({archive:fileURLToPath(archive),commit,sha256:actual,files:Object.keys(saved.files).length,reused:true,published:false}));
   process.exit(0);
 }
-await import('./build.mjs');
 const tracked=(await execFile('git',['ls-files','-z'],{cwd:root,windowsHide:true})).stdout.split('\0').filter(Boolean);
 const allowed=tracked.filter(path=>/^(?:src\/|scripts\/|public\/|tests\/|docs\/|android\/|ios\/|\.github\/workflows\/|\.gitattributes$|capacitor\.config\.json$|tsconfig\.client\.json$|package\.json$|package-lock\.json$|README\.md$|AGENTS\.md$|PLAN\.md$|STATUS\.md$)/.test(path));
 const paths=[...allowed,...appFiles.map(([path])=>'dist/'+path)].sort();

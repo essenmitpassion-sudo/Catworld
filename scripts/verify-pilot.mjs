@@ -43,7 +43,8 @@ const app=server();await new Promise(resolve=>app.listen(0,'127.0.0.1',resolve))
 try {
   const origin='http://127.0.0.1:'+app.address().port;
   const response=await fetch(origin+'/manifest.webmanifest');assert.equal(response.status,200);
-  assert.equal((await response.json()).short_name,'UDI');
+  const packagedManifest=JSON.parse(await readFile(join(unpacked,'src/manifest.webmanifest'),'utf8'));
+  assert.deepEqual(await response.json(),packagedManifest,'restored service must deliver its own packaged identity and manifest');
   const scan=await fetch(origin+'/api/discovery',{method:'POST',headers:{'Content-Type':'application/json',Origin:origin,'Sec-Fetch-Site':'same-origin'},body:JSON.stringify({query:'Samsung 990 PRO 2 TB'})});
   assert.equal(scan.status,200);assert.equal((await scan.json()).items.length,0,'without verifier, no offer is invented');
   const evidence={verifiedAt:new Date().toISOString(),commit:receipt.commit,archiveSha256:receipt.sha256,archiveIntegrity:true,unpackedFiles:entries.length,lockfileInstalled:true,

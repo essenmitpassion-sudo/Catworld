@@ -1,0 +1,75 @@
+{
+  "source": "this commit; exact identity from Git history",
+  "recordedAt": "2026-11-24T19:12:14.147Z",
+  "instruction": "docs/requirements/2026-11-24-neutral-identity.md",
+  "namingRoundsStopped": true,
+  "displayIdentity": "Neutral DE/EN descriptors and search-frame glyph, not a candidate brand",
+  "centralSource": "src/brand.mjs",
+  "generatedBy": [
+    "scripts/sync-identity.mjs",
+    "scripts/generate-icons.mjs",
+    "scripts/native-icons.mjs"
+  ],
+  "unchanged": [
+    "Technical bundle/package IDs and schemes",
+    "API/storage/market/source contracts and user/merchant data"
+  ],
+  "checks": {
+    "unitTests": 115,
+    "typecheck": true,
+    "build": true,
+    "fullBrowser": {
+      "de": [
+        360,
+        390,
+        768,
+        1365
+      ],
+      "en": [
+        390,
+        1365
+      ]
+    },
+    "nativeBoundaryWidths": [
+      320,
+      390
+    ],
+    "largeText": "200% CSS including open settings",
+    "smallHeight": 360,
+    "draftAndPersistence": true,
+    "identitySync": "Two successive actual syncs byte-idempotent; app ID stable and translation bindings preserved",
+    "nativeAssets": {
+      "perPlatform": 30,
+      "identical": true,
+      "networkDisabled": true
+    },
+    "images": [
+      {
+        "path": "docs/evidence/2026-11-24-neutral-ui/browser-boundary-ios-en-after-320.png",
+        "sha256": "c893ded5f0a9f8f255621cebc918257f6fab149f39e2dd3f5bbcdc83d45fa79c"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-neutral-ui/browser-boundary-ios-de-after.png",
+        "sha256": "22c134ba57f4dd09ad730de0ad00f9bda4cac6e8a880ef05f149ba6e32c8adb2"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-neutral-ui/browser-boundary-ios-en-saved-after.png",
+        "sha256": "bf44bbc1071a229c05178794c6fcf08124d3f2f762bbeff547e820bb4678c1b7"
+      }
+    ],
+    "imagesAreNative": false
+  },
+  "corrections": [
+    "Stale fixed short_name UDI caused actual274-file backup verification failure on bac5160; verifier now checks complete served manifest against its packaged source. New full restore remains pending until run.",
+    "Review found generated build writes could invalidate source-commit provenance; package now builds then rechecks Git cleanliness before creating or reusing any archive.",
+    "Early overbroad aria regex changed translation binding, caught by actual tests; narrowed exact whitespace aria attribute and restored source key.",
+    "New configurable neutral glyph exceeded prior fixed adaptive scale; scale derived from geometry extent and actual alpha/safe-zone probe passes.",
+    "Repeated Windows PNG write failures: unchanged content now read/compared and left untouched; successful native prepare/check and sync repeated."
+  ],
+  "native": "No new native device/keyboard/update/launcher acceptance inferred. Previous Android proof a45f751 and iOS CoreLocation boot blocker remain historical.",
+  "open": [
+    "Actual full native live search still needs separately authorized UDI service/auth/secure token storage",
+    "iOS healthy simulator or physical device, native dictation and human UX tests",
+    "New archive verification and remote-save receipt to follow"
+  ]
+}

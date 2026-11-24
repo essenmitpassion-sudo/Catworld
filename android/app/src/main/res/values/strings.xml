@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Bessilo</string>
-    <string name="title_activity_main">Bessilo</string>
+    <string name="app_name">Offer search</string>
+    <string name="title_activity_main">Offer search</string>
     <string name="package_name">stream.soundweave.udi</string>
     <string name="custom_url_scheme">stream.soundweave.udi</string>
 </resources>

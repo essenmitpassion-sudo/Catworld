@@ -119,7 +119,7 @@ h1 { overflow-wrap: anywhere; }
 .masthead .language-control { display: inline-flex; }
 @media(max-width:45rem) { .masthead { gap: .5rem; } .market-label { font-size: .7rem; } .language-control select { font-size: .8rem; padding-inline: .4rem; } }
 
-/* Bessilo: warm paper, ink and a restrained citrus selection accent.
+/* Neutral mobile UI: warm paper, ink and a restrained citrus selection accent.
    Shared native presentation only; no change to market or evidence rules. */
 html[data-native-ui] { --ink:#202c25; --muted:#59665b; --line:#d8ddd1; --paper:#fffef9; --blue:#244b3c; --soft:#eaf0df; --accent:#daedaa; color:var(--ink); background:#f7f7ef; }
 html[data-native-ui] body { grid-template-rows:auto minmax(0,1fr) auto; grid-template-areas:'header' 'content' 'navigation'; }
@@ -128,7 +128,7 @@ html[data-native-ui] .site-header { background:transparent; border:0; }
 html[data-native-ui] .masthead { position:relative; min-height:4.5rem; padding-block:.8rem; flex-wrap:wrap; gap:.5rem .75rem; }
 html[data-native-ui] .brand { min-height:44px; margin-right:auto; gap:.55rem; font-size:1.85rem; letter-spacing:-.075em; color:var(--ink); }
 html[data-native-ui] .brand-mark { width:2rem; height:2rem; border-radius:.65rem; background:var(--accent); transform:none; }
-html[data-native-ui] .brand-mark .icon { width:1.55rem; height:1.55rem; stroke-width:2; }
+html[data-native-ui] .brand-mark .icon { width:1.55rem; height:1.55rem; }
 html[data-native-ui] .brand-caption { display:none; }
 html[data-native-ui] .native-settings { position:static; }
 html[data-native-ui] .native-settings > summary { display:flex; align-items:center; gap:.45rem; min-height:44px; padding:.5rem .65rem; border:1px solid var(--line); border-radius:999px; color:var(--muted); background:var(--paper); font-size:.75rem; list-style:none; }

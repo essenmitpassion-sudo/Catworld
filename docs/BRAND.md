@@ -1,4 +1,6 @@
-# Bessilo · vorläufige Produktmarke ·24.11.2026
+# Sichtbare Identität offen · historische Namensvorprüfung
+
+**Aktuelle Nutzerentscheidung vom24.11.2026:** Keine weiteren Namensrunden innerhalb dieser Entwicklung. UDI nur intern; Bessilo ist kein aktiver Anzeigename. Neutrale Namen und ein neutrales Suchrahmen-Signet stehen austauschbar in src/brand.mjs. Anzeige-Metadaten/Icons werden daraus erzeugt, technische IDs und Nutzer-/Quelldaten bleiben unverändert. Vorrang haben Nutzerführung, Tastatur, Design und reale Suchabläufe. Die folgende frühere Recherche ist Historie, keine Markenfestlegung oder aktive Umsetzungsanweisung.
 
 Entscheidung: **Bessilo** wird reversibler Anzeigename der unveröffentlichten Testapp. UDI/Universal Deal Intelligence bleibt interne Projekt-/Vertragsbezeichnung. Kein neuer Store-Eintrag, keine Bundle-/Paket-ID, Domain, Signatur, Speicherkennung oder API-Version wird geändert. Der Name ist **nicht markenrechtlich freigegeben**. Recherche ist eine Vorprüfung, keine Rechtsberatung, kein Nachweis weltweiter Einzigartigkeit und keine Domainreservierung.
 

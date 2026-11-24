@@ -1,6 +1,6 @@
 # Universal Deal Intelligence
 
-**Sichtbare Testmarke: Bessilo.** [Namensentscheidung und Recherchegrenzen](docs/BRAND.md). Reversibler Anzeigename ohne Markenfreigabe; interne UDI-Verträge, Paketkennungen, gespeicherte Suchen und Repository bleiben erhalten. Keine Domain registriert oder App öffentlich veröffentlicht.
+**Keine festgelegte sichtbare Marke.** UDI ist nur das interne Projektkürzel. Neutrale Namen (Suche/Search) und Logo stehen zentral in [src/brand.mjs](src/brand.mjs); `npm run build` synchronisiert Anzeige-Metadaten und Public-Icons, `npm run native:prepare` zusätzlich Plattform-Icons. Technische IDs, Speicher und Suchverträge bleiben erhalten. Namensrecherche ist separat pausiert; [historischer Stand](docs/BRAND.md). Keine Domain registriert oder App öffentlich veröffentlicht.
 
 **Entwicklungsstand 24.11.2026:** Android-Text-/Fehler-/Speicher-/Neustartablauf praktisch geprüft; vollständiger iOS-Ablauf noch in Abnahme. Der lokale Angebotskern liefert echte, zeitlich begrenzte DQ-Teilbelege; HTTP-Hülle und Auftragsadapter sind vorbereitet. Reale persönliche Anmeldung, Hosting und sichere native Tokenablage fehlen. **Die nativen Apps haben noch keine Live-Angebotssuche oder eigene Spracheingabe.** Aktueller Fortsetzungspunkt: [STATUS.md](STATUS.md), Dienstgrenzen: [SERVICE.md](docs/SERVICE.md). Kein veröffentlichter Testbuild oder bestandener Erstnutzertest.
 

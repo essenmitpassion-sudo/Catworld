@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Bessilo",
-  "short_name": "Bessilo",
+  "name": "Offer search",
+  "short_name": "Search",
   "description": "Check concrete SSD offers, understand unknown costs and save searches. Swiss pilot with limited source coverage.",
   "lang": "en",
   "start_url": "./#suche",
