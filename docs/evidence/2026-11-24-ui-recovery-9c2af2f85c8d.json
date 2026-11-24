@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "commit": "9c2af2f85c8db117fd6a03511a2dd2957b7c0c40",
+  "restoreRef": "9c2af2f85c8db117fd6a03511a2dd2957b7c0c40",
+  "remoteBranch": "development/udi",
+  "remoteHeadReadBack": true,
+  "requirement": {
+    "path": "docs/requirements/2026-11-24-visual-product-quality.md",
+    "workingFileAndGitBlobSha256": "9d229ba2f29d1ebd34b9031c8210e537f8c84b94e093c883865aa4af67b9b421"
+  },
+  "localRecovery": {
+    "archive": "artifacts/udi-pilot-9c2af2f85c8d.tar.gz",
+    "sha256": "ad325ea71d376b4032c4cdb6d918cba3a4a4a7f314da1d2893490afb1d4dc7cb",
+    "files": 210,
+    "verifiedAt": "2026-11-24T00:03:51.916Z",
+    "isolatedRestore": true,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false,
+    "nativeCompilationVerifiedByRestore": false,
+    "containsInstallableApkOrIpa": false,
+    "externallyUploaded": false
+  },
+  "limits": "Local recovery verification is not native acceptance or a working hosted offer service. Source and requirements are separately secured on GitHub. Native run results are recorded independently."
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "commit": "9c2af2f85c8db117fd6a03511a2dd2957b7c0c40",
+  "restoreRef": "9c2af2f85c8db117fd6a03511a2dd2957b7c0c40",
+  "runId": 45293534923,
+  "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45293534923/job/138108069619",
+  "job": {
+    "id": 138108069619,
+    "name": "compile (ios, macos-15)",
+    "startedAt": "2026-11-24T00:00:17Z",
+    "completedAt": "2026-11-24T00:06:18Z",
+    "conclusion": "failure"
+  },
+  "environment": {
+    "image": "macos-15-arm64",
+    "imageVersion": "20261118.0550.1",
+    "xcode": "26.2",
+    "simulator": "fresh owned iPhone simulator on existing iOS runtime; not precreated device",
+    "cleanup": "only the newly created simulator was shut down and deleted"
+  },
+  "observations": {
+    "nativeBuild": "success",
+    "simulatorBoot": "finished",
+    "simctlInstall": "120-second ETIMEDOUT",
+    "installationDaemon": "00:05:34.666Z: Install successful for (Developer:stream.soundweave.udi); Overall: 2.66s",
+    "diagnosticScreenshot": "unavailable; no complete PNG records emitted",
+    "appLaunchAndUiTests": "not reached"
+  },
+  "interpretation": "Daemon success and CLI timeout disagree. This narrows investigation to installation/control/runner readiness; it does not prove app startup, native UI acceptance, or the precise underlying cause.",
+  "nextControlledInvestigation": {
+    "repeatIdentically": false,
+    "candidate": "Separately evaluate standard macos-26 with a pinned supported Xcode version, preserving Android results and current diagnostics. Do not attribute this failure to the documented Apple issue without additional evidence.",
+    "appleReference": "https://developer.apple.com/documentation/xcode-release-notes/xcode-26_4-release-notes",
+    "appleContext": "Xcode26.4 documents a resolved simdiskimaged/simctl hang and requires macOS26.2 or newer; verify relevant environment before testing.",
+    "runnerReference": "https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md",
+    "implementedOrVerified": false
+  },
+  "limits": {
+    "newIosUiPracticallyVerified": false,
+    "iosPersistencePracticallyVerified": false,
+    "fullProductAcceptance": false,
+    "liveOffers": false
+  }
+}

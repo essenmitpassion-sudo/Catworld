@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "commit": "9c2af2f85c8db117fd6a03511a2dd2957b7c0c40",
+  "restoreRef": "9c2af2f85c8db117fd6a03511a2dd2957b7c0c40",
+  "run": {
+    "id": 45293534923,
+    "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45293534923",
+    "fullRunConclusion": "iOS was still running when Android evidence was recorded"
+  },
+  "job": {
+    "id": 138108069864,
+    "name": "compile (android, ubuntu-24.04)",
+    "conclusion": "success",
+    "startedAt": "2026-11-24T00:00:16Z",
+    "completedAt": "2026-11-24T00:04:17Z"
+  },
+  "environment": {
+    "platform": "Android",
+    "api": 36,
+    "emulator": "x86_64, 320x640",
+    "driver": "adb and CDP to the installed debug app with actual Capacitor Preferences; no desktop browser substitute"
+  },
+  "checks": {
+    "newNativeInterface": true,
+    "primaryActionAboveNavigation": true,
+    "englishExactTextSearch": true,
+    "germanExactTextSearch": true,
+    "realUnconfiguredServiceError": true,
+    "noInventedPurchaseResults": true,
+    "saveBothDistinctRequests": true,
+    "exactRequestsAfterForceStopAndRestart": true,
+    "nativePreferencesAndCHDeliveryCurrency": true,
+    "germanLanguageAfterRestart": true
+  },
+  "screenshot": {
+    "path": "docs/evidence/2026-11-24-native-ui/android-native-start.png",
+    "origin": "adb exec-out screencap of the isolated installed app, recovered from this job's bounded PNG log records",
+    "width": 320,
+    "height": 640,
+    "sha256": "dc11c79f8508df37b986653cbedd50e02d6384b09be1a35fe206d667c0effad4",
+    "decodedAndHashVerified": true,
+    "visuallyInspected": true,
+    "observation": "Search action is fully visible above the two-tab navigation; honest unavailable-service message is visible. Empty initial state contains no actual offers or personal data."
+  },
+  "binary": {
+    "pathOnDisposableRunner": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "sha256": "a505980de234409c1bfb83be72b48fffa3d3636165e095c9139b5495e5be5056",
+    "installedAndStarted": true,
+    "downloadedToUserWorkspace": false,
+    "published": false
+  },
+  "limits": {
+    "physicalDevice": false,
+    "iosVerifiedByThisRecord": false,
+    "realSharedService": false,
+    "currentOffers": false,
+    "externalOfferNavigation": false,
+    "nativeSpeech": false,
+    "screenReaderAndSystemTextScaling": false,
+    "fullProductAcceptance": false
+  }
+}

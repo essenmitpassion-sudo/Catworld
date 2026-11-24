@@ -1,6 +1,6 @@
 # Zieleingabe und gespeicherte Suchen · 24.11.2026
 
-Diese Bilder zeigen die laufende gemeinsame App-Oberfläche in Chromium mit einem ausdrücklich simulierten Android-Brückenadapter. **Keine nativen Gerätebilder und keine Geräteabnahme.** Der gespeicherte Samsung-Wunsch ist eine synthetische QA-Eingabe, kein Angebot und kein Kunde. Native Nachweise bleiben separat in der Plattformmatrix.
+Die folgenden Vorher-/Nachher-Bilder zeigen die laufende gemeinsame App-Oberfläche in Chromium mit einem ausdrücklich simulierten Android-Brückenadapter. **Diese drei Vergleichsbilder sind keine nativen Gerätebilder und keine Geräteabnahme.** Der gespeicherte Samsung-Wunsch ist eine synthetische QA-Eingabe, kein Angebot und kein Kunde. Der separate echte Android-Nachweis steht weiter unten.
 
 Vorher und nachher: Englisch, 390 × 780 Pixel. Der frühere Build zeigte eine deaktivierte Spracheingabe samt Fehlerfläche. Der neue Einstieg priorisiert Zieleingabe, Hauptaktion und gespeicherte Wünsche; Radar-/Vergleichsrouten bleiben kontextuell erhalten. Aktuelle Angebote und native Sprache sind weiterhin nicht verfügbar und werden nicht als funktionierend ausgegeben.
 
@@ -26,3 +26,11 @@ Gespeicherte Suche:
 ![Gesäter QA-Suchwunsch, kein aktuelles Kaufangebot](saved-after.png)
 
 Der [Bewertungsbogen](../../PILOT-TEST.md) ist unausgefüllt. Wertigkeit, Verständnis und Wiederkehr müssen echte Testpersonen beurteilen. Live-Dienst, vollständiger Nutzerablauf und tatsächlich übergebbare Binärpakete bleiben eigene P0-Abnahmen.
+
+## Tatsächlich installierte Android-App
+
+Quellstand9c2af2f85c8d, API36, 320×640. [Job138108069864](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45293534923/job/138108069864) hat Installation, Start, EN/DE-Texteingabe, den realen fehlenden Dienst sowie Speichern und exaktes Wiederfinden beider Wünsche nach Prozessneustart bestanden. Das Bild stammt vom Emulator über adb, nicht von Chromium. SHA-256 und Prüfumfang: [unveränderter Nachweis](../2026-11-24-android-ui-9c2af2f85c8d.json).
+
+![Installierte Android-App mit neuer Zieleingabe](android-native-start.png)
+
+Suchknopf und Navigation sind vollständig sichtbar; die ehrliche Dienstlücke bleibt lesbar. Kein Nachweis für physische Geräte, Live-Angebote, Spracheingabe, Systemschrift oder Screenreader. iOS hat eine getrennte Abnahme.
