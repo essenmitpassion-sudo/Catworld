@@ -4,7 +4,13 @@ final class UDIFlowTests: XCTestCase {
     func testUnconnectedSearchAndPersistenceInBothLanguages() throws {
         continueAfterFailure = false
         let app = XCUIApplication(bundleIdentifier: "stream.soundweave.udi")
-        addTeardownBlock { if self.testRun?.hasSucceeded == false { print(app.debugDescription) } }
+        addTeardownBlock {
+            let attachment = XCTAttachment(screenshot: app.screenshot())
+            attachment.name = "UDI-final-native-screen"
+            attachment.lifetime = .keepAlways
+            self.add(attachment)
+            if self.testRun?.hasSucceeded == false { print(app.debugDescription) }
+        }
         app.launch()
         let web = app.webViews.firstMatch
         XCTAssertTrue(web.waitForExistence(timeout: 15))
@@ -15,11 +21,13 @@ final class UDIFlowTests: XCTestCase {
         for (index, language) in ["English", "Deutsch"].enumerated() {
             let search = web.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Search", "Suche")).firstMatch
             XCTAssertTrue(search.waitForExistence(timeout: 15)); search.tap()
-            let selector = web.buttons[language].firstMatch
+            // WebKit exposes aria-pressed buttons as native accessibility switches.
+            let selector = web.switches[language].firstMatch
             XCTAssertTrue(selector.waitForExistence(timeout: 5))
             XCTAssertTrue(selector.isHittable, "Language action must be directly reachable while editing")
             if app.statusBars.firstMatch.exists { XCTAssertGreaterThanOrEqual(selector.frame.minY, app.statusBars.firstMatch.frame.maxY, "Language control must clear the status bar") }
             selector.tap()
+            XCTAssertEqual(selector.value as? String, "1", "The chosen UI language must remain selected")
             let field = web.textViews.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")

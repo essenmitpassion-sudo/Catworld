@@ -1,0 +1,15 @@
+{
+  "schemaVersion":1,
+  "commit":"70fece945c44e3937eb3db1950ec5adf8c7c5e4f",
+  "runId":45405816648,
+  "jobId":138489570735,
+  "conclusion":"failure",
+  "scope":"Actual iPhone17Pro/iOS26.5 simulator, Xcode26.6/macOS26; app and UI-test target compiled and app launched",
+  "failure":"UDIFlowTests.swift19 queried English Button but WebKit exposes aria-pressed language actions as Switch accessibility elements",
+  "actualAccessibilityEvidence":[{"type":"Switch","label":"Deutsch","value":"0","frame":"241,72,75,45"},{"type":"Switch","label":"English","value":"1","frame":"319,72,68,45"}],
+  "tests":{"introduction":"passed","firstLanguageAction":"not found by incorrect test query","textAndPersistence":"not reached"},
+  "screenshot":"Post-test simctl capture unavailable, no complete PNG records; no new visual claim",
+  "correction":"Query real web.switches[language], assert selected value1, retain every text/error/save/restart criterion. Keep an explicitly named XCTest app screenshot before cleanup, export only its safe PNG attachment with existing bounded hash channel, retain diagnostic fallback. Actual exporter/native outcome still required.",
+  "supersededRun":"Backend-only d123d69 native run45408152244 cancelled because it retained the known incorrect test query; general CI45408152138 passed111tests. Android70fece9 proof retained separately.",
+  "limits":"No successful iOS language/text/persistence flow inferred from accessibility presence. No live service, native speech, physical-device or release claim."
+}

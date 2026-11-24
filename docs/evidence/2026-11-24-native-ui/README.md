@@ -1,5 +1,7 @@
 # Zieleingabe und gespeicherte Suchen · 24.11.2026
 
+Neue direkte Sprachwahl **auf Android tatsächlich geprüft**: [Originales Emulatorbild](language-actions-android-native.png),320×640, App70fece9. Vollständige PNG-Übertragung samt Hash und Bild angesehen; beide Sprachtasten, Texteingabe/Dienstfehler/Speicherung sowie beide Suchen nach Prozessneustart erfolgreich. [Getrennter nativer Nachweis](../2026-11-24-language-android-70fece9.json). iOS, reale native Angebote und Spracheingabe bleiben gesondert abzunehmen; Bild ist kein Kaufangebot.
+
 Spätere Sprachwahlkorrektur70fece9: [390px](language-actions-browser-390.png) und [320px](language-actions-browser-320.png) zeigen direkte Deutsch-/English-Tasten in der tatsächlich laufenden Browser-QA. Beide Bilder angesehen; klare44px-Aktionen statt zusätzlichem Systempicker, laufende Texteingabe bleibt erhalten. **Keine nativen Bilder oder neue iOS-Abnahme.** [Prüf-/Wiederherstellungsnachweis](../2026-11-24-language-ui-70fece9.json). Die folgenden früheren Vorher-/Nachher- und echten nativen Nachweise bleiben unverändert historisch erhalten.
 
 Die folgenden Vorher-/Nachher-Bilder zeigen die laufende gemeinsame App-Oberfläche in Chromium mit einem ausdrücklich simulierten Android-Brückenadapter. **Diese drei Vergleichsbilder sind keine nativen Gerätebilder und keine Geräteabnahme.** Der gespeicherte Samsung-Wunsch ist eine synthetische QA-Eingabe, kein Angebot und kein Kunde. Der separate echte Android-Nachweis steht weiter unten.

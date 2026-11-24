@@ -8,6 +8,16 @@ import {resolve,join,sep} from 'node:path';
 const labels=new Set(['android-start','ios-start','ios-flow','ios-install-timeout']);
 const maximum=1024*1024,chunkSize=4096;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+export function resultScreenshotName(manifest) {
+  assert(Array.isArray(manifest)&&manifest.length<=100,'Invalid XCTest attachment manifest');
+  const attachments=manifest.flatMap(row=>Array.isArray(row?.attachments)?row.attachments:[]);
+  assert(attachments.length<=1000,'Too many XCTest attachments');
+  const marked=attachments.filter(row=>typeof row?.suggestedHumanReadableName==='string'&&row.suggestedHumanReadableName.startsWith('UDI-final-native-screen'));
+  assert.equal(marked.length,1,'One explicitly marked UDI screenshot is required');
+  const file=marked[0].exportedFileName;
+  assert(typeof file==='string'&&/^[A-Za-z0-9_.-]{1,200}\.png$/i.test(file)&&!file.includes('..'),'Unsafe XCTest screenshot name');
+  return file;
+}
 function metadata(png) {
   assert(Buffer.isBuffer(png)&&png.length>=33&&png.length<=maximum,'Screenshot size invalid');
   assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a','Screenshot must be PNG');

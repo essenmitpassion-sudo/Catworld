@@ -8,7 +8,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
 import {withAndroidPage} from './native-cdp.mjs';
 import {androidFlow} from './native-flow-android.mjs';
-import {writeScreen} from './native-screens.mjs';
+import {writeScreen,resultScreenshotName} from './native-screens.mjs';
 
 const platform = process.argv[2];
 const temp = process.env.RUNNER_TEMP;
@@ -165,10 +165,22 @@ if (platform === 'android') {
     console.log(readFileSync(log,'utf8').slice(-18000));
     let captured=false;
     try {
-      const screenshot=join(temp,'udi-ios-flow.png');
-      run('xcrun',['simctl','io',device.udid,'screenshot',screenshot],15000);
-      await recordScreen('ios-flow',screenshot);captured=true;
-    } catch {console.log('iOS post-test screenshot unavailable; no visual claim.');}
+      // Capture while XCTest still owns the foreground app. Only the explicitly
+      // named UDI attachment is selected, not an arbitrary exported diagnostic.
+      const directory=join(temp,'udi-flow-attachments');
+      run('xcrun',['xcresulttool','export','attachments','--path',join(temp,'udi-flow.xcresult'),'--output-path',directory],30000);
+      const manifest=JSON.parse(readFileSync(join(directory,'manifest.json'),'utf8'));
+      const screenshot=resultScreenshotName(manifest);
+      await recordScreen('ios-flow',join(directory,screenshot));captured=true;
+      console.log('iOS image source: explicitly marked XCTest app attachment.');
+    } catch(error) {console.log('iOS XCTest image unavailable: '+String(error?.message??error).slice(-1500));}
+    if(!captured) {
+      try {
+        const screenshot=join(temp,'udi-ios-flow.png');
+        run('xcrun',['simctl','io',device.udid,'screenshot',screenshot],15000);
+        await recordScreen('ios-flow',screenshot);captured=true;
+      } catch(error) {console.log('iOS post-test screenshot unavailable; no visual claim. '+String(error?.message??error).slice(-1500));}
+    }
     assert(!result.error&&result.status===0,'iOS native flow test failed; see Xcode log above.');
     assert(captured,'iOS flow passed but screenshot could not be captured; visual acceptance remains open.');
   } finally {

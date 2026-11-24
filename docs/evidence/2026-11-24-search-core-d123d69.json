@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "commit": "d123d696e67b31740e442c5ac0a2ab51576a95ba",
+  "remoteHeadReadBack": true,
+  "scope": "Actual request-to-existing-core composition, cancellation and isolated recovery; no public/native service activation",
+  "checks": {
+    "fullUnitTestsPassed": 111,
+    "targetedCompositionTests": 5,
+    "targetedAffectedTests": 12,
+    "typecheck": true,
+    "build": true,
+    "fullDe4En2ChromiumRegression": true,
+    "abortedScanPreviouslyVerifiedThreeInsteadOfOne": true,
+    "journalCancellationRegressionFailedBeforeFix": true,
+    "independentReview": "Original journal-queue finding reproduced and fixed; reviewer reran12 tests, no remaining important findings"
+  },
+  "actualLocalSourcePipeline": {
+    "scope": "Operator-local real public-source pipeline; not hosted authentication or native live acceptance",
+    "checkedAt": "2026-11-24T13:51:37.907Z",
+    "sourceAdapter": "pageVerifier dq-solutions.ch only",
+    "modelConfigured": false,
+    "result": {
+      "kind": "results",
+      "marketId": "CH",
+      "deliveryCountry": "CH",
+      "currency": "CHF",
+      "criteria": {
+        "maxTotal": null,
+        "condition": "any",
+        "completeCostsOnly": false
+      },
+      "items": [
+        {
+          "title": "Samsung 990 PRO · 2 TB · ohne Kühlkörper",
+          "url": "https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011",
+          "source": "DQ Solutions",
+          "sourceId": "dq-solutions.ch",
+          "marketId": "CH",
+          "type": "shop",
+          "status": "partial",
+          "check": {
+            "url": "https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011",
+            "marketId": "CH",
+            "sourceId": "dq-solutions.ch",
+            "status": "http-200",
+            "productMatch": true,
+            "availability": "active",
+            "checkedAt": "2026-11-24T13:51:37.857Z",
+            "currency": "CHF",
+            "seller": "DQ Solutions",
+            "condition": "Neu",
+            "price": 43900,
+            "shipping": null,
+            "taxes": null,
+            "imports": null,
+            "fees": null,
+            "delivery": null,
+            "deliveryDestination": null,
+            "total": null,
+            "minimum": 43900,
+            "missing": [
+              "shipping",
+              "taxes",
+              "imports",
+              "fees"
+            ],
+            "mpn": "MZ-V9P2T0BW"
+          },
+          "expiresAt": "2026-11-24T13:56:37.857Z",
+          "mpn": "MZ-V9P2T0BW",
+          "budgetStatus": "none"
+        }
+      ],
+      "completedAt": "2026-11-24T13:51:37.907Z",
+      "unconfirmed": 2,
+      "excluded": 0,
+      "sourceMode": "catalog"
+    }
+  },
+  "localRecovery": {
+    "verifiedAt": "2026-11-24T13:54:31.034Z",
+    "commit": "d123d696e67b31740e442c5ac0a2ab51576a95ba",
+    "archiveSha256": "e9967f9e09845762cd8207e409ca8af1ec507bba14597c76a54b6091ec3516f1",
+    "archiveIntegrity": true,
+    "unpackedFiles": 238,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "nativeCompilationVerified": false,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false,
+    "archive": "artifacts/udi-pilot-d123d696e67b.tar.gz",
+    "externallyUploaded": false,
+    "containsApkOrIpa": false
+  },
+  "limits": "Unit HTTP authentication/source fixtures are synthetic. The separate local source probe used real permitted public DQ data, no model. Its one partial observation expires after5min; incomplete costs/delivery prevent recommendation. No personal journal in the composed callback. Real authentication, hosting, native token storage/offer flow, shared quotas and native voice remain open. An already-started atomic rename is not rolled back."
+}

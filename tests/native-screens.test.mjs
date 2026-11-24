@@ -4,9 +4,17 @@ import {readFile} from 'node:fs/promises';
 import {execFile as execute} from 'node:child_process';
 import {promisify} from 'node:util';
 import {Writable} from 'node:stream';
-import {screenRecords,parseScreens,writeScreen} from '../scripts/native-screens.mjs';
+import {screenRecords,parseScreens,writeScreen,resultScreenshotName} from '../scripts/native-screens.mjs';
 // Transport test fixture, not a native application screenshot.
 const fixture=await readFile(new URL('../src/assets/udi-192.png',import.meta.url));
+
+test('XCTest-Bildauswahl exportiert nur den ausdrücklich markierten eigenen PNG-Anhang',()=>{
+  // Synthetic metadata only, not an actual xcresult/device screenshot.
+  const attachment={suggestedHumanReadableName:'UDI-final-native-screen.png',exportedFileName:'test-screen.png'};
+  assert.equal(resultScreenshotName([{attachments:[attachment,{suggestedHumanReadableName:'unrelated.png',exportedFileName:'other.png'}]}]),'test-screen.png');
+  for(const file of ['../private.png','sub/image.png','image.jpg','/tmp/private.png','..secret.png'])assert.throws(()=>resultScreenshotName([{attachments:[{...attachment,exportedFileName:file}]}]));
+  for(const value of [null,{},[],[{attachments:[]}],[{attachments:[attachment,attachment]}]])assert.throws(()=>resultScreenshotName(value));
+});
 
 test('grosse Bildnachweise werden vor einem sofortigen Prozessende vollständig in eine echte Pipe geschrieben',async()=>{
   const script=`import{readFileSync}from'node:fs';import{writeScreen}from'./scripts/native-screens.mjs';

@@ -1,0 +1,12 @@
+{
+  "schemaVersion":1,
+  "commit":"70fece945c44e3937eb3db1950ec5adf8c7c5e4f",
+  "runId":45405816648,
+  "jobId":138489570114,
+  "conclusion":"success",
+  "scope":"Actual installed Android emulator, API36,320x640; direct language actions and unavailable-service flow",
+  "apkSha256":"2764a10d0d59af410fd5fddcbf54c542c8100c79c530761d2238483736611a40",
+  "checks":{"visibleLanguageButtonsActuallyTapped":true,"englishTextErrorSave":"2026-11-24T13:49:28.1267229Z","germanTextErrorSave":"2026-11-24T13:49:33.7970253Z","bothExactWishesAndGermanLanguageAfterForceStop":"2026-11-24T13:49:44.0474372Z","explicitChContextPreserved":true},
+  "image":{"path":"2026-11-24-native-ui/language-actions-android-native.png","sha256":"14d61b240a185d8c44c072b66efa003320d4e0c5eae10bb670d4500303c1247b","width":320,"height":640,"completeTransportAndHashVerified":true,"visuallyInspected":true,"scope":"Actual initial emulator screen, not a browser simulation or fabricated offer"},
+  "limits":"No physical-device, native speech or native live-service acceptance. iOS outcome separate. APK not exported/published; runner-local compilation hash only."
+}

@@ -8,6 +8,12 @@ Erneut um14:43:04 Uhr Schweiz am Stand70fece9 geprüft: [Quellenbeleg](evidence/
 
 Robots und öffentliche AGB am selben Tag erneut gelesen, jeweils HTTP200; Produktpfad nicht ausgeschlossen, Crawl-delay10s eingehalten. Minimaler bestehender Pilot, keine Datenlizenz oder Freigabe zur Ausweitung daraus ableiten. Keine KI-Aufrufe, Käufe oder Schutzumgehung. Zweite unabhängige Quelle und vollständige Kosten bleiben offen. Die folgenden Tabellen halten den früheren Recherchestand fest.
 
+## Kostenregeln als nächster Belegschritt · 24.11.2026
+
+Die am24.11. erneut gelesene [kanonische DQ-Versandseite](https://www.dq-solutions.ch/de/wissenswert/versandinformationen) nennt portofreie Schweizer Lieferung und einen Mindermengenzuschlag von CHF8 bei Warenwert unter CHF49. Die [Retail-AGB](https://www.dq-solutions.ch/de/wissenswert/agb) beschreiben Preise inklusive MwSt./gesetzlicher Produktgebühren, führen aber separat mögliche Neben-/Zahlungsmittelkosten auf. Das sind **bedingte Händlerregeln**, kein individuell bestätigter Checkout-Endpreis. Die Live-Belege oben bleiben unverändert mit offenen Kosten; keine automatische Nullsetzung oder Steuer-Doppelzählung aus Recherchetext.
+
+Vor operativer Übernahme: feste zulässige Policy-URLs/Prüfzeit/Ablauf, CH-Lieferung und Warenkorb-/Zahlungsbedingungen mit konkretem Angebot verknüpfen; Regelwidersprüche stoppen eine Bestätigung. Versand0 ist nicht dasselbe wie sämtliche Gebühren0. Das bisherige Modell kennt kein gewünschtes Zahlungsmittel und nur das Lieferland; ein exaktes belegtes Lieferziel darf nicht aus der Sprache oder allgemeinen Schweizer Versandregeln erfunden werden. Eigene Regel-/Grenzfalltests und reale Probe nötig. Keine neue Quellenfreigabe, Garantie, Kostenfreigabe oder Bestellung vorgenommen.
+
 ## Zweiter Zugangskandidat · Conrad CH / Awin, 24.11.2026
 
 Conrad nennt auf seiner [offiziellen Schweizer Partnerseite](https://www.conrad.ch/de/ueber-conrad/affiliate-partnerprogramm.html) Produktdaten und verlinkt Awin. Das [Schweizer Programm11467](https://ui.awin.com/merchant-profile/11467) nennt Produktdaten und Preisvergleichs-/Dealportale als mögliche Partner. Es ist damit ein konkreter Prüfweg für den bereits registrierten Händler, keine erteilte UDI-Partnerschaft oder funktionierende Quelle. Netzwerk- und Händlerzulassung gehen einem tatsächlichen Datenzugriff voraus; [Awin beschreibt](https://www.awin.com/ch/faq) Publisher-Prüfung, Programmbewerbung und Feedzugang.
