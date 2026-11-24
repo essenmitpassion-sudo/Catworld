@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "commit": "812152bc3533cd086a7b53e1a7320186928995c8",
+  "restoreRef": "812152bc3533cd086a7b53e1a7320186928995c8",
+  "runId": 45355433162,
+  "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45355433162",
+  "android": {"jobId": 138311960606, "conclusion": "success", "completedAt": "2026-11-24T08:25:33Z"},
+  "ios": {
+    "jobId": 138311961207,
+    "conclusion": "failure",
+    "completedAt": "2026-11-24T08:28:17Z",
+    "environment": "iPhone17Pro / iOS26.5, macos-26, Xcode26.6",
+    "nativeBuildInstallAndXCTestLaunch": true,
+    "webViewExistencePassed": true,
+    "failure": "UDIFlowTests.swift:11: initial global StaticText introduction query did not pass within15s",
+    "laterAccessibilitySnapshot": "Contains StaticText label: Describe what you need. A product or a goal is enough.",
+    "fullTextSearchSaveRelaunch": false
+  },
+  "screenshot": {
+    "path": "docs/evidence/2026-11-24-native-ui/ios-native-after-failed-intro.png",
+    "label": "ios-flow",
+    "scope": "Actual simulator screen after a failed introduction-readiness test; not a completed search or persistence flow",
+    "width": 1206,
+    "height": 2622,
+    "bytes": 244744,
+    "chunks": 80,
+    "sha256": "9762337b93f8ff4ad2d798b880a1b28320eae2c647efa8673a26d0a0f75894c7",
+    "completeAndHashVerified": true,
+    "visuallyInspected": true,
+    "observation": "UDI is foregrounded. Intro, honest service limitation, goal field, search action and two-tab navigation are visible; action is above navigation. No live offers or personal data."
+  },
+  "nextControlledCheck": "Scope DOM element queries to the actual WebView and capture its initial accessibility tree. Keep introduction, status, exact EN/DE input, saving and restart requirements and existing time bounds. Treat readiness/scoping as a hypothesis until the new actual run.",
+  "localRecovery": {
+    "archive": "artifacts/udi-pilot-812152bc3533.tar.gz",
+    "sha256": "aaa4d78070908b79ee1b096d2054e8bbeee532999aa882d5879e02b486817160",
+    "files": 219,
+    "verifiedAt": "2026-11-24T08:23:07.643Z",
+    "isolatedRestore": true,
+    "lockfileTypesNativeSourcesBackend200": true,
+    "containsApkOrIpa": false,
+    "externallyUploaded": false
+  },
+  "limits": "No complete iOS flow, native live offers, voice, physical-device or release acceptance. Screenshot proves the displayed state only; it does not turn the failed XCTest into a pass."
+}

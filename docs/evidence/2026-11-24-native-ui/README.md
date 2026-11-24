@@ -34,3 +34,11 @@ Quellstand9c2af2f85c8d, API36, 320×640. [Job138108069864](https://github.com/es
 ![Installierte Android-App mit neuer Zieleingabe](android-native-start.png)
 
 Suchknopf und Navigation sind vollständig sichtbar; die ehrliche Dienstlücke bleibt lesbar. Kein Nachweis für physische Geräte, Live-Angebote, Spracheingabe, Systemschrift oder Screenreader. iOS hat eine getrennte Abnahme.
+
+## Tatsächlicher iOS-Bildschirm nach fehlgeschlagener Bereitschaftsprüfung
+
+Quellstand812152b, iPhone17Pro/iOS26.5, 1206×2622 Pixel. [Herkunft, Hash und genaue Grenze](../2026-11-24-ios-visual-812152b.json): XCTest startet die installierte App und erkennt den WebView; die anfängliche globale Textabfrage scheitert, obwohl der spätere Zugänglichkeitsbaum den Text enthält. Das nach Testende tatsächlich aufgenommene Bild wurde vollständig übertragen, hashgeprüft und angesehen. **Kein bestandener Such-/Speicher-/Neustartablauf.**
+
+![Echte iOS-App nach fehlgeschlagener Einführungsprüfung](ios-native-after-failed-intro.png)
+
+Einführung, ehrlicher Diensthinweis, Eingabe und Hauptaktion sind sichtbar, die Navigation verdeckt die Aktion nicht. Der nächste kontrollierte Test verwendet gezielt den WebView-Inhalt und protokolliert dessen anfänglichen Zugänglichkeitsbaum. Keine fehlenden Prüfungen durch das Bild ersetzen.
