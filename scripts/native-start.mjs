@@ -165,14 +165,8 @@ if (platform === 'android') {
       catch {console.log('iOS installation screenshot unavailable; no visual claim.');}
       throw error;
     }
-    console.log(run('xcrun', ['simctl', 'launch', device.udid, appId]));
-    await delay(8000);
-    const screenshot = join(temp, 'udi-ios-start.png');
-    run('xcrun', ['simctl', 'io', device.udid, 'screenshot', screenshot]);
-    await recordScreen('ios-start',screenshot);
-    // The hosted GPU makes Vision OCR hang after a successful native launch.
-    // Check the rendered content through XCTest accessibility below instead;
-    // preserve the actual screenshot for separate visual inspection.
+    // XCTest owns AUT launch, native UI interaction and relaunch. A separate
+    // simctl launch gate duplicated it and stalled before tests could run.
     const flow=join(temp,'udi-flow');mkdirSync(flow,{recursive:true});
     for(const name of ['project.yml','UDIFlowTests.swift'])copyFileSync(resolve('scripts/native-tests/ios/'+name),join(flow,name));
     run(join(temp,'udi-tools/xcodegen/bin/xcodegen'),['generate','--spec',join(flow,'project.yml'),'--project',flow]);
@@ -181,7 +175,14 @@ if (platform === 'android') {
       '-derivedDataPath',join(temp,'udi-flow-build'),'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO'],
       {stdio:['ignore',fd,fd],timeout:360000,killSignal:'SIGKILL'});}finally{closeSync(fd);}
     console.log(readFileSync(log,'utf8').slice(-18000));
+    let captured=false;
+    try {
+      const screenshot=join(temp,'udi-ios-flow.png');
+      run('xcrun',['simctl','io',device.udid,'screenshot',screenshot],15000);
+      await recordScreen('ios-flow',screenshot);captured=true;
+    } catch {console.log('iOS post-test screenshot unavailable; no visual claim.');}
     assert(!result.error&&result.status===0,'iOS native flow test failed; see Xcode log above.');
+    assert(captured,'iOS flow passed but screenshot could not be captured; visual acceptance remains open.');
   } finally {
     spawnSync('xcrun', ['simctl', 'shutdown', device.udid], { timeout: 30000, killSignal: 'SIGKILL', stdio: 'ignore' });
     spawnSync('xcrun',['simctl','delete',createdId],{timeout:30000,killSignal:'SIGKILL',stdio:'ignore'});

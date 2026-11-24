@@ -31,6 +31,7 @@ test('native PNG-Prüfnachweise überleben Zeitstempel/Logpräfixe bytegleich',(
   const log=records.map(line=>'2026-11-24T00:00:00Z job\t'+line).join('\n');
   const [screen]=parseScreens(log);assert.equal(screen.label,'android-start');assert.deepEqual(screen.png,fixture);
   assert.equal(screen.width,192);assert.equal(screen.height,192);
+  assert.equal(parseScreens(screenRecords('ios-flow',fixture).join('\n'))[0].label,'ios-flow');
 });
 test('fehlende, verdoppelte oder verfälschte Bildteile sind kein gültiger Nachweis',()=>{
   const records=screenRecords('android-start',fixture);

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "commit": "f35b20c5b78c0d7ac111d2895c85b42d242e1955",
+  "restoreRef": "f35b20c5b78c0d7ac111d2895c85b42d242e1955",
+  "runId": 45352851578,
+  "url": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45352851578",
+  "android": {
+    "jobId": 138303329465,
+    "conclusion": "success",
+    "completedAt": "2026-11-24T08:07:01Z",
+    "api": 36,
+    "surface": "installed debug WebView, real Capacitor Preferences, 320x640 emulator",
+    "checks": ["EN exact text search", "DE exact text search", "real missing-service error", "save both requests", "exact requests and CH context after force-stop/relaunch", "German language persists", "primary action above navigation"],
+    "apkSha256": "cc3c4701a9586d1b877338496d7d0eadd8ee4a04655c65776f19bfb06da203ba",
+    "screenshot": {
+      "localPath": "artifacts/native-qa/f35b20c5b78c-138303329465/android-start.png",
+      "sha256": "18b3510d763dbf9fa3f8f7aa6f2c04c1f0130cdb78351c115fed4d6e42acf521",
+      "completeLogRecords": true,
+      "decodedAndVisuallyInspected": true,
+      "observation": "Honest unavailable-service message and main action are visible above the two-tab navigation; no offers or user data. Earlier versioned Android image covers the same UI."
+    }
+  },
+  "ios": {
+    "jobId": 138303330078,
+    "conclusion": "failure",
+    "completedAt": "2026-11-24T08:15:37Z",
+    "environment": "macos-26, Xcode26.6, fresh simulator",
+    "nativeCompilation": "success",
+    "bootStatus": "finished after approximately 6m56s",
+    "installation": "completed",
+    "failure": "manual xcrun simctl launch timed out after120s before screenshot or XCTest",
+    "screenshotRecords": 0,
+    "nativeFlowPracticallyVerified": false,
+    "meaning": "The image-writer correction was not reached on iOS; this is not evidence of a broken image transfer or a completed UI test."
+  },
+  "nextControlledStep": "Use XCTest as the single AUT launch/interaction/relaunch driver instead of a preceding duplicate simctl launch. Keep introduction, service errors, DE/EN actions, saving and relaunch assertions; collect a separately labelled post-test screenshot. No unchanged rerun or larger timeout.",
+  "limits": "No native live service, current native offers, voice, physical devices, signed packages or public release accepted."
+}

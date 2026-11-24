@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {readFile,mkdir,writeFile,realpath,lstat} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {resolve,join,sep} from 'node:path';
-const labels=new Set(['android-start','ios-start','ios-install-timeout']);
+const labels=new Set(['android-start','ios-start','ios-flow','ios-install-timeout']);
 const maximum=1024*1024,chunkSize=4096;
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 function metadata(png) {
