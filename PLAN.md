@@ -1,5 +1,21 @@
 # Universal Deal Intelligence
 
+## Ergänzung · intuitive App und autonomer Arbeitsmodus ·24.11.2026
+
+Originale: [intuitive App](docs/requirements/2026-11-24-intuitive-app.md), [autonomes Arbeiten](docs/requirements/2026-11-24-autonomous-work.md). Bestehende Produkt-/Sicherheitsabnahmen gelten; kein Neustart, keine zusätzliche Browser-App.
+
+| Auftrag | Priorität und prüfbares Ergebnis |
+|---|---|
+| Intuitive App P0 / Arbeitsauftrag1–3 | Bestand, Quelle des Tastaturhinweises und echte Suchgrenzen prüfen. iOS-QuickPath gehört dem Betriebssystem; keine Tutorial-Automatisierung auf Nutzerwunsch. Fehlender UDI-Dienstzugang bleibt separater Blocker, SOUNDWEAVE ausgeschlossen. |
+| Intuitive App P1/P2 / Arbeitsauftrag4–5 | Nächster kleiner Schritt: Hauptaktion vor optionalen Kriterien; kompakter nativer Kopf/Eingabe und konsistenter sichtbarer Fokus. Kriterien weiter erreichbar und wirksam, Entwurf nach Fehler erhalten. Vorher/Nachher an laufender gemeinsamer UI bei320/390px prüfen; keine native Abnahme daraus ableiten. |
+| Intuitive App P3 | Keine eigene Tastatur/Tutorials; vorhandene Eingabe beibehalten. Tippen/Einfügen/Löschen/Schliessen/Wiederöffnen und Aktionszugang mit realer Bildschirmtastatur separat Android/iOS abnehmen. Systemhinweise nicht unterdrücken. |
+| Intuitive App P4 | Bestehende Namensprüfung unten bleibt offen: DE/EN-Verständlichkeit, Aussprache, Merkfähigkeit, reale App-/Firmenkollisionen. UDI bleibt vorläufig; begründete sichtbare Empfehlung erst nach Recherche, keine rechtliche Freigabe oder technische ID-Änderung daraus ableiten. |
+| Intuitive App P5 / Arbeitsauftrag6–9 | Je Schritt Code/Ablauf/Fehler prüfen, wichtigste Schwäche korrigieren, Nachweis/STATUS aktualisieren, normalen Commit/autorisierten Push zurücklesen. Gebaut/automatisch/praktisch/offen trennen. Sichere Alternativen begrenzt erproben, keine Platzhalter als Live-Angebote; keine Kosten/Veröffentlichung/erfundene Hintergrundarbeit. |
+
+- [x] Einstieg im bestehenden Stack vereinfacht: Hauptaktion vor optionalen Kriterien, kompakter nativer Titel/Eingabe und sichtbarer Composer-Fokus. [Browser-Vorher/Nachher,113 Tests/Typen/Build/native Assets](docs/evidence/2026-11-24-intuitive-entry.json); keine native Geräteabnahme daraus ableiten.
+- [ ] Echten nativen Ziel→Angebot→Kosten→Anbieter-Ablauf über einen separat freigegebenen UDI-Dienst ermöglichen; vorher keine neue Vertrauens-/Live-Zusage. Android/iOS separat prüfen.
+- [ ] Danach belegte Vergleichssuche, unabhängige Quelle/Endkosten, menschliche Bedienprüfung und Namensentscheidung nach den vorhandenen Abnahmen.
+
 ## Evolutionsauftrag · Abdeckung und Reihenfolge vom24.11.2026
 
 [Vollständig gespeicherter Nutzerauftrag](docs/requirements/2026-11-24-next-generation-product-evolution.md). Keine neue Produktvision oder Neubau: folgende Zuordnung ergänzt die vorhandenen Abnahmen. «Vorhanden» ist kein Nachweis eines fertigen Endnutzerprodukts.

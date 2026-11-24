@@ -1,0 +1,171 @@
+{
+  "date": "2026-11-24T15:02:07.744Z",
+  "baselineCommit": "c40e55a62f1618875444cb58ba8656e576ae92ad",
+  "source": "this commit; git history supplies the final commit identity",
+  "requirements": [
+    {
+      "path": "docs/requirements/2026-11-24-intuitive-app.md",
+      "sha256": "ab42b20b1f2c706aa131daf67570cdc25a78034d0f9180d341d398666795a5aa"
+    },
+    {
+      "path": "docs/requirements/2026-11-24-autonomous-work.md",
+      "sha256": "bf30871b1d97c04a5c02788ea170f031edafc44f019393f659b054fe1be20bac"
+    }
+  ],
+  "change": [
+    "Primary search before optional criteria, with existing form and filter behavior retained",
+    "Compact native heading and input, visible petrol composer focus instead of nested blue field frame",
+    "No keyboard tutorial or OS suppression added"
+  ],
+  "automatic": {
+    "unitTests": {
+      "passed": 113,
+      "failed": 0
+    },
+    "typecheck": true,
+    "build": true,
+    "nativeAssets": {
+      "filesPerPlatform": 29,
+      "identical": true,
+      "networkDisabled": true
+    },
+    "chromium": {
+      "deWidths": [
+        360,
+        390,
+        768,
+        1365
+      ],
+      "enWidths": [
+        390,
+        1365
+      ],
+      "nativeBoundaryWidths": [
+        320,
+        390
+      ],
+      "textScale": "200% CSS, not native system dynamic type",
+      "regression": "New action-before-options assertion failed before HTML change and passed after rebuild. Options still open and close."
+    }
+  },
+  "visual": {
+    "images": [
+      {
+        "path": "docs/evidence/2026-11-24-intuitive-entry/browser-boundary-ios-en-before-320.png",
+        "sha256": "274a72964f92df5910f7410604b93f9b71eedd3155428d9ae09905d2c1840f72",
+        "scope": "Chromium shared UI with test platform boundary; not an Android/iOS device image"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-intuitive-entry/browser-boundary-ios-en-after-320.png",
+        "sha256": "59c8c0de93a66348981162635f2350e3be4d2fd71cf32c57280a83f10dc00b5b",
+        "scope": "Chromium shared UI with test platform boundary; not an Android/iOS device image"
+      },
+      {
+        "path": "docs/evidence/2026-11-24-intuitive-entry/browser-boundary-ios-en-after.png",
+        "sha256": "63b3a4a820b319b6ff80aec7bfc7a8c32b26111a40e44b478b8cc10ab2d81580",
+        "scope": "Chromium shared UI with test platform boundary; not an Android/iOS device image"
+      }
+    ],
+    "measurements": {
+      "before": {
+        "scope": "desktop browser boundary simulation, not a native device screenshot",
+        "width": 320,
+        "height": 640,
+        "composer": {
+          "top": 311.15625,
+          "bottom": 547.875,
+          "height": 236.71875
+        },
+        "primary": {
+          "top": 478.875,
+          "bottom": 530.875,
+          "height": 52
+        },
+        "navigation": {
+          "top": 579.8125,
+          "bottom": 640,
+          "height": 60.1875
+        },
+        "voice": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        "tools": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      },
+      "after": {
+        "scope": "desktop browser boundary simulation, not a native device screenshot",
+        "width": 320,
+        "height": 640,
+        "composer": {
+          "top": 296.609375,
+          "bottom": 525.328125,
+          "height": 228.71875
+        },
+        "primary": {
+          "top": 395.203125,
+          "bottom": 447.203125,
+          "height": 52
+        },
+        "navigation": {
+          "top": 579.8125,
+          "bottom": 640,
+          "height": 60.1875
+        },
+        "voice": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        },
+        "tools": {
+          "top": 0,
+          "bottom": 0,
+          "height": 0
+        }
+      },
+      "primaryTopImprovementPx": 83.671875
+    },
+    "limits": "No new native compilation, screen keyboard or physical-device acceptance. Browser capture is shared UI QA; not a human usability study."
+  },
+  "previousNativeRun": {
+    "sourceCommit": "44c881d55e456e364b53da279079caacf710bf19",
+    "runId": 45414452407,
+    "android": {
+      "jobId": 138516746163,
+      "result": "success"
+    },
+    "ios": {
+      "jobId": 138516745685,
+      "result": "failed",
+      "passed": "English text search, truthful missing-service error and saved search",
+      "notReached": "German flow and full restart",
+      "diagnosis": "Actual XCTest image and AX tree show iOS QuickPath onboarding panel intercepting taps, not an app tutorial. User explicitly reprioritized useful app work over tutorial handling.",
+      "screenshotSha256": "be620499c215819d55673423cc017a089085ca33c3f4beded1b688096cb2c64d13"
+    }
+  },
+  "previousRecovery": {
+    "verifiedAt": "2026-11-24T14:29:19.685Z",
+    "commit": "44c881d55e456e364b53da279079caacf710bf19",
+    "archiveSha256": "b5295e3e4523c6c554ed1e4d1dcd0eb51d09e656665a184e90e7e5804e940ae8",
+    "archiveIntegrity": true,
+    "unpackedFiles": 244,
+    "lockfileInstalled": true,
+    "typecheckVerified": true,
+    "nativeSourcePreparationVerified": true,
+    "nativeCompilationVerified": false,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "liveSourceCalls": false
+  },
+  "open": [
+    "No actual live offers inside native apps; separate authorized UDI hosting/auth/secure token storage missing",
+    "No native voice support or full iOS flow acceptance",
+    "Second legitimate source, complete delivered costs, brand/name research and human usability validation remain open"
+  ],
+  "safety": "No SOUNDWEAVE/team/domain actions, publication, purchases or new cost commitments",
+  "review": "Independent read-only review of form order, filtering and focus: no important findings. No native-device acceptance implied."
+}

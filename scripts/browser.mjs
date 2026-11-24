@@ -622,6 +622,10 @@ try {
     assert(await evaluate("document.querySelector('[data-mic]').disabled"),'native voice is not pretended from browser support');
     assert(await evaluate("document.querySelector('.composer-tools').hidden&&document.querySelector('[data-voice]').hidden"),'native entry offers text without inactive microphone or desktop keyboard hints');
     assert(await evaluate("document.querySelector('.primary-search').getBoundingClientRect().bottom<=document.querySelector('nav').getBoundingClientRect().top"),'native primary action fits above navigation without an initial scroll');
+    assert(await evaluate("document.querySelector('.primary-search').getBoundingClientRect().bottom<=document.querySelector('.search-options summary').getBoundingClientRect().top"),'search is the next step after input; optional criteria follow the primary action');
+    await pointerClick('.search-options summary');
+    assert(await evaluate("document.querySelector('.search-options').open && document.querySelector('#max-price').getBoundingClientRect().height>0"),'optional criteria remain available below the primary action');
+    await pointerClick('.search-options summary');
     await pointerClick('#search-query');await type('Samsung 990 PRO 2 TB');
     assert(await evaluate("Array.from(document.querySelectorAll('[data-language-value]')).length===2&&Array.from(document.querySelectorAll('[data-language-value]')).every(node=>{const r=node.getBoundingClientRect();return r.width>=44&&r.height>=44})"),'both native language actions have usable touch targets');
     assert(await evaluate("['de','en'].every(code=>{const b=document.querySelector('[data-language-value='+code+']'),r=b?.getBoundingClientRect();return b?.tagName==='BUTTON'&&r.width>=44&&r.height>=44})"),'native languages must be directly reachable touch actions');

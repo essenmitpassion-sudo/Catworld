@@ -133,16 +133,19 @@ html[data-native-ui] .language-control select { min-height:2.75rem; border-color
 html[data-native-ui] .native-languages { display:flex; flex-wrap:wrap; gap:.25rem; }
 html[data-native-ui] .native-languages button { min-height:44px; min-width:44px; padding:.5rem .65rem; border:1px solid var(--line); border-radius:.5rem; background:transparent; color:var(--muted); font-size:.8125rem; line-height:1.4; }
 html[data-native-ui] .native-languages button[aria-pressed=true] { color:#fff; border-color:var(--blue); background:var(--blue); }
-html[data-native-ui] .search-intro { padding-block:1.4rem .8rem; }
-html[data-native-ui] .search-intro h1 { font-size:clamp(1.8rem,5vw,2.15rem); font-weight:800; letter-spacing:-.045em; }
+html[data-native-ui] .search-intro { padding-block:1rem .65rem; }
+html[data-native-ui] .search-intro h1 { font-size:clamp(1.5rem,5vw,1.8rem); font-weight:800; letter-spacing:-.035em; }
 html[data-native-ui] .search-intro > p { margin-top:.5rem; font-size:.875rem; max-width:38ch; }
 html[data-native-ui] #native-runtime-status { margin:0 0 .9rem; padding:.55rem 0 .55rem .75rem; border-left:2px solid #b9cbc2; background:transparent; font-size:.8125rem; line-height:1.55; color:var(--muted); }
 html[data-native-ui] .composer { border-color:#cbdad1; border-radius:.85rem; }
 html[data-native-ui] .composer:focus-within { border-color:var(--blue); outline:1px solid var(--blue); }
+html[data-native-ui] :focus-visible { outline-color:var(--blue); }
+html[data-native-ui] #search-query:focus-visible { outline:none; }
 html[data-native-ui] .composer-input { padding:1rem 1rem .5rem; }
 html[data-native-ui] textarea { color:var(--ink); font-size:1rem; line-height:1.6; }
+html[data-native-ui] #search-query { min-height:4rem; }
 html[data-native-ui] textarea::placeholder { color:#5c706a; }
-html[data-native-ui] .search-options { margin-inline:1rem; }
+html[data-native-ui] .search-options { margin:0 1rem .5rem; }
 html[data-native-ui] .search-options summary { min-height:3rem; font-size:.8125rem; color:var(--muted); }
 html[data-native-ui] .optional-label { color:var(--muted); }
 html[data-native-ui] .composer-submit { padding:.6rem 1rem 1rem; }
