@@ -32,7 +32,7 @@ jobs:
           - platform: android
             os: ubuntu-24.04
           - platform: ios
-            os: macos-15
+            os: macos-26
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     steps:
@@ -45,10 +45,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - name: Select installed Xcode for iOS baseline
+      # Isolate repeated simctl stalls on the old macOS15/Xcode26.2 pair.
+      # Xcode26.4+ contains Simulator hang fixes and needs macOS26.2+.
+      # Keep app, device creation, timeouts and assertions unchanged.
+      - name: Select installed Xcode for controlled iOS validation
         if: matrix.platform == 'ios'
         shell: bash
-        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+        run: sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run native:prepare
       - run: npm run native:check
