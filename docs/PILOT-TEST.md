@@ -2,7 +2,22 @@
 
 Für einen begleiteten Bedien-/Fehlertest verwendbar; ein echter Angebots-/Nutzentest benötigt zusätzlich freigegebenen Dienst, Quellenzugang und Geräteabnahme. Dieser leere Bogen ist kein bestandener Nutzertest und keine Übergabefreigabe. Keine automatisierte Telemetrie vorhanden. Bericht nur mit freiwilliger Zustimmung an den Testbetreuer geben. Keine Namen, E-Mail-Adressen, Aufnahme, vollständigen persönlichen Suchtexte, Zugangsdaten oder genaue Lieferadresse erfassen. Eine selbst gewählte Kennung P01 reicht; keine Geräte-Fingerprints oder IP-Adressen.
 
-## Für die Testperson
+## Reproduzierbare Vergleichsaufgaben · Betreiberprüfung
+
+Evolutionsauftrag24.11.: Dies ist ein Katalog, kein durchgeführter Nutzertest. Dieselben Aufgaben mit gleicher Region CH, Währung CHF, Zustand, Lieferort und Zeitfenster auf UDI und der gewöhnlichen Methode der Testperson prüfen. Kein Kauf erforderlich. Modell-/Gerätekompatibilität nur nach tatsächlicher Geräteangabe beurteilen. Bei fehlendem Zugang «nicht prüfbar» statt0Treffer oder0Fehler erfassen. Keine Namens-/Altersdaten nötig; unterschiedliche Erfahrungs-/Seh-/Bedienanforderungen freiwillig und grob dokumentieren.
+
+| Fall | Aufgabe / Gegenprobe | Vorhandener Nachweis / offene Realprüfung |
+|---|---|---|
+| A | Samsung990PRO2TB ohne Kühlkörper, richtige MPN; falsche1TB-/Kühlkörpervariante daneben. | Fach-/Codec-Gegenproben und historische einzelne DQ-Suche vorhanden. Gleicher aktueller Vergleich über beide Apps und zweite Quelle offen. |
+| B | «Mein PC braucht2TB mehr Speicher bisCHF200»; notwendige Kompatibilität klären, Neuware/Gebraucht/B-Ware nur auf ausdrücklicher Basis vergleichen. | Interpretations-/Rückfragelogik geprüft. Echter hilfreicher Alternativweg/Kompatibilität/Endkosten und Zeitvorteil nicht nachgewiesen. |
+| C | Gebrauchte SSD versus tatsächlich laufendes PC-Inserat mit passendem Laufwerk. | Keine echte Ricardo-/Secondhand-Abnahme. Ausbau-/Funktions-/Zustands-/Gesamtkostenrisiken ausdrücklich prüfen; kein erfundener Weiterverkaufswert. |
+| D | Günstiger Produktpreis mit teurem Versand oder fehlenden Importgebühren; CHF auf ausländischer Seite; falsche/fehlende Liefer-PLZ. | Kosten-/Markt-/Liefervertrags-Gegenproben bestehen. Reale Endpreis-/Lieferbelege beider Quellen fehlen. |
+| E | Abgelaufener/verkaufter Treffer, Redirect auf ähnliche Variante, doppeltes Angebot, widersprüchliche Prüfzeit, angeblicher Gutschein ohne Bedingungen. | Varianten/Frische/Links/Redirektgrenzen/Dubletten synthetisch geprüft. Keine Live-Gutschein- oder Händlerbewertungsfunktion; nicht als bestanden zählen. |
+| F | Langsame/abgebrochene Verbindung, fehlende Rechte, Quellenlimit; Text/Speichern/Neustart in DE/EN. | Lokale HTTP-Fehler-/Zeit-/Quotenprüfung und Android-Ablauf vorhanden. iOS-Gesamtablauf, native Sprache, Systemschrift/Screenreader/physische Geräte offen. |
+
+Pro Aufgabe festhalten: Methode, Datum/Uhrzeit, Plattform/Build, Prüfzeit, relevante korrekt identifizierte Treffer n/N, tatsächlich passende erreichbare Direktlinks n/N, Preis-/Gutschein-/Endkostenbelege n/N, erster brauchbarer Treffer nach Sekunden, Recherchekosten soweit gemessen und Fehlergrund. «Brauchbar» verlangt relevantes erreichbares Angebot mit verständlich offenem/vollem Kostenstatus; eine Empfehlung verlangt zusätzlich vollständig vergleichbare Belege. Ein Klick oder Testdatentreffer zählt nicht als Nutzen. Ergebnisse unabhängiger Rollenreviews bleiben technische Einschätzungen, keine Aussage echter älterer/jüngerer Nutzer. Baseline derzeit **nicht erhoben**; keine Prozentwerte oder Bewertungen vorfüllen.
+
+## Für die Testperson · Ablauf
 
 Beschreibe ein Ziel, das dir tatsächlich hilft, zum Beispiel mehr Speicher für deinen vorhandenen PC. Beantworte eine Rückfrage nur, falls UDI sie stellt. Prüfe angezeigte Ergebnisse und ihre Quelle, öffne einen passenden Anbieterlink, speichere die Suche und öffne die App erneut. Du musst nichts kaufen. Wenn ein Schritt nicht verfügbar ist oder fehlschlägt, halte genau das fest und fahre nur mit möglichen Schritten fort. Testangebote sind keine Kaufangebote.
 

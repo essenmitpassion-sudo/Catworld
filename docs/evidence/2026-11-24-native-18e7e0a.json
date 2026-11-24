@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "commit": "18e7e0afbed4414c6de1b119e45a4eb728bf2bb6",
+  "runId": 45367743922,
+  "generalCi": {"runId": 45367743834, "conclusion": "success"},
+  "android": {"jobId": 138353767217, "conclusion": "success", "scope": "Installed emulator EN/DE text/error/save/restart flow"},
+  "ios": {"jobId": 138353766767, "conclusion": "failure", "nativeAppAndUiTestCompilation": "success", "appLaunchAndWebViewIntroduction": "passed", "failure": "UDIFlowTests.swift28: Deutsch option not found after tapping language selector during second language iteration", "firstEnglishIterationAssertions": "Reached and passed before second iteration per sequential test source; console tail does not retain its progress marker", "savedSearchAcrossRelaunch": "not reached", "screenshot": "Post-test simctl capture unavailable; decoder found no complete screenshot, no visual claim"},
+  "nextStep": "Inspect actual picker/keyboard interaction and dismiss editing before changing language; preserve all search/save/restart assertions. No unchanged simulator retry.",
+  "limits": "No complete iOS flow, native live offers, speech, physical-device test or testapp release. Historical screenshots remain separate."
+}
