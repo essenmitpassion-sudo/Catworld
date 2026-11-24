@@ -15,17 +15,11 @@ final class UDIFlowTests: XCTestCase {
         for (index, language) in ["English", "Deutsch"].enumerated() {
             let search = web.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Search", "Suche")).firstMatch
             XCTAssertTrue(search.waitForExistence(timeout: 15)); search.tap()
-            let selectors = web.otherElements.matching(NSPredicate(format: "label == %@ OR label == %@", "Interface language", "Oberflächensprache"))
-            XCTAssertTrue(selectors.firstMatch.waitForExistence(timeout: 5))
-            let selector = try XCTUnwrap(selectors.allElementsBoundByIndex.first(where: { $0.isHittable }))
+            let selector = web.buttons[language].firstMatch
+            XCTAssertTrue(selector.waitForExistence(timeout: 5))
+            XCTAssertTrue(selector.isHittable, "Language action must be directly reachable while editing")
             if app.statusBars.firstMatch.exists { XCTAssertGreaterThanOrEqual(selector.frame.minY, app.statusBars.firstMatch.frame.maxY, "Language control must clear the status bar") }
             selector.tap()
-            if app.buttons[language].firstMatch.waitForExistence(timeout: 2) { app.buttons[language].firstMatch.tap() }
-            else if app.pickerWheels.firstMatch.exists {
-                app.pickerWheels.firstMatch.adjust(toPickerWheelValue: language)
-                if app.toolbars.buttons["Done"].exists { app.toolbars.buttons["Done"].tap() }
-                else if app.toolbars.buttons["Fertig"].exists { app.toolbars.buttons["Fertig"].tap() }
-            } else { app.staticTexts[language].firstMatch.tap() }
             let field = web.textViews.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")

@@ -46,6 +46,7 @@ export function applyLanguage(root=document) {
   }
   for(const attr of ['placeholder','aria-label','title','content','data-prompt'])for(const node of root.querySelectorAll('[data-i18n-'+attr+']'))node.setAttribute(attr,t(node.getAttribute('data-i18n-'+attr)));
   const selector=root.querySelector('#ui-language');if(selector)selector.value=language;
+  for(const button of root.querySelectorAll('[data-language-value]'))button.setAttribute('aria-pressed',String(button.dataset.languageValue===language));
   const manifest=root.querySelector('link[rel=manifest]');if(manifest)manifest.setAttribute('href',language==='en'?'./manifest.en.webmanifest':'./manifest.webmanifest');
 }
 export function setLanguage(value,{persist=false}={}) {

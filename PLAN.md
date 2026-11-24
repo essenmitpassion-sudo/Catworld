@@ -35,6 +35,8 @@ Bekannte konkrete Produktaufträge nutzen zuerst die bereits zugeordneten Quelle
 
 ## Aktueller Umsetzungsschritt · nativer Start und verlässlicher Marktkontext
 
+Nächste belegte Bedienhürde: iOS18e7e0a erreicht die zweite Sprachiteration, findet nach Bearbeitungsfokus jedoch die gewünschte Option des Systempickers nicht. Die zwei freigegebenen Sprachen werden deshalb im nativen Einstieg direkt mit Deutsch/English-Tasten statt zusätzlichem Auswahlmenü angeboten. Bestehenden Such-/Sprach-/Speichervertrag erhalten; Originalselect nur als verborgenen internen Anschluss behalten, keine doppelte Bedienung. Mindestens44px grosse Tasten, eindeutiger aktiver Zustand und zugängliche Endonyme. Browser-Gegenprobe vor Umsetzung: sichtbare echte Tasten, Sprachwechsel nach Texteingabe ohne Entwurfsverlust, passende Auswahl nach Neustart,320px/200Prozent-Text ohne Überlauf. Android-/iOS-Tests tippen die tatsächlichen neuen Bedienelemente; keine direkte Wertinjektion als Sprachbediennachweis. Danach unveränderte Such-/Fehler-/Speicher-/Neustartabnahme auf beiden Plattformen und Quellenstand/Git/Wiederherstellung sichern. Neue Oberfläche ist erst nach echtem Simulatorlauf auf iOS praktisch abgenommen.
+
 ### Visuelle Produktqualität · Originalauftrag vom24.11.2026
 
 [Unverändertes Original](docs/requirements/2026-11-24-visual-product-quality.md). Im vorhandenen Stack die grösste belegte Reibung beheben; keine neue Produktoberfläche oder dekorativen Neustarts. Bestehende P0-Wahrheits-/Dienst-/Plattformgrenzen bleiben verbindlich. iOS-Installationsblocker stoppt nur die betreffende Geräteabnahme; unabhängige UI-Arbeit ist möglich, aber nicht als auf iOS geprüft auszugeben.

@@ -42,8 +42,9 @@ export async function androidFlow({send,evaluate},afterRestart) {
   }
   for(const [index,language] of ['en','de'].entries()) {
     await tap('nav a[href="#suche"]');
-    // Change the real WebView's language control; no fake bridge or HTTP reply.
-    await evaluate(`document.querySelector('#ui-language').value=${JSON.stringify(language)};document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}));`);
+    // Tap the visible language action in the installed app.
+    await tap(`[data-language-value="${language}"]`);
+    assert.equal(await evaluate("document.documentElement.lang"),language==='de'?'de-CH':'en');
     await tap('#search-query');
     await send('Input.insertText',{text:wishes[index]});
     assert.equal(await evaluate("document.querySelector('#search-query').value"),wishes[index],'native input must contain the exact new wish');

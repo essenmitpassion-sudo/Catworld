@@ -4,6 +4,26 @@ import {m,setText,t} from './i18n.mjs';
 export function configureNativeUI(document) {
   const get=id=>document.getElementById(id);
   document.documentElement.setAttribute('data-native-ui','');
+  const language=get('ui-language'),languageGroup=document.createElement('div');
+  languageGroup.className='native-languages';languageGroup.setAttribute('role','group');
+  languageGroup.dataset.i18nAriaLabel='Oberflächensprache';
+  languageGroup.setAttribute('aria-label',t('Oberflächensprache'));
+  // Both supported languages are direct actions. Keep the existing selection
+  // contract hidden, without opening a platform picker while editing a wish.
+  language.closest('label').hidden=true;
+  language.closest('label').after(languageGroup);
+  for(const option of language.options) {
+    const button=document.createElement('button');button.type='button';
+    button.textContent=option.textContent;button.lang=option.value;
+    button.dataset.languageValue=option.value;
+    button.setAttribute('aria-pressed',String(language.value===option.value));
+    button.addEventListener('click',()=>{
+      const focused=document.activeElement;
+      if(focused?.matches('textarea,input'))focused.blur();
+      language.value=option.value;language.dispatchEvent(new Event('change',{bubbles:true}));
+    });
+    languageGroup.append(button);
+  }
   setText(get('suche').querySelector('h1'),m('Was brauchst du?'));
   setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Ein Produkt oder ein Ziel reicht.'));
   const input=get('search-query');

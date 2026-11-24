@@ -622,6 +622,18 @@ try {
     assert(await evaluate("document.querySelector('[data-mic]').disabled"),'native voice is not pretended from browser support');
     assert(await evaluate("document.querySelector('.composer-tools').hidden&&document.querySelector('[data-voice]').hidden"),'native entry offers text without inactive microphone or desktop keyboard hints');
     assert(await evaluate("document.querySelector('.primary-search').getBoundingClientRect().bottom<=document.querySelector('nav').getBoundingClientRect().top"),'native primary action fits above navigation without an initial scroll');
+    await pointerClick('#search-query');await type('Samsung 990 PRO 2 TB');
+    assert(await evaluate("Array.from(document.querySelectorAll('[data-language-value]')).length===2&&Array.from(document.querySelectorAll('[data-language-value]')).every(node=>{const r=node.getBoundingClientRect();return r.width>=44&&r.height>=44})"),'both native language actions have usable touch targets');
+    assert(await evaluate("['de','en'].every(code=>{const b=document.querySelector('[data-language-value='+code+']'),r=b?.getBoundingClientRect();return b?.tagName==='BUTTON'&&r.width>=44&&r.height>=44})"),'native languages must be directly reachable touch actions');
+    await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB';document.querySelector('#search-query').focus()");
+    await pointerClick('[data-language-value=de]');
+    assert.equal(await evaluate("document.documentElement.lang"),'de-CH');
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB','language tap preserves editing draft');
+    assert.equal(await evaluate("document.querySelector('[data-language-value=de]').getAttribute('aria-pressed')"),'true');
+    await pointerClick('[data-language-value=en]');
+    assert.equal(await evaluate("document.querySelector('[data-language-value=de]').getAttribute('aria-pressed')"),'false');
+    assert(await evaluate("document.querySelector('#ui-language').closest('label').hidden"),'old picker is not a second visible control');
+    await evaluate("document.querySelector('#search-query').value='';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Describe what you need.')"),'native introduction must not promise unavailable voice input');
     await evaluate("document.querySelector('#ui-language').value='de';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
     assert(await evaluate("document.querySelector('.search-intro p').textContent.startsWith('Beschreibe deinen Wunsch.')"),'native text-first introduction follows German language selection');
@@ -639,6 +651,7 @@ try {
     assert(await evaluate(`(${savedRows})[0].marketId==='CH' && (${savedRows})[0].schemaVersion===2`),'native shared code writes explicit market-bound requests');
     await click('nav a[href="#watchlist"]');await send('Page.reload');
     await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
+    assert.equal(await evaluate("document.querySelector('[data-language-value=en]').getAttribute('aria-pressed')"),'true','visible language choice is restored too');
     await captureBoundary(platform,'en-saved',send);
     await click('#saved .text-button');
     await until(()=>evaluate("document.querySelector('#saved').textContent.includes('No saved searches yet')"),'native saved request removal');
