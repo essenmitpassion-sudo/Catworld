@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile, unlink } from 'node:fs/promises';
 import { dirname } from 'node:path';
-import { maxObservationAge } from '../src/deals.mjs';
+import { catalog, maxObservationAge } from '../src/deals.mjs';
 import { costs } from '../src/costs.mjs';
 import { acceptsOffer } from '../src/criteria.mjs';
 import {activeMarket,searchContext} from '../src/markets.mjs';
@@ -49,6 +49,10 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
     let source;try{source=sourceFor(new URL(candidate.url));}catch{}
     const matching=source?.marketId===context.marketId && (!Object.hasOwn(candidate,'marketId')||candidate.marketId===context.marketId)
       && (!Object.hasOwn(candidate,'sourceId')||candidate.sourceId===source.id);
+    const knownProduct=catalog.find(product=>product.sources.some(entry=>{
+      const known=new URL(entry.url);let target;try{target=new URL(candidate.url);}catch{return false;}
+      return known.hostname.replace(/^www\./,'')===target.hostname.replace(/^www\./,'')&&known.pathname===target.pathname;
+    }));
     try { if(matching)check = await verify?.(candidate); } catch { /* Each source can fail independently. */ }
     const checkedAt = typeof check?.checkedAt === 'string' ? Date.parse(check.checkedAt) : NaN;
     const currentTime = now();
@@ -59,7 +63,9 @@ export async function scan(discovery, { verify, journalPath, now = Date.now } = 
       status: 'unconfirmed', availability: 'unknown', reason: 'not-checked',
     };
     checks.push(record);
-    if (matching && current && check.marketId===context.marketId && check.sourceId===source.id
+    if (matching && current && check.status==='partial' && check.productMatch!==false
+      && (!candidate.mpn || check.mpn===candidate.mpn) && (!knownProduct || check.mpn===knownProduct.mpn)
+      && check.marketId===context.marketId && check.sourceId===source.id
       && check.url === candidate.url && check.httpStatus === 200 && check.currency === activeMarket.currency
       && check.availability === 'active' && Number.isSafeInteger(check.price) && check.price > 0
       && check.price <= 100_000_000) {

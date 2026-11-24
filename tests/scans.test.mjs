@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { scan } from '../scripts/scans.mjs';
+import { catalog } from '../src/deals.mjs';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -38,6 +39,38 @@ test('Quellenausfälle und ungeprüfte Treffer verhindern keine unabhängig best
   });
   assert.equal(result.items.length, 1);
   assert.equal(result.unconfirmed, 1);
+});
+
+test('aktive Preisdaten ersetzen keinen erfolgreichen Produkt- und Variantenabgleich', async () => {
+  for (const status of ['unconfirmed', undefined]) {
+    const result = await scan(found, { verify: async () => ({ ...fresh, status }), now: () => now });
+    assert.equal(result.items.length, 0, 'unconfirmed adapter data must not become an active offer');
+    assert.equal(result.unconfirmed, 1);
+  }
+  const contradicted = await scan(found, { verify: async () => ({ ...fresh, productMatch: false }), now: () => now });
+  assert.equal(contradicted.items.length, 0, 'an explicit identity mismatch cannot be overridden by an active price');
+  const product = catalog[0], source = product.sources.find(row => row.sourceId === 'dq-solutions.ch');
+  assert(source);
+  for (const requestedMpn of [product.mpn, undefined, 'WRONG-VARIANT']) {
+    const item = { ...candidate, url: source.url, ...(requestedMpn ? { mpn: requestedMpn } : {}) };
+    for (const observedMpn of ['WRONG-VARIANT', undefined]) {
+      const result = await scan({ ...found, items: [item] }, {
+        verify: async () => ({ ...fresh, url: item.url, sourceId: source.sourceId, mpn: observedMpn }), now: () => now,
+      });
+      assert.equal(result.items.length, 0, 'known product URL must match its actual catalog variant');
+      assert.equal(result.unconfirmed, 1);
+    }
+  }
+  const correct = { ...candidate, url: source.url, mpn: product.mpn };
+  const confirmed = await scan({ ...found, items: [correct] }, {
+    verify: async () => ({ ...fresh, url: correct.url, sourceId: source.sourceId, mpn: product.mpn }), now: () => now,
+  });
+  assert.equal(confirmed.items.length, 1, 'a matching known variant remains usable');
+  const item = { ...candidate, mpn: 'TEST-PART12345' };
+  const missing = await scan({ ...found, items: [item] }, { verify: async () => fresh, now: () => now });
+  assert.equal(missing.items.length, 0, 'an explicit requested part also needs source confirmation');
+  const valid = await scan({ ...found, items: [item] }, { verify: async () => ({ ...fresh, mpn: item.mpn }), now: () => now });
+  assert.equal(valid.items.length, 1);
 });
 
 test('Budget und Zustandskriterien gelten für die geprüften Daten', async () => {
