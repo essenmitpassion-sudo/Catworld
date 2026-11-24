@@ -6,6 +6,14 @@
 
 Robots und öffentliche AGB am selben Tag erneut gelesen, jeweils HTTP200; Produktpfad nicht ausgeschlossen, Crawl-delay10s eingehalten. Minimaler bestehender Pilot, keine Datenlizenz oder Freigabe zur Ausweitung daraus ableiten. Keine KI-Aufrufe, Käufe oder Schutzumgehung. Zweite unabhängige Quelle und vollständige Kosten bleiben offen. Die folgenden Tabellen halten den früheren Recherchestand fest.
 
+## Zweiter Zugangskandidat · Conrad CH / Awin, 24.11.2026
+
+Conrad nennt auf seiner [offiziellen Schweizer Partnerseite](https://www.conrad.ch/de/ueber-conrad/affiliate-partnerprogramm.html) Produktdaten und verlinkt Awin. Das [Schweizer Programm11467](https://ui.awin.com/merchant-profile/11467) nennt Produktdaten und Preisvergleichs-/Dealportale als mögliche Partner. Es ist damit ein konkreter Prüfweg für den bereits registrierten Händler, keine erteilte UDI-Partnerschaft oder funktionierende Quelle. Netzwerk- und Händlerzulassung gehen einem tatsächlichen Datenzugriff voraus; [Awin beschreibt](https://www.awin.com/ch/faq) Publisher-Prüfung, Programmbewerbung und Feedzugang.
+
+Offen vor Implementierung: ausdrückliche Erlaubnis für native App/Preisvergleich, tatsächlicher Schweizer Datenzugang, Produktidentität/MPN, CHF-Bruttopreis für Privatkunden, Verkäufer, Bestand, aktualisierter Zeitstempel, Direktlink und Versand-/Gebührenregeln. Aktualisierungsrhythmus und Bedingungen nicht aus dem deutschen Programm11354 auf die Schweiz übertragen. Die öffentlichen Cookieangaben sind innerhalb des CH-Profils uneinheitlich; keine Vertrags-/Provisionsannahme daraus im Produkt hinterlegen. Cashback-Publisher sind laut Profil eingeschränkt oder ausgeschlossen; kein Cashbackversprechen.
+
+Kein Konto angelegt, keine Bewerbung/Nachricht versendet, keine Bedingungen akzeptiert und kein Feed importiert. Direkter Abrufschutz bleibt unverändert. Nächster Test erst mit genehmigtem CH-Zugang und realen Daten; eine Mitgliedschaft oder ein Feed allein bestätigt keinen aktuellen Bestand oder Endpreis. Neue Adapter erst nach Quellenabnahme, Provisionen unabhängig von der Sortierung.
+
 Stand: 20.11.2026. Ein vorhandener URL-Parser ist keine funktionierende Quellenanbindung. Die App zeigt ausschliesslich frische, ausreichend eindeutige Detailseitenprüfungen; vollständig bestätigte Gesamtkosten und Kaufempfehlungen haben strengere Voraussetzungen.
 
 | Quelle / Angebotsart | Tatsächlich erreichbar und getestet | Aktualisierung / Anbindung | Einschränkung |
