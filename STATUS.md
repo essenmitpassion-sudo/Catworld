@@ -8,6 +8,8 @@
 
 **Anmeldeoberfläche** · Der ausdrücklich konfigurierte native Pilot zeigt die E-Mail-Anmeldung auf DE/EN. Ein falscher Code, erneutes Anfordern und Abbrechen sind bedienbar. Nach Bestätigung bleibt der Entwurf erhalten und die Suche startet erst auf erneuten Tipp. Abmelden entfernt vorläufige Eingaben und Ergebnisse. Alte lokale Suchwünsche werden im Kontopilot weder geladen noch übernommen. Chromium prüft beide Plattformzweige bei 320 px mit synthetischer Auth-Antwort. Standard- und Pilotbuild wurden für beide Plattformen mit 33 identischen UI-Dateien und der jeweils erwarteten Netzfreigabe geprüft.
 
+**Quellenlücke** · Ein Suchwunsch ausserhalb des Pilots löste vorher HTTP 502 aus. Jetzt erklärt die App die eingeschränkte Quellenabdeckung und bietet ein Beispiel zur Übernahme an. Der echte lokale Dienst gab dabei HTTP 422 zurück, rief keine Quelle auf und liess alle drei kostenlosen Suchen verfügbar. Die Beispielübernahme startet im geprüften Browserablauf keine Suche.
+
 **Wichtigste Korrektur** · Ein gespeichertes Briefing wird bei neuer widersprechender Angebotsprüfung sofort entwertet. Opt-out entfernt den Inhalt. Die Tagesgrenze folgt Europe/Zurich, auch bei konkurrierenden Aufrufen und Neustart. Das Plus-Kontingent folgt der bestätigten Laufzeit. Zahlungen werden durch die App noch nicht entgegengenommen. Der lokale Providerpfad verlangt eine atomare Budgetreservierung. Eine wirksame Anbieterobergrenze mit realem Abrechnungsnachweis bleibt offen.
 
 **Layout-Folgeprüfung** · Der [GitHub-Lauf für den gesicherten Stand](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45623307930) deckte bei 768 px Breite und 200 Prozent Schrift auf, dass in einem kurzen Browserfenster nur 21 px für den Inhalt übrig blieben. `d121310` lässt in kurzen Browserfenstern die ganze Seite scrollen. Eingabe und Hauptaktion sind bei 360, 390, 768 und 1365 px wieder erreichbar. [Korrektur und isoliert wiederhergestelltes Paket mit 315 Dateien](docs/evidence/2026-11-25-large-text-recovery.json). [GitHub-Qualitätslauf am Korrekturcommit](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45623887271) grün.
@@ -19,6 +21,8 @@ Am Pilotdienst-Commit `5ee76d7` waren die Qualitätsprüfung und iOS grün. Andr
 **Sicherung** · Pilotdienst `5ee76d7` nach `development/udi` gepusht und Remote-Commit zurückgelesen. Das lokale Paket mit 319 Dateien wurde mit frischer Abhängigkeitsinstallation isoliert wiederhergestellt. Alle drei gezielten Tests des geschützten Dienstes liefen auch aus dem Paket. [Prüfnachweis und Build-IDs](docs/evidence/2026-11-25-protected-pilot-recovery.json).
 
 Die E-Mail-Sitzung ist im Remote-Commit `dcc2ed3` gesichert. Das zugehörige Paket mit 322 Dateien wurde separat wiederhergestellt. Alle zehn Anmelde- und Pilotdiensttests bestanden aus dieser Kopie. [Prüfnachweis und Build-IDs](docs/evidence/2026-11-25-email-session-recovery.json).
+
+Die Anmeldeoberfläche ist in `7646223` auf GitHub gesichert. Das Paket mit 327 Dateien wurde separat wiederhergestellt. [Prüfnachweis](docs/evidence/2026-11-25-pilot-sign-in-ui-recovery.json)
 
 **Offen** · Echte E-Mail-Anmeldung, kontogebundene Wunschliste, geschützter UDI-Dienst mit dauerhafter Datenbank, Store-Sandbox und tatsächliche Store-Berechtigung. Ein Produktpreis von CHF 3.90 ist Zielwert. Die geschätzten Providerkosten bei 25 Suchen liegen je nach Aufrufzahl zwischen CHF 0.27 und 0.80 pro Plus-Konto. Zahlungs-, Auth-, Hosting- und weitere Anbieter-/Quellenkosten sind teilweise unbeziffert. Versand und zugehörige Geräteeinwilligung sind offen.
 

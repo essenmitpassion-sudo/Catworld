@@ -764,6 +764,7 @@ try {
         if(address.pathname.endsWith('/verify'))return JSON.parse(options.body).token==='123456'
           ?Response.json({access_token:'synthetic.account.session',token_type:'bearer',expires_in:120})
           :new Response(null,{status:403});
+        if(JSON.parse(options.body).query==='Kingston NV3 2 TB')return Response.json({kind:'outside-catalog'},{status:422});
         return new Response(null,{status:429,headers:{'X-UDI-Limit':'monthly'}});
       };
     })()`});
@@ -772,13 +773,13 @@ try {
     await until(()=>evaluate("!document.querySelector('#pilot-account').hidden && !document.querySelector('#suche').hidden"),'configured pilot entry');
     assert.equal(await evaluate('window.qaPilotCalls.length'),0);
     await pointerClick('#search-query');
-    await type('Samsung 990 PRO 2 TB');
-    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB');
+    await type('Kingston NV3 2 TB');
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Kingston NV3 2 TB');
     await pointerClick('.primary-search');
     await until(()=>evaluate("document.querySelector('#pilot-sign-in').open && document.activeElement.id==='pilot-email'"),'search opens sign-in on request');
     assert.equal(await evaluate('window.qaPilotCalls.length'),0);
     await pointerClick('[data-pilot-close]');
-    assert(await evaluate("!document.querySelector('#pilot-sign-in').open && document.querySelector('#search-query').value==='Samsung 990 PRO 2 TB'"));
+    assert(await evaluate("!document.querySelector('#pilot-sign-in').open && document.querySelector('#search-query').value==='Kingston NV3 2 TB'"));
     await pointerClick('.primary-search');
     await type('tester@example.com');
     await pointerClick('[data-pilot-email] [type=submit]');
@@ -798,7 +799,12 @@ try {
     await type('123456');
     await pointerClick('[data-pilot-code] [type=submit]');
     await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open && document.activeElement.matches('.primary-search')"),'confirmation returns to search');
-    assert(await evaluate("document.querySelector('#search-query').value==='Samsung 990 PRO 2 TB' && !window.qaPilotCalls.includes('/api/v1/search')"));
+    assert(await evaluate("document.querySelector('#search-query').value==='Kingston NV3 2 TB' && !window.qaPilotCalls.includes('/api/v1/search')"));
+    await pointerClick('.primary-search');
+    const outside=language==='de'?'fehlt eine prüfbare Quelle':'No source can verify';
+    await until(()=>evaluate(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(outside)})`),'supported-source boundary is explained');
+    await pointerClick('#web-results button');
+    assert(await evaluate("document.querySelector('#search-query').value==='Samsung 990 PRO 2 TB' && window.qaPilotCalls.filter(path=>path==='/api/v1/search').length===1"));
     await pointerClick('.primary-search');
     const limit=language==='de'?'Suchkontingent ist aufgebraucht':'used your search allowance';
     await until(()=>evaluate(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(limit)})`),'explicit search reaches the protected client');

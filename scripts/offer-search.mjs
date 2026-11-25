@@ -12,16 +12,20 @@ export function createOfferSearch({verify,webSearch=null,now=Date.now}={}) {
       ||!(signal instanceof AbortSignal))throw new Error('Missing authenticated request context');
     for(const key of ['marketId','deliveryCountry','currency'])if(typeof input?.[key]!=='string')throw new Error('Missing explicit market context');
     const prepared=prepareSearch(input);signal.throwIfAborted();
-    let sourceMode='catalog';
+    let sourceMode='catalog',outsideCatalog=false;
     const found=await discover(prepared,async query=>{
       signal.throwIfAborted();
       const known=await catalogSearch(query);signal.throwIfAborted();
       if(known.length)return known;
-      if(!webSearch)throw new Error('Search provider not configured');
+      if(!webSearch) {
+        outsideCatalog=true;
+        return [];
+      }
       sourceMode='web';
       const rows=await webSearch(query,{signal});signal.throwIfAborted();return rows;
     });
     signal.throwIfAborted();
+    if(outsideCatalog)return {kind:'outside-catalog'};
     // Do not select a shared personal journal from user-controlled input. Public
     // source facts stay in the verifier; private histories need separate storage.
     const result=await scan(found,{now,signal,verify:item=>verify(item,{signal})});

@@ -36,8 +36,8 @@ async function fixture(t,fetchUser) {
     verificationCalls:()=>verificationCalls,
     fetchSearch:(url,options)=>fetch(base+new URL(url).pathname,{...options,
       headers:{...options.headers,origin:'https://localhost'}}),
-    search:(id,index)=>fetch(base+'/api/v1/search',{method:'POST',headers:headers(id),
-      body:JSON.stringify({...request,requestId:index.toString(16).padStart(32,'0')})}),
+    search:(id,index,criteria)=>fetch(base+'/api/v1/search',{method:'POST',headers:headers(id),
+      body:JSON.stringify({...request,...criteria,requestId:index.toString(16).padStart(32,'0')})}),
     daily:(id,enabled)=>fetch(base+'/api/v1/preferences/daily-update',enabled===undefined
       ?{headers:headers(id)}
       :{method:'PUT',headers:headers(id),body:JSON.stringify({enabled})}),
@@ -56,6 +56,11 @@ test('geschützter Pilot prüft das Konto vor jeder Suche, trennt Kontingente un
   });
   assert.equal((await app.search('expired',0)).status,401);
   assert.equal((await app.search('cccccccc-cccc-4ccc-8ccc-cccccccccccc',0)).status,401);
+  assert.equal(app.verificationCalls(),0);
+
+  const outside=await app.search(alpha,0,{query:'Kingston NV3 2 TB'});
+  assert.equal(outside.status,422);
+  assert.deepEqual(await outside.json(),{kind:'outside-catalog'});
   assert.equal(app.verificationCalls(),0);
 
   for(let index=1;index<=3;index++) {

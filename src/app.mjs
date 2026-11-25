@@ -346,6 +346,23 @@ function renderWebResults(result, query) {
     if (!get('suche').hidden && get('results').contains(document.activeElement)) choices.firstElementChild.focus();
     return;
   }
+  if(result.kind==='outside-catalog') {
+    const note=message(m('Für diese Suche fehlt eine prüfbare Quelle'),
+      m('Der Pilot kann nur bestimmte Angebote prüfen. Dein Suchkontingent bleibt unverändert.'));
+    const example=element('button',m('Beispielsuche übernehmen'),'text-button');
+    example.type='button';
+    example.addEventListener('click',()=>{
+      get('search-query').form.reset();
+      get('results').replaceChildren();
+      target.replaceChildren();
+      get('suche').classList.remove('has-search');
+      get('search-home').hidden=false;
+      get('search-home').querySelector('[data-example]').click();
+    });
+    note.append(example);
+    target.replaceChildren(note);
+    return;
+  }
   if (result.kind !== 'results' || !result.items.length) {
     const messages = {
       disabled: m('Die Websuche ist in dieser Installation noch nicht verbunden.'),

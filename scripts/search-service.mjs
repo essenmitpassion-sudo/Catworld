@@ -100,6 +100,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
         }
         const result=await search(requestData.input,{subject,requestId:requestData.requestId,signal:controller.signal});
         if(controller.signal.aborted)throw fault(504);
+        if(result?.kind==='outside-catalog')throw fault(422);
         let reply;try{reply=serializeScanReply(result,requestData);}catch{throw fault(502);}
         if(Buffer.byteLength(JSON.stringify(reply))>65536)throw fault(502);
         if(reservation) {
@@ -122,7 +123,12 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
     let timer;
     const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(fault(504));},timeoutMs);});
     try{send(200,await Promise.race([operation,deadline]));}
-    catch(error){const status=[400,401,403,409,413,429,502,503,504].includes(error.status)?error.status:502;send(status,{kind:status===429?'busy':status===504?'timeout':status===401?'authentication-required':status===403?'access-denied':status===400||status===413?'invalid':'unavailable'},error.limit);}
+    catch(error){
+      const status=[400,401,403,409,413,422,429,502,503,504].includes(error.status)?error.status:502;
+      const failureKind={400:'invalid',401:'authentication-required',403:'access-denied',413:'invalid',
+        422:'outside-catalog',429:'busy',504:'timeout'};
+      send(status,{kind:failureKind[status]??'unavailable'},error.limit);
+    }
     finally{clearTimeout(timer);response.off('close',disconnect);}
   });
 }

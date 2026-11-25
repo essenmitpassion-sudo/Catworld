@@ -39,7 +39,7 @@ test('Rückfrage benötigt keinen Abruf; unbekannte Wünsche nutzen nur ausdrüc
   let sources=0,web=0;const ctx=context();
   const search=createOfferSearch({verify:async()=>{sources++;},now:()=>now});
   assert.equal((await search({...input,query:'more storage for my PC'},ctx)).kind,'clarification');
-  await assert.rejects(search({...input,query:'Kingston NV3 2 TB'},ctx));assert.equal(sources,0);
+  assert.deepEqual(await search({...input,query:'Kingston NV3 2 TB'},ctx),{kind:'outside-catalog'});assert.equal(sources,0);
   const enabled=createOfferSearch({verify:async()=>{sources++;},now:()=>now,webSearch:async(query,{signal})=>{web++;assert.equal(signal,ctx.signal);assert.equal(query.marketId,'CH');return [];}});
   const result=await enabled({...input,query:'Kingston NV3 2 TB'},ctx);
   assert.equal(result.sourceMode,'web');assert.deepEqual(result.items,[]);assert.equal(web,1);assert.equal(sources,0);

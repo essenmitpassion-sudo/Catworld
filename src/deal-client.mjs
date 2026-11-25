@@ -39,6 +39,7 @@ export function createDealClient({endpoint=null,approvedOrigin=null,getAccessTok
       if(controller.signal.aborted)return failure('cancelled');
       if(response.status===401)return failure('authentication-expired');
       if(response.status===403)return failure('access-denied');
+      if(response.status===422)return failure('outside-catalog');
       if(response.status===429)return failure(response.headers.get('X-UDI-Limit')==='monthly'?'quota-exhausted':'busy');
       if(response.status===400)return failure('invalid');
       if(response.status===408||response.status===504)return failure('timeout');
