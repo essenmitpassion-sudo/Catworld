@@ -1,6 +1,19 @@
 # Universal Deal Intelligence
 
-## Neuester Auftrag · Marke, USP, UI und Bedienung
+## Konto, Plus und freiwilliges tägliches Update · 25.11.2026
+
+Der [Originalauftrag](docs/requirements/2026-11-25-account-plus-costs.md) ist unverändert gespeichert. Hinzu kommt der ausdrückliche Kundenwunsch nach einem Schalter für tägliche Updates. Dieser Abschnitt steuert den ersten bezahlbaren Testbetrieb. Schweiz, DE/EN, Android/iOS. Die frühere Affiliate-Planung bleibt eine spätere Möglichkeit.
+
+| Reihenfolge und Verantwortung | Lieferung und überprüfbare Abnahme |
+|---|---|
+| 1 · Dienst und Kontoschutz | Freie Erklärung und Beispiele vor Login. Vor kostenwirksamer Suche und persönlichen gespeicherten Wünschen E-Mail-Einmalcode prüfen. Ein Konto erklärt Kontingent, Wünsche und Wiederherstellung. Falscher/abgelaufener Code, erneute Zustellung, Abbruch, Abmeldung und Kontolöschung durchspielen. Persönliche Tokens nur geschützt speichern. Zwei Konten auf einem Gerät und Neuinstallation prüfen. Lokale Pilotwünsche nur nach bewusster Übernahme einem Konto zuordnen. |
+| 2 · Kontingent und Kosten | Kostenlos 3 Suchen ohne Zahlungsdaten, Plus 25 je Abrechnungsmonat. Gemeinsame konfigurierbare Werte. Server reserviert atomar vor Anbieteraufrufen. Gleiche Anfrage wird höchstens einmal belastet. Bestätigte Recherche mit null Treffern, Rückfrage und technischer Fehler erhalten jeweils eindeutige Abrechnung. Konto- und Anbieterlimits, Kostenmessung ohne Suchtext, Warnschwellen und harter Ausgabenstopp über alle Prozesse nachweisen. Ausfälle und Parallelität praktisch testen. |
+| 3 · Tagesupdate | Schalter unter «Gespeichert» in DE/EN, zunächst aus. Ein- und Ausschalten serverseitig je Konto bestätigen, unklare Antwort neu lesen, auf einem zweiten Gerät nachvollziehen. Nur passende Verbesserungen zu ausdrücklich gespeicherten Wünschen, gleicher Produktvariante, Zustand und Lieferbasis. Nur vollständige CHF-Kosten und frische Quellenbelege zulassen. Höchstens eine Zusammenfassung je lokalem Tag in Europe/Zurich, auch bei Wiederholung, Zeitumstellung und Neustart. Ohne Änderung entfällt die Nachricht. Abmeldung vom Versand und Kontolöschung vor Übergabe erneut prüfen, wartende Nachrichten verwerfen. Versandkanal und Berechtigung ausdrücklich erläutern. Keine kostenpflichtige Hintergrundsuche zulasten persönlicher Suchkontingente. |
+| 4 · Wirtschaftlichkeit | Rechner und Quellenbelege für 3/25 Suchen, 1–3 externe Aufrufe, 100/1’000/10’000 aktive Konten und mehrere Plus-Anteile. Anbieter-, Hosting-, Steuer-, Store- und Erstattungsannahmen, Sicherheitsmarge, Deckungsbeitrag und Kostendeckung ausweisen. Erst nach gemessenen vollständigen Recherchen über Preis oder Kontingent entscheiden. |
+| 5 · Käufe und Wiederherstellung | Ein monatliches Plus-Abo, Schweizer Zielpreis CHF 3.90. Im Kaufdialog nur den tatsächlich konfigurierten lokalisierten Storepreis zeigen. StoreKit und Play Billing mit einer gemeinsamen, servergeprüften Berechtigung anbinden. Produkt- und Sandboxzugänge nötig. Kauf, ausstehende Synchronisation, gültig bis Laufzeitende nach Kündigung, Zahlungsstörung, Ablauf, Erstattung, Kaufwiederherstellung und Kontowechsel nachweisen. Provider-Ereignisse authentifizieren und idempotent verarbeiten. |
+| 6 · Native und betriebliche Freigabe | Auf Android und iOS kostenloses Konto → echte Suche → Limit → Sandboxkauf → Wiederherstellung sowie Opt-in → verifizierte Änderung → höchstens eine Zustellung → Opt-out prüfen. Betriebskosten, Backup und isolierte Wiederherstellung der Kontodatenbank getrennt vom Quellcode belegen. Aufbewahrungsfristen, Löschweg und Datenschutzinformationen prüfen. Erst danach Kundentest mit tatsächlichem Versand. |
+
+## Marke, USP, UI und Bedienung · 24.11.2026
 
 [Unverändert gespeicherter Auftrag](docs/requirements/2026-11-24-brand-usp-ui-usability.md) ersetzt die neutrale sichtbare Identität durch austauschbare Arbeitsmarke `udi.`; keine weiteren Namensrunden, keine technischen Identitätswechsel. Frühere Belege bleiben historische Zustände.
 

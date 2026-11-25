@@ -5,7 +5,7 @@ export type Observation = {url:string; marketId:'CH'; sourceId:string; status:'h
   mpn?:string; seller:string; condition:'Neu'|'Gebraucht'|'Generalüberholt'|'Beschädigt'; price:number; shipping:number|null; taxes:number|null; imports:number|null; fees:number|null;
   delivery:string|null; deliveryDestination:{country:'CH';postalCode:string}|null; total:number|null; minimum:number; missing:string[]};
 export type Offer = {title:string; url:string; source:string; sourceId:string; marketId:'CH'; type:'shop'|'listing'; status:'partial'; mpn?:string; expiresAt:string; check:Observation; budgetStatus:'none'|'unknown-total'|'within'};
-export type FailureKind = 'native-unavailable'|'configuration-error'|'authentication-required'|'authentication-expired'|'access-denied'|'invalid'|'invalid-response'|'timeout'|'offline'|'network-error'|'unavailable'|'busy'|'cancelled'|'expired';
+export type FailureKind = 'native-unavailable'|'configuration-error'|'authentication-required'|'authentication-expired'|'access-denied'|'invalid'|'invalid-response'|'timeout'|'offline'|'network-error'|'unavailable'|'busy'|'quota-exhausted'|'cancelled'|'expired';
 export type Failure = {kind:FailureKind};
 export type Results = SearchContext & {kind:'results'; items:Offer[]; criteria:Criteria; completedAt:string; unconfirmed:number; excluded:number; sourceMode?:'catalog'|'web'; testData?:true};
 export type Clarification = SearchContext & {kind:'clarification'; criteria:Criteria; testData?:true};

@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { discover, InvalidSearch } from './discovery.mjs';
 import { gatewaySearch } from './gateway.mjs';
+import { openProviderBudget } from './provider-budget.mjs';
 import { pageVerifier } from './verification.mjs';
 import { scan } from './scans.mjs';
 import { catalogSearch } from './catalog-search.mjs';
@@ -90,7 +91,18 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
-  const webSearch = gatewaySearch({ apiKey: process.env.AI_GATEWAY_API_KEY, model: process.env.UDI_SEARCH_MODEL });
+  let webSearch=null;
+  const {AI_GATEWAY_API_KEY,UDI_SEARCH_MODEL,UDI_BUDGET_DB,UDI_BUDGET_MONTH_USD_MICROS,UDI_BUDGET_REQUEST_USD_MICROS}=process.env;
+  if (AI_GATEWAY_API_KEY && UDI_SEARCH_MODEL && UDI_BUDGET_DB) {
+    try {
+      const budget=openProviderBudget({databasePath:UDI_BUDGET_DB,
+        monthlyMicros:Number(UDI_BUDGET_MONTH_USD_MICROS),requestMicros:Number(UDI_BUDGET_REQUEST_USD_MICROS)});
+      webSearch=gatewaySearch({apiKey:AI_GATEWAY_API_KEY,model:UDI_SEARCH_MODEL,budget});
+      if(!webSearch)budget.close();
+    } catch {
+      console.warn('Bezahlte Suche deaktiviert. Das Betreiberbudget konnte nicht geöffnet werden.');
+    }
+  }
   const verify = pageVerifier((process.env.UDI_VERIFY_DOMAINS ?? 'dq-solutions.ch').split(',').map(value => value.trim()));
   server({ webSearch, verify, journalPath: fileURLToPath(new URL('../.udi/checks.json', import.meta.url)) })
     .listen(4173, '127.0.0.1', () => console.log('UDI: http://127.0.0.1:4173'));

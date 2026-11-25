@@ -41,6 +41,8 @@ test('Testantworten können nicht als Live-Daten durch den normalen App-Client g
   assert.equal((await client(async()=>response(payload()),{allowTestData:false}).search(input)).kind,'invalid-response');
 });
 test('fehlende/abgelaufene Rechte, Quoten und Dienstfehler werden ohne Wiederholung unterschieden',async()=>{
+  const monthly=await client(async()=>new Response(null,{status:429,headers:{'X-UDI-Limit':'monthly'}})).search(input);
+  assert.equal(monthly.kind,'quota-exhausted');
   let calls=0;assert.equal((await client(async()=>{calls++;},{getAccessToken:async()=>null}).search(input)).kind,'authentication-required');assert.equal(calls,0);
   for(const [status,kind] of [[401,'authentication-expired'],[403,'access-denied'],[429,'busy'],[503,'unavailable'],[504,'timeout']]){
     let count=0;const result=await client(async()=>{count++;return new Response('no secret details',{status});}).search(input);

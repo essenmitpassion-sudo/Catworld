@@ -18,22 +18,34 @@ function readBody(request,signal) {
   });
 }
 
-export function createSearchService({authenticate,search,timeoutMs=8000}={}) {
+export function createSearchService({authenticate,search,timeoutMs=8000,mode='production',quota,resolveEntitlement,dailyUpdates}={}) {
   if(!Number.isSafeInteger(timeoutMs)||timeoutMs<20||timeoutMs>20000)throw new Error('Invalid service timeout');
+  if(!['production','pilot'].includes(mode))throw new Error('Invalid service mode');
   const users=new Map();let active=0,attempts=0,windowEnds=0;
-  const configured=typeof authenticate==='function'&&typeof search==='function';
+  const metered=quota?.durable===true&&typeof quota.reserve==='function'&&typeof quota.finish==='function'&&typeof resolveEntitlement==='function';
+  const configured=typeof authenticate==='function'&&typeof search==='function'&&(mode==='pilot'||metered);
   return createServer({requestTimeout:timeoutMs,headersTimeout:Math.min(5000,timeoutMs),maxHeaderSize:8192},async(request,response)=>{
     const origin=request.headers.origin;
-    const send=(status,payload)=>{
+    const send=(status,payload,limit)=>{
       if(response.destroyed||response.writableEnded)return;
       const headers={'Content-Type':'application/vnd.udi.deals.v1+json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
         'Referrer-Policy':'no-referrer','Connection':'close',Vary:'Origin',...(origins.has(origin)?{'Access-Control-Allow-Origin':origin}:{})};
-      if(status===429)headers['Retry-After']='60';
+      if(status===429) {
+        headers['Retry-After']=String(limit?.retryAfter??60);
+        if(limit?.kind==='quota-exceeded') {
+          headers['X-UDI-Limit']='monthly';
+          if(origins.has(origin))headers['Access-Control-Expose-Headers']='X-UDI-Limit, Retry-After';
+        }
+      }
       if(status===204)Object.assign(headers,{'Access-Control-Allow-Methods':'POST','Access-Control-Allow-Headers':'authorization,content-type,accept'});
       if(status===405)headers.Allow='POST, OPTIONS';
       response.once('finish',()=>{if(!request.complete)request.destroy();});
       response.writeHead(status,headers).end(payload===undefined?undefined:JSON.stringify(payload));
     };
+    if(request.url==='/api/v1/preferences/daily-update'&&typeof dailyUpdates==='function') {
+      try {await dailyUpdates(request,response);}catch{send(503,{kind:'unavailable'});}
+      return;
+    }
     if(request.url!=='/api/v1/search')return send(404,{kind:'unavailable'});
     if(origin!==undefined&&!origins.has(origin))return send(403,{kind:'access-denied'});
     if(request.method==='OPTIONS') {
@@ -59,6 +71,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000}={}) {
     const disconnect=()=>{if(!response.writableEnded)controller.abort();};
     response.once('close',disconnect);
     const operation=(async()=>{
+      let reservation,settled=false;
       try {
         let subject;try{subject=await authenticate(authorization.slice(7),{signal:controller.signal});}catch{throw fault(503);}
         if(controller.signal.aborted)throw fault(504);
@@ -71,11 +84,35 @@ export function createSearchService({authenticate,search,timeoutMs=8000}={}) {
         user.calls++;user.running=true;users.set(subject,user);userLocked=user;
         let requestData;try{requestData=readServiceRequest(await readBody(request,controller.signal));}catch(error){throw fault(error.status===413?413:controller.signal.aborted?504:400);}
         if(controller.signal.aborted)throw fault(504);
+        if(metered) {
+          let entitlement,reserved;
+          try {
+            entitlement=await resolveEntitlement(subject,{signal:controller.signal});
+            if(controller.signal.aborted)throw fault(504);
+            reserved=quota.reserve({subject,requestId:requestData.requestId,input:requestData.input,entitlement});
+          } catch {throw fault(controller.signal.aborted?504:503);}
+          if(reserved.kind==='replay')return reserved.reply;
+          if(reserved.kind==='quota-exceeded')throw Object.assign(fault(429),{limit:reserved});
+          if(reserved.kind==='pending')throw fault(429);
+          if(['conflict','request-reused'].includes(reserved.kind))throw fault(409);
+          if(reserved.kind!=='reserved')throw fault(503);
+          reservation=reserved;
+        }
         const result=await search(requestData.input,{subject,requestId:requestData.requestId,signal:controller.signal});
         if(controller.signal.aborted)throw fault(504);
         let reply;try{reply=serializeScanReply(result,requestData);}catch{throw fault(502);}
         if(Buffer.byteLength(JSON.stringify(reply))>65536)throw fault(502);
+        if(reservation) {
+          try {quota.finish(reservation,{reply,charge:reply.kind==='results'});settled=true;}
+          catch {throw fault(503);}
+        }
         return reply;
+      } catch(error) {
+        if(reservation&&!settled) {
+          try {quota.finish(reservation,{charge:false});}
+          catch {throw fault(503);}
+        }
+        throw error;
       } finally {
         // A timed-out dependency may ignore cancellation. It still owns its
         // slot until it actually settles; do not create unbounded hidden work.
@@ -85,7 +122,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000}={}) {
     let timer;
     const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(fault(504));},timeoutMs);});
     try{send(200,await Promise.race([operation,deadline]));}
-    catch(error){const status=[400,401,403,413,429,502,503,504].includes(error.status)?error.status:502;send(status,{kind:status===429?'busy':status===504?'timeout':status===401?'authentication-required':status===403?'access-denied':status===400||status===413?'invalid':'unavailable'});}
+    catch(error){const status=[400,401,403,409,413,429,502,503,504].includes(error.status)?error.status:502;send(status,{kind:status===429?'busy':status===504?'timeout':status===401?'authentication-required':status===403?'access-denied':status===400||status===413?'invalid':'unavailable'},error.limit);}
     finally{clearTimeout(timer);response.off('close',disconnect);}
   });
 }

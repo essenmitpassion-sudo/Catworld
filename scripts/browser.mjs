@@ -697,6 +697,24 @@ try {
     await until(()=>evaluate("document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB')"),'saved request persists in native-boundary simulation');
     assert.equal(await evaluate("document.querySelector('[data-language-value=en]').getAttribute('aria-pressed')"),'true','visible language choice is restored too');
     await captureBoundary(platform,'en-saved',send);
+    const switchSelector='#daily-update input';
+    assert(await evaluate("document.querySelector('#daily-update input').disabled && !document.querySelector('#daily-update input').checked"),'guest cannot opt in to a missing service');
+    // Test account only, through the actual preference client and switch controller.
+    await evaluate(`(async()=>{const {bindDailyUpdate,dailyUpdateAccount}=await import('./daily-update.mjs');let stored=false;window.qaDailyFail=false;
+      const account=dailyUpdateAccount({approvedOrigin:'https://daily.example',getAccessToken:async()=>'qa-token',fetchImpl:async(url,options)=>{
+        if(options.headers.Authorization!=='Bearer qa-token'||url.pathname!=='/api/v1/preferences/daily-update')throw Error('wrong contract');
+        if(options.method==='PUT')stored=JSON.parse(options.body).enabled;
+        if(window.qaDailyFail)throw Error('lost reply');
+        return Response.json({schemaVersion:1,enabled:stored,updatedAt:null});}});
+      window.qaDailyDispose=bindDailyUpdate(document.querySelector('#daily-update'),account);})()`);
+    await until(()=>evaluate("!document.querySelector('#daily-update input').disabled"),'account preference loaded');
+    await pointerClick(switchSelector);
+    await until(()=>evaluate("document.querySelector('#daily-update input').checked && !document.querySelector('#daily-update input').disabled"),'opt in confirmed');
+    await evaluate('window.qaDailyFail=true');await pointerClick(switchSelector);
+    await until(()=>evaluate("!document.querySelector('#daily-update button').hidden && document.querySelector('#daily-update-status').textContent.includes('unknown')"),'ambiguous write offers refresh');
+    await evaluate('window.qaDailyFail=false');await pointerClick('#daily-update button');
+    await until(()=>evaluate("!document.querySelector('#daily-update input').disabled && !document.querySelector('#daily-update input').checked"),'confirmed opt out recovered after lost response');
+    await evaluate('window.qaDailyDispose()');
     await click('#saved .text-button');
     await until(()=>evaluate("document.querySelector('#saved').textContent.includes('No saved searches yet')"),'native saved request removal');
     await captureBoundary(platform,'en-empty',send);

@@ -2,6 +2,7 @@ import { catalog, search, compare, costFields, directLink, isAmount, maxObservat
 import { criteriaFor } from './criteria.mjs';
 import { readSearches, storeSearch, removeSearch, searchStorageKey } from './saved-searches.mjs';
 import {createSearchPersistence,nativeSearchPreferences} from './search-persistence.mjs';
+import {bindDailyUpdate} from './daily-update.mjs';
 import {configureNativeUI} from './native-ui.mjs';
 import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
@@ -50,6 +51,7 @@ try {
 if(platform!=='web') {
   configureNativeUI(document);
 }
+bindDailyUpdate(get('daily-update'));
 setupInstall();
 
 function draftInput(query = get('search-query').value.trim()) {
@@ -321,6 +323,7 @@ function renderWebResults(result, query) {
       'network-error':m('Die Verbindung zum Angebotsdienst ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.'),
       cancelled:m('Die Suche wurde abgebrochen. Dein Suchtext bleibt erhalten.'),
       busy: m('Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.'),
+      'quota-exhausted': m('Dein Suchkontingent ist aufgebraucht. Im nächsten Abrechnungszeitraum kannst du wieder suchen.'),
       unavailable: m('Die Websuche ist vorübergehend nicht erreichbar.'),
       invalid: m('Gib einen Kaufwunsch als Text ohne Webadresse ein.'),
       results: result.excluded

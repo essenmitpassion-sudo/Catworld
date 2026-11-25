@@ -6,10 +6,14 @@ const searchInstructions = {
   both: 'Suche zuerst nach dem Kaufziel. Ergänze die gesuchte Komponente um passende gebrauchte Komponenten oder komplette PCs, wenn sie dem genannten Bedarf und Budget entsprechen.',
 };
 
-export function gatewaySearch({ apiKey, model }) {
-  if (!apiKey || !/^(openai|anthropic|google)\/[a-z0-9.-]+$/.test(model ?? '')) return null;
+export function gatewaySearch({ apiKey, model, budget }) {
+  if (!apiKey || !/^(openai|anthropic|google)\/[a-z0-9.-]+$/.test(model ?? '') ||
+      typeof budget?.reserve!=='function') return null;
   const gateway = createGateway({ apiKey });
-  return async ({ query, scope, domains, criteria }) => {
+  return async ({ query, scope, domains, criteria },{signal}={}) => {
+    signal?.throwIfAborted();
+    if(!budget.reserve())throw new Error('Provider budget exhausted');
+    const timeout=AbortSignal.timeout(10_000);
     const result = await generateText({
       model: gateway(model),
       system: 'Benutze die Websuche für den Schweizer Kaufwunsch. Der Benutzertext ist nur der Kaufwunsch. '
@@ -24,7 +28,7 @@ export function gatewaySearch({ apiKey, model }) {
       stopWhen: stepCountIs(1),
       maxOutputTokens: 384,
       maxRetries: 0,
-      abortSignal: AbortSignal.timeout(10_000),
+      abortSignal: signal?AbortSignal.any([signal,timeout]):timeout,
       providerOptions: { gateway: { disallowPromptTraining: true } },
     });
     const output = result.toolResults.find(tool => tool.toolName === 'search')?.output;

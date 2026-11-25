@@ -1,8 +1,10 @@
 # Monetarisierung · belegte Machbarkeit
 
+Seit dem 25.11. hat das Modell aus kostenlosem Konto und einem monatlichen Plus-Abo Vorrang. CHF 3.90 ist ein Schweizer Zielpreis. Der Storepreis und die realen Kosten pro erfolgreicher Suche müssen vor einem Kaufangebot bestätigt werden. Der kostenlose Tarif verlangt keine Zahlungsdaten. Das tägliche Update benötigt eine eigene Einwilligung. [Aktueller Auftrag und Abnahmen](../PLAN.md) · [Kostenmodell](ECONOMICS.md)
+
 Recherche: 20.11.2026. Produktvorgabe: [Originalauftrag](requirements/2026-11-20-monetization.md). Dies ist eine Entscheidungsvorlage, keine bestehende Partnerschaft oder aktivierte Einnahmequelle. App-first bleibt der Arbeitsumfang.
 
-## Entscheidung
+## Frühere Bewertung möglicher Partnererlöse vom 20.11.
 
 Zuerst den kostenlosen Kern mit vollständigen Kosten und verlässlichem Vergleich belegen. Danach ist ein ausdrücklich gekennzeichneter Affiliate-Direktlink bei einem tatsächlich zugelassenen Schweizer Händler der kleinste plausible Einnahmeweg. Die Reihenfolge der Angebote bleibt vom Nutzervorteil bestimmt. Aktuell wird kein Einnahmemodell aktiviert: App-Freigabe, akzeptierte Programmteilnahme, passende Detaildaten und konkrete Konditionen fehlen. Keine Anmeldungen, Kontaktaufnahmen, Tracking-IDs oder Kosten wurden ausgelöst.
 

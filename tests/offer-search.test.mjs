@@ -58,7 +58,7 @@ test('Abbruch stoppt den tatsächlichen Scan vor weiteren Kandidaten und vor ver
 
 test('gemeinsamer Client durchläuft echten lokalen HTTP-Dienst und bestehenden Suchkern mit Testquelle',async t=>{
   const search=createOfferSearch({verify:async item=>item.sourceId==='dq-solutions.ch'?fixture(item,Date.now()):inspectPage(item,{status:403})});
-  const server=createSearchService({authenticate:async credential=>credential==='unit-test-token'?'unit-user':null,search});
+  const server=createSearchService({mode:'pilot',authenticate:async credential=>credential==='unit-test-token'?'unit-user':null,search});
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections();}));
   const client=createDealClient({endpoint:'https://udi.example.com/api/v1/search',approvedOrigin:'https://udi.example.com',getAccessToken:async()=>'unit-test-token',

@@ -1,5 +1,13 @@
 // Gettext-style controlled UI messages. Never use for raw merchant/user text.
 const base = {
+  "Tägliches Update": "Daily update",
+  "Einstellung erneut laden": "Reload setting",
+  "Tägliche Updates sind verfügbar, sobald Konto und Versand verbunden sind.": "Daily updates will be available once accounts and delivery are connected.",
+  "Einstellung wird gespeichert …": "Saving your setting …",
+  "Einstellung wird geladen …": "Loading your setting …",
+  "Aktiv. Bei passenden Änderungen erhältst du höchstens ein Update pro Tag.": "On. You’ll receive at most one update a day when a relevant offer changes.",
+  "Aus. Du erhältst keine täglichen Updates.": "Off. You won’t receive daily updates.",
+  "Aktueller Status unbekannt. Lade die Einstellung erneut.": "Current status unknown. Reload your setting.",
   "Testdaten · beispielhafte Prüfzeit {checkedAt}": "Test data · example check time {checkedAt}",
   "Der Angebotsdienst ist noch nicht richtig verbunden. Gespeicherte Suchen bleiben verfügbar.": "The offer service is not configured correctly yet. Saved searches remain available.",
   "Für diese Suche fehlt eine gültige Anmeldung am Angebotsdienst.": "A valid sign-in to the offer service is needed for this search.",
@@ -162,6 +170,7 @@ const extra = {
   "Auch gebraucht":"Include used items",
   "Die Websuche ist in dieser Installation noch nicht verbunden.":"Web search is not connected in this installation yet.",
   "Die Websuche ist gerade ausgelastet. Versuche es in einer Minute erneut.":"Web search is busy. Try again in a minute.",
+  "Dein Suchkontingent ist aufgebraucht. Im nächsten Abrechnungszeitraum kannst du wieder suchen.":"You’ve used your search allowance. You can search again in your next billing period.",
   "Die Websuche ist vorübergehend nicht erreichbar.":"Web search is temporarily unavailable.",
   "Gib einen Kaufwunsch als Text ohne Webadresse ein.":"Describe what you want to buy as text without a web address.",
   "Die geprüften Angebote erfüllen deine Kaufkriterien nicht. Du kannst dein Budget oder den Zustand anpassen.":"The checked offers do not meet your buying criteria. You can adjust your budget or condition.",

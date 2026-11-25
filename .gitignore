@@ -5,6 +5,7 @@
 /.env.*
 /artifacts/
 /native-dist/
+/.codex-attachments/
 *.jks
 *.keystore
 *.p12

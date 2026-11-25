@@ -37,7 +37,7 @@ npm run dev
 
 ## Optionale Websuche
 
-Der lokale Server verwendet Vercel AI Gateway für die Suche nach konkreten Schweizer Händler- und Inseratsseiten. Setze serverseitig `AI_GATEWAY_API_KEY` und `UDI_SEARCH_MODEL` mit einer im Gateway verfügbaren Modell-ID aus `openai/`, `anthropic/` oder `google/`. Starte den Server danach neu. Die Aktivierung kann Gebühren auslösen. Setze das gewünschte Budget im Gateway und übermittle den Schlüssel über die lokale Umgebung oder einen Secret Store.
+Der lokale Server kann über Vercel AI Gateway konkrete Schweizer Händler- und Inseratsseiten suchen. Der Katalogweg funktioniert unabhängig davon. Bezahlte Suche erfordert ein ausdrücklich eingerichtetes Betreiberbudget und Schlüssel im Secret Store. Die lokale Reservierung je Gateway-Anfrage und die zusätzlich erforderlichen Grenzen beim Anbieter sind in [Wirtschaftlichkeit](docs/ECONOMICS.md#ausgabenbegrenzung-im-lokalen-dienst) dokumentiert.
 
 Ohne KI-Konfiguration bleiben die Live-Prüfung bekannter Katalogprodukte und die Watchlist nutzbar. Breite Web- und Gebrauchtmarktsuchen erfordern den Gateway-Zugang. Frei formulierte Suchen können eine Rückfrage zur Gebrauchtoption auslösen. Im Browser unterstütztes Diktat füllt das Suchfeld, der Nutzer prüft den Text und sendet ihn selbst. Je nach Browser verarbeitet dessen Spracherkennungsdienst Audio ausserhalb von UDI.
 
