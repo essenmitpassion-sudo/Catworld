@@ -24,6 +24,8 @@ Die E-Mail-Sitzung ist im Remote-Commit `dcc2ed3` gesichert. Das zugehörige Pak
 
 Die Anmeldeoberfläche ist in `7646223` auf GitHub gesichert. Das Paket mit 327 Dateien wurde separat wiederhergestellt. [Prüfnachweis](docs/evidence/2026-11-25-pilot-sign-in-ui-recovery.json)
 
+Die Katalogkorrektur ist in `f3ff43e` auf GitHub gesichert. Die Wiederherstellung des Pakets mit 328 Dateien und die neun Suchdienst- und Pilottests daraus sind bestätigt. [Prüfnachweis](docs/evidence/2026-11-25-catalog-coverage-recovery.json)
+
 **Offen** · Echte E-Mail-Anmeldung, kontogebundene Wunschliste, geschützter UDI-Dienst mit dauerhafter Datenbank, Store-Sandbox und tatsächliche Store-Berechtigung. Ein Produktpreis von CHF 3.90 ist Zielwert. Die geschätzten Providerkosten bei 25 Suchen liegen je nach Aufrufzahl zwischen CHF 0.27 und 0.80 pro Plus-Konto. Zahlungs-, Auth-, Hosting- und weitere Anbieter-/Quellenkosten sind teilweise unbeziffert. Versand und zugehörige Geräteeinwilligung sind offen.
 
 **Nächster Schritt** · Mit einem getrennten UDI-Supabase-Testprojekt, zwei bestätigten Testkonten und einem freigegebenen UDI-HTTPS-Ziel den [nativen Testbuild](docs/SERVICE.md#anmeldeoberfläche-im-nativen-testbuild) verbinden. Danach E-Mail-Zustellung, Anmeldung, geschützte Suche und Kontotrennung auf Android und iOS abnehmen. Tagesupdate-Zustellung, Anbieterbudget und Store-Sandbox folgen als eigene Abnahmen.

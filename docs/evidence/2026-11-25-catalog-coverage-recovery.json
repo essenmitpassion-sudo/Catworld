@@ -1,0 +1,20 @@
+{
+  "verifiedAt": "2026-11-25T15:54:57.460Z",
+  "sourceCommit": "f3ff43ece0d6d28b12baac04bf230a50d575d4e8",
+  "remoteRef": "refs/heads/development/udi",
+  "archive": "artifacts/udi-pilot-f3ff43ece0d6.tar.gz",
+  "archiveSha256": "e72aa1f8310f1e13d93e8f4d3869a53c5765e913fa83cc34fa58bbb6c063d903",
+  "unpackedFiles": 328,
+  "freshLockfileInstall": true,
+  "localTestsPassed": 162,
+  "restoredOfferAndPilotTestsPassed": 9,
+  "browserPilotUiChecks": ["Android branch, DE, 320px", "iOS branch, EN, 320px"],
+  "baselineUnknownCatalogStatus": 502,
+  "verifiedUnknownCatalogStatus": 422,
+  "unknownCatalogSourceCalls": 0,
+  "remainingFreeSearchAllowanceAfterUnknownCatalog": 3,
+  "exampleStartsSearchAutomatically": false,
+  "ciRunId": 45649591849,
+  "nativeRunId": 45649591792,
+  "liveEmailOrNativeDeviceSignInVerified": false
+}
