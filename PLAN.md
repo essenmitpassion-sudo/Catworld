@@ -1,5 +1,16 @@
 # Universal Deal Intelligence
 
+## Konto und Spracheingabe · Vertiefung vom 25.11.2026
+
+[Originalauftrag mit P0–P6](docs/requirements/2026-11-25-account-and-dictation.md). Kontoregeln, Abo und persönliche Speicherung werden im folgenden Kontoplan geführt. Hier kommen die Sprachabnahmen hinzu.
+
+| Priorität | Prüfbare Abnahme |
+|---|---|
+| P0/P1 Bestand und Einstieg | Android/iOS, Mindestversionen und verfügbare Prüfumgebung belegen. Vor Konto Beispiele, Entwurf und Kriterien verwenden. Erste Live-Suche verlangt Einladung und E-Mail-Code. Anmeldung erhält den Entwurf und verbraucht kein Kontingent. Wiederherstellung, Abmeldung, abgelaufene Sitzung, Löschung und Kontowechsel mit echten Testkonten durchspielen. |
+| P2/P4 Eingabe und Erlaubnis | Beim Start kein Dialog. Mikrofon am Suchfeld öffnen, technische Verarbeitung und Erkennungssprache erklären, erst nach Bestätigung Erlaubnis anfragen. Sichtbarer Aufnahmezustand, Stoppen, Abbruch, Wechsel in Hintergrund und Einstellungen bei verweigerter Freigabe prüfen. |
+| P3 Native Verarbeitung | Lokale Verfügbarkeit pro Sprache und Gerät vor Aufnahme prüfen. Nur Text an die gemeinsame Oberfläche geben. Keine Aufnahmepersistenz. Unbekannte oder nicht installierte Sprachen und fehlende lokale Erkennung lassen die Tastatur nutzbar. Provider-Fallback erst bei belegtem Bedarf und eigener Datenschutz-/Kostenentscheidung. |
+| P5/P6 Geräteabnahme | iOS und Android getrennt prüfen. Aufnahme → Transkript → bearbeiten → ausdrücklicher Suchstart, Stille, zu langer Text, erneute Aufnahme, Ablehnungszustände, Offline- und Sprachgrenzen. 320 px und grosse Schrift in Chromium, echte Tastatur, VoiceOver/TalkBack und Audio auf geeigneten Geräten. Quelle des Nachweises und fehlende Schritte in STATUS. |
+
 ## Konto, Plus und freiwilliges tägliches Update · 25.11.2026
 
 Der [Originalauftrag](docs/requirements/2026-11-25-account-plus-costs.md) ist unverändert gespeichert. Hinzu kommt der ausdrückliche Kundenwunsch nach einem Schalter für tägliche Updates. Dieser Abschnitt steuert den ersten bezahlbaren Testbetrieb. Schweiz, DE/EN, Android/iOS. Die frühere Affiliate-Planung bleibt eine spätere Möglichkeit.
