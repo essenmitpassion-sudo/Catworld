@@ -16,6 +16,8 @@ Am Pilotdienst-Commit `5ee76d7` waren die Qualitätsprüfung und iOS grün. Andr
 
 **Sicherung** · Pilotdienst `5ee76d7` nach `development/udi` gepusht und Remote-Commit zurückgelesen. Das lokale Paket mit 319 Dateien wurde mit frischer Abhängigkeitsinstallation isoliert wiederhergestellt. Alle drei gezielten Tests des geschützten Dienstes liefen auch aus dem Paket. [Prüfnachweis und Build-IDs](docs/evidence/2026-11-25-protected-pilot-recovery.json).
 
+Die E-Mail-Sitzung ist im Remote-Commit `dcc2ed3` gesichert. Das zugehörige Paket mit 322 Dateien wurde separat wiederhergestellt. Alle zehn Anmelde- und Pilotdiensttests bestanden aus dieser Kopie. [Prüfnachweis und Build-IDs](docs/evidence/2026-11-25-email-session-recovery.json).
+
 **Offen** · Echte E-Mail-Anmeldung, kontogebundene Wunschliste, geschützter UDI-Dienst mit dauerhafter Datenbank, Store-Sandbox und tatsächliche Store-Berechtigung. Ein Produktpreis von CHF 3.90 ist Zielwert. Die geschätzten Providerkosten bei 25 Suchen liegen je nach Aufrufzahl zwischen CHF 0.27 und 0.80 pro Plus-Konto. Zahlungs-, Auth-, Hosting- und weitere Anbieter-/Quellenkosten sind teilweise unbeziffert. Versand und zugehörige Geräteeinwilligung sind offen.
 
 **Nächster Schritt** · Für die erste echte Probe fehlen ein getrenntes UDI-Supabase-Testprojekt, zwei bestätigte Testkonten mit E-Mail-Einmalcode und ein freigegebenes UDI-HTTPS-Ziel. Die Anmeldeoberfläche und die Testkonfiguration anschliessen. Danach E-Mail-Zustellung, Anmeldung, geschützte Suche und Kontotrennung auf Android und iOS abnehmen. Tagesupdate-Zustellung, Anbieterbudget und Store-Sandbox folgen als eigene Abnahmen. [Konfiguration des Pilotdienstes](docs/SERVICE.md#kontogeschützter-lokaler-pilot--25112026)
