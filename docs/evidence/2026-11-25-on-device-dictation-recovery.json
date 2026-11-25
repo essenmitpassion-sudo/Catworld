@@ -1,0 +1,18 @@
+{
+  "verifiedAt": "2026-11-25T16:16:43.377Z",
+  "sourceCommit": "ef3a3f791fc95ce748d55b36e83ae6a3fb2a066d",
+  "remoteRef": "refs/heads/development/udi",
+  "requirementsCommit": "0516cbd73777b31a96b5283adc6cf0ae90a43312",
+  "archive": "artifacts/udi-pilot-ef3a3f791fc9.tar.gz",
+  "archiveSha256": "e5c4a2437e80eaa94bfbda8eed2f82291a5a4098425b2555860f7a27d34c1834",
+  "unpackedFiles": 337,
+  "freshLockfileInstall": true,
+  "nativeSourcePreparation": true,
+  "matchingUiAssetsPerPlatform": 34,
+  "localTestsPassed": 162,
+  "browserSpeechChecks": ["Android branch, DE, 320px", "iOS branch, EN, 320px"],
+  "speechBridgeSimulatedInBrowser": true,
+  "physicalDeviceAudioVerified": false,
+  "ciRunId": 45652217702,
+  "nativeRunId": 45652217855
+}
