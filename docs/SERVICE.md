@@ -23,7 +23,13 @@ Zur Abnahme auf Geräten braucht es ein getrennt freigegebenes UDI-HTTPS-Ziel vo
 
 `src/pilot-session.mjs` verbindet `requestCode`, `verifyCode`, `signOut` und den typisierten Suchclient. Er verlangt ein fest konfiguriertes Auth-Projekt und ein separates freigegebenes HTTPS-Ziel für den UDI-Dienst. Der Pilot fordert Codes für bestehende Konten an. Für die Zulassung prüft der Suchdienst das Token und die erlaubte Konto-ID bei jedem Zugriff. Das Testprojekt muss die Mailvorlage mit dem sechsstelligen Code verwenden. [Supabase-E-Mail-Code](https://supabase.com/docs/guides/auth/auth-email-passwordless)
 
-Das Zugangstoken verbleibt für die erste Pilotprobe nur im Arbeitsspeicher. Eine lokale Abmeldung beendet die Sitzung und laufende Aufrufe. Ein bereits ausgestelltes Token bleibt beim Anbieter bis zu dessen Ablauf oder Widerruf gültig. Ein Neustart des Clients erfordert einen neuen Code. Persistente Sitzungen brauchen später eine geeignete native Ablage und einen gesondert geprüften Widerruf. Die App lädt diesen Client erst mit freigegebener Testkonfiguration und Anmeldeoberfläche. Die automatisierte Integrationsprüfung verwendet beide Plattformzweige, echte lokale UDI-HTTP-Aufrufe und klar synthetische Auth-Antworten.
+Das Zugangstoken verbleibt für die erste Pilotprobe nur im Arbeitsspeicher. Eine lokale Abmeldung beendet die Sitzung und laufende Aufrufe. Ein bereits ausgestelltes Token bleibt beim Anbieter bis zu dessen Ablauf oder Widerruf gültig. Ein Neustart des Clients erfordert einen neuen Code. Persistente Sitzungen brauchen später eine geeignete native Ablage und einen gesondert geprüften Widerruf. Die automatisierte Integrationsprüfung verwendet beide Plattformzweige, echte lokale UDI-HTTP-Aufrufe und klar synthetische Auth-Antworten.
+
+### Anmeldeoberfläche im nativen Testbuild
+
+Für einen ausdrücklich freigegebenen Testbuild setze beim Aufruf von `npm run native:prepare` zusätzlich `UDI_NATIVE_PILOT=1` und `UDI_PILOT_SEARCH_ORIGIN` auf den bestätigten HTTPS-Ursprung des getrennten UDI-Dienstes. `UDI_AUTH_ORIGIN` und `UDI_AUTH_PUBLISHABLE_KEY` entsprechen dem Testprojekt des Dienstes. `npm run native:check` mit denselben Einstellungen bestätigt für beide App-Pakete die identischen Inhalte und die zwei konkreten Netzwerkziele. Ein Standardbuild ohne diesen Schalter enthält keine Anmeldekonfiguration und sperrt Netzwerkaufrufe.
+
+Gäste können Wünsche und Kriterien vorbereiten. Der Suchknopf öffnet die Anmeldung. Einmalcode, erneute Zustellung, Abbrechen und Abmelden sind auf Deutsch und Englisch vorhanden. Nach erfolgreicher Bestätigung führt die App zur unveränderten Eingabe zurück. Die Nutzerin startet die kontingentwirksame Suche selbst. Beim Abmelden werden laufende Aufrufe, der sichtbare Entwurf und Resultate entfernt. Der kontogeschützte Testbuild blendet die auf dem Gerät vorhandenen alten Suchwünsche aus, bis persönliche Speicherung umgesetzt ist.
 
 ## Neu freigegebene Domain ·24.11.2026
 

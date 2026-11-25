@@ -4,6 +4,7 @@ import { readSearches, storeSearch, removeSearch, searchStorageKey } from './sav
 import {createSearchPersistence,nativeSearchPreferences} from './search-persistence.mjs';
 import {bindDailyUpdate} from './daily-update.mjs';
 import {configureNativeUI} from './native-ui.mjs';
+import {configuredPilotSession,bindPilotSignIn} from './pilot-sign-in.mjs';
 import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
@@ -38,19 +39,53 @@ let sharer;
 mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
+const pilotSession=configuredPilotSession(document,platform);
 document.documentElement.toggleAttribute('data-native-ui',platform!=='web');
 let searchPersistence;
-try {
-  const preferences=['android','ios'].includes(platform)?nativeSearchPreferences(globalThis.Capacitor):undefined;
-  let timer;
-  try {searchPersistence=await Promise.race([createSearchPersistence({storage:localStorage,preferences}),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Gespeicherte Suchen konnten nicht gelesen werden.')),5000);})]);}
-  finally {clearTimeout(timer);}
-} catch(error) {
-  searchPersistence={storage:{getItem(){throw error;}},update:async()=>{throw error;}};
+if(!pilotSession) {
+  try {
+    const preferences=['android','ios'].includes(platform)?nativeSearchPreferences(globalThis.Capacitor):undefined;
+    let timer;
+    try {searchPersistence=await Promise.race([createSearchPersistence({storage:localStorage,preferences}),new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('Gespeicherte Suchen konnten nicht gelesen werden.')),5000);})]);}
+    finally {clearTimeout(timer);}
+  } catch(error) {
+    searchPersistence={storage:{getItem(){throw error;}},update:async()=>{throw error;}};
+  }
 }
 if(platform!=='web') {
   configureNativeUI(document);
 }
+const pilotSignIn=pilotSession && bindPilotSignIn({
+  dialog:get('pilot-sign-in'),
+  openButton:get('pilot-account'),
+  searchButton:get('suche').querySelector('.primary-search'),
+  session:pilotSession,
+  onSessionChange(signedIn) {
+    const status=get('native-runtime-status');
+    const field=get('search-query');
+    status.hidden=signedIn;
+    setText(status,m('Melde dich an, wenn du deinen Wunsch prüfen möchtest.'));
+    if(signedIn)field.removeAttribute('aria-describedby');
+    else field.setAttribute('aria-describedby',status.id);
+  },
+  onSignOut() {
+    activeSearch?.abort();
+    clearTimeout(resultsExpiry);
+    activeProduct=null;
+    activeSeller=null;
+    activeCriteria={};
+    get('search-query').form.reset();
+    get('shared-notice').hidden=true;
+    get('results').replaceChildren();
+    get('web-results').replaceChildren();
+    get('comparison').replaceChildren();
+    get('detail').replaceChildren();
+    get('suche').classList.remove('has-search');
+    get('search-home').hidden=false;
+    refreshIntent();
+    navigate('suche');
+  },
+});
 bindDailyUpdate(get('daily-update'));
 setupInstall();
 
@@ -169,12 +204,14 @@ function describeCriteria(criteria) {
     {new:t('Nur neu'),used:t('Gebraucht oder generalüberholt')}[criteria.condition],criteria.completeCostsOnly?t('Nur bestätigte Gesamtkosten'):null].filter(Boolean).join(' · ')}));
 }
 
-try {
-  const saved = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
-  if (!Array.isArray(saved)) throw new Error('Invalid watchlist');
-  watched = new Set(saved.filter(mpn => catalog.some(product => product.mpn === mpn)));
-} catch {
-  storageError = true;
+if(!pilotSession) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
+    if (!Array.isArray(saved)) throw new Error('Invalid watchlist');
+    watched = new Set(saved.filter(mpn => catalog.some(product => product.mpn === mpn)));
+  } catch {
+    storageError = true;
+  }
 }
 
 function element(tag, content, className) {
@@ -437,6 +474,11 @@ async function submit(query, scope) {
     get('max-price').focus();
     return;
   }
+  if(pilotSession && !pilotSession.isSignedIn()) {
+    pilotSignIn.updateButton();
+    pilotSignIn.open(form.querySelector('.primary-search'));
+    return;
+  }
   const products = search(query);
   get('suche').classList.add('has-search');
   get('search-home').hidden = true;
@@ -446,7 +488,7 @@ async function submit(query, scope) {
   ]));
   const criteriaLabel = describeCriteria(criteria);
   if (criteriaLabel) get('results').append(element('p', criteriaLabel, 'muted'));
-  get('results').append(saveSearchButton(input));
+  if(!pilotSession)get('results').append(saveSearchButton(input));
   clearTimeout(resultsExpiry);
   get('web-results').replaceChildren(element('p', m('Wir suchen und prüfen die Angebote …'), 'surface muted'));
   navigate('suche');
@@ -458,8 +500,12 @@ async function submit(query, scope) {
   try {
     const result = await discoverOffers(input, {
       signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),
+      client:pilotSession??undefined,
     });
-    if (!request.signal.aborted) renderWebResults(result, query);
+    if (!request.signal.aborted) {
+      pilotSignIn?.updateButton();
+      renderWebResults(result, query);
+    }
   } catch {
     if (!request.signal.aborted) renderWebResults({ kind: 'unavailable' }, query);
   }
@@ -567,7 +613,7 @@ function renderPassport() {
   const actions = element('div', null, 'actions');
   const url = directLink(offer.url, activeProduct);
   if (url && offer.state !== 'unconfirmed') actions.append(link(m('{seller} öffnen',{seller:offer.seller}), url, 'button', true));
-  actions.append(watchAction(activeProduct));
+  if(!pilotSession)actions.append(watchAction(activeProduct));
   box.append(actions);
   const guidance = message(m('Kaufentscheid'), recommendationText(recommendation, comparisonStatus));
   if (recommendation?.seller === offer.seller) appendPriceAdvantage(guidance, priceAdvantage);
@@ -578,6 +624,10 @@ function renderPassport() {
 }
 
 function renderWatchlist() {
+  if(pilotSession) {
+    get('saved').replaceChildren(element('p',m('Persönliche gespeicherte Suchen folgen in einer späteren Testversion.'),'muted'));
+    return;
+  }
   const items = catalog.filter(product => watched.has(product.mpn));
   const boxes = items.map(product => {
     const box = message(product.name,m('{variant} · {mpn}',()=>({variant:t(product.variant),mpn:product.mpn})));

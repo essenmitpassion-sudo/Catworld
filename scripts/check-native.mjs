@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile,lstat} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {appFiles} from './public-files.mjs';
+import {nativePilotProfile} from './native-pilot-config.mjs';
 
 const config=JSON.parse(await readFile(new URL('../capacitor.config.json',import.meta.url),'utf8'));
 assert.equal(config.webDir,'native-dist');assert.equal(config.server.cleartext,false);
@@ -15,9 +16,12 @@ for(const file of files) {
   const original=await readFile(new URL('../native-dist/'+file,import.meta.url));
   for(const destination of destinations)assert.equal(createHash('sha256').update(await readFile(new URL('../'+destination+file,import.meta.url))).digest('hex'),createHash('sha256').update(original).digest('hex'),destination+file);
 }
+const profile=nativePilotProfile(process.env);
 for(const destination of ['native-dist/',...destinations]) {
   const index=await readFile(new URL('../'+destination+'index.html',import.meta.url),'utf8');
-  assert(index.includes('name="udi-runtime" content="native"'));assert(index.includes("connect-src 'none'"));
+  assert(index.includes('name="udi-runtime" content="native"'));assert(index.includes('connect-src '+profile.connectSrc+';'));
+  if(profile.meta)assert(index.includes(profile.meta));
+  else assert(!index.includes('name="udi-native-pilot"'));
   assert(index.includes('data-native-ui=""'));
   await assert.rejects(lstat(new URL('../'+destination+'observations.json',import.meta.url)),{code:'ENOENT'});
 }
@@ -33,4 +37,4 @@ assert(privacy.includes('NSPrivacyAccessedAPICategoryUserDefaults')&&privacy.inc
 assert((await readFile(new URL('../ios/App/App.xcodeproj/project.pbxproj',import.meta.url),'utf8')).includes('PrivacyInfo.xcprivacy in Resources'));
 const icon=await readFile(new URL('../ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png',import.meta.url));
 assert.equal(icon.readUInt32BE(16),1024);assert.equal(icon.readUInt32BE(20),1024);assert.equal(icon[25],2,'iOS icon is RGB without alpha channel');
-console.log(JSON.stringify({filesPerPlatform:files.length,identicalBundledUi:true,networkDisabled:true,observationSnapshotsExcluded:true,nativeCompilationVerified:false,deviceParityVerified:false}));
+console.log(JSON.stringify({filesPerPlatform:files.length,identicalBundledUi:true,networkDisabled:!profile.meta,observationSnapshotsExcluded:true,nativeCompilationVerified:false,deviceParityVerified:false}));

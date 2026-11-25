@@ -206,6 +206,14 @@ html[data-native-ui] .brand-mark { background:var(--paper); color:var(--blue); }
 #daily-update input:checked::before { margin-left:auto; }
 #daily-update p { font-size:.875rem; }
 
+#pilot-sign-in { width:min(32rem, calc(100% - 2rem)); max-height:calc(100dvh - 2rem); padding:clamp(1rem,5vw,1.5rem); border:1px solid var(--line); border-radius:1.2rem; background:var(--paper); color:var(--ink); overflow:auto; }
+#pilot-sign-in::backdrop { background:#17251c99; }
+#pilot-sign-in p, #pilot-sign-in form { margin-block:.65rem 0; }
+#pilot-sign-in form { display:grid; gap:.6rem; }
+#pilot-sign-in input { width:100%; min-width:0; min-height:48px; padding:.5rem .65rem; border:1px solid var(--muted); border-radius:.65rem; background:var(--paper); color:var(--ink); font-size:1rem; }
+#pilot-sign-in .button, #pilot-sign-in .text-button { min-height:44px; }
+#pilot-sign-in [role="status"]:empty { display:none; }
+
 /* On a short browser window, let the header and navigation scroll with the
    document. Their enlarged text cannot squeeze the form into a clipped pane. */
 @media (max-height: 540px) {

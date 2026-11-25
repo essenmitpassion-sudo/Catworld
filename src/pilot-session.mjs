@@ -34,16 +34,21 @@ async function readConfirmation(response) {
 
 // A pilot session lives only as long as this app instance. The protected API
 // independently verifies the token before any account-scoped operation.
-export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now=Date.now,fetchImpl=globalThis.fetch}={}) {
+export function validatePilotConfig({authOrigin,publishableKey,approvedOrigin}={}) {
   const service=new URL(approvedOrigin);
   if(typeof authOrigin!=='string' || !projectOrigin.test(authOrigin) || typeof publishableKey!=='string' || !publishable.test(publishableKey)
     || service.protocol!=='https:' || service.origin!==approvedOrigin || service.port || approvedOrigin===authOrigin
     || !service.hostname.includes('.') || /^[\d.]+$/.test(service.hostname)
     || /(?:^|\.)(?:localhost|local|internal)$/.test(service.hostname))throw new TypeError('Invalid pilot configuration');
+  return {authOrigin,publishableKey,approvedOrigin};
+}
+
+export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now=Date.now,fetchImpl=globalThis.fetch}={}) {
+  validatePilotConfig({authOrigin,publishableKey,approvedOrigin});
 
   let lifetime=new AbortController();
   let pendingEmail=null,active=false,session=null;
-  const client=createDealClient({endpoint:new URL('/api/v1/search',service).href,approvedOrigin,fetchImpl,now,
+  const client=createDealClient({endpoint:new URL('/api/v1/search',approvedOrigin).href,approvedOrigin,fetchImpl,now,
     getAccessToken:async()=>session?.token??null});
 
   async function exchange(path,body,{signal}={}) {
@@ -99,6 +104,7 @@ export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now
     active=false;
   }
   return Object.freeze({
+    isSignedIn:()=>Boolean(session && now()<session.endsAt),
     requestCode(email,options) {
       const address=typeof email==='string'?email.trim():'';
       if(address.length>254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))return Promise.resolve(result('invalid-email'));

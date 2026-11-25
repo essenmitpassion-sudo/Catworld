@@ -47,6 +47,7 @@
         </details>
       </form>
       <details class="share-search"><summary data-i18n="Diese Suche teilen">Diese Suche teilen</summary><p class="muted" data-i18n="Dein Wunsch und deine Kaufkriterien sind im Link lesbar. Prüfe vorher, ob du diese Angaben teilen möchtest. Preise, Aufnahme und Watchlist werden nicht geteilt.">Dein Wunsch und deine Kaufkriterien sind im Link lesbar. Prüfe vorher, ob du diese Angaben teilen möchtest. Preise, Aufnahme und Watchlist werden nicht geteilt.</p><button type="button" class="text-button" data-share-prepare="" data-i18n="Link zur Prüfung vorbereiten">Link zur Prüfung vorbereiten</button><div id="share-preview" hidden=""><label for="share-url" data-i18n="Dein Freigabelink">Dein Freigabelink</label><textarea id="share-url" data-share-url="" readonly="" rows="2"></textarea><p data-share-status="" role="status" class="muted"></p><div class="actions"><button type="button" class="button" data-share-copy="" data-i18n="Link kopieren">Link kopieren</button><button type="button" class="button" data-share-native="" hidden="" data-i18n="Teilen">Teilen</button></div></div></details>
+      <button id="pilot-account" class="text-button" type="button" hidden="" data-i18n="Anmelden">Anmelden</button>
       <div id="search-home">
         <div class="suggestions"><span data-i18n="Zum Ausprobieren">Zum Ausprobieren</span><button type="button" data-example="" data-i18n="Samsung 990 PRO · 2 TB">Samsung 990 PRO · 2 TB<span data-icon="plus"></span></button><button type="button" data-prompt="Mein PC braucht mehr Speicher" data-i18n="Ein Upgrade statt Neukauf" data-i18n-data-prompt="Mein PC braucht mehr Speicher">Ein Upgrade statt Neukauf<span data-icon="plus"></span></button></div>
         <div class="coverage-note"><span data-icon="shield"></span><p data-i18n="Direkt prüfbar: Samsung 990 PRO 2 TB bei DQ Solutions. Andere Produkte und Gebrauchtangebote sind noch eingeschränkt.">Direkt prüfbar: Samsung 990 PRO 2 TB bei DQ Solutions. Andere Produkte und Gebrauchtangebote sind noch eingeschränkt.</p></div>
@@ -68,4 +69,21 @@
   <footer class="footer"><span class="footer-brand" data-i18n="udi.">udi.</span><span data-i18n="Klare Wünsche. Nachvollziehbare Entscheidungen.">Klare Wünsche. Nachvollziehbare Entscheidungen.</span><a href="#hilfe" data-i18n="Installation &amp; Pilothilfe">Installation &amp; Pilothilfe</a><span data-i18n="Schweizer PC-Pilot · CHF">Schweizer PC-Pilot · CHF</span></footer></div></main>
 
 
+  <dialog id="pilot-sign-in" aria-labelledby="pilot-sign-in-title">
+    <h2 id="pilot-sign-in-title" data-i18n="Anmelden">Anmelden</h2>
+    <p data-pilot-intro="" data-i18n="Für die Angebotssuche im Pilot brauchst du eine Einladung. Dein Suchwunsch bleibt beim Anmelden erhalten.">Für die Angebotssuche im Pilot brauchst du eine Einladung. Dein Suchwunsch bleibt beim Anmelden erhalten.</p>
+    <form data-pilot-email="">
+      <label for="pilot-email" data-i18n="E-Mail-Adresse">E-Mail-Adresse</label>
+      <input id="pilot-email" name="email" type="email" maxlength="254" autocomplete="email" autocapitalize="none" required>
+      <button type="submit" class="button" data-i18n="Code anfordern">Code anfordern</button>
+    </form>
+    <form data-pilot-code="" hidden="">
+      <label for="pilot-code" data-i18n="Sechsstelliger Code">Sechsstelliger Code</label>
+      <input id="pilot-code" name="code" type="text" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code" required>
+      <button type="submit" class="button" data-i18n="Code bestätigen">Code bestätigen</button>
+      <button type="button" class="text-button" data-pilot-resend="" data-i18n="Neuen Code anfordern">Neuen Code anfordern</button>
+    </form>
+    <p role="status" class="muted"></p>
+    <button type="button" class="text-button" data-pilot-close="" data-i18n="Abbrechen">Abbrechen</button>
+  </dialog>
 </body></html>

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {createPilotSession} from '../src/pilot-session.mjs';
+import {nativePilotProfile} from '../scripts/native-pilot-config.mjs';
 
 const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
 const approvedOrigin='https://udi.example.com';
@@ -9,6 +10,15 @@ const email='test@example.com';
 const query={query:'Samsung 990 PRO 2 TB',marketId:'CH',deliveryCountry:'CH',currency:'CHF'};
 const token='fixture.account.signature';
 const issued={access_token:token,token_type:'bearer',expires_in:120,refresh_token:'discard-this-fixture'};
+
+test('nur der ausdrücklich konfigurierte native Testbuild erhält genau zwei erlaubte HTTPS-Ziele',()=>{
+  const env={UDI_AUTH_ORIGIN:authOrigin,UDI_PILOT_SEARCH_ORIGIN:approvedOrigin,UDI_AUTH_PUBLISHABLE_KEY:config.publishableKey};
+  assert.deepEqual(nativePilotProfile(env),{connectSrc:"'none'",meta:''});
+  const profile=nativePilotProfile({...env,UDI_NATIVE_PILOT:'1'});
+  assert.equal(profile.connectSrc,authOrigin+' '+approvedOrigin);
+  assert(profile.meta.includes('name="udi-native-pilot"'));
+  assert.throws(()=>nativePilotProfile({...env,UDI_NATIVE_PILOT:'1',UDI_AUTH_PUBLISHABLE_KEY:'sb_secret_never_embed'}));
+});
 
 test('E-Mail-Code öffnet eine befristete Suchsitzung ohne Registrierung und persistente Zugangsdaten',async()=>{
   const calls=[];

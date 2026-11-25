@@ -733,6 +733,82 @@ try {
     await noOverflow();await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:adapter.identifier});
     console.log('Native boundary simulation passed for '+platform+' (browser test; no native emulator/device claim)');
   }
+  if(!live&&!layoutOnly)for(const [platform,language] of [['android','de'],['ios','en']]) {
+    await closeTestServer();
+    app=server(appOptions);
+    app.listen(0,'127.0.0.1');
+    await once(app,'listening');
+    origin='http://127.0.0.1:'+app.address().port;
+    const fixture=await send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{
+      window.Capacitor={getPlatform:()=>${JSON.stringify(platform)}};
+      localStorage.setItem('udi.language.v1',${JSON.stringify(language)});
+      localStorage.setItem('udi.searches.v1',JSON.stringify([{query:'Previous local wish',maxPrice:'',condition:'any',completeCostsOnly:false}]));
+      const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
+      const approvedOrigin='https://udi.example';
+      const attach=new MutationObserver(()=>{
+        if(!document.head?.querySelector('meta[name=viewport]'))return;
+        const meta=document.createElement('meta');
+        meta.name='udi-native-pilot';
+        Object.assign(meta.dataset,{authOrigin,approvedOrigin,publishableKey:'sb_publishable_synthetic_qa'});
+        document.head.append(meta);
+        attach.disconnect();
+      });
+      attach.observe(document,{childList:true,subtree:true});
+      window.qaPilotCalls=[];
+      const original=window.fetch;
+      window.fetch=async (url,options)=>{
+        const address=new URL(url,location.href);
+        if(![authOrigin,approvedOrigin].includes(address.origin))return original(url,options);
+        window.qaPilotCalls.push(address.pathname);
+        if(address.pathname.endsWith('/otp'))return Response.json({});
+        if(address.pathname.endsWith('/verify'))return JSON.parse(options.body).token==='123456'
+          ?Response.json({access_token:'synthetic.account.session',token_type:'bearer',expires_in:120})
+          :new Response(null,{status:403});
+        return new Response(null,{status:429,headers:{'X-UDI-Limit':'monthly'}});
+      };
+    })()`});
+    await send('Emulation.setDeviceMetricsOverride',{width:320,height:600,deviceScaleFactor:1,mobile:true});
+    await send('Page.navigate',{url:origin+'/#suche'});
+    await until(()=>evaluate("!document.querySelector('#pilot-account').hidden && !document.querySelector('#suche').hidden"),'configured pilot entry');
+    assert.equal(await evaluate('window.qaPilotCalls.length'),0);
+    await pointerClick('#search-query');
+    await type('Samsung 990 PRO 2 TB');
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 990 PRO 2 TB');
+    await pointerClick('.primary-search');
+    await until(()=>evaluate("document.querySelector('#pilot-sign-in').open && document.activeElement.id==='pilot-email'"),'search opens sign-in on request');
+    assert.equal(await evaluate('window.qaPilotCalls.length'),0);
+    await pointerClick('[data-pilot-close]');
+    assert(await evaluate("!document.querySelector('#pilot-sign-in').open && document.querySelector('#search-query').value==='Samsung 990 PRO 2 TB'"));
+    await pointerClick('.primary-search');
+    await type('tester@example.com');
+    await pointerClick('[data-pilot-email] [type=submit]');
+    await until(()=>evaluate("!document.querySelector('[data-pilot-code]').hidden && document.activeElement.id==='pilot-code'"),'code entry reachable');
+    assert(await evaluate("document.querySelector('[data-pilot-intro]').hidden"),'code screen avoids repeating the introduction');
+    if(process.env.UDI_SCREENSHOT_DIR) {
+      await mkdir(process.env.UDI_SCREENSHOT_DIR,{recursive:true});
+      const shot=await send('Page.captureScreenshot',{format:'png'});
+      await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'pilot-code-'+platform+'.png'),Buffer.from(shot.data,'base64'));
+    }
+    await type('999999');
+    await pointerClick('[data-pilot-code] [type=submit]');
+    const rejected=language==='de'?'falsch oder abgelaufen':'incorrect or has expired';
+    await until(()=>evaluate(`document.querySelector('#pilot-sign-in [role=status]').textContent.includes(${JSON.stringify(rejected)})`),'incorrect or expired code is actionable');
+    await pointerClick('[data-pilot-resend]');
+    await until(()=>evaluate("document.activeElement.id==='pilot-code' && !document.querySelector('#pilot-code').value"),'resend clears previous code');
+    await type('123456');
+    await pointerClick('[data-pilot-code] [type=submit]');
+    await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open && document.activeElement.matches('.primary-search')"),'confirmation returns to search');
+    assert(await evaluate("document.querySelector('#search-query').value==='Samsung 990 PRO 2 TB' && !window.qaPilotCalls.includes('/api/v1/search')"));
+    await pointerClick('.primary-search');
+    const limit=language==='de'?'Suchkontingent ist aufgebraucht':'used your search allowance';
+    await until(()=>evaluate(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(limit)})`),'explicit search reaches the protected client');
+    await pointerClick('#pilot-account');
+    assert(await evaluate("!document.querySelector('#search-query').value && !document.querySelector('#web-results').textContent"));
+    await click('nav a[href="#watchlist"]');
+    assert(await evaluate("!document.querySelector('#saved').textContent.includes('Previous local wish')"));
+    await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:fixture.identifier});
+    console.log('Pilot email-code UI passed at 320px for '+platform+' / '+language+' (Chromium simulation)');
+  }
   assert.equal(pageErrors.length,0,'no unhandled app errors or console errors');
 } catch (error) {
   if(pageErrors.length)console.error(JSON.stringify({pageErrors}));
