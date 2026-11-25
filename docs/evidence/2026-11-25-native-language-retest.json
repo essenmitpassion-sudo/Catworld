@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "a26fe235dc1650743a4a6cb0e6a13f24d59cb017",
+  "nativeRunId": 45625570837,
+  "qualityRunId": 45625570724,
+  "qualityConclusion": "success",
+  "android": {
+    "jobId": 139249954922,
+    "conclusion": "success",
+    "environment": "GitHub Android emulator",
+    "savedSearchesLanguageAndChContextPersisted": true
+  },
+  "ios": {
+    "jobId": 139249955541,
+    "conclusion": "success",
+    "environment": "GitHub iOS Simulator",
+    "englishAndGermanTextSearchMissingServiceAndSave": true,
+    "savedSearchesAndGermanPersisted": true
+  },
+  "liveOfferServiceVerified": false,
+  "signInVerified": false,
+  "voiceVerified": false,
+  "physicalDevicesTested": false
+}

@@ -2,6 +2,23 @@
 
 Stand: Client implementiert, kein erreichbarer geschützter Dienst konfiguriert. Android und iOS benutzen `createDealClient` aus derselben Codebasis. Die App enthält weder Endpunkt noch Token, Schlüssel oder Testangebote. Der lokale Node-Prüfserver und dessen Host-/Origin-Schutz bleiben unverändert; er ist kein bereitgestellter nativer Dienst.
 
+## Kontogeschützter lokaler Pilot · 25.11.2026
+
+`npm run pilot:service` startet den gemeinsamen Such- und Einstellungsdienst auf `127.0.0.1:4174`. Der Dienst verlangt folgende Betreiberkonfiguration:
+
+| Variable | Wert |
+|---|---|
+| `UDI_AUTH_ORIGIN` | Projekt-URL des separat zugeordneten Supabase-Testprojekts, exakt `https://<projekt>.supabase.co` |
+| `UDI_AUTH_PUBLISHABLE_KEY` | Öffentlicher Projektschlüssel mit Präfix `sb_publishable_` |
+| `UDI_PILOT_ACCOUNTS` | Kommagetrennte UUIDs der ausdrücklich eingeladenen, bestätigten E-Mail-Testkonten |
+| `UDI_PILOT_DATA_DIR` | Absoluter Pfad zu einem geschützten UDI-Verzeichnis für SQLite und Sicherungen |
+
+Für jeden Zugriff prüft die Anwendung das persönliche Token beim fest konfigurierten Auth-Endpunkt `/auth/v1/user`. Nur bestätigte E-Mail-Konten auf der Zulassungsliste erhalten Zugriff. Die lokale Kennung ist an das Auth-Projekt und die zurückgegebene UUID gebunden. E-Mail-Adressen, Tokens und Anbieterantworten bleiben aus den Betriebsdaten. Entferne gesperrte Konten aus der Liste und starte den Dienst neu. Halte die Tokenlaufzeit im Testprojekt kurz und prüfe Widerruf und Kontolöschung separat. [Supabase-Tokenprüfung](https://supabase.com/docs/guides/auth/jwts) · [Projektschlüssel](https://supabase.com/docs/guides/getting-started/api-keys)
+
+Für diese Fassung gilt das kostenlose Kontingent von drei abgeschlossenen Suchen pro UTC-Kalendermonat. Das SQLite-Kontingent und die getrennte Tagesupdate-Einwilligung überstehen Neustarts. Die Suche nutzt den zugelassenen Schweizer Katalogpfad mit DQ-Prüfer. Anfragen ausserhalb des Katalogs brauchen einen weiteren freigegebenen Rechercheweg. Die Pilotkonfiguration enthält keinen kostenpflichtigen Rechercheadapter, keinen Zustellkanal und keine Store-Produkte.
+
+Zur Abnahme auf Geräten braucht es ein getrennt freigegebenes UDI-HTTPS-Ziel vor dem Loopback-Dienst, ein eigenes Supabase-Testprojekt mit E-Mail-Einmalcode und zwei Testkonten, die geschützte native Sitzungsablage sowie die konfigurierte App-Verbindung. Setze in der Vorstufe ausschliesslich Testkonten und eine separate Datenbank ein. `tests/pilot-service.test.mjs` prüft lokal die tatsächlichen API-Routen mit synthetischen Antworten des Auth-Anbieters und Quellenprüfers. Für die Live-Abnahme gelten die echten Anbieterantworten.
+
 ## Neu freigegebene Domain ·24.11.2026
 
 [Ausdrückliche erneute Freigabe](requirements/2026-11-24-domain-authorization.md): soundweave.stream darf für UDI verwendet werden. [Öffentliche DNS-Prüfung19:33:34Z](evidence/2026-11-24-domain-public.json) bestätigt Cloudflare-Nameserver. Apex-A/AAAA liefern NOERROR ohne Adressantwort; udi.soundweave.stream/A liefert NXDOMAIN. Dies belegt weder freie Zone noch ungenutzte Mail-/andere Subdomains, kein Hostingkonto oder geschützter Dienst. Bestehende Einträge werden nicht verändert. Ein erster Node-DNS-Versuch scheiterte am lokalen Resolvertransport; die dokumentierte HTTPS-DNS-Antwort ist davon getrennt.

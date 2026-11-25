@@ -19,6 +19,7 @@
     "live": "node scripts/browser.mjs --live",
     "icons": "node scripts/generate-icons.mjs",
     "pilot:package": "node scripts/package-pilot.mjs",
+    "pilot:service": "node scripts/pilot-service.mjs",
     "pilot:verify": "node scripts/verify-pilot.mjs"
   },
   "dependencies": {
