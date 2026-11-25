@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-11-25T13:28:38.244Z",
+  "sourceCommit": "d12131000a5dfae429cc62a44f2ff55816c8c4a6",
+  "remoteRef": "refs/heads/development/udi",
+  "baseline": {
+    "runId": 45623307930,
+    "widthPx": 768,
+    "fontSizePercent": 200,
+    "availableContentHeightPx": 21.28,
+    "inputReachable": false
+  },
+  "verifiedLayoutWidthsPx": [360, 390, 768, 1365],
+  "inputAndPrimaryActionReachable": true,
+  "localTestsPassed": 151,
+  "archive": "artifacts/udi-pilot-d12131000a5d.tar.gz",
+  "archiveSha256": "ee36792f82d98ed55b4cbf4e499788d3a932839f3078f7cf9c6b9c33199777d7",
+  "unpackedFiles": 315,
+  "freshLockfileInstall": true,
+  "typecheck": true,
+  "nativeSourcePreparation": true,
+  "nativeDeviceVerification": false,
+  "backendManifestStatus": 200,
+  "catalogApiStatus": 200,
+  "ciRunId": 45623887271,
+  "nativeRunId": 45623887174
+}
