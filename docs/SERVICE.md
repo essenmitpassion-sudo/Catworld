@@ -31,7 +31,11 @@ Das Zugangstoken verbleibt für die erste Pilotprobe nur im Arbeitsspeicher. Ein
 
 Für einen ausdrücklich freigegebenen Testbuild setze beim Aufruf von `npm run native:prepare` zusätzlich `UDI_NATIVE_PILOT=1` und `UDI_PILOT_SEARCH_ORIGIN` auf den bestätigten HTTPS-Ursprung des getrennten UDI-Dienstes. `UDI_AUTH_ORIGIN` und `UDI_AUTH_PUBLISHABLE_KEY` entsprechen dem Testprojekt des Dienstes. `npm run native:check` mit denselben Einstellungen bestätigt für beide App-Pakete die identischen Inhalte und die zwei konkreten Netzwerkziele. Ein Standardbuild ohne diesen Schalter enthält keine Anmeldekonfiguration und sperrt Netzwerkaufrufe.
 
-Gäste können Wünsche und Kriterien vorbereiten. Der Suchknopf öffnet die Anmeldung. Einmalcode, erneute Zustellung, Abbrechen und Abmelden sind auf Deutsch und Englisch vorhanden. Nach erfolgreicher Bestätigung führt die App zur unveränderten Eingabe zurück. Die Nutzerin startet die kontingentwirksame Suche selbst. Beim Abmelden werden laufende Aufrufe, der sichtbare Entwurf und Resultate entfernt. Der kontogeschützte Testbuild blendet die auf dem Gerät vorhandenen alten Suchwünsche aus, bis persönliche Speicherung umgesetzt ist.
+Gäste können Wünsche und Kriterien vorbereiten. Der Suchknopf öffnet die Anmeldung. Einmalcode, erneute Zustellung, Abbrechen und Abmelden sind auf Deutsch und Englisch vorhanden. Nach erfolgreicher Bestätigung führt die App zur unveränderten Eingabe zurück. Die Nutzerin startet die kontingentwirksame Suche selbst. Beim Abmelden werden laufende Aufrufe, der sichtbare Entwurf und Resultate entfernt. Alte gerätelokale Wünsche bleiben ohne automatische Übernahme vom Kontopilot getrennt.
+
+### Gespeicherte Suchen pro Konto
+
+`GET /api/v1/saved-searches` liest die Liste des bestätigten Kontos. `PUT` speichert und `DELETE` entfernt genau einen Suchwunsch im strikten v2-Format mit CH-Kontext, Text, Budget und Kriterien. Die Konto-ID stammt aus der geprüften Sitzung. Doppelte Änderungen sind wiederholbar. Der Dienst speichert höchstens 20 Wünsche pro Konto in SQLite. Dabei entstehen keine Such- oder Anbieteraufrufe. Lokales Abmelden leert die Anzeige und verhindert verspätete Antworten aus der alten Sitzung. Der Betreiberbaustein kann die gespeicherten Wünsche eines stillgelegten Kontos löschen. Ein vollständiger Kontolöschablauf einschliesslich Widerruf und Identitätsanbieter bleibt offen.
 
 ## Neu freigegebene Domain ·24.11.2026
 

@@ -3,6 +3,11 @@ import {searchContext,legacySearchMarket} from './markets.mjs';
 
 export const searchStorageKey = 'udi.searches.v2';
 export const legacySearchStorageKey='udi.searches.v1';
+export class SavedSearchLimitError extends Error {
+  constructor() {
+    super('Du kannst bis zu 20 Suchen speichern. Entferne zuerst eine ältere Suche.');
+  }
+}
 
 export function normalizeSearch(input) {
   if(Object.hasOwn(input??{},'schemaVersion')&&input.schemaVersion!==2)throw new Error('Dieser gespeicherte Suchauftrag wird nicht unterstützt.');
@@ -40,7 +45,7 @@ export function storeSearch(storage, input) {
   const entry = normalizeSearch(input);
   const saved = readSearches(storage);
   const same = saved.some(existing => identity(existing) === identity(entry));
-  if (!same && saved.length >= 20) throw new Error('Du kannst bis zu 20 Suchen speichern. Entferne zuerst eine ältere Suche.');
+  if (!same && saved.length >= 20) throw new SavedSearchLimitError();
   const updated = same ? saved : [...saved, entry];
   storage.setItem(searchStorageKey, JSON.stringify(updated));
   return updated;

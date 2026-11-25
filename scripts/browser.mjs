@@ -755,6 +755,7 @@ try {
       });
       attach.observe(document,{childList:true,subtree:true});
       window.qaPilotCalls=[];
+      let saved=[];
       const original=window.fetch;
       window.fetch=async (url,options)=>{
         const address=new URL(url,location.href);
@@ -764,6 +765,11 @@ try {
         if(address.pathname.endsWith('/verify'))return JSON.parse(options.body).token==='123456'
           ?Response.json({access_token:'synthetic.account.session',token_type:'bearer',expires_in:120})
           :new Response(null,{status:403});
+        if(address.pathname==='/api/v1/saved-searches') {
+          if(options.method==='PUT')saved=[JSON.parse(options.body)];
+          if(options.method==='DELETE')saved=[];
+          return Response.json({schemaVersion:1,items:saved});
+        }
         if(JSON.parse(options.body).query==='Kingston NV3 2 TB')return Response.json({kind:'outside-catalog'},{status:422});
         return new Response(null,{status:429,headers:{'X-UDI-Limit':'monthly'}});
       };
@@ -808,10 +814,20 @@ try {
     await pointerClick('.primary-search');
     const limit=language==='de'?'Suchkontingent ist aufgebraucht':'used your search allowance';
     await until(()=>evaluate(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(limit)})`),'explicit search reaches the protected client');
+    await pointerClick('#results .text-button');
+    await until(()=>evaluate("document.querySelector('#results .text-button').disabled"),'account wish save confirmed');
+    await pointerClick('nav a[href="#watchlist"]');
+    await until(()=>evaluate("document.querySelector('#saved').textContent.includes('Samsung 990 PRO 2 TB')"),'account wish visible');
+    assert(await evaluate("!document.querySelector('#saved').textContent.includes('Previous local wish')"));
+    await pointerClick('#saved .text-button');
+    await until(()=>evaluate("!document.querySelector('#saved').textContent.includes('Samsung 990 PRO 2 TB')"),'account wish removal confirmed');
+    await pointerClick('nav a[href="#suche"]');
+    await until(()=>visible('suche'),'account returns to search');
     await pointerClick('#pilot-account');
     assert(await evaluate("!document.querySelector('#search-query').value && !document.querySelector('#web-results').textContent"));
     await click('nav a[href="#watchlist"]');
     assert(await evaluate("!document.querySelector('#saved').textContent.includes('Previous local wish')"));
+    assert(await evaluate("!document.querySelector('#saved').textContent.includes('Samsung 990 PRO 2 TB')"));
     await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:fixture.identifier});
     console.log('Pilot email-code UI passed at 320px for '+platform+' / '+language+' (Chromium simulation)');
   }

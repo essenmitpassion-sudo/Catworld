@@ -1,6 +1,7 @@
 import {isAbsolute,join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {createAccountQuota,utcMonthlyEntitlement} from './account-quota.mjs';
+import {createAccountSearches} from './account-searches.mjs';
 import {createDailyUpdateHandler,createDailyUpdates} from './daily-updates.mjs';
 import {createOfferSearch} from './offer-search.mjs';
 import {createSearchService} from './search-service.mjs';
@@ -67,10 +68,11 @@ export function createPilotService({authOrigin,publishableKey,allowedAccounts,da
   const search=createOfferSearch({verify});
   const databasePath=join(dataDirectory,'udi-pilot.sqlite');
   const quota=createAccountQuota({databasePath});
-  let updates;
+  let updates,savedSearches;
   try {
     updates=createDailyUpdates({databasePath});
-    const server=createSearchService({authenticate,search,quota,resolveEntitlement:()=>utcMonthlyEntitlement(),
+    savedSearches=createAccountSearches(databasePath);
+    const server=createSearchService({authenticate,search,quota,resolveEntitlement:()=>utcMonthlyEntitlement(),savedSearches,
       dailyUpdates:createDailyUpdateHandler({store:updates,authenticate})});
     return {
       server,
@@ -80,11 +82,13 @@ export function createPilotService({authOrigin,publishableKey,allowedAccounts,da
           else resolve();
         }));
         updates.close();
+        savedSearches.close();
         quota.close();
       },
     };
   } catch(error) {
     updates?.close();
+    savedSearches?.close();
     quota.close();
     throw error;
   }

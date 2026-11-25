@@ -31,6 +31,7 @@ let storageError = false;
 let activeSearch;
 let resultsExpiry;
 let observationExpiry;
+let savedLoad;
 let activeCriteria = {};
 let skippedQuestion = null;
 let suggestionReceipt = null;
@@ -80,6 +81,8 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     get('web-results').replaceChildren();
     get('comparison').replaceChildren();
     get('detail').replaceChildren();
+    savedLoad?.abort();
+    get('saved').replaceChildren();
     get('suche').classList.remove('has-search');
     get('search-home').hidden=false;
     refreshIntent();
@@ -183,11 +186,15 @@ function saveSearchButton(input) {
     errorNote?.remove();
     button.disabled = true;
     try {
-      await updateSearches(storage => storeSearch(storage, input));
+      if(pilotSession)await pilotSession.saveSearch(input);
+      else await updateSearches(storage => storeSearch(storage, input));
+      if(!button.isConnected)return;
       setText(button,m('Suche gespeichert'));
       renderRecent();
       setText(get('notice'),m('Suchwunsch und Kaufkriterien wurden in deiner Watchlist gespeichert.'));
     } catch (error) {
+      if(!button.isConnected)return;
+      pilotSignIn?.updateButton();
       button.disabled = false;
       setText(get('notice'),m('Die Suche konnte auf diesem Gerät nicht gespeichert werden.'));
       errorNote=element('p',uiError(error),'muted');
@@ -505,7 +512,7 @@ async function submit(query, scope) {
   ]));
   const criteriaLabel = describeCriteria(criteria);
   if (criteriaLabel) get('results').append(element('p', criteriaLabel, 'muted'));
-  if(!pilotSession)get('results').append(saveSearchButton(input));
+  get('results').append(saveSearchButton(input));
   clearTimeout(resultsExpiry);
   get('web-results').replaceChildren(element('p', m('Wir suchen und prüfen die Angebote …'), 'surface muted'));
   navigate('suche');
@@ -640,9 +647,87 @@ function renderPassport() {
   target.replaceChildren(box, guidance);
 }
 
+function savedSearchCard(request) {
+  const box = message(request.query, describeCriteria(criteriaFor(request)) || m('Alle Zustände'));
+  const actions = element('div', null, 'actions');
+  const searchAgain = element('button', m('Erneut prüfen'), 'button');
+  searchAgain.type = 'button';
+  searchAgain.addEventListener('click', () => restoreSearch(request));
+  const remove = element('button', m('Suche entfernen'), 'text-button');
+  remove.type = 'button';
+  remove.addEventListener('click', async () => {
+    remove.disabled = true;
+    try {
+      let updated;
+      if(pilotSession)updated=await pilotSession.removeSearch(request);
+      else await updateSearches(storage => removeSearch(storage, request));
+      if(!remove.isConnected)return;
+      if(pilotSession)showAccountSearches(updated);
+      else renderWatchlist();
+      setText(get('notice'),m('Gespeicherte Suche entfernt.'));
+      get('saved').querySelector('button, a')?.focus();
+    } catch (error) {
+      if(!remove.isConnected)return;
+      remove.disabled = false;
+      if(pilotSession&&!pilotSession.isSignedIn()) {
+        pilotSignIn.updateButton();
+        renderWatchlist();
+      } else {
+        box.append(element('p',m('Die Suche konnte nicht entfernt werden. {error}',()=>({error:uiError(error)})), 'muted'));
+      }
+    }
+  });
+  actions.append(searchAgain, remove);
+  box.append(actions);
+  return box;
+}
+
+function showAccountSearches(items) {
+  const target=get('saved');
+  if(items.length)target.replaceChildren(...items.map(savedSearchCard));
+  else target.replaceChildren(message(m('Noch keine Suchwünsche gespeichert'),
+    m('Speichere deinen Suchwunsch mit Budget und Kriterien. Du kannst später mit einem Klick erneut prüfen.')),
+    link(m('Zur Suche'),'#suche'));
+}
+
+async function renderAccountWatchlist() {
+  savedLoad?.abort();
+  const target=get('saved');
+  if(!pilotSession.isSignedIn()) {
+    const note=message(m('Deine gespeicherten Suchen'),m('Melde dich an, um deine gespeicherten Suchen zu sehen.'));
+    const signIn=element('button',m('Anmelden'),'button');
+    signIn.type='button';
+    signIn.addEventListener('click',()=>{navigate('suche');pilotSignIn.open();});
+    note.append(signIn);
+    target.replaceChildren(note);
+    return;
+  }
+  const load=new AbortController();
+  savedLoad=load;
+  target.replaceChildren(element('p',m('Gespeicherte Suchen werden geladen …'),'muted'));
+  try {
+    const items=await pilotSession.listSearches({signal:load.signal});
+    if(load.signal.aborted)return;
+    showAccountSearches(items);
+  } catch {
+    if(load.signal.aborted)return;
+    if(!pilotSession.isSignedIn()) {
+      pilotSignIn.updateButton();
+      void renderAccountWatchlist();
+      return;
+    }
+    const note=message(m('Die gespeicherten Suchen konnten nicht synchronisiert werden.'));
+    const retry=element('button',m('Erneut versuchen'),'text-button');
+    retry.type='button';
+    retry.addEventListener('click',()=>void renderAccountWatchlist());
+    note.append(retry);
+    target.replaceChildren(note);
+  }
+}
+
 function renderWatchlist() {
   if(pilotSession) {
-    get('saved').replaceChildren(element('p',m('Persönliche gespeicherte Suchen folgen in einer späteren Testversion.'),'muted'));
+    void renderAccountWatchlist();
     return;
   }
   const items = catalog.filter(product => watched.has(product.mpn));
@@ -654,30 +739,7 @@ function renderWatchlist() {
     return box;
   });
   try {
-    for (const request of readSearches(searchPersistence.storage)) {
-      const box = message(request.query, describeCriteria(criteriaFor(request)) || m('Alle Zustände'));
-      const actions = element('div', null, 'actions');
-      const searchAgain = element('button', m('Erneut prüfen'), 'button');
-      searchAgain.type = 'button';
-      searchAgain.addEventListener('click', () => restoreSearch(request));
-      const remove = element('button', m('Suche entfernen'), 'text-button');
-      remove.type = 'button';
-      remove.addEventListener('click', async () => {
-        remove.disabled = true;
-        try {
-          await updateSearches(storage => removeSearch(storage, request));
-          renderWatchlist();
-          setText(get('notice'),m('Gespeicherte Suche entfernt.'));
-          get('saved').querySelector('button, a')?.focus();
-        } catch (error) {
-          remove.disabled = false;
-          box.append(element('p',m('Die Suche konnte nicht entfernt werden. {error}',()=>({error:uiError(error)})), 'muted'));
-        }
-      });
-      actions.append(searchAgain, remove);
-      box.append(actions);
-      boxes.push(box);
-    }
+    boxes.push(...readSearches(searchPersistence.storage).map(savedSearchCard));
   } catch {
     boxes.push(message(m('Gespeicherte Suchen nicht lesbar'), m('Die gespeicherten Daten bleiben auf diesem Gerät. Prüfe die Browsereinstellungen für lokalen Speicher.')));
   }
@@ -695,6 +757,7 @@ function renderRoute(focus = false) {
   const hash = location.hash.slice(1).split('?')[0];
   const current = routes.find(id => !get(id).hidden);
   const route = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'suche' : 'suche');
+  if(route!=='watchlist')savedLoad?.abort();
   if (route !== 'suche' && voice?.isRecording()) voice.stop();
   if (route === 'suche') renderRecent();
   for (const id of routes) get(id).hidden = id !== route;

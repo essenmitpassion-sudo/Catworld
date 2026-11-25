@@ -7,6 +7,8 @@ import test from 'node:test';
 import {createPilotService} from '../scripts/pilot-service.mjs';
 import {createPilotSession} from '../src/pilot-session.mjs';
 import {discoverOffers} from '../src/runtime.mjs';
+import {normalizeSearch,SavedSearchLimitError} from '../src/saved-searches.mjs';
+import {createAccountSearches} from '../scripts/account-searches.mjs';
 
 const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
 const publishableKey='sb_publishable_synthetic-test-key';
@@ -41,6 +43,9 @@ async function fixture(t,fetchUser) {
     daily:(id,enabled)=>fetch(base+'/api/v1/preferences/daily-update',enabled===undefined
       ?{headers:headers(id)}
       :{method:'PUT',headers:headers(id),body:JSON.stringify({enabled})}),
+    wishes:(id,method='GET',entry)=>fetch(base+'/api/v1/saved-searches',{
+      method,headers:headers(id),body:entry===undefined?undefined:JSON.stringify(entry),
+    }),
   };
 }
 
@@ -82,6 +87,46 @@ test('geschützter Pilot prüft das Konto vor jeder Suche, trennt Kontingente un
   assert.equal((await (await app.daily(alpha)).json()).enabled,true);
 });
 
+test('gespeicherte Suchwünsche gehören dem bestätigten Konto und Änderungen sind wiederholbar',async t=>{
+  const app=await fixture(t,async(_url,options)=>{
+    const id=options.headers.Authorization.split('.')[1];
+    return id===alpha||id===beta?Response.json(user(id)):new Response(null,{status:401});
+  });
+  const wish=normalizeSearch({query:'Samsung 990 PRO 2 TB',maxPrice:'200'});
+  assert.equal((await app.wishes('expired')).status,401);
+  assert.deepEqual(await (await app.wishes(alpha)).json(),{schemaVersion:1,items:[]});
+  assert.equal((await app.wishes(alpha,'PUT',{...wish,subject:beta})).status,400);
+  for(let index=0;index<2;index++)assert.deepEqual(await (await app.wishes(alpha,'PUT',wish)).json(),{schemaVersion:1,items:[wish]});
+  assert.deepEqual(await (await app.wishes(beta,'DELETE',wish)).json(),{schemaVersion:1,items:[]});
+  assert.deepEqual(await (await app.wishes(alpha)).json(),{schemaVersion:1,items:[wish]});
+  assert.deepEqual(await (await app.wishes(alpha,'DELETE',wish)).json(),{schemaVersion:1,items:[]});
+  assert.equal(app.verificationCalls(),0);
+});
+
+test('dauerhafter Suchspeicher bleibt für dasselbe Konto nach Neustart verfügbar',async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'udi-saved-'));
+  t.after(()=>rm(directory,{recursive:true,force:true}));
+  const databasePath=join(directory,'saved.sqlite');
+  const first=createAccountSearches(databasePath);
+  const wish=normalizeSearch({query:'Samsung 990 PRO 2 TB',maxPrice:'200'});
+  first.save(alpha,wish);
+  first.save(beta,normalizeSearch({query:'SSD 1 TB'}));
+  first.close();
+  const reopened=createAccountSearches(databasePath);
+  try {
+    assert.deepEqual(reopened.list(alpha),[wish]);
+    for(let i=1;i<20;i++)reopened.save(alpha,normalizeSearch({query:'PC-Aufrüstung '+i}));
+    assert.equal(reopened.save(alpha,wish).length,20);
+    assert.throws(()=>reopened.save(alpha,normalizeSearch({query:'21. Wunsch'})),SavedSearchLimitError);
+    assert.equal(reopened.list(alpha).length,20);
+    reopened.deleteAccount(alpha);
+    assert.deepEqual(reopened.list(alpha),[]);
+    assert.equal(reopened.list(beta).length,1);
+  } finally {
+    reopened.close();
+  }
+});
+
 test('gemeinsamer App-Client nutzt nach dem Einmalcode den echten geschützten Suchpfad',async t=>{
   const pilot=await fixture(t,async(_url,options)=>{
     return options.headers.Authorization==='Bearer '+token(alpha)?Response.json(user(alpha)):new Response(null,{status:401});
@@ -105,8 +150,13 @@ test('gemeinsamer App-Client nutzt nach dem Einmalcode den echten geschützten S
     assert.equal(response.kind,'results');
     assert.deepEqual(response.items,[]);
   }
+  const wish=normalizeSearch({query,marketId,deliveryCountry,currency,maxPrice:'200'});
+  assert.deepEqual(await session.saveSearch(wish),[wish]);
+  assert.deepEqual(await session.listSearches(),[wish]);
+  assert.deepEqual(await session.removeSearch(wish),[]);
   session.signOut();
   assert.equal((await search('android')).kind,'authentication-required');
+  await assert.rejects(session.listSearches(),/Melde dich an/);
 });
 
 test('Pilot sperrt anonyme und unbestätigte Konten und bleibt bei defektem Auth-Dienst geschlossen',async t=>{

@@ -3,6 +3,8 @@
 import {createServer} from 'node:http';
 import {performance} from 'node:perf_hooks';
 import {readServiceRequest,serializeScanReply} from './service-contract.mjs';
+import {readSavedSearch} from './account-searches.mjs';
+import {SavedSearchLimitError} from '../src/saved-searches.mjs';
 
 const origins=new Set(['https://localhost','capacitor://localhost']);
 const fault=status=>Object.assign(new Error('Request rejected'),{status});
@@ -18,7 +20,7 @@ function readBody(request,signal) {
   });
 }
 
-export function createSearchService({authenticate,search,timeoutMs=8000,mode='production',quota,resolveEntitlement,dailyUpdates}={}) {
+export function createSearchService({authenticate,search,timeoutMs=8000,mode='production',quota,resolveEntitlement,dailyUpdates,savedSearches}={}) {
   if(!Number.isSafeInteger(timeoutMs)||timeoutMs<20||timeoutMs>20000)throw new Error('Invalid service timeout');
   if(!['production','pilot'].includes(mode))throw new Error('Invalid service mode');
   const users=new Map();let active=0,attempts=0,windowEnds=0;
@@ -26,9 +28,11 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
   const configured=typeof authenticate==='function'&&typeof search==='function'&&(mode==='pilot'||metered);
   return createServer({requestTimeout:timeoutMs,headersTimeout:Math.min(5000,timeoutMs),maxHeaderSize:8192},async(request,response)=>{
     const origin=request.headers.origin;
+    const savedRoute=request.url==='/api/v1/saved-searches' && savedSearches;
+    const methods=savedRoute?['GET','PUT','DELETE']:['POST'];
     const send=(status,payload,limit)=>{
       if(response.destroyed||response.writableEnded)return;
-      const headers={'Content-Type':'application/vnd.udi.deals.v1+json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
+      const headers={'Content-Type':savedRoute?'application/json':'application/vnd.udi.deals.v1+json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
         'Referrer-Policy':'no-referrer','Connection':'close',Vary:'Origin',...(origins.has(origin)?{'Access-Control-Allow-Origin':origin}:{})};
       if(status===429) {
         headers['Retry-After']=String(limit?.retryAfter??60);
@@ -37,8 +41,8 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
           if(origins.has(origin))headers['Access-Control-Expose-Headers']='X-UDI-Limit, Retry-After';
         }
       }
-      if(status===204)Object.assign(headers,{'Access-Control-Allow-Methods':'POST','Access-Control-Allow-Headers':'authorization,content-type,accept'});
-      if(status===405)headers.Allow='POST, OPTIONS';
+      if(status===204)Object.assign(headers,{'Access-Control-Allow-Methods':methods.join(', '),'Access-Control-Allow-Headers':'authorization,content-type,accept'});
+      if(status===405)headers.Allow=[...methods,'OPTIONS'].join(', ');
       response.once('finish',()=>{if(!request.complete)request.destroy();});
       response.writeHead(status,headers).end(payload===undefined?undefined:JSON.stringify(payload));
     };
@@ -46,22 +50,24 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
       try {await dailyUpdates(request,response);}catch{send(503,{kind:'unavailable'});}
       return;
     }
-    if(request.url!=='/api/v1/search')return send(404,{kind:'unavailable'});
+    if(request.url!=='/api/v1/search'&&!savedRoute)return send(404,{kind:'unavailable'});
     if(origin!==undefined&&!origins.has(origin))return send(403,{kind:'access-denied'});
     if(request.method==='OPTIONS') {
       const requested=(request.headers['access-control-request-headers']??'').split(',').map(value=>value.trim().toLowerCase()).filter(Boolean);
-      if(!origins.has(origin)||request.headers['access-control-request-method']!=='POST'||requested.some(name=>!['authorization','content-type','accept'].includes(name)))return send(403,{kind:'access-denied'});
+      if(!origins.has(origin)||!methods.includes(request.headers['access-control-request-method'])||requested.some(name=>!['authorization','content-type','accept'].includes(name)))return send(403,{kind:'access-denied'});
       return send(204);
     }
-    if(request.method!=='POST')return send(405,{kind:'invalid'});
+    if(!methods.includes(request.method))return send(405,{kind:'invalid'});
     if(!configured)return send(503,{kind:'unavailable'});
     if(request.headers.cookie!==undefined||request.rawHeaders.filter((value,index)=>index%2===0&&value.toLowerCase()==='authorization').length!==1)return send(403,{kind:'access-denied'});
     const authorization=request.headers.authorization;
     // Match the existing client token syntax; never copy credentials to a URL,
     // observation, response or log. Authentication itself belongs to the operator.
     if(typeof authorization!=='string'||authorization.length>4103||!/^Bearer [-A-Za-z0-9._~+/]+=*$/.test(authorization))return send(401,{kind:'authentication-required'});
-    if(!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers['content-type']??''))return send(415,{kind:'invalid'});
+    const reads=request.method==='GET';
+    if(!reads&&!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers['content-type']??''))return send(415,{kind:'invalid'});
     const length=request.headers['content-length'];
+    if(reads&&(request.headers['transfer-encoding']!==undefined||(length!==undefined&&length!=='0')))return send(400,{kind:'invalid'});
     if(length!==undefined&&(!/^\d+$/.test(length)||Number(length)>2048))return send(413,{kind:'invalid'});
     const now=performance.now();
     if(now>=windowEnds){attempts=0;windowEnds=now+60000;}
@@ -82,6 +88,18 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
         const user=users.get(subject)??{calls:0,ends:time+60000,running:false};
         if(user.running||user.calls>=10||(!users.has(subject)&&users.size>=256))throw fault(429);
         user.calls++;user.running=true;users.set(subject,user);userLocked=user;
+        if(savedRoute) {
+          let items;
+          if(reads)items=savedSearches.list(subject);
+          else {
+            let entry;
+            try {entry=readSavedSearch(await readBody(request,controller.signal));}
+            catch(error){throw fault(error.status===413?413:controller.signal.aborted?504:400);}
+            if(controller.signal.aborted)throw fault(504);
+            items=request.method==='PUT'?savedSearches.save(subject,entry):savedSearches.remove(subject,entry);
+          }
+          return {schemaVersion:1,items};
+        }
         let requestData;try{requestData=readServiceRequest(await readBody(request,controller.signal));}catch(error){throw fault(error.status===413?413:controller.signal.aborted?504:400);}
         if(controller.signal.aborted)throw fault(504);
         if(metered) {
@@ -124,6 +142,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
     const deadline=new Promise((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(fault(504));},timeoutMs);});
     try{send(200,await Promise.race([operation,deadline]));}
     catch(error){
+      if(savedRoute&&error instanceof SavedSearchLimitError)return send(409,{kind:'saved-search-limit'});
       const status=[400,401,403,409,413,422,429,502,503,504].includes(error.status)?error.status:502;
       const failureKind={400:'invalid',401:'authentication-required',403:'access-denied',413:'invalid',
         422:'outside-catalog',429:'busy',504:'timeout'};

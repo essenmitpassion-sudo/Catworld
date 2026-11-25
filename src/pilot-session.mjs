@@ -1,11 +1,12 @@
 import {createDealClient} from './deal-client.mjs';
+import {normalizeSearch,SavedSearchLimitError} from './saved-searches.mjs';
 
 const projectOrigin=/^https:\/\/[a-z0-9]{20}\.supabase\.co$/;
 const publishable=/^sb_publishable_[A-Za-z0-9_-]{10,128}$/;
 const accessToken=/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
 const result=kind=>({kind});
 
-async function readConfirmation(response) {
+async function readJson(response) {
   if (!/^application\/json(?:\s*;|$)/i.test(response.headers.get('content-type')??'') || !response.body) {
     void response.body?.cancel().catch(()=>{});
     throw new Error('Invalid confirmation');
@@ -21,15 +22,18 @@ async function readConfirmation(response) {
       data.set(value,length);
       length+=value.length;
     }
-    const {access_token:token,expires_in:expires,token_type:type}=
-      JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(data.subarray(0,length)));
-    if(type!=='bearer' || typeof token!=='string' || token.length>4096 || !accessToken.test(token)
-      || !Number.isSafeInteger(expires) || expires<1 || expires>86400)throw new Error('Invalid confirmation');
-    return {token,expires};
+    return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(data.subarray(0,length)));
   } finally {
     void reader.cancel().catch(()=>{});
     reader.releaseLock();
   }
+}
+
+async function readConfirmation(response) {
+  const {access_token:token,expires_in:expires,token_type:type}=await readJson(response);
+  if(type!=='bearer' || typeof token!=='string' || token.length>4096 || !accessToken.test(token)
+    || !Number.isSafeInteger(expires) || expires<1 || expires>86400)throw new Error('Invalid confirmation');
+  return {token,expires};
 }
 
 // A pilot session lives only as long as this app instance. The protected API
@@ -103,8 +107,36 @@ export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now
     pendingEmail=null;
     active=false;
   }
+  async function savedSearches(method,input,{signal}={}) {
+    if(!session || now()>=session.endsAt)throw new Error('Melde dich an, um deine gespeicherten Suchen zu sehen.');
+    const owner=lifetime;
+    const timeout=AbortSignal.timeout(8000);
+    const combined=AbortSignal.any([owner.signal,timeout,...(signal?[signal]:[])]);
+    combined.throwIfAborted();
+    const headers={Accept:'application/json',Authorization:'Bearer '+session.token};
+    if(method!=='GET')headers['Content-Type']='application/json';
+    const response=await fetchImpl(new URL('/api/v1/saved-searches',approvedOrigin),{
+      method,headers,signal:combined,cache:'no-store',credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',
+      body:method==='GET'?undefined:JSON.stringify(normalizeSearch(input)),
+    });
+    if(!response.ok||response.redirected) {
+      void response.body?.cancel().catch(()=>{});
+      if(!owner.signal.aborted && [401,403].includes(response.status) && !response.redirected)signOut();
+      if(response.status===409 && !response.redirected)throw new SavedSearchLimitError();
+      throw new Error('Die gespeicherten Suchen konnten nicht synchronisiert werden.');
+    }
+    const {schemaVersion,items}=await readJson(response);
+    combined.throwIfAborted();
+    if(schemaVersion!==1||!Array.isArray(items)||items.length>20||items.some(item=>item?.schemaVersion!==2)) {
+      throw new Error('Invalid saved searches');
+    }
+    return items.map(normalizeSearch);
+  }
   return Object.freeze({
     isSignedIn:()=>Boolean(session && now()<session.endsAt),
+    listSearches:options=>savedSearches('GET',null,options),
+    saveSearch:(input,options)=>savedSearches('PUT',input,options),
+    removeSearch:(input,options)=>savedSearches('DELETE',input,options),
     requestCode(email,options) {
       const address=typeof email==='string'?email.trim():'';
       if(address.length>254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(address))return Promise.resolve(result('invalid-email'));
