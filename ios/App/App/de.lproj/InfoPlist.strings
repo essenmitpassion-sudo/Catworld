@@ -1,0 +1,2 @@
+"NSMicrophoneUsageDescription" = "UDI braucht das Mikrofon, um deinen gesprochenen Wunsch in bearbeitbaren Text umzuwandeln.";
+"NSSpeechRecognitionUsageDescription" = "UDI erkennt die Wörter, die du als Suchwunsch diktierst.";

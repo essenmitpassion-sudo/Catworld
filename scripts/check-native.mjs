@@ -28,6 +28,13 @@ for(const destination of ['native-dist/',...destinations]) {
 const manifest=await readFile(new URL('../android/app/src/main/AndroidManifest.xml',import.meta.url),'utf8');
 for(const file of ['android/capacitor-cordova-android-plugins/build.gradle','android/capacitor-cordova-android-plugins/cordova.variables.gradle'])assert((await readFile(new URL('../'+file,import.meta.url),'utf8')).length>0,'Missing generated Android build input: '+file);
 assert(manifest.includes('android:allowBackup="false"'));assert(manifest.includes('android:usesCleartextTraffic="false"'));
+assert(manifest.includes('android.permission.RECORD_AUDIO')&&manifest.includes('android.speech.RecognitionService'));
+const speechInfo=await readFile(new URL('../ios/App/App/Info.plist',import.meta.url),'utf8');
+assert(speechInfo.includes('NSMicrophoneUsageDescription')&&speechInfo.includes('NSSpeechRecognitionUsageDescription'));
+for(const lang of ['de','en']) {
+  const purpose=await readFile(new URL('../ios/App/App/'+lang+'.lproj/InfoPlist.strings',import.meta.url),'utf8');
+  assert(purpose.includes('NSMicrophoneUsageDescription')&&purpose.includes('NSSpeechRecognitionUsageDescription'));
+}
 const packageFile=await readFile(new URL('../ios/App/CapApp-SPM/Package.swift',import.meta.url),'utf8');
 const deps=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8')).dependencies;
 assert(packageFile.includes('exact: "'+deps['@capacitor/ios']+'"'));

@@ -40,6 +40,11 @@ export async function androidFlow({send,evaluate},afterRestart) {
     assert(rows.every(row=>row.schemaVersion===2&&row.marketId==='CH'&&row.deliveryCountry==='CH'&&row.currency==='CHF'));
     console.log('Android: saved searches and CH context survived force-stop/relaunch; German selection preserved.');return;
   }
+  assert(await evaluate("typeof Capacitor.Plugins.NativeSpeech?.recognize==='function'"),'Native speech bridge is registered');
+  await tap('[data-mic]');
+  await wait("!document.querySelector('[data-native-voice-options]').hidden && document.querySelector('[data-mic]').getAttribute('aria-pressed')==='false'");
+  await tap('[data-native-voice-cancel]');
+  console.log('Android: microphone explanation can open and close before requesting permission.');
   for(const [index,language] of ['en','de'].entries()) {
     await tap('nav a[href="#suche"]');
     // Tap the visible language action in the installed app.

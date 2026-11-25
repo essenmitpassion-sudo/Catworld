@@ -1,5 +1,6 @@
 import {m,setText,t} from './i18n.mjs';
 import {icon} from './ui.mjs';
+import {nativeSpeech} from './native-voice.mjs';
 
 // Presentation only. Search, markets, evidence and storage stay in their modules.
 export function configureNativeUI(document) {
@@ -55,7 +56,9 @@ export function configureNativeUI(document) {
   get('suche').querySelector('.composer-submit').after(status);
   input.setAttribute('aria-describedby',status.id);
   get('suche').querySelector('.coverage-note').hidden=true;
-  setText(get('hilfe').querySelector('[data-help-voice]'),m('Die Spracheingabe ist für diese App-Version noch nicht verfügbar. Nutze die Texteingabe.'));
+  setText(get('hilfe').querySelector('[data-help-voice]'),m(nativeSpeech()
+    ?'Diktat funktioniert mit einer lokal verfügbaren Sprache. Die App speichert keine Tonaufnahme. Du entscheidest, wann du den bearbeiteten Text zur Suche abschickst.'
+    :'Die Spracheingabe ist für diese App-Version noch nicht verfügbar. Nutze die Texteingabe.'));
   for(const route of ['radar','vergleich'])document.querySelector(`nav a[href="#${route}"]`).hidden=true;
   setText(document.querySelector('nav a[href="#watchlist"] [data-i18n]'),m('Gespeichert'));
   setText(get('watchlist').querySelector('h1'),m('Deine Suchen'));

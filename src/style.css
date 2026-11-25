@@ -214,6 +214,14 @@ html[data-native-ui] .brand-mark { background:var(--paper); color:var(--blue); }
 #pilot-sign-in .button, #pilot-sign-in .text-button { min-height:44px; }
 #pilot-sign-in [role="status"]:empty { display:none; }
 
+html[data-native-ui] .voice-button { min-height:44px; color:var(--blue); background:var(--soft); border-color:var(--line); }
+html[data-native-ui] .voice-button[aria-pressed=true] { color:#762b28; background:#f9e9e6; }
+html[data-native-ui] .voice-panel { color:var(--ink); border-color:var(--line); background:var(--paper); }
+[data-native-voice-options] { display:flex; flex-wrap:wrap; align-items:end; gap:.5rem; }
+[data-native-voice-options] label { width:100%; }
+[data-native-voice-options] select { min-height:44px; min-width:0; max-width:100%; padding:.5rem; border:1px solid var(--muted); border-radius:.6rem; background:var(--paper); color:var(--ink); }
+[data-native-voice-options] .button { min-height:44px; }
+
 /* On a short browser window, let the header and navigation scroll with the
    document. Their enlarged text cannot squeeze the form into a clipped pane. */
 @media (max-height: 540px) {

@@ -36,7 +36,19 @@
           <label for="search-query" data-i18n="Dein Wunsch. In deinen Worten." class="sr-only">Dein Wunsch. In deinen Worten.</label>
           <textarea id="search-query" name="query" maxlength="300" rows="2" enterkeyhint="search" required="" placeholder="Zum Beispiel: eine Samsung 990 PRO mit 2 TB, bis CHF 500" data-i18n-placeholder="Zum Beispiel: eine Samsung 990 PRO mit 2 TB, bis CHF 500"></textarea>
           <div class="composer-tools"><button type="button" class="voice-button" data-mic=""><span data-icon="mic"></span><span data-mic-label="" data-i18n="Einsprechen">Einsprechen</span></button><span class="keyboard-hint" aria-hidden="true" data-i18n="Enter zum Suchen">Enter zum Suchen</span></div>
-          <div class="voice-panel" data-voice="" hidden=""><p data-voice-status="" role="status"></p><div data-audio-preview="" hidden=""><label data-i18n="Deine Aufnahme anhören">Deine Aufnahme anhören<audio controls="" preload="metadata" data-audio=""></audio></label><button type="button" class="text-button" data-delete-audio="" data-i18n="Aufnahme löschen">Aufnahme löschen</button></div></div>
+          <div class="voice-panel" id="voice-panel" data-voice="" hidden="">
+            <p data-voice-status="" role="status"></p>
+            <div data-native-voice-options="" hidden="">
+              <label for="dictation-language" data-i18n="Sprache für das Diktat">Sprache für das Diktat</label>
+              <select id="dictation-language">
+                <option value="de-DE" data-i18n="Deutsch (Deutschland)">Deutsch (Deutschland)</option>
+                <option value="en-GB" data-i18n="Englisch (Grossbritannien)">Englisch (Grossbritannien)</option>
+              </select>
+              <button type="button" class="button" data-native-voice-start="" data-i18n="Diktat starten">Diktat starten</button>
+            </div>
+            <button type="button" class="text-button" data-native-voice-cancel="" hidden="" data-i18n="Abbrechen">Abbrechen</button>
+            <div data-audio-preview="" hidden=""><label data-i18n="Deine Aufnahme anhören">Deine Aufnahme anhören<audio controls="" preload="metadata" data-audio=""></audio></label><button type="button" class="text-button" data-delete-audio="" data-i18n="Aufnahme löschen">Aufnahme löschen</button></div>
+          </div>
           <p class="voice-privacy" data-voice-privacy="" hidden="" data-i18n="Beim Diktat kann dein Browser Audio an seinen Spracherkennungsdienst senden. Die Aufnahme zum Anhören wird von UDI weder hochgeladen noch dauerhaft gespeichert. Beim Suchen erhält UDI ausschliesslich den Text und deine Kriterien.">Beim Diktat kann dein Browser Audio an seinen Spracherkennungsdienst senden. Die Aufnahme zum Anhören wird von UDI weder hochgeladen noch dauerhaft gespeichert. Beim Suchen erhält UDI ausschliesslich den Text und deine Kriterien.</p>
         </div>
         <div class="intent-refinement" id="intent-compass" hidden=""><div id="intent-summary" aria-live="polite"></div><div id="intent-question" hidden=""></div></div>

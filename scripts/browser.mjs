@@ -815,6 +815,81 @@ try {
     await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:fixture.identifier});
     console.log('Pilot email-code UI passed at 320px for '+platform+' / '+language+' (Chromium simulation)');
   }
+  if(!live&&!layoutOnly)for(const [platform,language] of [['android','de'],['ios','en']]) {
+    await closeTestServer();
+    app=server(appOptions);
+    app.listen(0,'127.0.0.1');
+    await once(app,'listening');
+    origin='http://127.0.0.1:'+app.address().port;
+    const fixture=await send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{
+      localStorage.setItem('udi.language.v1',${JSON.stringify(language)});
+      let speechListener, pending;
+      window.qaSpeechCalls=[];
+      window.qaSpeechStatus='transcript';
+      window.qaSpeechReply=(status,text)=>{
+        const call=pending;
+        pending=null;
+        call.resolve({status,text});
+      };
+      window.Capacitor={getPlatform:()=>${JSON.stringify(platform)},Plugins:{
+        Preferences:{get:async()=>({value:null}),set:async()=>{}},
+        NativeSpeech:{
+          addListener:async(_event,listener)=>{speechListener=listener;},
+          recognize:({id,locale})=>{
+            window.qaSpeechCalls.push({locale});
+            if(window.qaSpeechStatus!=='transcript')return Promise.resolve({status:window.qaSpeechStatus});
+            return new Promise(resolve=>{
+              pending={id,resolve};
+              speechListener({id,status:'listening'});
+            });
+          },
+          stop:async({id})=>{
+            if(pending?.id===id)window.qaSpeechReply('transcript','2 TB SSD');
+          },
+          cancel:async()=>{}, // Deliberately allow a stale result to exercise the guard.
+        },
+      }};
+    })()`});
+    await send('Emulation.setDeviceMetricsOverride',{width:320,height:600,deviceScaleFactor:1,mobile:true});
+    await send('Page.navigate',{url:origin+'/#suche'});
+    await until(()=>visible('suche'),'native speech boundary startup');
+    assert.equal(await evaluate('window.qaSpeechCalls.length'),0);
+    await pointerClick('#search-query');
+    await type('Samsung');
+    await pointerClick('[data-mic]');
+    assert.equal(await evaluate('window.qaSpeechCalls.length'),0,'opening the explanation does not start recognition');
+    assert(await evaluate("!document.querySelector('[data-native-voice-options]').hidden && !document.querySelector('[data-native-voice-start]').disabled"));
+    await evaluate("document.querySelector('#dictation-language').value='en-GB';document.querySelector('#dictation-language').dispatchEvent(new Event('change',{bubbles:true}))");
+    await pointerClick('[data-native-voice-start]');
+    const listening=language==='de'?'Aufnahme läuft':'Listening';
+    await until(()=>evaluate(`document.querySelector('[data-voice-status]').textContent.includes(${JSON.stringify(listening)})`),'visible recording status');
+    assert.equal(await evaluate("window.qaSpeechCalls[0].locale"),'en-GB');
+    await pointerClick('[data-mic]');
+    await until(()=>evaluate("document.querySelector('#search-query').value==='Samsung 2 TB SSD'"),'stopped transcription becomes editable draft');
+    assert(await evaluate("!document.querySelector('#web-results').textContent && !document.querySelector('#results').textContent"),'dictation never submits a search');
+    assert(await evaluate("document.querySelector('[data-audio-preview]').hidden"),'native UI never exposes an audio recording');
+
+    await pointerClick('[data-mic]');
+    await pointerClick('[data-native-voice-start]');
+    await until(()=>evaluate("window.qaSpeechCalls.length===2"),'second local dictation started');
+    await pointerClick('[data-native-voice-cancel]');
+    await evaluate("window.qaSpeechReply('transcript','must not appear')");
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 2 TB SSD');
+    for(const [status,de,en] of [['denied','Systemeinstellungen','system settings'],['unsupported','nicht verfügbar','unavailable'],['empty','Kein Text erkannt','No text was recognised']]) {
+      await evaluate(`window.qaSpeechStatus=${JSON.stringify(status)}`);
+      await pointerClick('[data-mic]');
+      await pointerClick('[data-native-voice-start]');
+      await until(()=>evaluate(`document.querySelector('[data-voice-status]').textContent.includes(${JSON.stringify(language==='de'?de:en)})`),'local dictation '+status);
+      assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 2 TB SSD');
+    }
+    await pointerClick('#search-query');
+    await type(' korrigiert');
+    assert(await evaluate("document.querySelector('#search-query').value.includes('korrigiert')"));
+    await pointerClick('.primary-search');
+    assert(await evaluate("!document.querySelector('#results').hidden && document.querySelector('#results').textContent"));
+    await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:fixture.identifier});
+    console.log('On-device dictation UI passed for '+platform+' / '+language+' at 320px (simulated speech bridge)');
+  }
   assert.equal(pageErrors.length,0,'no unhandled app errors or console errors');
 } catch (error) {
   if(pageErrors.length)console.error(JSON.stringify({pageErrors}));

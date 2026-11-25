@@ -17,6 +17,15 @@ final class UDIFlowTests: XCTestCase {
         print("iOS initial WebView accessibility: \(web.debugDescription.prefix(8000))")
         let introduction = NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "Describe what you need", "Beschreibe deinen Wunsch")
         XCTAssertTrue(web.staticTexts.matching(introduction).firstMatch.waitForExistence(timeout: 15), "Native UI must finish rendering without promising unavailable voice input")
+        let microphone = web.descendants(matching: .any).matching(NSPredicate(format: "label == %@ OR label == %@", "Speak", "Einsprechen")).firstMatch
+        XCTAssertTrue(microphone.waitForExistence(timeout: 15))
+        microphone.tap()
+        let startDictation = web.buttons.matching(NSPredicate(format: "label == %@ OR label == %@", "Start dictation", "Diktat starten")).firstMatch
+        XCTAssertTrue(startDictation.waitForExistence(timeout: 15), "Explain dictation before requesting permission")
+        let closeDictation = web.buttons.matching(NSPredicate(format: "label == %@ OR label == %@", "Cancel", "Abbrechen")).firstMatch
+        XCTAssertTrue(closeDictation.isHittable)
+        closeDictation.tap()
+        print("iOS: microphone explanation opened and closed before requesting permission")
         let wishes = ["Samsung 990 PRO 2 TB", "Samsung 990 PRO 2 TB bis CHF 500"]
         for (index, language) in ["English", "Deutsch"].enumerated() {
             let search = web.links.matching(NSPredicate(format: "label == %@ OR label == %@", "Search", "Suche")).firstMatch

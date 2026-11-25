@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F1D300000000000000000001 /* NativeSpeechPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D300000000000000000002 /* NativeSpeechPlugin.swift */; };
+		F1D300000000000000000003 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1D300000000000000000004 /* InfoPlist.strings */; };
 		F1D200000000000000000003 /* UDIFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D200000000000000000004 /* UDIFlowTests.swift */; };
 		F1D100000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F1D100000000000000000002 /* PrivacyInfo.xcprivacy */; };
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
@@ -31,6 +33,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F1D300000000000000000002 /* NativeSpeechPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSpeechPlugin.swift; sourceTree = "<group>"; };
+		F1D300000000000000000005 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F1D300000000000000000006 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F1D200000000000000000004 /* UDIFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UDIFlowTests.swift; path = ../../scripts/native-tests/ios/UDIFlowTests.swift; sourceTree = SOURCE_ROOT; };
 		F1D200000000000000000005 /* UDIFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UDIFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1D100000000000000000002 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -89,6 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				9582B6822FE993A50072D4E8 /* SceneDelegate.swift */,
+				F1D300000000000000000002 /* NativeSpeechPlugin.swift */,
+				F1D300000000000000000004 /* InfoPlist.strings */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -159,6 +166,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				de,
 				Base,
 			);
 			mainGroup = 504EC2FB1FED79650016851F;
@@ -182,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1D100000000000000000001 /* PrivacyInfo.xcprivacy in Resources */,
+				F1D300000000000000000003 /* InfoPlist.strings in Resources */,
 				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
@@ -200,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+				F1D300000000000000000001 /* NativeSpeechPlugin.swift in Sources */,
 				9582B6832FE993A70072D4E8 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,6 +221,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		F1D300000000000000000004 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (F1D300000000000000000005 /* de */, F1D300000000000000000006 /* en */,);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		504EC30B1FED79650016851F /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

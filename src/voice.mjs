@@ -1,7 +1,11 @@
 // Browser-native dictation plus a temporary, local recording for review.
 import {m,setText,t,speechLanguage} from './i18n.mjs';
 import {runtimePlatform} from './runtime.mjs';
+import {nativeSpeech,setupNativeVoice} from './native-voice.mjs';
 export function setupVoice(root, onInput) {
+  const native=runtimePlatform()!=='web';
+  const plugin=native?nativeSpeech():null;
+  if(plugin)return setupNativeVoice(root,onInput,plugin);
   const button = root.querySelector('[data-mic]');
   const input = root.elements.query;
   const panel = root.querySelector('[data-voice]');
@@ -10,7 +14,6 @@ export function setupVoice(root, onInput) {
   const audio = root.querySelector('[data-audio]');
   const label = root.querySelector('[data-mic-label]');
   const Recognition = window.SpeechRecognition ?? window.webkitSpeechRecognition;
-  const native=runtimePlatform()!=='web';
   const supported = !native&&!!(Recognition && navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
   let session = null;
   let audioUrl;
