@@ -1,0 +1,41 @@
+{
+  "verifiedAt": "2026-11-25T13:25:11.396Z",
+  "sourceCommit": "c46763fb20f7cfd73343844394f54d6a92bf5739",
+  "verifiedRemoteRefAtCheckpoint": "refs/heads/development/udi",
+  "previousRemoteCommit": "185f0135c70778091398506656307a82b1d6c055",
+  "priorLocalBrandCommit": "feef0d50bfa9029d4ffe1e1469a2f54732345857",
+  "archivedRequirementSha256": "b43b4fee3eaca82fdf0a5817fa1ba36b08151f6b397e720ff18be2b421fb47e2",
+  "qa": {
+    "automatedTestsPassed": 151,
+    "typecheck": true,
+    "build": true,
+    "chromiumWidthsDe": [360, 390, 768, 1365],
+    "chromiumWidthsEn": [390, 1365],
+    "dailyPreferenceLocalHttpTestAccounts": 2,
+    "matchingBundledUiFilesPerPlatform": 31,
+    "providerCalls": false,
+    "realAccountOrStoreIntegration": false,
+    "notificationDelivery": false,
+    "nativeDeviceFlowVerified": false
+  },
+  "recovery": {
+    "archive": "artifacts/udi-pilot-c46763fb20f7.tar.gz",
+    "sha256": "daeae71cac87c77200a06ed3ee0e9b34415dc11a098040e297c5b5f4dfbc1903",
+    "verifiedFiles": 314,
+    "freshLockfileInstall": true,
+    "nativeSourcePreparation": true,
+    "backendManifestStatus": 200,
+    "catalogApiStatus": 200,
+    "localArchive": true
+  },
+  "github": {
+    "ciRunId": 45623307930,
+    "nativeRunId": 45623307912,
+    "priorNativeRun": {
+      "sourceCommit": "7d72470bb248c807865a1fdce4a58bcfcd2d5bd4",
+      "runId": 45471226054,
+      "androidJob": {"id": 138724643231, "conclusion": "failure"},
+      "iosJob": {"id": 138724643826, "conclusion": "success"}
+    }
+  }
+}
