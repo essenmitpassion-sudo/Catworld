@@ -1,7 +1,7 @@
 import {brand} from './brand.mjs';
 // Original, consistently drawn symbols. External data never becomes HTML.
 const paths = {
-  waymark: brand.logo.strokes.flatMap(points=>['polyline',{points:points.map(p=>p.join(',')).join(' ')}]),
+  waymark: [...brand.logo.strokes.flatMap(points=>['polyline',{points:points.map(p=>p.join(',')).join(' ')}]),'circle',{cx:brand.logo.point.x,cy:brand.logo.point.y,r:brand.logo.point.r,fill:brand.colors.accent}],
   search: ['circle', { cx: 10.5, cy: 10.5, r: 6.5 }, 'path', { d: 'm16 16 4.5 4.5' }],
   mic: ['rect', { x: 9, y: 2, width: 6, height: 13, rx: 3 }, 'path', { d: 'M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8' }],
   radar: ['circle', { cx: 12, cy: 12, r: 9 }, 'path', { d: 'M12 7a5 5 0 1 0 5 5M12 12l7-7' }],

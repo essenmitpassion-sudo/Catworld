@@ -11,7 +11,7 @@ export async function writeIconFile(path,data) {
   await writeFile(path,data);
 }
 
-// Central neutral mark, supersampled with built-in PNG/zlib.
+// Central working mark, supersampled with built-in PNG/zlib.
 // Historical asset filenames remain stable; this is code-drawn, not a merchant asset.
 function chunk(name,data) {
   const type=Buffer.from(name), input=Buffer.concat([type,data]);
@@ -32,16 +32,23 @@ export function iconPng(size,{alpha=true,adaptive=false}={}) {
     const dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((px-ax)*dx+(py-ay)*dy)/(dx*dx+dy*dy)));
     return Math.hypot(px-ax-t*dx,py-ay-t*dy);
   }
+  const rgb=value=>[1,3,5].map(i=>parseInt(value.slice(i,i+2),16));
+  const ink=rgb(brand.colors.ink),paper=rgb(brand.colors.paper),accent=rgb(brand.colors.accent);
+  const point=brand.logo.point,lineRadius=brand.logo.strokeWidth/brand.logo.size/2;
   for(let y=0;y<size;y++) for(let x=0;x<size;x++) {
-    let cover=0;
+    let coverage=0;const sum=[0,0,0];
     for(let sy=0;sy<3;sy++) for(let sx=0;sx<3;sx++) {
       const scale=adaptive ? adaptiveScale : 1;
       const px=((x+(sx+.5)/3)/size-.5)/scale+.5, py=((y+(sy+.5)/3)/size-.5)/scale+.5;
-      if(segments.some(segment=>distance(px,py,segment)<brand.logo.strokeWidth/brand.logo.size/2))cover++;
+      const d=Math.hypot(px-point.x/brand.logo.size,py-point.y/brand.logo.size);
+      const color=d<point.r/brand.logo.size-lineRadius?accent:
+        d<point.r/brand.logo.size+lineRadius||segments.some(segment=>distance(px,py,segment)<lineRadius)?ink:null;
+      if(color) {coverage++;for(let c=0;c<3;c++)sum[c]+=color[c];}
+      else if(!adaptive)for(let c=0;c<3;c++)sum[c]+=paper[c];
     }
     const offset=y*(size*channels+1)+1+x*channels;
-    for(let c=0;c<3;c++) pixels[offset+c]=adaptive?[32,44,37][c]:Math.round([218,237,170][c]+([32,44,37][c]-[218,237,170][c])*cover/9);
-    if(alpha)pixels[offset+3]=adaptive?Math.round(255*cover/9):255;
+    for(let c=0;c<3;c++)pixels[offset+c]=Math.round(sum[c]/(adaptive?coverage||1:9));
+    if(alpha)pixels[offset+3]=adaptive?Math.round(255*coverage/9):255;
   }
   const header=Buffer.alloc(13);header.writeUInt32BE(size);header.writeUInt32BE(size,4);header[8]=8;header[9]=alpha?6:2;
   return Buffer.concat([

@@ -610,7 +610,9 @@ try {
     await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
-    assert(await evaluate("document.querySelector('.brand').textContent.includes('Search') && document.title.includes('Offer search')"),'the neutral English identity is consistent and has no fixed candidate brand');
+    assert(await evaluate("document.querySelector('.brand').textContent.includes('udi.') && document.title.includes('udi.')"),'the working identity is consistent across header and document');
+    assert(await evaluate("document.querySelector('[data-brand-wordmark]').textContent==='udi.' && document.querySelector('[data-brand-descriptor]').textContent==='Find what you need.'"),'working mark has a visible functional line, without changing technical identity');
+    assert(await evaluate("document.activeElement.id!=='search-query'"),'the initial screen must not open the keyboard through autofocus');
     assert(await evaluate("!!document.querySelector('.native-settings summary') && !document.querySelector('.native-settings').open"),'market and language are available through one closed compact control');
     assert(await evaluate("document.querySelector('#recent-searches').hidden && document.querySelectorAll('.suggestions button').length===1"),'saved searches have their own destination and only one example competes with input');
     await captureBoundary(platform,'en',send);

@@ -1,6 +1,16 @@
-# Sichtbare Identität offen · historische Namensvorprüfung
+# Arbeitsmarke udi. · zentral austauschbar
 
-**Aktuelle Nutzerentscheidung vom24.11.2026:** Keine weiteren Namensrunden innerhalb dieser Entwicklung. UDI nur intern; Bessilo ist kein aktiver Anzeigename. Neutrale Namen und ein neutrales Suchrahmen-Signet stehen austauschbar in src/brand.mjs. Anzeige-Metadaten/Icons werden daraus erzeugt, technische IDs und Nutzer-/Quelldaten bleiben unverändert. Vorrang haben Nutzerführung, Tastatur, Design und reale Suchabläufe. Die folgende frühere Recherche ist Historie, keine Markenfestlegung oder aktive Umsetzungsanweisung.
+Neuester [Nutzerauftrag](requirements/2026-11-24-brand-usp-ui-usability.md) setzt `udi.` als Arbeitsmarke. Er ersetzt die zwischenzeitlich neutrale sichtbare Anzeige. Keine neue Namensrunde und keine rechtliche Freigabe. DE: **Produkt- und Angebotssuche**; EN: **Find what you need.**; kurze Storebeschreibung **Smart product search** (keine Veröffentlichung). Keine erfundene Akronymbedeutung.
+
+Quelle für Name, Funktionszeilen, Farben und Logo: src/brand.mjs. Build synchronisiert native Anzeigenamen, Manifeste und öffentliche Icons; native Vorbereitung zusätzlich Plattformicons. Bundle-/Paket-/Scheme-/API-/Speicher-IDs und Nutzer-/Händlertexte unverändert.
+
+## Zeichensystem
+
+Offene Lupenkontur mit kurzem Weg zum Fundpunkt; drei einfache Linienzüge und ein umrandeter Punkt statt zusätzlicher Mini-Details. Dunkelgrün, warmes Weiss, sparsamer heller Punkt. In der tatsächlich laufenden gemeinsamen Oberfläche bei ungefähr25px und bei320px Bildschirmbreite DE/EN angesehen. Farb-/Hintergrundvarianten zentral erzeugt: [hell](design/udi-mark-light.svg), [dunkel](design/udi-mark-dark.svg), [einfarbig](design/udi-mark-mono.svg). Dies sind Zeichenvarianten; die App behauptet keinen fertigen Dark Mode. Native Launchermasken/Screenshot-Abnahme bleibt getrennt.
+
+## Historische, nicht aktive Namensvorprüfung
+
+Die folgende frühere Kandidatenentscheidung ist Historie und keine aktive Autorität. Bessilo wird nicht als Produktname verwendet.
 
 Entscheidung: **Bessilo** wird reversibler Anzeigename der unveröffentlichten Testapp. UDI/Universal Deal Intelligence bleibt interne Projekt-/Vertragsbezeichnung. Kein neuer Store-Eintrag, keine Bundle-/Paket-ID, Domain, Signatur, Speicherkennung oder API-Version wird geändert. Der Name ist **nicht markenrechtlich freigegeben**. Recherche ist eine Vorprüfung, keine Rechtsberatung, kein Nachweis weltweiter Einzigartigkeit und keine Domainreservierung.
 

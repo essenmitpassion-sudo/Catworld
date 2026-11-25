@@ -1,5 +1,5 @@
-import {readFile,writeFile} from 'node:fs/promises';
-import {brand,brandTemplate} from '../src/brand.mjs';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {brand,brandTemplate,brandSvg} from '../src/brand.mjs';
 import {iconPng,writeIconFile} from './generate-icons.mjs';
 
 // Generate display metadata from one trusted source. Technical identities are
@@ -20,8 +20,12 @@ export async function syncIdentity() {
   await write(strings,(await read(strings)).replace(/(<string name="(?:app_name|title_activity_main)">)[^<]*(<\/string>)/g,(_,a,b)=>a+xml(brand.installName)+b));
   const plist='ios/App/App/Info.plist';
   await write(plist,(await read(plist)).replace(/(<key>CFBundleDisplayName<\/key>\s*<string>)[^<]*(<\/string>)/,(_,a,b)=>a+xml(brand.installName)+b));
+  await mkdir(new URL('../docs/design/',import.meta.url),{recursive:true});
+  for(const variant of ['light','dark','mono'])await write('docs/design/udi-mark-'+variant+'.svg',brandSvg(variant,32));
+  await write('android/app/src/main/res/values/ic_launcher_background.xml','<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">'+brand.colors.paper+'</color>\n</resources>\n');
   const index='src/index.html';let html=await read(index);
-  html=html.replace(/(<span data-brand-wordmark="">)[^<]*(<\/span>)/,(_,a,b)=>a+xml(brand.labels.de.shortName)+b)
+  html=html.replace(/(<span class="brand-descriptor" data-brand-descriptor="">)[^<]*(<\/span>)/,(_,a,b)=>a+xml(brand.labels.de.descriptor)+b)
+    .replace(/(<span data-brand-wordmark="">)[^<]*(<\/span>)/,(_,a,b)=>a+xml(brand.labels.de.shortName)+b)
     .replace(/(<title data-i18n=")([^"]+)(">)[^<]*(<\/title>)/,(_,a,key,b,c)=>a+key+b+xml(brandTemplate(key,'de'))+c)
     .replace(/(<a class="brand"[^>]*?\saria-label=")[^"]*(")/,(_,a,b)=>a+xml(brandTemplate('UDI · Zur Suche','de'))+b);
   await write(index,html);

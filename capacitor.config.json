@@ -1,6 +1,6 @@
 {
   "appId": "stream.soundweave.udi",
-  "appName": "Offer search",
+  "appName": "udi.",
   "webDir": "native-dist",
   "loggingBehavior": "none",
   "includePlugins": [

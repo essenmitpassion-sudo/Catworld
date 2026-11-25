@@ -191,3 +191,9 @@ html[data-native-ui] #saved > p { padding-block:1rem; font-size:.8125rem; line-h
 html[data-native-ui] .footer { border-top:0; padding-block:1rem; margin-top:.5rem; justify-content:flex-start; }
 html[data-native-ui] .footer > :not(a) { display:none; }
 html[data-native-ui] .footer a { display:inline-flex; align-items:center; min-height:44px; font-size:.75rem; color:var(--muted); }
+
+/* The functional line explains the provisional mark without another panel. */
+.brand-text { display:flex; flex-direction:column; gap:.3rem; min-width:0; }
+.brand-descriptor { max-width:20ch; font-size:.625rem; font-weight:600; line-height:1.3; letter-spacing:0; color:var(--muted); }
+html[data-native-ui] .brand { letter-spacing:-.055em; }
+html[data-native-ui] .brand-mark { background:var(--paper); color:var(--blue); }

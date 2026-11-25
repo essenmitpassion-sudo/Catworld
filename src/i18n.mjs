@@ -44,6 +44,7 @@ export function setText(node,value) {
 export function applyLanguage(root=document) {
   document.documentElement.lang=language==='de'?'de-CH':'en';
   for(const node of root.querySelectorAll('[data-brand-wordmark]'))node.textContent=brand.labels[language].shortName;
+  for(const node of root.querySelectorAll('[data-brand-descriptor]'))node.textContent=brand.labels[language].descriptor;
   for(const node of root.querySelectorAll('[data-i18n]')) {
     const binding=bindings.get(node);setText(node,m(node.dataset.i18n,binding?.params??{}));
   }

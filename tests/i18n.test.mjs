@@ -7,11 +7,11 @@ import { readFile } from 'node:fs/promises';
 import { load } from 'cheerio';
 import { intentFor } from '../src/intent.mjs';
 
-test('neutraler Anzeigename folgt der Sprache ohne Nutzerwünsche oder interne Kürzel umzubenennen',()=>{
+test('austauschbare Arbeitsmarke folgt der Sprache ohne Nutzerwünsche oder interne Kürzel umzubenennen',()=>{
   try {
-    setLanguage('de');assert.equal(t('UDI · Zur Suche'),'Angebotssuche · Zur Suche');
+    setLanguage('de');assert.equal(t('UDI · Zur Suche'),'udi. · Zur Suche');
     assert.equal(t('{query} · Erneut prüfen',{query:'UDI camera udi.'}),'UDI camera udi. · Erneut prüfen');
-    setLanguage('en');assert.equal(t('UDI · Zur Suche'),'Offer search · Go to search');
+    setLanguage('en');assert.equal(t('UDI · Zur Suche'),'udi. · Go to search');
     assert.equal(t('{query} · Erneut prüfen',{query:'UDI camera udi.'}),'UDI camera udi. · Check again');
   } finally {setLanguage('de');}
 });
