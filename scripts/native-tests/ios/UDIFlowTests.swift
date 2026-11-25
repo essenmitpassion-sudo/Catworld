@@ -29,10 +29,16 @@ final class UDIFlowTests: XCTestCase {
             XCTAssertTrue(selector.isHittable, "Language action must be reachable in the opened settings")
             if app.statusBars.firstMatch.exists { XCTAssertGreaterThanOrEqual(selector.frame.minY, app.statusBars.firstMatch.frame.maxY, "Language control must clear the status bar") }
             selector.tap()
-            settings.tap() // Reopen to inspect the actual selected state, then close.
-            let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "1"), object: selector)
-            XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed, "The chosen UI language must remain selected")
-            settings.tap()
+            // Wait for the translated accessibility tree before reopening.
+            // On a busy simulator the previous label can survive the tap even
+            // though WebKit eventually exposes the new language and selection.
+            let translatedLabel = index == 0 ? "Language and market: English" : "Sprache und Markt: Deutsch"
+            let translatedSettings = web.buttons[translatedLabel].firstMatch
+            XCTAssertTrue(translatedSettings.waitForExistence(timeout: 20), "The settings label must reflect the chosen language")
+            translatedSettings.tap()
+            let selected = web.switches.matching(NSPredicate(format: "label == %@ AND value == %@", language, "1")).firstMatch
+            XCTAssertTrue(selected.waitForExistence(timeout: 20), "The chosen UI language must remain selected")
+            translatedSettings.tap()
             let field = web.textViews.firstMatch
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(wishes[index])
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")
