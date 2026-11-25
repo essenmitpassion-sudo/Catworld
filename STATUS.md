@@ -10,7 +10,7 @@
 
 **Nativer Folgeversuch** · Der korrigierte Stand `a26fe23` ist auf Android und iOS grün. Beide Plattformen wurden installiert und gestartet. Der iOS-Simulator bestätigte Textsuche, echten Zustand ohne Angebotsdienst und Speichern auf Deutsch und Englisch sowie Neustart mit erhaltener deutscher Sprache und Suchwünschen. Der Android-Emulator bestätigte gespeicherte Wünsche, Sprache und CH-Kontext nach Neustart. [Native Nachweise](docs/evidence/2026-11-25-native-language-retest.json).
 
-**Sicherung** · Arbeitsmarke `feef0d5` und Konto-/Update-Grundlage `c46763f` normal nach `development/udi` gepusht. Den Remote-Commit zurückgelesen. Lokales Wiederherstellungspaket isoliert entpackt, SHA-256 und alle 314 Dateien, Typprüfung, native Quellvorbereitung, Manifest und Katalogdienst bestätigt. [Prüfnachweis und Build-IDs](docs/evidence/2026-11-25-accounts-daily-recovery.json).
+**Sicherung** · Pilotdienst `5ee76d7` nach `development/udi` gepusht und Remote-Commit zurückgelesen. Das lokale Paket mit 319 Dateien wurde mit frischer Abhängigkeitsinstallation isoliert wiederhergestellt. Alle drei gezielten Tests des geschützten Dienstes liefen auch aus dem Paket. [Prüfnachweis und Build-IDs](docs/evidence/2026-11-25-protected-pilot-recovery.json).
 
 **Offen** · Echte E-Mail-Anmeldung, kontogebundene Wunschliste, geschützter UDI-Dienst mit dauerhafter Datenbank, Store-Sandbox und tatsächliche Store-Berechtigung. Ein Produktpreis von CHF 3.90 ist Zielwert. Die geschätzten Providerkosten bei 25 Suchen liegen je nach Aufrufzahl zwischen CHF 0.27 und 0.80 pro Plus-Konto. Zahlungs-, Auth-, Hosting- und weitere Anbieter-/Quellenkosten sind teilweise unbeziffert. Versand und zugehörige Geräteeinwilligung sind offen.
 

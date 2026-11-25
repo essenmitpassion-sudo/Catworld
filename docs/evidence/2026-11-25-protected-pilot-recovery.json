@@ -1,0 +1,22 @@
+{
+  "verifiedAt": "2026-11-25T14:48:17.607Z",
+  "sourceCommit": "5ee76d726a1d041532ac2c39c5aa8d38b0219fa3",
+  "verifiedRemoteRefAtCheckpoint": "refs/heads/development/udi",
+  "archive": "artifacts/udi-pilot-5ee76d726a1d.tar.gz",
+  "archiveSha256": "ecbfd7a365bc0c8256dcff28a61029b08918843999605e4b9de02d89ebc616c3",
+  "unpackedFiles": 319,
+  "freshLockfileInstall": true,
+  "localTestsPassed": 154,
+  "buildAndChromiumSmoke": true,
+  "nativeSourcePreparation": true,
+  "restoredPilotTestsPassed": 3,
+  "realLocalHttpRoutes": [
+    "/api/v1/search",
+    "/api/v1/preferences/daily-update"
+  ],
+  "syntheticAuthAndSourceFixtures": true,
+  "productionCredentialsOrLiveProviderCalls": false,
+  "actualLoginOrDeviceServiceFlow": false,
+  "ciRunId": 45637960022,
+  "nativeRunId": 45637960044
+}
