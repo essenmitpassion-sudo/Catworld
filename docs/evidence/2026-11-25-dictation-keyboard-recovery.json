@@ -1,0 +1,24 @@
+{
+  "verifiedAt": "2026-11-25T16:38:40.383Z",
+  "sourceCommit": "f3bde836aa5e33a1903338d7cc16ce5335a06963",
+  "remoteRef": "refs/heads/development/udi",
+  "archive": "artifacts/udi-pilot-f3bde836aa5e.tar.gz",
+  "archiveSha256": "05d48c9a7646e9ab66e1af6bcaac8e167bae005d4b44b82f77aee9fccc4639b5",
+  "unpackedFiles": 341,
+  "freshLockfileInstall": true,
+  "localTestsPassed": 165,
+  "browserSmokeAndLayoutPassed": true,
+  "restoredBrowserNativeBoundariesPassed": true,
+  "previousSpeechRun": {
+    "runId": 45652217855,
+    "androidJobId": 139341692243,
+    "androidConclusion": "success",
+    "iosJobId": 139341691576,
+    "iosCompiled": true,
+    "iosMicrophoneExplanationPassed": true,
+    "iosTextSearchMissedWithKeyboard": true
+  },
+  "nativeRetestRunId": 45655990931,
+  "ciRunId": 45655991129,
+  "physicalDeviceMicrophoneVerified": false
+}
