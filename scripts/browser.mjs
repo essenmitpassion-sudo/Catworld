@@ -207,7 +207,10 @@ try {
         await evaluate("document.documentElement.style.fontSize='200%'");await noOverflow();
         assert(await evaluate("(()=>{const button=document.querySelector('.primary-search').getBoundingClientRect(),form=document.querySelector('.composer').getBoundingClientRect();return button.left>=form.left && button.right<=form.right})()"),'large-text search button fits entirely inside its form');
         await evaluate("document.querySelector('#search-query').focus();document.querySelector('#search-query').scrollIntoView({block:'center'})");
-        assert(await evaluate("(()=>{const input=document.querySelector('#search-query'),r=input.getBoundingClientRect();return input.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})()"),'input remains reachable with large text in a short viewport');
+        const inputHit=await evaluate(`(()=>{const input=document.querySelector('#search-query'),r=input.getBoundingClientRect(),main=document.querySelector('main'),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return {reachable:input.contains(hit),input:r.toJSON(),main:main.getBoundingClientRect().toJSON(),scrollTop:main.scrollTop,hit:hit?.id||hit?.className||hit?.tagName}})()`);
+        assert(inputHit.reachable,'input remains reachable with large text in a short viewport '+JSON.stringify(inputHit));
+        await evaluate("document.querySelector('.primary-search').scrollIntoView({block:'center'})");
+        assert(await evaluate("(()=>{const b=document.querySelector('.primary-search'),r=b.getBoundingClientRect();return b.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})()"),'search action remains reachable with large text in a short viewport');
       }
       continue;
     }

@@ -205,3 +205,14 @@ html[data-native-ui] .brand-mark { background:var(--paper); color:var(--blue); }
 #daily-update input:checked { color:var(--paper); background:var(--blue); }
 #daily-update input:checked::before { margin-left:auto; }
 #daily-update p { font-size:.875rem; }
+
+/* On a short browser window, let the header and navigation scroll with the
+   document. Their enlarged text cannot squeeze the form into a clipped pane. */
+@media (max-height: 540px) {
+  html:not([data-native-ui]) body {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+  html:not([data-native-ui]) .app-content { overflow: visible; }
+}
