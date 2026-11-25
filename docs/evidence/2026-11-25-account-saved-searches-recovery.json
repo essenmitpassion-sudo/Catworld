@@ -1,0 +1,18 @@
+{
+  "verifiedAt": "2026-11-25T16:24:14.358Z",
+  "sourceCommit": "72e56e752caac54ebec83ab99707720d4360efa3",
+  "remoteRef": "refs/heads/development/udi",
+  "archive": "artifacts/udi-pilot-72e56e752caa.tar.gz",
+  "archiveSha256": "ed80556ad57775950ea2d9ae5f09b03c08467e837635ad925398b0ddd4d1fa72",
+  "unpackedFiles": 339,
+  "freshLockfileInstall": true,
+  "localTestsPassed": 164,
+  "restoredPilotTestsPassed": 6,
+  "accountSeparationAndRestartVerifiedLocally": true,
+  "sourceCallsForSavedSearches": 0,
+  "browserChecks": ["Android branch, DE, 320px", "iOS branch, EN, 320px"],
+  "syntheticAuthResponses": true,
+  "realAccountRestorationOnDevices": false,
+  "ciRunId": 45653342229,
+  "nativeRunId": 45653342183
+}
