@@ -740,7 +740,17 @@ try {
     await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
     const fixture=await send('Page.addScriptToEvaluateOnNewDocument',{source:`(()=>{
-      window.Capacitor={getPlatform:()=>${JSON.stringify(platform)}};
+      let voiceListener;
+      window.qaCancelledForAccount=0;
+      window.Capacitor={getPlatform:()=>${JSON.stringify(platform)},Plugins:{NativeSpeech:{
+        addListener:async(_event,listener)=>{voiceListener=listener;},
+        recognize:({id})=>new Promise(resolve=>{window.qaLateSpeech=resolve;voiceListener({id,status:'listening'});}),
+        stop:async()=>{},
+        cancel:()=>new Promise(resolve=>{
+          window.qaCancelledForAccount++;
+          window.qaStopConfirmed=resolve;
+        }),
+      }}};
       localStorage.setItem('udi.language.v1',${JSON.stringify(language)});
       localStorage.setItem('udi.searches.v1',JSON.stringify([{query:'Previous local wish',maxPrice:'',condition:'any',completeCostsOnly:false}]));
       const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
@@ -786,7 +796,16 @@ try {
     assert.equal(await evaluate('window.qaPilotCalls.length'),0);
     await pointerClick('[data-pilot-close]');
     assert(await evaluate("!document.querySelector('#pilot-sign-in').open && document.querySelector('#search-query').value==='Kingston NV3 2 TB'"));
-    await pointerClick('.primary-search');
+    await pointerClick('[data-mic]');
+    await pointerClick('[data-native-voice-start]');
+    await until(()=>evaluate("typeof window.qaLateSpeech==='function'"),'speech is active before opening account');
+    await pointerClick('#pilot-account');
+    await until(()=>evaluate("window.qaCancelledForAccount===1"),'opening sign-in cancels microphone access first');
+    assert(await evaluate("!document.querySelector('#pilot-sign-in').open"),'account stays closed until native stop is confirmed');
+    await evaluate('window.qaStopConfirmed()');
+    await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'sign-in opens after the microphone is released');
+    await evaluate("window.qaLateSpeech({status:'transcript',text:'do not keep this'})");
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Kingston NV3 2 TB');
     await type('tester@example.com');
     await pointerClick('[data-pilot-email] [type=submit]');
     await until(()=>evaluate("!document.querySelector('[data-pilot-code]').hidden && document.activeElement.id==='pilot-code'"),'code entry reachable');

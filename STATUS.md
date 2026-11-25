@@ -6,9 +6,13 @@
 
 **Diktat gesichert** · Anforderungen in `0516cbd`, Implementierung in `ef3a3f7`. Remote zurückgelesen. Paket mit 337 Dateien und frischer Abhängigkeitsinstallation separat wiederhergestellt. [Wiederherstellung](docs/evidence/2026-11-25-on-device-dictation-recovery.json) und [nativer Build](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45652217855).
 
+Android und iOS kompilierten die Sprachmodule auf GitHub. Android bestand Installation, Mikrofonerklärung vor der Berechtigung, Textsuche, Speichern und Neustart im Emulator. Der iOS-Starttest läuft. Die Erkennung echter Sprache wurde in keinem der beiden Läufe nachgewiesen.
+
 **Kontospeicher** · Der geschützte Pilot speichert Suchwünsche mit Kriterien für das bestätigte Konto. In echter lokaler HTTP-Prüfung mit zwei synthetischen Konten belegt: getrennt lesen, wiederholt speichern, entfernen, zwischen Sitzungen trennen und ohne Quellenaufruf betreiben. SQLite-Wiederöffnung bestätigt den dauerhaften Speicher. Der Testbuild zeigt die persönliche Liste nach Anmeldung und leert die Anzeige beim Abmelden. Alte gerätelokale Wünsche bleiben ausserhalb des Kontos.
 
 **Kontospeicher gesichert** · `72e56e7` auf GitHub zurückgelesen. 164 automatisierte Tests, Typen, Build und Chromium grün. Das Paket mit 339 Dateien wurde separat wiederhergestellt. Sechs Tests zum Kontodienst bestanden aus dieser Kopie. [Nachweis](docs/evidence/2026-11-25-account-saved-searches-recovery.json).
+
+**Datenschutzkorrektur** · Die Gegenprobe zeigte, dass der Anmeldedialog während eines Diktats aufgehen konnte. Jetzt bleibt er bis zur Bestätigung des nativen Abbruchs geschlossen. Ein verspätetes Transkript verändert den Entwurf nicht. Die kombinierte Browserprüfung prüft beides auf Android- und iOS-Zweig.
 
 **Umgesetzt** · Die austauschbare Arbeitsmarke `udi.` ist im Android-/iOS-Quellstand hinterlegt. Der [Originalauftrag zu Konto, Plus und Kosten](docs/requirements/2026-11-25-account-plus-costs.md) ist bytegenau gesichert. [PLAN](PLAN.md) führt Reihenfolge und Abnahmen. Unter «Gespeichert» ist «Tägliches Update» in DE/EN sichtbar. Der Schalter ist im ausgelieferten Entwicklungsstand gesperrt, bis Konto und Versand verbunden sind. [Tagesupdate](docs/DAILY-UPDATES.md), [Suchkontingente](docs/QUOTA.md) und [Kostenmodell](docs/ECONOMICS.md) beschreiben Implementierung und Betriebsvoraussetzungen.
 
@@ -38,4 +42,4 @@ Die Katalogkorrektur ist in `f3ff43e` auf GitHub gesichert. Die Wiederherstellun
 
 **Offen** · Echte E-Mail-Anmeldung, betriebliche Abnahme des UDI-Diensts mit dauerhafter Datenbank, sicherer Sitzungswiederherstellung und Kontolöschung, Store-Sandbox und tatsächliche Store-Berechtigung. Ein Produktpreis von CHF 3.90 ist Zielwert. Die geschätzten Providerkosten bei 25 Suchen liegen je nach Aufrufzahl zwischen CHF 0.27 und 0.80 pro Plus-Konto. Zahlungs-, Auth-, Hosting- und weitere Anbieter-/Quellenkosten sind teilweise unbeziffert. Versand und zugehörige Geräteeinwilligung sind offen.
 
-**Nächster Schritt** · Mit einem getrennten UDI-Supabase-Testprojekt, zwei bestätigten Testkonten und einem freigegebenen UDI-HTTPS-Ziel den [nativen Testbuild](docs/SERVICE.md#anmeldeoberfläche-im-nativen-testbuild) verbinden. Danach E-Mail-Zustellung, Anmeldung, geschützte Suche und Kontotrennung auf Android und iOS abnehmen. Tagesupdate-Zustellung, Anbieterbudget und Store-Sandbox folgen als eigene Abnahmen.
+**Nächster Schritt** · Das [Diktat auf Geräten](docs/DICTATION.md) mit installierter deutscher und englischer Sprache, Erlaubniswechsel, Flugmodus und Screenreader prüfen. Für die [Kontoabnahme](docs/SERVICE.md#anmeldeoberfläche-im-nativen-testbuild) braucht es das getrennte UDI-Supabase-Testprojekt, zwei bestätigte Testkonten und das freigegebene HTTPS-Ziel. Danach E-Mail-Zustellung, geschützte Suche, geräteübergreifende Kontotrennung, sichere Wiederherstellung und Kontolöschung prüfen. Tagesupdate-Zustellung, Anbieterbudget und Store-Sandbox folgen als eigene Abnahmen.

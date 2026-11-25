@@ -25,7 +25,7 @@ export function setupNativeVoice(root,onInput,plugin) {
   const start=options.querySelector('[data-native-voice-start]');
   const cancelButton=panel.querySelector('[data-native-voice-cancel]');
   const input=root.elements.query;
-  let current;
+  let current,cancellation;
   let selectedLocale=false;
   const tell=key=>{panel.hidden=false;setText(status,m(key));};
 
@@ -39,12 +39,18 @@ export function setupNativeVoice(root,onInput,plugin) {
     cancelButton.hidden=true;
     tell(key);
   }
-  const askNative=(method,id)=>Promise.resolve().then(()=>plugin[method]({id})).catch(()=>{});
+  const askNative=(method,id)=>Promise.resolve().then(()=>plugin[method]({id})).then(()=>true,()=>false);
   function cancel(key=failureMessage.cancelled) {
-    if(current)void askNative('cancel',current.id);
+    if(current) {
+      const stopping={id:current.id,promise:askNative('cancel',current.id)};
+      cancellation=stopping;
+      void stopping.promise.then(stopped=>{if(stopped&&cancellation===stopping)cancellation=null;});
+    }
     reset(key);
+    return cancellation?.promise??Promise.resolve(true);
   }
   function finish(currentRun,result) {
+    if(result?.status&&cancellation?.id===currentRun.id)cancellation=null;
     if(current!==currentRun)return;
     if(result?.status!=='transcript') {
       reset(failureMessage[result?.status]??failureMessage.error);
@@ -100,7 +106,7 @@ export function setupNativeVoice(root,onInput,plugin) {
   locale.addEventListener('change',()=>{selectedLocale=true;});
   cancelButton.addEventListener('click',()=>{cancel();button.focus();});
   start.addEventListener('click',async()=>{
-    if(current)return;
+    if(current||cancellation)return;
     const id=globalThis.crypto.randomUUID();
     const run={id,listening:false,finishing:false,timer:setTimeout(()=>{
       if(current?.id===id)cancel(failureMessage.timeout);
@@ -115,10 +121,10 @@ export function setupNativeVoice(root,onInput,plugin) {
     if(current!==run)return;
     if(!listening)return finish(run,{status:'error'});
     try {finish(run,await plugin.recognize({id,locale:language}));}
-    catch {finish(run,{status:'error'});}
+    catch {finish(run);}
   });
 
   window.addEventListener('pagehide',()=>{if(current)cancel();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && current)cancel();});
-  return {isRecording:()=>Boolean(current),stop:()=>{if(current || !options.hidden)cancel();}};
+  return {isRecording:()=>Boolean(current),stop:()=>current||!options.hidden?cancel():cancellation?.promise??Promise.resolve(true)};
 }

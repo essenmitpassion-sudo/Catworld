@@ -12,6 +12,7 @@ Die bestehende Anmeldegrenze bleibt der erste echte Suchstart. Freier Entwurf, B
 - iOS verwendet `SFSpeechRecognizer` und einen flüchtigen Audiopuffer. Aufnahme startet nur bei `supportsOnDeviceRecognition` mit erzwungenem `requiresOnDeviceRecognition`. iOS fordert die Mikrofon- und die Spracherkennungsberechtigung an. [Lokale Erkennung auf iOS](https://developer.apple.com/documentation/speech/sfspeechrecognitionrequest/requiresondevicerecognition) · [Apple-Berechtigungsablauf](https://developer.apple.com/documentation/speech/asking-permission-to-use-speech-recognition)
 - Die App bietet eine ausdrücklich auswählbare Erkennungssprache an. Deutsch (Deutschland, `de-DE`) und Englisch (Grossbritannien, `en-GB`) sind Kandidaten. Die tatsächliche Unterstützung hängt von Gerät und Modellpaket ab. Schweizerdeutsch und weitere Sprachen sind keine geprüften Erkennungspfade. Die Wahl ändert weder UI-Sprache noch Schweizer Markt.
 - Die native Oberfläche gibt nur Text weiter. UDI speichert die Audiopuffer nicht als Datei und sendet Audio nicht an einen Dienst. Ein Stopp schliesst die Erkennung ab. Abbruch, Hintergrund und Zeitlimit geben Ressourcen frei und ignorieren späte Rückmeldungen. Der erhaltene Text bleibt bearbeitbar im Suchfeld.
+- Vor dem Anmeldedialog wartet UDI auf die Bestätigung, dass ein laufendes Diktat beendet wurde. Abmelden und Wegnavigieren brechen die Aufnahme ab. Die Eingabefelder für Konto und Code bleiben während einer unbestätigten Aufnahme geschlossen.
 
 ## Abnahme
 

@@ -61,6 +61,17 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
   openButton:get('pilot-account'),
   searchButton:get('suche').querySelector('.primary-search'),
   session:pilotSession,
+  async beforeOpen() {
+    let timer;
+    try {
+      const deadline=new Promise(resolve=>{timer=setTimeout(()=>resolve(false),4000);});
+      if(await Promise.race([voice?.stop(),deadline])!==false)return true;
+      const form=get('search-query').form;
+      form.querySelector('[data-voice]').hidden=false;
+      setText(form.querySelector('[data-voice-status]'),m('Beende dein Diktat, bevor du dich anmeldest.'));
+      return false;
+    } finally {clearTimeout(timer);}
+  },
   onSessionChange(signedIn) {
     const status=get('native-runtime-status');
     const field=get('search-query');
@@ -70,6 +81,7 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     else field.setAttribute('aria-describedby',status.id);
   },
   onSignOut() {
+    void voice?.stop();
     activeSearch?.abort();
     clearTimeout(resultsExpiry);
     activeProduct=null;
@@ -500,7 +512,7 @@ async function submit(query, scope) {
   }
   if(pilotSession && !pilotSession.isSignedIn()) {
     pilotSignIn.updateButton();
-    pilotSignIn.open(form.querySelector('.primary-search'));
+    void pilotSignIn.open(form.querySelector('.primary-search'));
     return;
   }
   const products = search(query);

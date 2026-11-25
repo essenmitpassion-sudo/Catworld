@@ -13,6 +13,7 @@ const base = {
   "Kein Text erkannt. Versuche es erneut oder tippe deinen Wunsch.":"No text was recognised. Try again or type what you need.",
   "Das Diktat wurde nicht rechtzeitig abgeschlossen. Dein Text bleibt erhalten.":"Dictation timed out. Your text is still here.",
   "Diktat abgebrochen. Dein Text bleibt erhalten.":"Dictation cancelled. Your text is still here.",
+  "Beende dein Diktat, bevor du dich anmeldest.":"Finish dictation before signing in.",
   "Das Mikrofon ist gerade belegt. Versuche es erneut oder tippe weiter.":"The microphone is busy. Try again or continue typing.",
   "Das Diktat konnte nicht gestartet oder abgeschlossen werden. Du kannst weiter tippen.":"Dictation could not start or finish. You can continue typing.",
   "Dein Text und das Diktat sind zusammen zu lang. Dein bisheriger Text bleibt erhalten.":"Your draft and dictation together are too long. Your draft is still here.",

@@ -17,7 +17,7 @@ export function configuredPilotSession(document,platform) {
   return profile?createPilotSession(profile.dataset):null;
 }
 
-export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOut,onSessionChange}) {
+export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOut,onSessionChange,beforeOpen}) {
   const emailForm=dialog.querySelector('[data-pilot-email]');
   const codeForm=dialog.querySelector('[data-pilot-code]');
   const email=emailForm.elements.email;
@@ -26,7 +26,7 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
   const status=dialog.querySelector('[role="status"]');
   const introduction=dialog.querySelector('[data-pilot-intro]');
   const controls=[email,code,resend,emailForm.querySelector('[type="submit"]'),codeForm.querySelector('[type="submit"]')];
-  let operation;
+  let operation,opening=false;
   let returnFocus;
 
   function updateButton() {
@@ -34,8 +34,13 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
     setText(openButton,m(signedIn?'Abmelden':'Anmelden'));
     onSessionChange(signedIn);
   }
-  function open(anchor=openButton) {
-    if(dialog.open)return;
+  async function open(anchor=openButton) {
+    if(dialog.open||opening)return;
+    opening=true;
+    let ready;
+    try {ready=await beforeOpen();}
+    finally {opening=false;}
+    if(!ready)return;
     returnFocus=anchor;
     emailForm.hidden=false;
     codeForm.hidden=true;
