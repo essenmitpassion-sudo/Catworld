@@ -14,7 +14,10 @@ const messages={
 export function configuredPilotSession(document,platform) {
   if(!['android','ios'].includes(platform))return null;
   const profile=document.querySelector('meta[name="udi-native-pilot"]');
-  return profile?createPilotSession(profile.dataset):null;
+  const modal=document.getElementById('pilot-sign-in');
+  if(!profile || typeof modal?.showModal!=='function' ||
+      typeof AbortSignal.any!=='function' || typeof AbortSignal.timeout!=='function')return null;
+  return createPilotSession(profile.dataset);
 }
 
 export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOut,onSessionChange,beforeOpen}) {

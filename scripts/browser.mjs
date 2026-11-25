@@ -894,6 +894,9 @@ try {
     await pointerClick('[data-mic]');
     assert.equal(await evaluate('window.qaSpeechCalls.length'),0,'opening the explanation does not start recognition');
     assert(await evaluate("!document.querySelector('[data-native-voice-options]').hidden && !document.querySelector('[data-native-voice-start]').disabled"));
+    await pointerClick('[data-native-voice-cancel]');
+    assert(await evaluate("document.querySelector('[data-voice]').hidden"),'closing the explanation leaves no extra row under the typed draft');
+    await pointerClick('[data-mic]');
     await evaluate("document.querySelector('#dictation-language').value='en-GB';document.querySelector('#dictation-language').dispatchEvent(new Event('change',{bubbles:true}))");
     await pointerClick('[data-native-voice-start]');
     const listening=language==='de'?'Aufnahme läuft':'Listening';

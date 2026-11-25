@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {createPilotSession} from '../src/pilot-session.mjs';
 import {nativePilotProfile} from '../scripts/native-pilot-config.mjs';
+import {configuredPilotSession} from '../src/pilot-sign-in.mjs';
 
 const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
 const approvedOrigin='https://udi.example.com';
@@ -10,6 +11,11 @@ const email='test@example.com';
 const query={query:'Samsung 990 PRO 2 TB',marketId:'CH',deliveryCountry:'CH',currency:'CHF'};
 const token='fixture.account.signature';
 const issued={access_token:token,token_type:'bearer',expires_in:120,refresh_token:'discard-this-fixture'};
+
+test('ältere WebView ohne modalen Dialog aktiviert die Anmeldung nicht',()=>{
+  const mockDocument={querySelector:()=>({dataset:config}),getElementById:()=>({})};
+  assert.equal(configuredPilotSession(mockDocument,'ios'),null);
+});
 
 test('nur der ausdrücklich konfigurierte native Testbuild erhält genau zwei erlaubte HTTPS-Ziele',()=>{
   const env={UDI_AUTH_ORIGIN:authOrigin,UDI_PILOT_SEARCH_ORIGIN:approvedOrigin,UDI_AUTH_PUBLISHABLE_KEY:config.publishableKey};

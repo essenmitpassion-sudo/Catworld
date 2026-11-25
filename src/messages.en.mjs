@@ -42,6 +42,7 @@ const base = {
   "Die gespeicherten Suchen konnten nicht synchronisiert werden.":"Saved searches couldn’t be synced.",
   "Erneut versuchen":"Try again",
   "Melde dich an, wenn du deinen Wunsch prüfen möchtest.":"Sign in when you’re ready to look for offers.",
+  "Aktualisiere dein Betriebssystem, um dich im Pilot anzumelden. Du kannst deinen Wunsch weiterhin eingeben.":"Update your operating system to sign in to the pilot. You can still type what you need.",
   "Für diese Suche fehlt eine prüfbare Quelle":"No source can verify this search yet",
   "Der Pilot kann nur bestimmte Angebote prüfen. Dein Suchkontingent bleibt unverändert.":"The pilot can only check certain offers. Your search allowance stays the same.",
   "Beispielsuche übernehmen":"Use example search",

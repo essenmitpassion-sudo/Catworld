@@ -41,9 +41,11 @@ mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
 const pilotSession=configuredPilotSession(document,platform);
+const pilotConfigured=['android','ios'].includes(platform)&&Boolean(document.querySelector('meta[name="udi-native-pilot"]'));
+const pilotSystemMessage='Aktualisiere dein Betriebssystem, um dich im Pilot anzumelden. Du kannst deinen Wunsch weiterhin eingeben.';
 document.documentElement.toggleAttribute('data-native-ui',platform!=='web');
 let searchPersistence;
-if(!pilotSession) {
+if(!pilotConfigured) {
   try {
     const preferences=['android','ios'].includes(platform)?nativeSearchPreferences(globalThis.Capacitor):undefined;
     let timer;
@@ -55,6 +57,7 @@ if(!pilotSession) {
 }
 if(platform!=='web') {
   configureNativeUI(document);
+  if(pilotConfigured&&!pilotSession)setText(get('native-runtime-status'),m(pilotSystemMessage));
 }
 const pilotSignIn=pilotSession && bindPilotSignIn({
   dialog:get('pilot-sign-in'),
@@ -223,7 +226,7 @@ function describeCriteria(criteria) {
     {new:t('Nur neu'),used:t('Gebraucht oder generalüberholt')}[criteria.condition],criteria.completeCostsOnly?t('Nur bestätigte Gesamtkosten'):null].filter(Boolean).join(' · ')}));
 }
 
-if(!pilotSession) {
+if(!pilotConfigured) {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) ?? '[]');
     if (!Array.isArray(saved)) throw new Error('Invalid watchlist');
@@ -510,6 +513,12 @@ async function submit(query, scope) {
     get('max-price').focus();
     return;
   }
+  if(pilotConfigured&&!pilotSession) {
+    const status=get('native-runtime-status');
+    status.tabIndex=-1;
+    status.focus();
+    return;
+  }
   if(pilotSession && !pilotSession.isSignedIn()) {
     pilotSignIn.updateButton();
     void pilotSignIn.open(form.querySelector('.primary-search'));
@@ -649,7 +658,7 @@ function renderPassport() {
   const actions = element('div', null, 'actions');
   const url = directLink(offer.url, activeProduct);
   if (url && offer.state !== 'unconfirmed') actions.append(link(m('{seller} öffnen',{seller:offer.seller}), url, 'button', true));
-  if(!pilotSession)actions.append(watchAction(activeProduct));
+  if(!pilotConfigured)actions.append(watchAction(activeProduct));
   box.append(actions);
   const guidance = message(m('Kaufentscheid'), recommendationText(recommendation, comparisonStatus));
   if (recommendation?.seller === offer.seller) appendPriceAdvantage(guidance, priceAdvantage);
@@ -738,6 +747,10 @@ async function renderAccountWatchlist() {
 }
 
 function renderWatchlist() {
+  if(pilotConfigured&&!pilotSession) {
+    get('saved').replaceChildren(message(m(pilotSystemMessage)));
+    return;
+  }
   if(pilotSession) {
     void renderAccountWatchlist();
     return;

@@ -6,6 +6,8 @@ UDI verwendet Capacitor 8.6.2 mit gemeinsamem JavaScript und separaten nativen P
 
 Die bestehende Anmeldegrenze bleibt der erste echte Suchstart. Freier Entwurf, Beispiele und Diktat brauchen kein Konto. Der ausdrücklich konfigurierte Pilot verwendet E-Mail-Einmalcode für eingeladene Konten und hält die Test-Sitzung im Arbeitsspeicher. Unter Konto und dauerhaften Wünschen folgen echte Mailzustellung, geschützte Sitzungsablage, Löschung und geräteübergreifende Abnahme gemäss [PLAN](../PLAN.md). Eine eigene KI-Mitgliedschaft ist entbehrlich.
 
+Die App-Mindestversion allein reicht für den Anmeldepilot nicht aus. Die WebView muss modale Dialoge und die AbortSignal-Funktionen unterstützen. Bei fehlenden Funktionen bleibt der Entwurf nutzbar und die App erklärt den Aktualisierungsbedarf. [WebKit beschreibt Dialogunterstützung ab iOS 15.4.](https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/)
+
 ## Verarbeitung
 
 - Android prüft den auf dem Gerät installierten Erkennungsdienst und die installierte Sprache mit `checkRecognitionSupport` ab API 33. Verwendet wird ausschliesslich `createOnDeviceSpeechRecognizer`. API 24–32 und fehlende installierte Modelle bleiben bei Tastatureingabe. [Android-Spracherkennung](https://developer.android.com/reference/android/speech/SpeechRecognizer) · [Installierte Gerätesprachen](https://developer.android.com/reference/android/speech/RecognitionSupport)

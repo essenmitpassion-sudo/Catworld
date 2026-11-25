@@ -6,7 +6,7 @@
 
 **Diktat gesichert** · Anforderungen in `0516cbd`, Implementierung in `ef3a3f7`. Remote zurückgelesen. Paket mit 337 Dateien und frischer Abhängigkeitsinstallation separat wiederhergestellt. [Wiederherstellung](docs/evidence/2026-11-25-on-device-dictation-recovery.json) und [nativer Build](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/45652217855).
 
-Android und iOS kompilierten die Sprachmodule auf GitHub. Android bestand Installation, Mikrofonerklärung vor der Berechtigung, Textsuche, Speichern und Neustart im Emulator. Der iOS-Starttest läuft. Die Erkennung echter Sprache wurde in keinem der beiden Läufe nachgewiesen.
+Android und iOS kompilierten die Sprachmodule auf GitHub. Android bestand Installation, Mikrofonerklärung vor der Berechtigung, Textsuche, Speichern und Neustart im Emulator. iOS öffnete und schloss die Mikrofonerklärung erfolgreich, verfehlte danach mit eingeblendeter Tastatur den Suchknopf. Der Korrekturstand schliesst die Erklärung ohne Restfläche, hält den Eingabefokus bis zum Klick stabil und prüft den Abstand des Suchknopfs zur Tastatur. Die gemeinsame Oberfläche ist lokal grün. Der erneute native Lauf steht aus. Die Erkennung echter Sprache wurde in keinem der beiden Läufe nachgewiesen.
 
 **Kontospeicher** · Der geschützte Pilot speichert Suchwünsche mit Kriterien für das bestätigte Konto. In echter lokaler HTTP-Prüfung mit zwei synthetischen Konten belegt: getrennt lesen, wiederholt speichern, entfernen, zwischen Sitzungen trennen und ohne Quellenaufruf betreiben. SQLite-Wiederöffnung bestätigt den dauerhaften Speicher. Der Testbuild zeigt die persönliche Liste nach Anmeldung und leert die Anzeige beim Abmelden. Alte gerätelokale Wünsche bleiben ausserhalb des Kontos.
 

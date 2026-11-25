@@ -46,6 +46,10 @@ export function configureNativeUI(document) {
   setText(get('suche').querySelector('h1'),m('Was brauchst du?'));
   setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Ein Produkt oder ein Ziel reicht.'));
   const input=get('search-query');
+  input.form.querySelector('.primary-search').addEventListener('pointerdown',event=>{
+    // Keep the editing viewport steady until the search click is delivered.
+    if(event.button===0&&document.activeElement?.matches('textarea,input'))event.preventDefault();
+  });
   const inputLabel=document.querySelector('label[for="search-query"]');
   inputLabel.classList.remove('sr-only');setText(inputLabel,m('Dein Wunsch'));
   input.dataset.i18nPlaceholder='Zum Beispiel: Samsung 990 PRO mit 2 TB, bis CHF 500.';

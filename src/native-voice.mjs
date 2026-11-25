@@ -40,6 +40,11 @@ export function setupNativeVoice(root,onInput,plugin) {
     tell(key);
   }
   const askNative=(method,id)=>Promise.resolve().then(()=>plugin[method]({id})).then(()=>true,()=>false);
+  function closeOptions() {
+    options.hidden=true;
+    cancelButton.hidden=true;
+    panel.hidden=true;
+  }
   function cancel(key=failureMessage.cancelled) {
     if(current) {
       const stopping={id:current.id,promise:askNative('cancel',current.id)};
@@ -92,9 +97,7 @@ export function setupNativeVoice(root,onInput,plugin) {
       return;
     }
     if(!options.hidden) {
-      options.hidden=true;
-      cancelButton.hidden=true;
-      panel.hidden=true;
+      closeOptions();
       return;
     }
     if(!selectedLocale)locale.value=getLanguage()==='de'?'de-DE':'en-GB';
@@ -104,10 +107,14 @@ export function setupNativeVoice(root,onInput,plugin) {
     start.scrollIntoView({block:'nearest'});
   });
   locale.addEventListener('change',()=>{selectedLocale=true;});
-  cancelButton.addEventListener('click',()=>{cancel();button.focus();});
+  cancelButton.addEventListener('click',()=>{
+    if(current)void cancel();
+    else closeOptions();
+    button.focus();
+  });
   start.addEventListener('click',async()=>{
     if(current||cancellation)return;
-    const id=globalThis.crypto.randomUUID();
+    const id=Array.from(globalThis.crypto.getRandomValues(new Uint8Array(16)),byte=>byte.toString(16).padStart(2,'0')).join('');
     const run={id,listening:false,finishing:false,timer:setTimeout(()=>{
       if(current?.id===id)cancel(failureMessage.timeout);
     },48000)};
@@ -126,5 +133,12 @@ export function setupNativeVoice(root,onInput,plugin) {
 
   window.addEventListener('pagehide',()=>{if(current)cancel();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && current)cancel();});
-  return {isRecording:()=>Boolean(current),stop:()=>current||!options.hidden?cancel():cancellation?.promise??Promise.resolve(true)};
+  return {
+    isRecording:()=>Boolean(current),
+    stop() {
+      if(current)return cancel();
+      if(!options.hidden)closeOptions();
+      return cancellation?.promise??Promise.resolve(true);
+    },
+  };
 }

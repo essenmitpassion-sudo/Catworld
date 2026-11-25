@@ -53,7 +53,21 @@ final class UDIFlowTests: XCTestCase {
             XCTAssertEqual(field.value as? String, wishes[index], "Native text must match the intended wish")
             let submit = web.buttons[index == 0 ? "Find offers" : "Angebote suchen"].firstMatch
             XCTAssertTrue(submit.waitForExistence(timeout: 5))
-            if !submit.isHittable { web.swipeUp() }
+            let content = web.otherElements["main"].firstMatch
+            XCTAssertTrue(content.exists)
+            func submitReachable() -> Bool {
+                let keyboard = app.keyboards.firstMatch
+                var viewport = content.frame
+                if keyboard.exists {
+                    viewport.size.height = max(0, min(viewport.maxY, keyboard.frame.minY) - viewport.minY)
+                }
+                return submit.isHittable && viewport.insetBy(dx: 0, dy: 10).contains(submit.frame)
+            }
+            for _ in 0..<3 {
+                if submitReachable() { break }
+                content.swipeUp(velocity: .slow)
+            }
+            XCTAssertTrue(submitReachable(), "Search action must clear the keyboard and navigation before tapping")
             submit.tap()
             let save = web.buttons[index == 0 ? "Save search" : "Suche speichern"].firstMatch
             XCTAssertTrue(save.waitForExistence(timeout: 10))
@@ -65,8 +79,6 @@ final class UDIFlowTests: XCTestCase {
             XCTAssertTrue(web.staticTexts.matching(unavailable).firstMatch.waitForExistence(timeout: 5), "The submitted search must show its own missing-service error")
             // WebKit can report a clipped offscreen element as hittable.
             // Bound the actual frame to the scrollable content, not the nav.
-            let content = web.otherElements["main"].firstMatch
-            XCTAssertTrue(content.exists)
             for _ in 0..<3 {
                 if save.isHittable && content.frame.insetBy(dx: 0, dy: 6).contains(save.frame) { break }
                 web.swipeUp()
