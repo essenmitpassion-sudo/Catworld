@@ -17,3 +17,12 @@ Die bestehende Anmeldegrenze bleibt der erste echte Suchstart. Freier Entwurf, B
 ## Abnahme
 
 Vor einer Nutzerfreigabe braucht es auf beiden Plattformen ein Gerät mit installiertem Sprachmodell. Je Sprache zuerst verfügbare lokale Erkennung, dann erteilte und verweigerte Berechtigung, Aufnahme ohne Netz, Stille, Abbruch, Hintergrundwechsel und Bearbeitung des Transkripts nachvollziehen. VoiceOver und TalkBack sowie die reale Tastatur auf einem kleinen Gerät durchspielen. Android unter API 33 und ein Gerät ohne Modell müssen bei Tastatureingabe bleiben. GitHub-Starttests, die gemeinsame Oberfläche und simulierte Antworten belegen weder Mikrofonaufnahme noch tatsächliche Modellverfügbarkeit. Die genauen Prüfstände stehen in STATUS.
+
+| Geräteprobe | Erwartetes Verhalten |
+|---|---|
+| Neu installieren, Suchfeld öffnen, auf das Mikrofon tippen | Beim App-Start und beim Öffnen der Erklärung erscheint keine Systemberechtigung. Erst «Diktat starten» darf die Erkennung anstossen. |
+| Lokale Sprache wählen, Freigabe erlauben, Flugmodus aktivieren | Eine kurze Passage diktieren, stoppen, im Feld korrigieren. Die lokale Erkennung benötigt bei verfügbarer Sprachunterstützung keine Verbindung. Live-Suche wartet auf einen ausdrücklichen Tipp und erhält im Flugmodus den Offlinezustand. |
+| Ablehnen und dauerhaft verweigern | Textfeld bleibt nutzbar. Die Anleitung verweist auf die jeweiligen Systemeinstellungen. Bei erneuter Freigabe erst bewusst neu starten. |
+| Stille, Abbruch, Hintergrund, Wechsel zur Anmeldung | Entwurf bleibt erhalten. Ein spät zurückgegebener Text verändert ihn nicht. Konto- und Codefelder erscheinen erst nach bestätigtem Ende der Aufnahme. |
+| Gerät ohne Sprachmodell und Android unter API 33 | Die App erklärt die fehlende lokale Erkennung. Es erfolgt keine Netzwerkerkennung und kein automatischer Modelldownload. |
+| VoiceOver oder TalkBack, grosse Schrift und kleine Höhe | Mikrofon, Sprache, Status, Stopp und Abbruch sind benannt und erreichbar. Das Transkript lässt sich mit der regulären Tastatur bearbeiten. |

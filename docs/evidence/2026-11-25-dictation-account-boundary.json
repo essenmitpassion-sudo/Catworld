@@ -1,0 +1,18 @@
+{
+  "verifiedAt": "2026-11-25T16:29:49.513Z",
+  "sourceCommit": "fd2fddb758887c2c50c9990922e78c7abec59b17",
+  "remoteRef": "refs/heads/development/udi",
+  "archive": "artifacts/udi-pilot-fd2fddb75888.tar.gz",
+  "archiveSha256": "5b394750c83a52fde53f9ed0bcf84650237463225044a015f97dcd0a9ddcc1e9",
+  "unpackedFiles": 340,
+  "freshLockfileInstall": true,
+  "localTestsPassed": 164,
+  "restoredPilotTestsPassed": 6,
+  "restoredChromiumAndroidAndIosBranches": true,
+  "signInWaitsForMockNativeStopAcknowledgement": true,
+  "lateTranscriptDiscarded": true,
+  "realDeviceMicrophoneTranscriptionVerified": false,
+  "ciRunId": 45654384043,
+  "ciConclusion": "success",
+  "nativeRunId": 45654384059
+}
