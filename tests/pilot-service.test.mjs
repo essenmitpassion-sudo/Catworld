@@ -5,6 +5,8 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import test from 'node:test';
 import {createPilotService} from '../scripts/pilot-service.mjs';
+import {createPilotSession} from '../src/pilot-session.mjs';
+import {discoverOffers} from '../src/runtime.mjs';
 
 const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
 const publishableKey='sb_publishable_synthetic-test-key';
@@ -32,6 +34,8 @@ async function fixture(t,fetchUser) {
   const headers=id=>({authorization:'Bearer '+token(id),'content-type':'application/json',origin:'capacitor://localhost'});
   return {
     verificationCalls:()=>verificationCalls,
+    fetchSearch:(url,options)=>fetch(base+new URL(url).pathname,{...options,
+      headers:{...options.headers,origin:'https://localhost'}}),
     search:(id,index)=>fetch(base+'/api/v1/search',{method:'POST',headers:headers(id),
       body:JSON.stringify({...request,requestId:index.toString(16).padStart(32,'0')})}),
     daily:(id,enabled)=>fetch(base+'/api/v1/preferences/daily-update',enabled===undefined
@@ -71,6 +75,33 @@ test('geschützter Pilot prüft das Konto vor jeder Suche, trennt Kontingente un
   assert.equal((await (await app.daily(alpha,true)).json()).enabled,true);
   assert.equal((await (await app.daily(beta)).json()).enabled,false);
   assert.equal((await (await app.daily(alpha)).json()).enabled,true);
+});
+
+test('gemeinsamer App-Client nutzt nach dem Einmalcode den echten geschützten Suchpfad',async t=>{
+  const pilot=await fixture(t,async(_url,options)=>{
+    return options.headers.Authorization==='Bearer '+token(alpha)?Response.json(user(alpha)):new Response(null,{status:401});
+  });
+  const session=createPilotSession({authOrigin,publishableKey,approvedOrigin:'https://udi.example.com',fetchImpl:async(url,options)=>{
+    const destination=new URL(url);
+    if(destination.origin===authOrigin) {
+      if(destination.pathname==='/auth/v1/otp')return Response.json({});
+      assert.equal(destination.pathname,'/auth/v1/verify');
+      return Response.json({access_token:token(alpha),expires_in:120,token_type:'bearer'});
+    }
+    return pilot.fetchSearch(url,options);
+  }});
+  const {query,marketId,deliveryCountry,currency}=request;
+  const search=platform=>discoverOffers({query,marketId,deliveryCountry,currency},{platform,client:session});
+  assert.equal((await search('ios')).kind,'authentication-required');
+  assert.equal((await session.requestCode('alpha@example.com')).kind,'code-requested');
+  assert.equal((await session.verifyCode('123456')).kind,'signed-in');
+  for(const platform of ['android','ios']) {
+    const response=await search(platform);
+    assert.equal(response.kind,'results');
+    assert.deepEqual(response.items,[]);
+  }
+  session.signOut();
+  assert.equal((await search('android')).kind,'authentication-required');
 });
 
 test('Pilot sperrt anonyme und unbestätigte Konten und bleibt bei defektem Auth-Dienst geschlossen',async t=>{

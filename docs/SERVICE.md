@@ -19,6 +19,12 @@ Für diese Fassung gilt das kostenlose Kontingent von drei abgeschlossenen Suche
 
 Zur Abnahme auf Geräten braucht es ein getrennt freigegebenes UDI-HTTPS-Ziel vor dem Loopback-Dienst, ein eigenes Supabase-Testprojekt mit E-Mail-Einmalcode und zwei Testkonten, die geschützte native Sitzungsablage sowie die konfigurierte App-Verbindung. Setze in der Vorstufe ausschliesslich Testkonten und eine separate Datenbank ein. `tests/pilot-service.test.mjs` prüft lokal die tatsächlichen API-Routen mit synthetischen Antworten des Auth-Anbieters und Quellenprüfers. Für die Live-Abnahme gelten die echten Anbieterantworten.
 
+### Client für die E-Mail-Code-Anmeldung
+
+`src/pilot-session.mjs` verbindet `requestCode`, `verifyCode`, `signOut` und den typisierten Suchclient. Er verlangt ein fest konfiguriertes Auth-Projekt und ein separates freigegebenes HTTPS-Ziel für den UDI-Dienst. Der Pilot fordert Codes für bestehende Konten an. Für die Zulassung prüft der Suchdienst das Token und die erlaubte Konto-ID bei jedem Zugriff. Das Testprojekt muss die Mailvorlage mit dem sechsstelligen Code verwenden. [Supabase-E-Mail-Code](https://supabase.com/docs/guides/auth/auth-email-passwordless)
+
+Das Zugangstoken verbleibt für die erste Pilotprobe nur im Arbeitsspeicher. Eine lokale Abmeldung beendet die Sitzung und laufende Aufrufe. Ein bereits ausgestelltes Token bleibt beim Anbieter bis zu dessen Ablauf oder Widerruf gültig. Ein Neustart des Clients erfordert einen neuen Code. Persistente Sitzungen brauchen später eine geeignete native Ablage und einen gesondert geprüften Widerruf. Die App lädt diesen Client erst mit freigegebener Testkonfiguration und Anmeldeoberfläche. Die automatisierte Integrationsprüfung verwendet beide Plattformzweige, echte lokale UDI-HTTP-Aufrufe und klar synthetische Auth-Antworten.
+
 ## Neu freigegebene Domain ·24.11.2026
 
 [Ausdrückliche erneute Freigabe](requirements/2026-11-24-domain-authorization.md): soundweave.stream darf für UDI verwendet werden. [Öffentliche DNS-Prüfung19:33:34Z](evidence/2026-11-24-domain-public.json) bestätigt Cloudflare-Nameserver. Apex-A/AAAA liefern NOERROR ohne Adressantwort; udi.soundweave.stream/A liefert NXDOMAIN. Dies belegt weder freie Zone noch ungenutzte Mail-/andere Subdomains, kein Hostingkonto oder geschützter Dienst. Bestehende Einträge werden nicht verändert. Ein erster Node-DNS-Versuch scheiterte am lokalen Resolvertransport; die dokumentierte HTTPS-DNS-Antwort ist davon getrennt.
