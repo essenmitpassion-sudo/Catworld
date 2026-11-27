@@ -2,7 +2,7 @@
 
 ## Abschlusscheck P0–P3 · 27.11.2026
 
-Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) belegt Preiszustände, Modellvergleich, Kontoschutz, Spracheingabe, Kosten und beide nativen Profile. Der iOS-Simulator bestand den Testdienst-Ablauf. Der Android-Emulator bestand Start und Testanmeldung, stoppte im ersten Lauf beim Testpreis. Der korrigierte Code ist lokal geprüft und läuft separat in Native-CI.
+Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) belegt Preiszustände, Modellvergleich, Kontoschutz, Spracheingabe, Kosten und beide nativen Profile. Der iOS-Simulator bestand den Testdienst-Ablauf. Der korrigierte Stand bestand den Testdienst-Ablauf auch auf dem Android-Emulator. Die iOS-Wiederholungsprüfung desselben Code-Stands läuft.
 
 ## Isolierter nativer Testdienst · 27.11.2026
 

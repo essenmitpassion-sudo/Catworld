@@ -1,0 +1,37 @@
+{
+  "testedCommit": "fb329327ea3ca15fc66bbe638e7f4428f2c70684",
+  "run": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46076078970",
+  "data": "synthetic",
+  "physicalDevices": false,
+  "jobs": [
+    {
+      "platform": "Android emulator",
+      "profile": "fixture",
+      "job": 140763997439,
+      "conclusion": "success",
+      "anonymisedLog": [
+        "2026-11-27T22:22:48.5157385Z BUILD SUCCESSFUL in 1m 22s",
+        "2026-11-27T22:24:19.0771588Z Android fixture wall clock minus runner, milliseconds: {\"lower\":-509,\"upper\":-471}",
+        "2026-11-27T22:24:24.3042073Z Android fixture: APK installed on the disposable emulator",
+        "2026-11-27T22:24:36.4698431Z Android fixture: launched installed app (DE)",
+        "2026-11-27T22:24:47.6639846Z Android fixture: protected login, rejected code and explicit search gate passed",
+        "2026-11-27T22:24:49.3514468Z Android fixture: protected search and incomplete CHF 99.00 price passed; account search saved",
+        "2026-11-27T22:24:51.4645308Z Android fixture: confirmed CHF 104.00 total and disabled seller link passed",
+        "2026-11-27T22:24:53.5876706Z Android fixture: service error displayed, old offers cleared, draft retained and Plus usage stayed at 2 of 3",
+        "2026-11-27T22:25:02.5343304Z Android fixture: sign-in, Plus usage and protected saved search restored after force-stop/relaunch",
+        "2026-11-27T22:25:02.5606399Z Runner loopback fixture requests: {\"otp\":2,\"verify\":1,\"partial\":1,\"confirmed\":1,\"unavailable\":1,\"list\":1,\"save\":1}"
+      ]
+    },
+    {
+      "platform": "Android emulator",
+      "profile": "unconnected",
+      "job": 140763997482,
+      "conclusion": "success",
+      "anonymisedLog": [
+        "2026-11-27T22:22:39.3700941Z BUILD SUCCESSFUL in 1m 6s",
+        "2026-11-27T22:24:19.8295268Z Android: microphone explanation can open and close before requesting permission.",
+        "2026-11-27T22:24:38.7648542Z Android: saved searches and CH context survived force-stop/relaunch; German selection preserved."
+      ]
+    }
+  ]
+}
