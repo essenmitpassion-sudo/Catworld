@@ -1,5 +1,18 @@
 # Universal Deal Intelligence
 
+## Persönlich testbare App · 28.11.2026
+
+[Originalauftrag P0–P4](docs/requirements/2026-11-28-testable-app.md). Ausgangspunkt ist der saubere Stand 5f8ae9d auf development/udi. 198 Tests wurden im Checkout erneut ausgeführt. Letzter nativer Prüflauf auf fb32932 mit installiertem Testprofil auf Android-Emulator und iOS-Simulator. Der iOS-Standardlauf stoppte nach dem Tipp auf «Speak». Auf dem Windows-Host fehlen adb und Xcode. Physische Geräte wurden nicht geprüft.
+
+| Schritt | Umsetzung und Abnahme |
+|---|---|
+| P1 · iOS-Diktat | Eingangsaktion und Berechtigungsdialog getrennt prüfen. Native Spracherkennung und Abbruchvertrag beachten. Gleiche Eingabe und derselbe Fallback auf Android. Erst rot und grün in der gemeinsamen Oberfläche, danach isolierte native Kontrolle je Plattform. |
+| P2 · Suche | Bestehenden Testdienst um deterministische leere, langsame und widersprüchliche Antworten ergänzen. Wiederholung, Abbruch, Zeitüberschreitung, unveränderten Entwurf und gesperrte Händlerlinks durch den App-Client testen. |
+| P3 · Persönlicher Start | Auf Windows die bestehende Oberfläche mit einem lokalen Starter und demselben Testdienst zugänglich machen. Die Nutzung im Browserfenster als solche kennzeichnen. Native Buildprofile auf Android-Emulator und iOS-Simulator prüfen. |
+| P4 · Kritische Nebenpfade | Fokus auf Start, Navigation, lokale Wiederherstellung, Fehler und Vertrauensgrenzen. Bestätigte Testblocker beheben. Prüfumgebung und offenen Geräteschritt im Nachweis führen. |
+
+HTTPS-Testdienst und echte getrennte Konten folgen vor einem geschützten Pilot, sobald die Kernabläufe stabil sind. Dann Anmeldung, Wiederherstellung, Händlersuche und Zugriffsschutz auf beiden Plattformen abnehmen. Bis dahin gilt der isolierte Testdienst.
+
 ## Abschlusscheck P0–P3 · 27.11.2026
 
 Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) führt aktuelle Code-, Automations- und Plattformnachweise sowie die konkreten Freigaben für den Live-Betrieb. Die vier Preiszustände, der reproduzierbare Modellvergleich und der isolierte native Testdienst wurden getrennt geprüft und in Git gesichert.
