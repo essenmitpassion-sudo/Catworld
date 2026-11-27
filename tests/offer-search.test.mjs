@@ -84,3 +84,14 @@ test('ein bekannter Suchsatz erreicht den Clientvertrag mit bindendem Budget und
   assert.deepEqual(tight.items,[]);
   assert.equal(tight.excluded,3);
 });
+
+test('regionale Modellnummer bleibt vom Quellenabruf bis zum geschützten Client vollständig',async()=>{
+  const ctx=context();
+  const wanted={...input,query:'MU-PE1T0S/EU'};
+  const search=createOfferSearch({now:()=>now,verify:async item=>fixture(item)});
+  const raw=await search(wanted,ctx);
+  const accepted=parseDealReply(serializeScanReply(raw,{input:wanted,requestId:ctx.requestId},now),wanted,now,false,ctx.requestId);
+  assert.equal(accepted.items.length,1);
+  assert.equal(accepted.items[0].mpn,'MU-PE1T0S/EU');
+  assert.equal(accepted.items[0].check.total,null);
+});

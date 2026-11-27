@@ -3,7 +3,7 @@ import {searchContext} from './markets.mjs';
 import {criteriaFor,acceptsOffer} from './criteria.mjs';
 import {costs,isAmount} from './costs.mjs';
 import {sourceFor} from './sources.mjs';
-import {catalog} from './deals.mjs';
+import {catalog,partNumbers} from './deals.mjs';
 /** @typedef {import('./deal-types.d.ts').SearchInput} SearchInput */
 /** @typedef {import('./deal-types.d.ts').DealReply} DealReply */
 /** @typedef {import('./deal-types.d.ts').Offer} Offer */
@@ -34,7 +34,7 @@ export function prepareSearch(input) {
 /** @param {unknown} raw @param {SearchInput} input @param {number} now @param {boolean} allowTestData @param {string} requestId @returns {DealReply} */
 export function parseDealReply(raw,input,now,allowTestData,requestId) {
   const data=record(raw),context=searchContext(input),criteria=criteriaFor(input);
-  const requestedMpn=[...input.query.toUpperCase().matchAll(/\b[A-Z]{2,6}-[A-Z0-9]{5,}\b/g)].map(match=>match[0]).find(value=>/\d/.test(value));
+  const [requestedMpn]=partNumbers(input.query);
   if(data.requestId!==requestId||data.schemaVersion!==1||!['live','test'].includes(/** @type {string} */(data.dataMode))||(data.dataMode==='test'&&!allowTestData))throw new Error('Unsupported response');
   if(data.marketId!==context.marketId||data.deliveryCountry!==context.deliveryCountry||data.currency!==context.currency)throw new Error('Wrong market');
   const c=record(data.criteria);

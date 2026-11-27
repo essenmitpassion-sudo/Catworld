@@ -1,5 +1,9 @@
 # Status · 25.11.2026
 
+## Suche nach Merkmalen · 27.11.2026
+
+Die Pilotabdeckung wächst von einer auf drei konkrete Varianten. UDI findet die externe 1-TB-SSD mit USB-C ohne Modellnamen in DE/EN und prüft regionale Herstellernummern vollständig. Vier bisher leere passende Anfragen lieferten frische Teilbelege. Gegenproben für falsche Kapazität, falschen Anschluss oder zu wenig Angaben verursachten keinen Händlerabruf. 172 Tests und beide Live-Browserabläufe bestanden. Händler-Endpreise und ein breiterer Quellenzugang bleiben offen. [Vergleich](docs/evidence/2026-11-27-catalog-intent.md).
+
 ## One-Touch-Suche · 27.11.2026
 
 Die gemeinsame Suche findet die bekannte Schweizer Pilotvariante auch in vollständigen deutschen und englischen Kaufwünschen. Der Vorher-Nachher-Vergleich mit acht Aufgaben zeigte 1 → 3 passende Teilbelege bei drei passenden Anfragen und 2 → 0 falsche Zuordnungen bei zwei Gegenproben. Ein frischer DQ-Abruf pro Durchlauf, null Modellaufrufe. Artikelpreis zur Prüfung CHF 439, Gesamtkosten und Lieferziel offen. Beide Browserabläufe führten vom sichtbaren Suchknopf über den Deal Passport zur realen Händlerseite. 168 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Native Live-Abnahme, breitere Abdeckung und externer Wettbewerbsvergleich stehen aus. [Messprotokoll](docs/evidence/2026-11-27-one-touch-search.md).

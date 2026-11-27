@@ -48,3 +48,23 @@ test('einzelne Variantenwörter oder ein ausgeschlossener Produktname lösen kei
     assert.deepEqual(await catalogSearch({query, domains: ['dq-solutions.ch']}), [], query);
   }
 });
+
+test('explizite Produktmerkmale decken DE und EN ab und lassen unbekannte Anforderungen bindend', async () => {
+  const domains=['dq-solutions.ch'];
+  const matches=new Map([
+    ['Ich suche eine externe SSD 1 TB USB-C bis CHF 350.','MU-PE1T0S/EU'],
+    ['I need a 1 TB portable SSD USB-C up to CHF 350.','MU-PE1T0S/EU'],
+    ['Samsung 2 TB 990 EVO Plus','MZ-V9S2T0BW'],
+    ['MU-PE1T0S/EU','MU-PE1T0S/EU'],
+    ['Samsung 990 PRO 2 TB','MZ-V9P2T0BW'],
+    ['990 PRO 2 TB ohne Kühlkörper','MZ-V9P2T0BW'],
+  ]);
+  for (const [query,mpn] of matches) {
+    assert.deepEqual((await catalogSearch({query,domains})).map(row=>row.snippet),[mpn],query);
+  }
+  for (const query of ['externe SSD 2 TB USB-C','external SSD 1 TB Thunderbolt','1 TB SSD',
+    'external 1 TB SSD USB-A','external SSD 1 TB USB-C oder 2 TB','MU-PE1T0S/US',
+    'external SSD 1 TB USB-C,-Black','external SSD 1 TB USB-C/−Black']) {
+    assert.deepEqual(await catalogSearch({query,domains}),[],query);
+  }
+});

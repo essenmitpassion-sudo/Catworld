@@ -424,9 +424,12 @@ function renderWebResults(result, query) {
     source.prepend(icon('shop'));
     heading.append(source, element('span', m('Teilweise geprüft'), 'badge'));
     const check = item.check;
+    const product = catalog.find(product => product.mpn === check.mpn && product.sources.some(source => source.url === item.url));
     const layout = element('div', null, 'offer-layout');
     const identity = element('div');
-    identity.append(element('h3', item.title));
+    identity.append(element('h3', product
+      ? m('{name} · {variant}',()=>({name:product.name,variant:t(product.variant)}))
+      : item.title));
     if (check.mpn) identity.append(element('p', check.mpn, 'price-caption'));
     const amount = element('div', null, 'offer-cost');
     amount.append(element('p',m('{value}',()=>({value:money(check.total??check.price)})), 'offer-price'),
@@ -460,9 +463,8 @@ function renderWebResults(result, query) {
     });
     const actions = element('div', null, 'actions');
     actions.append(action);
-    const knownProduct = catalog.find(product => product.sources.some(source => source.url === item.url));
-    if (!result.testData && knownProduct && check.mpn === knownProduct.mpn) {
-      actions.append(productAction(m('Deal Passport'), 'passport', knownProduct, item.source));
+    if (!result.testData && product) {
+      actions.append(productAction(m('Deal Passport'), 'passport', product, item.source));
     }
     box.append(details, actions);
     return box;

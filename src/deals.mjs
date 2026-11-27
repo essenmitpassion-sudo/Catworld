@@ -5,6 +5,7 @@ export { costFields, isAmount } from './costs.mjs';
 
 export const catalog = [{
   name: 'Samsung 990 PRO',
+  model: '990 PRO',
   variant: '2 TB · ohne Kühlkörper',
   mpn: 'MZ-V9P2T0BW',
   compatibility: 'Für einen M.2-2280-Steckplatz mit NVMe-Unterstützung. PCIe 4.0 für die volle Schnittstellengeschwindigkeit.',
@@ -16,7 +17,35 @@ export const catalog = [{
     { seller: 'Conrad', marketId:'CH',sourceId:'conrad.ch',url: 'https://www.conrad.ch/de/p/samsung-990-pro-2-tb-interne-m-2-pcie-nvme-ssd-2280-pcie-nvme-40-x4-retail-mz-v9p2t0bw-2705384.html' },
     { seller: 'DQ Solutions', marketId:'CH',sourceId:'dq-solutions.ch',url: 'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011' },
   ],
+}, {
+  name: 'Samsung 990 EVO Plus',
+  model: '990 EVO Plus',
+  variant: '2 TB · M.2 2280',
+  mpn: 'MZ-V9S2T0BW',
+  compatibility: 'Für einen M.2-2280-Steckplatz mit NVMe-Unterstützung.',
+  manufacturer: 'https://www.samsung.com/ch/memory-storage/nvme-ssd/990-evo-plus-2tb-nvme-pcie-gen-4-mz-v9s2t0bw/',
+  terms: 'samsung 990 evo plus 2tb nvme m2 2280 ssd',
+  sources: [
+    { seller: 'DQ Solutions', marketId:'CH', sourceId:'dq-solutions.ch', url:'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-evo-plus-nvme-m-2-ssd-m-2-hs2010' },
+  ],
+}, {
+  name: 'Samsung T7 Shield',
+  model: 'T7 Shield',
+  variant: '1 TB · Schwarz',
+  mpn: 'MU-PE1T0S/EU',
+  compatibility: 'Externe SSD mit USB-C. Unterstützt USB 3.2 Gen 2.',
+  manufacturer: 'https://www.samsung.com/ch/memory-storage/portable-ssd/t7-shield-1tb-black-external-storage-nvme-1050-mbs-mu-pe1t0s-eu/',
+  terms: 'samsung t7 shield 1tb ssd externe extern external portable usb c type typ schwarz black',
+  lookupGroups: [['ssd'], ['1tb'], ['externe', 'extern', 'external', 'portable'], ['usb c', 'usb typ c', 'usb type c']],
+  sources: [
+    { seller: 'DQ Solutions', marketId:'CH', sourceId:'dq-solutions.ch', url:'https://www.dq-solutions.ch/de/samsung-1-tb-t7-shield-portable-ssd-schwarz-hs1114' },
+  ],
 }];
+
+export function partNumbers(value) {
+  return [...value.toUpperCase().matchAll(/\b[A-Z]{2,6}-[A-Z0-9]{5,}(?:\/[A-Z0-9]+)?\b/g)]
+    .map(match => match[0]).filter(value => /\d/.test(value));
+}
 
 function tokens(value) {
   return value.toLowerCase().normalize('NFC')
@@ -32,13 +61,19 @@ export function search(query) {
   const request = withoutBudget(query).normalize('NFC').toLowerCase()
     .replace(/\s+/gu, ' ').replace(requestPrefix, '');
   // A minus attached to a search term expresses exclusion. Keep internal MPN hyphens.
-  if (/(?:^|[\s(])[-−][\p{L}\d]/u.test(request)) return [];
+  if (/(?:^|[^\p{L}\d])[-−][\p{L}\d]/u.test(request)) return [];
+  const identifiers = partNumbers(request);
   const queryWords = ' ' + tokens(request).join(' ') + ' ';
   return catalog.filter(product => {
+    if (identifiers.some(identifier => identifier !== product.mpn)) return false;
     const qualifier = product.qualifiers?.find(phrase => queryWords.includes(' ' + phrase + ' '));
     const remaining = (qualifier ? queryWords.replace(' ' + qualifier + ' ', ' ') : queryWords).trim();
     const available = new Set(tokens(product.terms + ' ' + product.mpn));
-    return remaining.length > 0 && remaining.split(' ').every(word => available.has(word));
+    const words = new Set(remaining.split(' '));
+    if (!remaining || [...words].some(word => !available.has(word))) return false;
+    const named = [product.model, product.mpn].some(identity => tokens(identity).every(word => words.has(word)));
+    return named || (product.lookupGroups?.every(group =>
+      group.some(phrase => queryWords.includes(' ' + phrase + ' '))) ?? false);
   });
 }
 

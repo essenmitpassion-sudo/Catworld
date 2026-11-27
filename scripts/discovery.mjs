@@ -1,9 +1,7 @@
 import { criteriaFor } from '../src/criteria.mjs';
-import { catalog } from '../src/deals.mjs';
+import { catalog, partNumbers } from '../src/deals.mjs';
 import {searchContext} from '../src/markets.mjs';
 import { sources as webSources } from './sources.mjs';
-const partNumbers = value => [...value.toUpperCase().matchAll(/\b[A-Z]{2,6}-[A-Z0-9]{5,}\b/g)]
-  .map(match => match[0]).filter(value => /\d/.test(value));
 
 export class InvalidSearch extends Error {
   name = 'InvalidSearch';
