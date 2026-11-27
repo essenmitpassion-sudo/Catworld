@@ -1,5 +1,9 @@
 # Universal Deal Intelligence
 
+## Eigenständiger Suchweg · 28.11.2026
+
+Der [Originalauftrag](docs/requirements/2026-11-28-search-design.md) folgt dem persönlichen Teststart. Die [Vorher-Prüfung und drei Designrichtungen](docs/evidence/2026-11-28-search-design-baseline.md) begründen den Sucharbeitsplatz mit Preisbeleg. Zuerst den Weg vom Start bis zum lesbaren ersten Angebot umsetzen. Danach dieselbe Bedienlogik für Leerzustand, Fehler, gespeicherte Suchen und kleine Ansichten prüfen. Freigabe anhand echter Vorschau, DE/EN-Läufen und separat ausgewiesener nativer Prüfungen.
+
 ## Persönlich testbare App · 28.11.2026
 
 [Originalauftrag P0–P4](docs/requirements/2026-11-28-testable-app.md). Ausgangspunkt ist der saubere Stand 5f8ae9d auf development/udi. 198 Tests wurden im Checkout erneut ausgeführt. Letzter nativer Prüflauf auf fb32932 mit installiertem Testprofil auf Android-Emulator und iOS-Simulator. Der iOS-Standardlauf stoppte nach dem Tipp auf «Speak». Auf dem Windows-Host fehlen adb und Xcode. Physische Geräte wurden nicht geprüft.
