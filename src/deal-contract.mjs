@@ -46,6 +46,10 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
   if(data.kind!=='results'||!Array.isArray(data.items)||data.items.length>3)throw new Error('Invalid results');
   const completedAt=stamp(data.completedAt);if(Date.parse(completedAt)>now)throw new Error('Future response');
   for(const key of ['unconfirmed','excluded'])if(data[key]!==undefined&&(!Number.isSafeInteger(data[key])||/** @type {number} */(data[key])<0||/** @type {number} */(data[key])>6))throw new Error('Invalid result count');
+  const missingCompleteCosts = data.missingCompleteCosts;
+  if (missingCompleteCosts !== undefined && (!criteria.completeCostsOnly
+    || typeof missingCompleteCosts !== 'number' || !Number.isSafeInteger(missingCompleteCosts)
+    || missingCompleteCosts < 0 || missingCompleteCosts > Number(data.excluded ?? 0))) throw new Error('Invalid incomplete-cost count');
   if(now-Date.parse(completedAt)>=300000)return {kind:'expired'};
   if(data.sourceMode!==undefined&&!['catalog','web'].includes(/** @type {string} */(data.sourceMode)))throw new Error('Invalid source mode');
   /** @type {Offer[]} */const items=[];const seen=new Set();let stale=0,excluded=0;
@@ -103,5 +107,6 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
   }
   if(stale&&!items.length&&!invalidations?.length)return {kind:'expired'};
   return {kind:'results',...base,items,completedAt,unconfirmed:stale+/** @type {number} */(data.unconfirmed??0),excluded:excluded+/** @type {number} */(data.excluded??0),
-    ...(invalidations===undefined?{}:{invalidations}),...(data.sourceMode?{sourceMode:/** @type {'catalog'|'web'} */(data.sourceMode)}:{})};
+    ...(invalidations===undefined?{}:{invalidations}),...(missingCompleteCosts?{missingCompleteCosts}:{}),
+    ...(data.sourceMode?{sourceMode:/** @type {'catalog'|'web'} */(data.sourceMode)}:{})};
 }

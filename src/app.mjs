@@ -378,6 +378,19 @@ function renderWebResults(result, query) {
     target.replaceChildren(note);
     return;
   }
+  if (result.kind === 'results' && !result.items.length && result.missingCompleteCosts > 0) {
+    const note = message(m('Kein Gesamtpreis bestätigt'), m('Für die infrage kommenden Angebote fehlen einzelne Kostenangaben.'));
+    const review = element('button', m('Kostenfilter prüfen'), 'text-button');
+    review.type = 'button';
+    review.addEventListener('click', () => {
+      const form = get('search-query').form;
+      form.querySelector('.search-options').open = true;
+      form.elements.completeCostsOnly.focus();
+    });
+    note.append(review);
+    target.replaceChildren(note);
+    return;
+  }
   if (result.kind !== 'results' || !result.items.length) {
     const messages = {
       disabled: m('Die Websuche ist in dieser Installation noch nicht verbunden.'),

@@ -37,7 +37,8 @@ async function until(read, label) {
 const live = process.argv.includes('--live');
 const liveEnglish=live&&process.argv.includes('--english');
 const liveByAttribute=live&&process.argv.includes('--attribute');
-const liveSecondSource=live&&process.argv.includes('--second-source');
+const liveCompleteCosts=live&&process.argv.includes('--endprice');
+const liveSecondSource=liveCompleteCosts||(live&&process.argv.includes('--second-source'));
 assert(!(liveByAttribute&&liveSecondSource),'Select one live scenario');
 const liveMpn=liveByAttribute?'MU-PE1T0S/EU':'MZ-V9P2T0BW';
 const liveSourceId=liveSecondSource?'shop.mixel.ch':'dq-solutions.ch';
@@ -305,7 +306,23 @@ try {
     if (live) {
       await evaluate("document.querySelector('#search-query').focus()");
       await type(liveQueries[liveEnglish?1:0]);
+      if(liveCompleteCosts) {
+        await pointerClick('.search-options summary');
+        await pointerClick('[name=completeCostsOnly]');
+      }
       await pointerClick('.primary-search');
+      if(liveCompleteCosts) {
+        const empty=liveEnglish?'No total price confirmed':'Kein Gesamtpreis bestätigt';
+        await until(()=>evaluate('document.querySelector("#web-results").textContent.includes('+JSON.stringify(empty)+')'),'live incomplete-cost outcome');
+        assert.equal(await evaluate("document.querySelectorAll('#web-results article').length"),0);
+        const receipt=JSON.parse(await readFile(join(profile,'checks.json'),'utf8')).at(-1);
+        const actual=receipt.checks.filter(check=>check.availability==='active').map(check=>check.sourceId);
+        assert.deepEqual(actual,pilotSourceDomains);
+        await pointerClick('#web-results button');
+        assert(await evaluate("document.activeElement.name==='completeCostsOnly'&&document.activeElement.checked"),'cost filter stays enabled and editable');
+        console.log(JSON.stringify({language:liveEnglish?'en':'de', outcome:empty, sources:actual, checkedAt:receipt.completedAt}));
+        continue;
+      }
       await until(() => evaluate('Boolean(document.querySelector('+JSON.stringify(liveOfferSelector)+'))'), 'live merchant offer');
       if(liveSecondSource) {
         assert.equal(await evaluate("document.querySelectorAll('#web-results article').length"),2);

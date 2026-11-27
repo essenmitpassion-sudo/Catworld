@@ -57,6 +57,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
   const invalidations = [];
   const items = [];
   let excluded = 0;
+  let missingCompleteCosts = 0;
   let interrupted = false;
   let evidence = false;
   // Bound detail-page requests independently of the number of search results.
@@ -108,6 +109,10 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
       const criteria = discovery.criteria ?? {};
       if (!acceptsOffer(check, criteria)) {
         excluded++;
+        const identified = candidate.mpn && check.seller
+          && (typeof check.condition === 'string' || (check.condition === null && source.id === 'shop.mixel.ch'));
+        if (identified && criteria.completeCostsOnly && summary.total === null
+          && acceptsOffer(check, { ...criteria, completeCostsOnly: false })) missingCompleteCosts++;
         if (canonicalOffer) invalidations.push({ url: candidate.url, checkedAt: check.checkedAt, olderOnly: true });
         continue;
       }
@@ -125,6 +130,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
   // Source downtime with no usable evidence is an interrupted search.
   if (interrupted && !evidence && !items.length) return { kind: 'unavailable' };
   return { kind: 'results',...context,items, unconfirmed: discovery.items.length - items.length - excluded,
-    excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url), invalidations,
+    excluded, ...(missingCompleteCosts ? { missingCompleteCosts } : {}),
+    criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url), invalidations,
     completedAt: new Date(now()).toISOString() };
 }

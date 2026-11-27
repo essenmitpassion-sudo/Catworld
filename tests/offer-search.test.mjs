@@ -149,3 +149,33 @@ test('alter Accept-Header behält den bisherigen geschützten Suchablauf', async
   assert(!checked.includes('shop.mixel.ch'));
   assert(!(await response.json()).items.some(item=>item.sourceId==='shop.mixel.ch'));
 });
+
+test('Endpreisfilter unterscheidet fehlende Kosten von Budget und Zustand', async () => {
+  const search=createOfferSearch({now:()=>now,verify:async item=>{
+    if (!['dq-solutions.ch','shop.mixel.ch'].includes(item.sourceId)) return;
+    const check=fixture(item);
+    return item.sourceId==='shop.mixel.ch'?{...check,condition:null}:check;
+  }});
+  for(const [extra,missingCompleteCosts] of [[{},2],[{maxPrice:'50'},0],[{condition:'new'},1]]) {
+    const wanted={...input,...extra,completeCostsOnly:true};
+    const ctx=context();
+    const raw=await search(wanted,ctx);
+    const actual=parseDealReply(serializeScanReply(raw,{input:wanted,requestId:ctx.requestId},now),wanted,now,false,ctx.requestId);
+    assert.deepEqual(actual.items,[]);
+    assert.equal(actual.excluded,2);
+    assert.equal(actual.missingCompleteCosts??0,missingCompleteCosts);
+  }
+});
+
+test('ein nicht identifizierter Webtreffer wird nicht als reine Kostenlücke gezählt', async () => {
+  const wanted={...input,query:'Portable SSD',completeCostsOnly:true};
+  const search=createOfferSearch({now:()=>now,
+    webSearch:async()=>[{title:'Portable SSD',url:'https://www.dq-solutions.ch/de/ssd-extern-hs99999'}],
+    verify:async item=>fixture(item),
+  });
+  const ctx=context();
+  const raw=await search(wanted,ctx);
+  const accepted=parseDealReply(serializeScanReply(raw,{input:wanted,requestId:ctx.requestId},now),wanted,now,false,ctx.requestId);
+  assert.deepEqual(accepted.items,[]);
+  assert.equal(accepted.missingCompleteCosts??0,0);
+});

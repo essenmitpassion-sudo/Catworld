@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Endpreisfilter · 27.11.2026
+
+Für die Samsung 990 PRO 2 TB wurden im geschützten lokalen Pilot zwei passende Angebote mit offenem Endpreis nachgewiesen. Beim engeren Budget von CHF 200 war keines der beiden sonst passend. Mit Neuwarefilter blieb ein passender Teilbeleg. Die deutsche und englische Oberfläche führt bei fehlender Preisbestätigung zu den bestehenden Suchkriterien zurück. Verbindliche Gesamtkosten und native Live-Abnahme bleiben offen. 186 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Nachweis](docs/evidence/2026-11-27-endprice-filter.md).
+
 ## Zweite Schweizer Händlerquelle · 27.11.2026
 
 MIXEL Shop und DQ Solutions wurden für dieselbe Samsung 990 PRO 2 TB ohne Kühlkörper im geschützten lokalen Pilot geprüft. Beide meldeten aktiven Bestand und einen CHF-Artikelpreis. Bei MIXEL bleiben der Produktzustand und der verbindliche Lieferpreis offen. Die App zeigt beide als Teilbelege. Vollständige Endpreise und native Live-Abnahme bleiben offen. [Quellen- und Prüfnachweis](docs/evidence/2026-11-27-mixel-second-source.md).

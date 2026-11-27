@@ -207,3 +207,12 @@ test('ein neuer Preis über Budget verdrängt den alten Preis, während derselbe
   assert.equal(compare(product,current,next).offers.find(offer=>offer.url===source.url).observation.price,20000);
   assert.deepEqual(applyChecks(current,catalog,reply),current,'filtering a known price never deletes the equal-time quote');
 });
+
+test('Endpreis-Metadaten gelten nur im Kostenfilter und für ausgefilterte Angebote', () => {
+  const restricted={...input,completeCostsOnly:true};
+  const unavailable={...fixture(),criteria:criteriaFor(restricted),items:[],excluded:1};
+  for(const missingCompleteCosts of [2,-1,0.5,'1',null]) {
+    assert.throws(()=>serializeScanReply({...unavailable,missingCompleteCosts},{requestId,input:restricted},now));
+  }
+  assert.throws(()=>serializeScanReply({...fixture(),items:[],excluded:1,missingCompleteCosts:1},{requestId,input},now));
+});
