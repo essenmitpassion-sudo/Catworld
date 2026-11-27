@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Simulierter Vergleich der Modellwege · 27.11.2026
+
+Der reproduzierbare DE/EN-Vergleich verarbeitet zwölf Fälle über den bestehenden Suchkern und Clientvertrag. In den elf Qualitätsfällen lag die Einzelmodellvariante bei 11/11 erwarteten sicheren Entscheidungen. Die simulierte Gegenprüfung erreichte ebenfalls 11/11 mit zwei zusätzlichen Aufrufen und ohne zusätzlichen gelösten Fall. Der separate Ausfalltest bestätigte den begrenzten Ersatzversuch und die Stopps bei Budgetmangel und Abbruch. Zweiter tatsächlich unabhängiger Anbieter, Live-Kosten und echter Qualitätsgewinn bleiben offen. [Vergleichsprotokoll](docs/evidence/2026-11-27-multi-ai-replay.md).
+
 ## Preiszustände und Quellen · 27.11.2026
 
 Die Suche und der Deal Passport zeigen vier getrennte Preiszustände. Der Antwortvertrag prüft vollständige Kosten, angerechneten Rabatt, Betrag und Lieferziel. Die erneute Live-Prüfung fand bei DQ Solutions CHF 439.00 und bei MIXEL CHF 450.90 mit verfügbarem Bestand. Beide Endpreise bleiben unvollständig. Der bestätigte Zustand wurde im synthetischen Vertragstest ausgeführt. [Quellen- und Prüfnachweis](docs/evidence/2026-11-27-price-states.md).
