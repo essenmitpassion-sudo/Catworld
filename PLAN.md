@@ -1,5 +1,16 @@
 # Universal Deal Intelligence
 
+## Einfache KI-Suche · 28.11.2026
+
+[Originalauftrag P0–P7](docs/requirements/2026-11-28-simple-ai-search.md). Erster belastbarer Ablauf ist eine frei formulierte Anfrage zu einer Schweizer SSD mit konkreter Variante und Budget. Der bestehende Katalogweg prüft zulässige Händlerquellen direkt. Der Suchwunsch braucht dafür weder einen Modellwähler noch Zugangsdaten eines KI-Anbieters. Aktuelle Produkt- und Preisbelege entscheiden, was die App anzeigen darf.
+
+| Pareto-Etappe | Abnahme und Abhängigkeiten |
+|---|---|
+| 1 · P0/P1/P4/P5/P7 | Kurze Antwort vor den geprüften Angeboten. Offene Endpreise, geprüfte Beträge und gesicherte Lieferziele unterscheiden. Natürlich formulierten CH-Kaufwunsch, Quellenlücke, Budget und DE/EN im bestehenden Ablauf prüfen. Mit dem manuellen Rechercheweg vergleichen. |
+| 2 · P2/P3 | Direkte Quelle für bekannte Varianten. Anbieterroute nur geschützt, offiziell integriert und begrenzt. Vor einem zweiten Anbieter Beleg für Qualitätsgewinn und reale Kosten. Die vorhandene Tarifrechnung mit Quellen- und Betriebsannahmen prüfen. |
+| 3 · P1/P7 | Android und iOS separat mit klar gekennzeichneten Testdaten abnehmen. Weitere Kategorien erst mit nutzbaren erlaubten Quellen und gesicherten Daten- und Kostengrenzen. Einen echten Pilot separat freigeben. |
+| P6 · durchgängig | Vor Änderungen Arbeitsstand prüfen. Reproduzierbare Etappen verifizieren, separat committen und den autorisierten Branch zurücklesen. |
+
 ## Eigenständiger Suchweg · 28.11.2026
 
 Der [Originalauftrag](docs/requirements/2026-11-28-search-design.md) folgt dem persönlichen Teststart. Die [Vorher-Prüfung und drei Designrichtungen](docs/evidence/2026-11-28-search-design-baseline.md) begründen den Sucharbeitsplatz mit Preisbeleg. Der [Vorher-Nachher-Nachweis](docs/evidence/2026-11-28-search-design.md) belegt den sichtbaren ersten Preis, den überarbeiteten Einstieg und den Rückweg zum Suchwunsch. DE/EN, Fehler, gespeicherte Suchen und kleine Ansichten wurden in der laufenden Vorschau geprüft. Physische Geräte stehen für Diktat, Bildschirmtastatur und Screenreader aus.
