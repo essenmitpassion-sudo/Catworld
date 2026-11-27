@@ -30,3 +30,7 @@ Die neue reale Prüfroutine ist npm run live -- --attribute für Deutsch und npm
 ## Stichprobe gegen Preisvergleich
 
 Die öffentliche Suche von Toppreise.ch führt dieselben Varianten und weist bei der T7 Shield mehrere Händler und Versandangaben aus. Die Seiten wurden als öffentliche Produktansicht geprüft. Die Händlerangebote wurden dort nicht am Checkout bestätigt. Diese Stichprobe belegt die geringere Breite des UDI-Pilots und ist kein vollständiger Wettbewerbsbenchmark oder Datenzugang für UDI. [T7 Shield im Preisvergleich](https://www.toppreise.ch/preisvergleich/Externe-Solid-State-Drives-SSD/SAMSUNG-Portable-SSD-T7-Shield-USB-C-3-2-Gen-2-1-MU-PE1T0S-EU-p691217?posf=1&pselav=1) · [990 EVO Plus im Preisvergleich](https://www.toppreise.ch/produktsuche?q=Samsung+990+EVO+Plus+SSD+2TB).
+
+## Rückkehr zur Eingabe
+
+Ausgangscommit [0e8aaa0](https://github.com/essenmitpassion-sudo/Catworld/commit/0e8aaa0). Gegenprobe im Chromium-Ablauf für die geschützte Suche bei 320 px. Bei einer 422-Antwort setzte die bisherige Folgeaktion den Suchwunsch Kingston NV3 2 TB auf das Beispiel zurück. Die Werte CHF 350, Zustand Neu und «nur mit vollständigen Kosten» gingen dabei verloren. Die neue Aktion fokussiert den vorhandenen Suchwunsch und erhält alle drei Kriterien. Seit dem Ergebnis bleibt der Zähler bei einer HTTP-Anfrage, bis die bearbeitete Anfrage bewusst abgeschickt wird. Auf DE/EN bestanden, mit synthetischem Pilotdienst. 172/172 Tests, Typprüfung, Build und Chromium-Smoke bestanden.

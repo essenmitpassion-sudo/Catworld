@@ -371,17 +371,10 @@ function renderWebResults(result, query) {
   if(result.kind==='outside-catalog') {
     const note=message(m('Für diese Suche fehlt eine prüfbare Quelle'),
       m('Der Pilot kann nur bestimmte Angebote prüfen. Dein Suchkontingent bleibt unverändert.'));
-    const example=element('button',m('Beispielsuche übernehmen'),'text-button');
-    example.type='button';
-    example.addEventListener('click',()=>{
-      get('search-query').form.reset();
-      get('results').replaceChildren();
-      target.replaceChildren();
-      get('suche').classList.remove('has-search');
-      get('search-home').hidden=false;
-      get('search-home').querySelector('[data-example]').click();
-    });
-    note.append(example);
+    const edit=element('button',m('Suchwunsch bearbeiten'),'text-button');
+    edit.type='button';
+    edit.addEventListener('click',()=>get('search-query').focus());
+    note.append(edit);
     target.replaceChildren(note);
     return;
   }

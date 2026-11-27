@@ -17,7 +17,7 @@ Für jeden Zugriff prüft die Anwendung das persönliche Token beim fest konfigu
 
 Für diese Fassung gilt das kostenlose Kontingent von drei abgeschlossenen Suchen pro UTC-Kalendermonat. Das SQLite-Kontingent und die getrennte Tagesupdate-Einwilligung überstehen Neustarts. Die Suche nutzt den zugelassenen Schweizer Katalogpfad mit DQ-Prüfer. Anfragen ausserhalb des Katalogs brauchen einen weiteren freigegebenen Rechercheweg. Die Pilotkonfiguration enthält keinen kostenpflichtigen Rechercheadapter, keinen Zustellkanal und keine Store-Produkte.
 
-Ausserhalb des aktuell bestückten Katalogs antwortet der Dienst mit HTTP 422 und `outside-catalog`. Die laufende Reservierung wird freigegeben. Die Oberfläche erklärt die Quellenlücke und bietet an, die Beispielsuche in das Formular zu übernehmen. Erst ein bewusster weiterer Tipp startet diese Suche.
+Ausserhalb des aktuell bestückten Katalogs antwortet der Dienst mit HTTP 422 und `outside-catalog`. Die laufende Reservierung wird freigegeben. Die Oberfläche erklärt die Quellenlücke und führt zur vorhandenen Eingabe zurück. Suchwunsch und Kaufkriterien bleiben bearbeitbar. Erst ein bewusster weiterer Tipp startet eine neue Suche.
 
 Zur Abnahme auf Geräten braucht es ein getrennt freigegebenes UDI-HTTPS-Ziel vor dem Loopback-Dienst, ein eigenes Supabase-Testprojekt mit E-Mail-Einmalcode und zwei Testkonten, die geschützte native Sitzungsablage sowie die konfigurierte App-Verbindung. Setze in der Vorstufe ausschliesslich Testkonten und eine separate Datenbank ein. `tests/pilot-service.test.mjs` prüft lokal die tatsächlichen API-Routen mit synthetischen Antworten des Auth-Anbieters und Quellenprüfers. Für die Live-Abnahme gelten die echten Anbieterantworten.
 

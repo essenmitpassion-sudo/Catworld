@@ -1,8 +1,10 @@
-# Status · 25.11.2026
+# Status · 27.11.2026
 
 ## Suche nach Merkmalen · 27.11.2026
 
 Die Pilotabdeckung wächst von einer auf drei konkrete Varianten. UDI findet die externe 1-TB-SSD mit USB-C ohne Modellnamen in DE/EN und prüft regionale Herstellernummern vollständig. Vier bisher leere passende Anfragen lieferten frische Teilbelege. Gegenproben für falsche Kapazität, falschen Anschluss oder zu wenig Angaben verursachten keinen Händlerabruf. 172 Tests und beide Live-Browserabläufe bestanden. Händler-Endpreise und ein breiterer Quellenzugang bleiben offen. [Vergleich](docs/evidence/2026-11-27-catalog-intent.md).
+
+Wenn keine Quelle zum Wunsch passt, führt «Suchwunsch bearbeiten» zurück zur ausgefüllten Eingabe. Die Gegenprobe im geschützten Suchablauf bei 320 px bestätigte auf DE/EN, dass Suchtext, CHF 350, Zustand und Kostenfilter erhalten bleiben. Eine neue Anfrage startet erst bei erneutem Suchklick. Der frühere Beispielknopf setzte diese Daten zurück. [Dienstvertrag](docs/SERVICE.md#kontogeschützter-lokaler-pilot--25112026).
 
 ## One-Touch-Suche · 27.11.2026
 

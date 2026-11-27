@@ -832,11 +832,14 @@ try {
     await pointerClick('[data-pilot-code] [type=submit]');
     await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open && document.activeElement.matches('.primary-search')"),'confirmation returns to search');
     assert(await evaluate("document.querySelector('#search-query').value==='Kingston NV3 2 TB' && !window.qaPilotCalls.includes('/api/v1/search')"));
+    await evaluate("(()=>{const fields=document.querySelector('#search-query').form.elements;fields.maxPrice.value='350';fields.condition.value='new';fields.completeCostsOnly.checked=true})()");
     await pointerClick('.primary-search');
     const outside=language==='de'?'fehlt eine prüfbare Quelle':'No source can verify';
     await until(()=>evaluate(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(outside)})`),'supported-source boundary is explained');
     await pointerClick('#web-results button');
-    assert(await evaluate("document.querySelector('#search-query').value==='Samsung 990 PRO 2 TB' && window.qaPilotCalls.filter(path=>path==='/api/v1/search').length===1"));
+    assert.deepEqual(await evaluate("(()=>{const input=document.querySelector('#search-query'),fields=input.form.elements;return [input.value,fields.maxPrice.value,fields.condition.value,fields.completeCostsOnly.checked,window.qaPilotCalls.filter(path=>path==='/api/v1/search').length,document.activeElement===input]})()"),
+      ['Kingston NV3 2 TB','350','new',true,1,true], 'editing preserves every criterion and never starts another search');
+    await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
     await pointerClick('.primary-search');
     const limit=language==='de'?'Suchkontingent ist aufgebraucht':'used your search allowance';
     await until(()=>evaluate(`document.querySelector('#web-results').textContent.includes(${JSON.stringify(limit)})`),'explicit search reaches the protected client');

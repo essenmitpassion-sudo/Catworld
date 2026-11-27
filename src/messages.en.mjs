@@ -45,7 +45,7 @@ const base = {
   "Aktualisiere dein Betriebssystem, um dich im Pilot anzumelden. Du kannst deinen Wunsch weiterhin eingeben.":"Update your operating system to sign in to the pilot. You can still type what you need.",
   "Für diese Suche fehlt eine prüfbare Quelle":"No source can verify this search yet",
   "Der Pilot kann nur bestimmte Angebote prüfen. Dein Suchkontingent bleibt unverändert.":"The pilot can only check certain offers. Your search allowance stays the same.",
-  "Beispielsuche übernehmen":"Use example search",
+  "Suchwunsch bearbeiten":"Edit search request",
   "Tägliches Update": "Daily update",
   "Einstellung erneut laden": "Reload setting",
   "Tägliche Updates sind verfügbar, sobald Konto und Versand verbunden sind.": "Daily updates will be available once accounts and delivery are connected.",
