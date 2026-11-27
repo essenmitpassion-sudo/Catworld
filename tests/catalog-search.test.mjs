@@ -20,3 +20,31 @@ test('ein im Wunsch genanntes Budget verhindert die Katalogzuordnung nicht', asy
   const items = await catalogSearch({ query: 'Samsung 990 PRO 2 TB bis CHF 500', domains: ['dq-solutions.ch'] });
   assert.equal(items.length, 1);
 });
+
+test('vollständige Suchsätze finden bekannte Modelle und behalten die Variante', async () => {
+  for (const query of [
+    'Ich suche eine Samsung 990 PRO 2 TB ohne Kühlkörper bis CHF 500.',
+    'I am looking for a Samsung 990 PRO 2 TB without a heatsink, up to CHF 500.',
+    'Find me a Samsung 990 PRO 2000 GB without heatsink.',
+    'Samsung 990 PRO 2 TB (ohne Kühlkörper)',
+    'Ohne Kühlkörper: Samsung 990 PRO 2 TB',
+    'Ich suche eine Samsung 990 PRO 2 TB (ohne Kühlkörper) bis CHF 500.',
+  ]) {
+    const items = await catalogSearch({query, domains: ['dq-solutions.ch']});
+    assert.deepEqual(items.map(item => item.snippet), ['MZ-V9P2T0BW'], query);
+  }
+});
+
+test('einzelne Variantenwörter oder ein ausgeschlossener Produktname lösen keine Quellenprüfung aus', async () => {
+  for (const query of [
+    'I need a -Samsung 990 PRO 2 TB',
+    'Samsung 990 PRO 2 TB heatsink',
+    'ohne Samsung 990 PRO 2 TB',
+    'Ich suche eine Samsung 990 PRO 2 TB mit Kühlkörper.',
+    'I need a Samsung 990 PRO 1 TB without a heatsink.',
+    'I need a Samsung 990 PRO 2 TB without a heatsink for my PS5.',
+    'Samsung 990 PRO 2 TB ohne Kühlkörper mit Kühlkörper',
+  ]) {
+    assert.deepEqual(await catalogSearch({query, domains: ['dq-solutions.ch']}), [], query);
+  }
+});

@@ -9,7 +9,8 @@ export const catalog = [{
   mpn: 'MZ-V9P2T0BW',
   compatibility: 'Für einen M.2-2280-Steckplatz mit NVMe-Unterstützung. PCIe 4.0 für die volle Schnittstellengeschwindigkeit.',
   manufacturer: 'https://www.samsung.com/ch/support/model/MZ-V9P2T0BW/',
-  terms: 'samsung 990 pro 2tb ohne kühlkörper ohne heatsink nvme m2 2280 ssd',
+  terms: 'samsung 990 pro 2tb nvme m2 2280 ssd',
+  qualifiers: ['ohne kühlkörper', 'ohne heatsink', 'without a heatsink', 'without heatsink', 'no heatsink'],
   sources: [
     { seller: 'Digitec', marketId:'CH',sourceId:'digitec.ch',url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721' },
     { seller: 'Conrad', marketId:'CH',sourceId:'conrad.ch',url: 'https://www.conrad.ch/de/p/samsung-990-pro-2-tb-interne-m-2-pcie-nvme-ssd-2280-pcie-nvme-40-x4-retail-mz-v9p2t0bw-2705384.html' },
@@ -24,11 +25,20 @@ function tokens(value) {
     .replace(/\bm\.2\b/g, 'm2').match(/[\p{L}\d]+/gu) ?? [];
 }
 
+// Strip only complete request introductions. Variant words must match a whole catalog qualifier.
+const requestPrefix = /^(?:(?:ich suche(?: nach)?|ich brauche|ich möchte(?: kaufen)?|finde(?: mir)?) (?:eine[nrms]? |den |die |das )?|(?:i am looking for|i['’]m looking for|i need|i want(?: to buy)?|find(?: me)?) (?:an? |the )?)/u;
+
 export function search(query) {
-  const words = tokens(withoutBudget(query));
+  const request = withoutBudget(query).normalize('NFC').toLowerCase()
+    .replace(/\s+/gu, ' ').replace(requestPrefix, '');
+  // A minus attached to a search term expresses exclusion. Keep internal MPN hyphens.
+  if (/(?:^|[\s(])[-−][\p{L}\d]/u.test(request)) return [];
+  const queryWords = ' ' + tokens(request).join(' ') + ' ';
   return catalog.filter(product => {
+    const qualifier = product.qualifiers?.find(phrase => queryWords.includes(' ' + phrase + ' '));
+    const remaining = (qualifier ? queryWords.replace(' ' + qualifier + ' ', ' ') : queryWords).trim();
     const available = new Set(tokens(product.terms + ' ' + product.mpn));
-    return words.length > 0 && words.every(word => available.has(word));
+    return remaining.length > 0 && remaining.split(' ').every(word => available.has(word));
   });
 }
 

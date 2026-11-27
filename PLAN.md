@@ -1,5 +1,13 @@
 # Universal Deal Intelligence
 
+## One-Touch-Suchintelligenz · 27.11.2026
+
+Der erste P0-Schritt schliesst die Lücke zwischen konkretem Kaufwunsch in DE/EN und bereits prüfbarer Produktvariante. [Ausgangsbasis, Zielwerte und gemessene Resultate](docs/evidence/2026-11-27-one-touch-search.md).
+
+- [x] Bestehenden geschützten Suchpfad mit realer Händlerprüfung messen. Häufige vollständige Suchsätze zu einem exakten Variantenabgleich führen. Fehlzuordnungen für Kühlkörper und ausdrücklich ausgeschlossene Produkte verhindern. Budgetgrenze und offene Kosten übertragen.
+- [ ] Die nächste Engstelle ist die enge Quellen- und Katalogabdeckung. Die bestehende Rückfrage bei einem Zielwunsch praktisch mit alternativen Beschaffungswegen weiterführen, sobald eine zulässige Quelle eine passende Variante belegen kann. Anbieterzugang, Endpreis, native Live-Abnahme und Vergleich mit externen Suchwegen separat nachweisen. Erst daraus einen Wettbewerbsvorteil ableiten.
+
+
 ## Konto und Spracheingabe · Vertiefung vom 25.11.2026
 
 [Originalauftrag mit P0–P6](docs/requirements/2026-11-25-account-and-dictation.md). Kontoregeln, Abo und persönliche Speicherung werden im folgenden Kontoplan geführt. Hier kommen die Sprachabnahmen hinzu.

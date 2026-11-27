@@ -68,3 +68,19 @@ test('gemeinsamer Client durchläuft echten lokalen HTTP-Dienst und bestehenden 
   assert.equal(result.items[0].check.total,null);assert.equal(result.unconfirmed,2);
   assert(!JSON.stringify(result).includes('unit-user')&&!JSON.stringify(result).includes('unit-test-token'));
 });
+
+test('ein bekannter Suchsatz erreicht den Clientvertrag mit bindendem Budget und offenen Gesamtkosten', async () => {
+  const ctx=context();
+  const search=createOfferSearch({now:()=>now,verify:async item=>fixture(item)});
+  const query=budget=>({...input,query:'I need a Samsung 990 PRO 2 TB without a heatsink, up to CHF '+budget+'.'});
+  const allowed=query(500);
+  const scan=await search(allowed,ctx);
+  const result=parseDealReply(serializeScanReply(scan,{input:allowed,requestId:ctx.requestId},now),allowed,now,false,ctx.requestId);
+  assert.equal(result.criteria.maxTotal,50000);
+  assert.equal(result.items[0].mpn,'MZ-V9P2T0BW');
+  assert.equal(result.items[0].check.total,null);
+  assert.equal(result.items[0].budgetStatus,'unknown-total');
+  const tight=await search(query(99),ctx);
+  assert.deepEqual(tight.items,[]);
+  assert.equal(tight.excluded,3);
+});

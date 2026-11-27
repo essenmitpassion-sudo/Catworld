@@ -293,8 +293,10 @@ try {
     }
     if (live) {
       await evaluate("document.querySelector('#search-query').focus()");
-      await type(liveEnglish?'Samsung 990 PRO 2 TB up to CHF 500':'Samsung 990 PRO 2 TB bis CHF 500');
-      await key('Enter');
+      await type(liveEnglish
+        ? 'I am looking for a Samsung 990 PRO 2 TB without a heatsink, up to CHF 500.'
+        : 'Ich suche eine Samsung 990 PRO 2 TB ohne Kühlkörper bis CHF 500.');
+      await pointerClick('.primary-search');
       await until(() => evaluate("document.querySelector('#web-results article a')?.href.startsWith('https://www.dq-solutions.ch/')"), 'live DQ offer');
       assert(await evaluate(`document.querySelector('#web-results .cost-open')?.textContent.includes(${JSON.stringify(liveEnglish?'Shipping':'Versand')})`), 'live offer names unknown costs');
       assert(await evaluate("!document.querySelector('#web-results .value-proof')"), 'partial live offer has no savings claim');
