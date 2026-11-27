@@ -51,6 +51,15 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
   await signIn(free,'free');
   assert.deepEqual(await free.getFixtureAccount(),{test:true,plan:'free',used:0,limit:1});
   assert.equal((await free.search(input(unavailable))).kind,'unavailable');
+  assert.equal((await free.search(input(''))).kind,'invalid');
+  assert.equal((await free.search(input('https://example.invalid/'))).kind,'invalid');
+  assert.equal((await free.search(input('UDI fixture timeout'))).kind,'timeout');
+  assert.equal((await free.search(input('UDI fixture invalid'))).kind,'invalid-response');
+  const stop=new AbortController();
+  const waiting=free.search(input('UDI fixture timeout'),{signal:stop.signal});
+  stop.abort();
+  assert.equal((await waiting).kind,'cancelled');
+  assert.deepEqual(await free.getFixtureAccount(),{test:true,plan:'free',used:0,limit:1});
   const open=await free.search(input(partial));
   assert.equal(open.kind,'results','A device clock 5 seconds behind the fixture should still accept the offer');
   assert.equal(open.testData,true);
@@ -74,7 +83,10 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
   assert.equal(closed.items[0].check.total,10400);
   assert.equal(closed.items[0].check.priceConfirmation.kind,'checkout');
   assert.equal((await plus.search(input(partial))).kind,'results');
-  assert.equal((await plus.search(input(partial))).kind,'results');
+  const empty=await plus.search(input('Quelque chose d’inhabituel 🛰️'));
+  assert.equal(empty.kind,'results');
+  assert.equal(empty.testData,true);
+  assert.deepEqual(empty.items,[]);
   assert.equal((await plus.search(input(partial))).kind,'quota-exhausted');
   const rehydrated=await create(preferences);
   assert.equal(rehydrated.isSignedIn(),true);
@@ -88,7 +100,7 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
   assert.equal((await create(preferences)).isSignedIn(),false);
 
   const health=await fetch(base+'/healthz').then(reply=>reply.json());
-  assert.deepEqual(health,{test:true,counts:{otp:2,verify:2,partial:3,confirmed:1,unavailable:1,quota:3,list:3,save:1,remove:1}});
+  assert.deepEqual(health,{test:true,counts:{otp:2,verify:2,partial:2,confirmed:1,unavailable:1,quota:3,list:3,save:1,remove:1}});
 });
 
 test('der Fixture-Transport verwirft fremde Ziele, Weiterleitungen und als live markierte Antworten',async()=>{

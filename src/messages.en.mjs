@@ -66,6 +66,7 @@ const base = {
   "Die Suche dauert zu lange. Versuche es erneut.": "The search is taking too long. Try again.",
   "Du bist offline. Gespeicherte Suchen bleiben verfügbar.": "You are offline. Saved searches remain available.",
   "Die Verbindung zum Angebotsdienst ist fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.": "The connection to the offer service failed. Check your connection and try again.",
+  "Suche abbrechen":"Cancel search",
   "Die Suche wurde abgebrochen. Dein Suchtext bleibt erhalten.": "The search was cancelled. Your search text is preserved.",
   "Testantwort": "Test response",
   "Testdaten: Anbieterlink deaktiviert.": "Test data: seller link disabled.",

@@ -826,6 +826,7 @@ try {
           return Response.json({schemaVersion:1,items:saved});
         }
         if(JSON.parse(options.body).query==='Kingston NV3 2 TB')return Response.json({kind:'outside-catalog'},{status:422});
+        if(JSON.parse(options.body).query==='UDI fixture timeout')return new Promise(resolve=>{window.qaSlowResult=()=>resolve(new Response(null,{status:504}));});
         return new Response(null,{status:429,headers:{'X-UDI-Limit':'monthly'}});
       };
     })()`});
@@ -877,6 +878,14 @@ try {
     await pointerClick('#web-results button');
     assert.deepEqual(await evaluate("(()=>{const input=document.querySelector('#search-query'),fields=input.form.elements;return [input.value,fields.maxPrice.value,fields.condition.value,fields.completeCostsOnly.checked,window.qaPilotCalls.filter(path=>path==='/api/v1/search').length,document.activeElement===input]})()"),
       ['Kingston NV3 2 TB','350','new',true,1,true], 'editing preserves every criterion and never starts another search');
+    await evaluate("(()=>{const field=document.querySelector('#search-query');field.value='UDI fixture timeout';field.dispatchEvent(new Event('input',{bubbles:true}));})()");
+    await pointerClick('.primary-search');
+    await until(()=>evaluate("typeof window.qaSlowResult==='function'"),'delayed protected search starts');
+    await pointerClick('#web-results [data-cancel-search]');
+    const cancelled=language==='de'?'Die Suche wurde abgebrochen':'The search was cancelled';
+    await until(()=>evaluate("document.querySelector('#web-results').textContent.includes("+JSON.stringify(cancelled)+")"),'manual cancellation is visible');
+    await evaluate('window.qaSlowResult()');
+    assert(await evaluate("document.querySelector('#search-query').value==='UDI fixture timeout' && !document.querySelector('#web-results article')"),'late response after cancellation never replaces the draft or renders an offer');
     await evaluate("document.querySelector('#search-query').value='Samsung 990 PRO 2 TB';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
     await pointerClick('.primary-search');
     const limit=language==='de'?'Suchkontingent ist aufgebraucht':'used your search allowance';

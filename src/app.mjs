@@ -45,7 +45,8 @@ let sharer;
 mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
-if (['android','ios'].includes(platform) && document.querySelector('meta[name="udi-native-fixture"]')) {
+const fixtureMode=['android','ios'].includes(platform) && Boolean(document.querySelector('meta[name="udi-native-fixture"]'));
+if (fixtureMode) {
   const notice = element('p', m('Testumgebung · Nur simulierte Konten und Preise'), 'surface shared-notice');
   notice.id = 'native-fixture-notice';
   const account = element('span');
@@ -350,7 +351,7 @@ function watchAction(product, remove = false) {
 
 function productCard(product) {
   const card = message(product.name,m('{variant} · {mpn}',()=>({variant:t(product.variant),mpn:product.mpn})));
-  card.append(productAction(m('Händler vergleichen'), 'vergleich', product));
+  if (!fixtureMode) card.append(productAction(m('Händler vergleichen'), 'vergleich', product));
   return card;
 }
 
@@ -526,8 +527,16 @@ function renderWebResults(result, query) {
   resultsExpiry = setTimeout(() => renderWebResults({ kind: 'expired' }, query), Math.max(1, expiry - Date.now()));
 }
 
+function cancelSearch() {
+  if (!activeSearch) return;
+  activeSearch.abort();
+  activeSearch = null;
+  renderWebResults({kind:'cancelled'}, get('search-query').value);
+}
+
 async function submit(query, scope) {
   if (voice?.isRecording()) { voice.stop(); return; }
+  cancelSearch();
   get('search-query').value = query;
   refreshIntent();
   if (!get('intent-question').hidden) {
@@ -535,10 +544,6 @@ async function submit(query, scope) {
     get('intent-question').querySelector('h3').focus();
     return;
   }
-  activeSearch?.abort();
-  const request = new AbortController();
-  activeSearch = request;
-  get('search-query').value = query;
   const form = get('search-query').form;
   const input = {
     ...searchContext(),
@@ -582,17 +587,31 @@ async function submit(query, scope) {
   const criteriaLabel = describeCriteria(criteria);
   if (criteriaLabel) get('results').append(element('p', criteriaLabel, 'muted'));
   get('results').append(saveSearchButton(input));
+  const request = new AbortController();
+  activeSearch = request;
   clearTimeout(resultsExpiry);
-  get('web-results').replaceChildren(element('p', m('Wir suchen und prüfen die Angebote …'), 'surface muted'));
+  const loading = element('div', null, 'surface');
+  const status = element('p', m('Wir suchen und prüfen die Angebote …'), 'muted');
+  status.setAttribute('role', 'status');
+  const cancel = element('button', m('Suche abbrechen'), 'text-button');
+  cancel.type = 'button';
+  cancel.dataset.cancelSearch = '';
+  cancel.addEventListener('click', () => {
+    form.querySelector('.primary-search').focus();
+    cancelSearch();
+  });
+  loading.append(status, cancel);
+  get('web-results').replaceChildren(loading);
   navigate('suche');
   const resultTitle = get('results').querySelector('h2');
   resultTitle.tabIndex = -1;
   resultTitle.focus({preventScroll:true});
   // Explicit submission moves to its outcome; async updates never steal focus.
   resultTitle.scrollIntoView({block:'start',behavior:'instant'});
+  const deadline = AbortSignal.timeout(20_000);
   try {
     const result = await discoverOffers(input, {
-      signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),
+      signal: AbortSignal.any([request.signal, deadline]),
       client:pilotSession??undefined,
     });
     if (!request.signal.aborted) {
@@ -600,7 +619,9 @@ async function submit(query, scope) {
       renderWebResults(result, query);
     }
   } catch {
-    if (!request.signal.aborted) renderWebResults({ kind: 'unavailable' }, query);
+    if (!request.signal.aborted) renderWebResults({kind: deadline.aborted ? 'timeout' : 'unavailable'}, query);
+  } finally {
+    if (activeSearch === request) activeSearch = null;
   }
 }
 
@@ -835,8 +856,10 @@ function renderWatchlist() {
 function renderRoute(focus = false) {
   const hash = location.hash.slice(1).split('?')[0];
   const current = routes.find(id => !get(id).hidden);
-  const route = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'suche' : 'suche');
+  const requestedRoute = routes.includes(hash) ? hash : (hash === 'main' ? current ?? 'suche' : 'suche');
+  const route = fixtureMode && !['suche','watchlist','hilfe'].includes(requestedRoute) ? 'suche' : requestedRoute;
   if(route!=='watchlist')savedLoad?.abort();
+  if(route!=='suche')cancelSearch();
   if (route !== 'suche' && voice?.isRecording()) voice.stop();
   if (route === 'suche') renderRecent();
   for (const id of routes) get(id).hidden = id !== route;

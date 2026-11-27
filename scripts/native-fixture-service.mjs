@@ -1,6 +1,7 @@
 import {randomBytes} from 'node:crypto';
 import {createServer} from 'node:http';
 import {pathToFileURL} from 'node:url';
+import {setTimeout as delay} from 'node:timers/promises';
 import {createAccountSearches,readSavedSearch} from './account-searches.mjs';
 import {readServiceRequest} from './service-contract.mjs';
 import {criteriaFor} from '../src/criteria.mjs';
@@ -118,19 +119,35 @@ export function createNativeFixtureService() {
       counts.unavailable++;
       return reject(response,503);
     }
+    const envelope={schemaVersion:1,requestId,dataMode:'test',marketId,deliveryCountry,currency,criteria:criteriaFor(input)};
+    // Synthetic failure cases leave the allowance available for the next test.
+    if(query==='udi fixture timeout') {
+      await delay(1500);
+      return reject(response,504);
+    }
+    // The runner and the emulator can disagree about the current time.
+    const checkedAt=at-15000;
+    const completedAt=new Date(checkedAt).toISOString();
+    if(query==='udi fixture invalid') {
+      const broken=offer(false,checkedAt);
+      broken.check.total=100;
+      return send(response,200,{...envelope,kind:'results',completedAt,items:[broken]});
+    }
     if(subject.used>=subject.limit) {
       counts.quota++;
       return send(response,429,{test:true},{'X-UDI-Limit':'monthly'});
     }
+    if(!input.scope && /\b(?:mehr speicher|more storage)\b/i.test(query)) {
+      return send(response,200,{...envelope,kind:'clarification'});
+    }
     subject.used++;
-    const envelope={schemaVersion:1,requestId,dataMode:'test',marketId,deliveryCountry,currency,criteria:criteriaFor(input)};
-    if(![product,confirmed].includes(query))return send(response,200,{...envelope,kind:'clarification'});
-    const isConfirmed=query===confirmed;
-    counts[isConfirmed?'confirmed':'partial']++;
-    // The runner and the emulator can disagree about the current time.
-    const checkedAt=at-15000;
-    return send(response,200,{...envelope,kind:'results',sourceMode:'catalog',
-      completedAt:new Date(checkedAt).toISOString(),items:[offer(isConfirmed,checkedAt)]});
+    const items=[];
+    if([product,confirmed].includes(query)) {
+      const isConfirmed=query===confirmed;
+      counts[isConfirmed?'confirmed':'partial']++;
+      items.push(offer(isConfirmed,checkedAt));
+    }
+    return send(response,200,{...envelope,kind:'results',sourceMode:'catalog',completedAt,items});
   }
 
   const server=createServer({requestTimeout:3000,headersTimeout:2000,maxHeaderSize:8192},(request,response)=>{
