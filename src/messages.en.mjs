@@ -232,6 +232,8 @@ const extra = {
   "Preis geprüft":"Price checked",
   "Unvollständig / Schätzung":"Incomplete / estimate",
   "Nicht verifizierbar":"Not verifiable",
+  "Testzugang: plus@udi.test · Code 123456.":"Test sign-in: plus@udi.test · Code 123456.",
+  "Lokale Testansicht im Browser · Nur simulierte Konten und Preise":"Local browser test · Simulated accounts and prices only",
   "Testumgebung · Nur simulierte Konten und Preise":"Test environment · Simulated accounts and prices only",
   " · Testabo {plan} · {used} von {limit} Suchen":" · Test plan {plan} · {used} of {limit} searches",
   " · Testkontingent nicht verfügbar":" · Test allowance unavailable",

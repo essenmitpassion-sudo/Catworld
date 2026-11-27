@@ -34,7 +34,7 @@ export async function androidFixtureFlow(page,afterRestart) {
     });
   })()`));
   async function type(target,input) {
-    await tap(target);
+    await wait('document.activeElement===' + node(target));
     await send('Input.insertText',{text:input});
   }
   async function search(input) {
@@ -100,6 +100,12 @@ export async function androidFixtureFlow(page,afterRestart) {
   await expectOffer('Verbindlich bestätigt','104.00');
   console.log('Android fixture: confirmed CHF 104.00 total and disabled seller link passed');
 
+  await search('UDI fixture timeout');
+  await wait(text(results)+'?.includes("Die Suche dauert zu lange")');
+  await search('UDI fixture invalid');
+  await wait(text(results)+'?.includes("Die Antwort konnte nicht sicher geprüft werden")');
+  assert.equal(await evaluate("document.querySelectorAll('#web-results article, #results a[href*=vergleich]').length"),0);
+  console.log('Android fixture: timeout and contradictory offer rejected; no comparison link shown');
   await search(unavailableWish);
   await wait(text(results)+'?.includes("Die Websuche ist vorübergehend nicht erreichbar.")');
   assert(await evaluate(text(results)+'?.includes("Nicht verifizierbar")'));

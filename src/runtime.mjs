@@ -11,9 +11,10 @@ export function runtimePlatform(bridge=globalThis.Capacitor,bundle=globalThis.do
 
 // A bundled native UI does not contain the Node service. Until authenticated
 // native transport is approved, never fall back to a device-local API or host.
-export async function discoverOffers(input,{platform=runtimePlatform(),signal,fetchImpl=globalThis.fetch,client=nativeClient}={}) {
-  if(['android','ios'].includes(platform))return client.search(input,{signal});
+export async function discoverOffers(input,{platform=runtimePlatform(),signal,fetchImpl=globalThis.fetch,client}={}) {
+  if(['android','ios'].includes(platform))return (client??nativeClient).search(input,{signal});
   if(platform!=='web')return {kind:'native-unavailable'};
+  if(client)return client.search(input,{signal});
   const response=await fetchImpl('./api/discovery',{
     method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal,
   });

@@ -2,8 +2,8 @@
 import {m,setText,t,speechLanguage} from './i18n.mjs';
 import {runtimePlatform} from './runtime.mjs';
 import {nativeSpeech,setupNativeVoice} from './native-voice.mjs';
-export function setupVoice(root, onInput) {
-  const native=runtimePlatform()!=='web';
+export function setupVoice(root, onInput, {allowBrowser=true}={}) {
+  const native=!allowBrowser || runtimePlatform()!=='web';
   const plugin=native?nativeSpeech():null;
   if(plugin)return setupNativeVoice(root,onInput,plugin);
   const button = root.querySelector('[data-mic]');

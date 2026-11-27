@@ -11,12 +11,22 @@ const messages={
   unavailable:'Die Anmeldung ist gerade nicht erreichbar. Versuche es erneut.',
 };
 
+export function localTestEnabled(document,platform) {
+  return platform==='web' && document.location?.protocol==='http:' && document.location.hostname==='127.0.0.1'
+    && Boolean(document.querySelector('meta[name="udi-local-test"][content="test"]'));
+}
+
 export function configuredPilotSession(document,platform) {
+  const modal=document.getElementById('pilot-sign-in');
+  if(typeof modal?.showModal!=='function' ||
+      typeof AbortSignal.any!=='function' || typeof AbortSignal.timeout!=='function')return null;
+  if(localTestEnabled(document,platform)) {
+    return import('./native-fixture-transport.mjs').then(async ({browserFixtureOptions}) =>
+      createPilotSession(await browserFixtureOptions()));
+  }
   if(!['android','ios'].includes(platform))return null;
   const profile=document.querySelector('meta[name="udi-native-pilot"]');
-  const modal=document.getElementById('pilot-sign-in');
-  if(!profile || typeof modal?.showModal!=='function' ||
-      typeof AbortSignal.any!=='function' || typeof AbortSignal.timeout!=='function')return null;
+  if(!profile)return null;
   return createPilotSession(profile.dataset);
 }
 

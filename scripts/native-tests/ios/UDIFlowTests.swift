@@ -128,8 +128,19 @@ final class UDIFlowTests: XCTestCase {
         checkOffer("Confirmed total", amount: "104.00")
         print("iOS fixture: confirmed CHF 104.00 total and disabled seller link passed")
 
+        let timeout = "UDI fixture timeout"
+        search(timeout, replacing: confirmed)
+        let timedOut = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "The search is taking too long")).firstMatch
+        XCTAssertTrue(timedOut.waitForExistence(timeout: 10))
+        let invalid = "UDI fixture invalid"
+        search(invalid, replacing: timeout)
+        let rejectedOffer = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "The response could not be checked safely")).firstMatch
+        XCTAssertTrue(rejectedOffer.waitForExistence(timeout: 10))
+        XCTAssertFalse(offerMarker.exists)
+        XCTAssertFalse(web.links["Compare sellers"].exists)
+        print("iOS fixture: timeout and contradictory offer rejected; no comparison link shown")
         let failing = "UDI fixture unavailable"
-        search(failing, replacing: confirmed)
+        search(failing, replacing: invalid)
         XCTAssertTrue(web.staticTexts["Web search is temporarily unavailable."].firstMatch.waitForExistence(timeout: 15))
         XCTAssertTrue(web.staticTexts["Not verifiable"].firstMatch.waitForExistence(timeout: 5))
         checkUsage(2)

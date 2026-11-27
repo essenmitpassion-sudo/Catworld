@@ -48,7 +48,7 @@ export async function androidFlow(page,afterRestart) {
   }
   assert(await evaluate("typeof Capacitor.Plugins.NativeSpeech?.recognize==='function'"),'Native speech bridge is registered');
   await tap('[data-mic]');
-  await wait("!document.querySelector('[data-native-voice-options]').hidden && document.querySelector('[data-mic]').getAttribute('aria-pressed')==='false'");
+  await wait("!document.querySelector('[data-native-voice-options]').hidden && document.querySelector('[data-mic]').getAttribute('aria-expanded')==='true' && !document.querySelector('[data-mic]').hasAttribute('aria-pressed')");
   await tap('[data-native-voice-cancel]');
   console.log('Android: microphone explanation can open and close before requesting permission.');
   for(const [index,language] of ['en','de'].entries()) {

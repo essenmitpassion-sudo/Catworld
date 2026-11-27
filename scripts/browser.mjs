@@ -7,6 +7,7 @@ import { join, resolve, basename, sep } from 'node:path';
 import { once } from 'node:events';
 import { setTimeout as pause } from 'node:timers/promises';
 import { server } from './serve.mjs';
+import { checkPersonalTest } from './browser-personal.mjs';
 import { inspectPage, pageVerifier } from './verification.mjs';
 import { pilotSourceDomains } from './sources.mjs';
 import { catalog } from '../src/deals.mjs';
@@ -190,6 +191,9 @@ try {
     assert(await evaluate("document.querySelector('main').scrollWidth<=document.querySelector('main').clientWidth"),'app content reflows without horizontal clipping');
     assert(await evaluate("(()=>{const main=document.querySelector('main').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return main.bottom<=nav.top+.5||nav.bottom<=main.top+.5})()"),'navigation never overlays the content viewport');
   }
+  if (process.argv.includes('--personal-test')) {
+    await checkPersonalTest({send,evaluate,until,pointerClick,type,noOverflow});
+  } else {
   for (const width of live ? [390] : nativeOnly?[]:[360, 390, 768, 1365]) {
     if (width !== (live ? 390 : 360)) {
       await closeTestServer();
@@ -988,6 +992,7 @@ try {
     assert(await evaluate("!document.querySelector('#results').hidden && document.querySelector('#results').textContent"));
     await send('Page.removeScriptToEvaluateOnNewDocument',{identifier:fixture.identifier});
     console.log('On-device dictation UI passed for '+platform+' / '+language+' at 320px (simulated speech bridge)');
+  }
   }
   assert.equal(pageErrors.length,0,'no unhandled app errors or console errors');
 } catch (error) {

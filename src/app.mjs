@@ -4,7 +4,7 @@ import { readSearches, storeSearch, removeSearch, searchStorageKey } from './sav
 import {createSearchPersistence,nativeSearchPreferences} from './search-persistence.mjs';
 import {bindDailyUpdate} from './daily-update.mjs';
 import {configureNativeUI} from './native-ui.mjs';
-import {configuredPilotSession,bindPilotSignIn} from './pilot-sign-in.mjs';
+import {configuredPilotSession,bindPilotSignIn,localTestEnabled} from './pilot-sign-in.mjs';
 import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
@@ -45,14 +45,20 @@ let sharer;
 mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
-const fixtureMode=['android','ios'].includes(platform) && Boolean(document.querySelector('meta[name="udi-native-fixture"]'));
+const localTestMode=localTestEnabled(document,platform);
+const compactLayout=localTestMode || platform!=='web';
+const fixtureMode=localTestMode || (['android','ios'].includes(platform) && Boolean(document.querySelector('meta[name="udi-native-fixture"]')));
 if (fixtureMode) {
-  const notice = element('p', m('Testumgebung · Nur simulierte Konten und Preise'), 'surface shared-notice');
+  const notice = element('p', m(localTestMode?'Lokale Testansicht im Browser · Nur simulierte Konten und Preise':'Testumgebung · Nur simulierte Konten und Preise'), 'surface shared-notice');
   notice.id = 'native-fixture-notice';
   const account = element('span');
   account.id = 'native-fixture-account';
   notice.append(account);
   get('main').querySelector('.shell').prepend(notice);
+}
+if (localTestMode) {
+  get('pilot-sign-in').querySelector('[data-pilot-intro]').after(element('p',
+    m('Testzugang: plus@udi.test · Code 123456.'), 'muted'));
 }
 const pilotSession=await configuredPilotSession(document,platform);
 let fixtureAccountRead=0;
@@ -70,9 +76,9 @@ async function refreshFixtureAccount(signedIn) {
     if (read === fixtureAccountRead) setText(label, m(' · Testkontingent nicht verfügbar'));
   }
 }
-const pilotConfigured=['android','ios'].includes(platform)&&Boolean(document.querySelector('meta[name="udi-native-pilot"]'));
+const pilotConfigured=localTestMode || (['android','ios'].includes(platform)&&Boolean(document.querySelector('meta[name="udi-native-pilot"]')));
 const pilotSystemMessage='Aktualisiere dein Betriebssystem, um dich im Pilot anzumelden. Du kannst deinen Wunsch weiterhin eingeben.';
-document.documentElement.toggleAttribute('data-native-ui',platform!=='web');
+document.documentElement.toggleAttribute('data-native-ui',compactLayout);
 let searchPersistence;
 if(!pilotConfigured) {
   try {
@@ -84,7 +90,7 @@ if(!pilotConfigured) {
     searchPersistence={storage:{getItem(){throw error;}},update:async()=>{throw error;}};
   }
 }
-if(platform!=='web') {
+if(compactLayout) {
   configureNativeUI(document);
   if(pilotConfigured&&!pilotSession)setText(get('native-runtime-status'),m(pilotSystemMessage));
 }
@@ -135,7 +141,7 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
   },
 });
 bindDailyUpdate(get('daily-update'));
-setupInstall();
+if (!localTestMode) setupInstall();
 
 function draftInput(query = get('search-query').value.trim()) {
   const form = get('search-query').form;
@@ -150,7 +156,7 @@ function refreshIntent({invalidate=true}={}) {
   const panel = get('intent-compass');
   panel.hidden = true;
   target.replaceChildren();
-  get('suche').querySelector('.share-search').hidden = !input.query || platform!=='web';
+  get('suche').querySelector('.share-search').hidden = !input.query || compactLayout;
   const questionBox = get('intent-question');
   questionBox.replaceChildren();
   questionBox.hidden = true;
@@ -203,7 +209,7 @@ function restoreSearch(request) {
 function renderRecent() {
   const target = get('recent-searches');
   target.replaceChildren();
-  if(platform!=='web'){target.hidden=true;return;}
+  if(compactLayout){target.hidden=true;return;}
   try {
     const saved = readSearches(searchPersistence.storage).slice(0, 3);
     target.hidden = !saved.length;
@@ -864,7 +870,7 @@ function renderRoute(focus = false) {
   if (route === 'suche') renderRecent();
   for (const id of routes) get(id).hidden = id !== route;
   for (const anchor of document.querySelectorAll('nav a')) {
-    const tab=platform==='web'?(route==='passport'?'vergleich':route):(route==='watchlist'?'watchlist':'suche');
+    const tab=compactLayout?(route==='watchlist'?'watchlist':'suche'):(route==='passport'?'vergleich':route);
     if (anchor.hash === '#' + tab) anchor.setAttribute('aria-current', 'page');
     else anchor.removeAttribute('aria-current');
   }
@@ -919,8 +925,8 @@ get('search-query').addEventListener('keydown', event => {
     event.preventDefault(); composer.requestSubmit();
   }
 });
-voice = setupVoice(composer, refreshIntent);
-sharer = setupSharing(document, draftInput);
+voice = setupVoice(composer, refreshIntent,{allowBrowser:!localTestMode});
+if (!localTestMode) sharer = setupSharing(document, draftInput);
 function importSharedSearch() {
   try {
     const input=readSharedSearch(location.hash);
@@ -948,7 +954,7 @@ renderRoute();
 document.documentElement.dataset.platform=platform;
 
 try {
-  const data = await loadObservations({signal:AbortSignal.timeout(5000)});
+  const data = localTestMode ? [] : await loadObservations({signal:AbortSignal.timeout(5000)});
   const currentUrls = new Set(observations.map(row => row?.url));
   observations = [...data.filter(row => !currentUrls.has(row?.url)), ...observations];
   sourceState = 'ready';

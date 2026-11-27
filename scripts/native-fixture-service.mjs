@@ -53,7 +53,7 @@ function send(response,status,body,headers={}) {
 }
 
 // Disposable fixture process. Only these synthetic identities can create state.
-export function createNativeFixtureService() {
+export function createNativeFixtureService({servePage}={}) {
   const accounts=new Map([['free@udi.test',account('free',1)],['plus@udi.test',account('plus',3)]]);
   const counts={otp:0,verify:0,partial:0,confirmed:0,unavailable:0,quota:0,list:0,save:0,remove:0};
   const saves=createAccountSearches(':memory:');
@@ -63,7 +63,15 @@ export function createNativeFixtureService() {
     const address=server.address();
     if(address===null||typeof address==='string'||request.socket.remoteAddress!=='127.0.0.1'
       ||![`127.0.0.1:${address.port}`,`localhost:${address.port}`].includes(request.headers.host)
-      ||request.headers.origin!==undefined||request.headers.cookie!==undefined)return reject(response,403);
+    )return reject(response,403);
+    const origin=request.headers.origin;
+    const fetchSite=request.headers['sec-fetch-site'];
+    if(servePage) {
+      if((origin!==undefined && origin!=='http://'+request.headers.host)
+        || ![undefined,'none','same-origin'].includes(fetchSite))return reject(response,403);
+      if(await servePage(request,response))return;
+    } else if(origin!==undefined)return reject(response,403);
+    if(request.headers.cookie!==undefined)return reject(response,403);
     const route=request.url;
     const method=request.method;
     const at=Date.now();

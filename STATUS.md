@@ -1,4 +1,9 @@
-# Status · 27.11.2026
+# Status · 28.11.2026
+
+## Persönlicher Teststart
+
+UDI lässt sich auf Windows über «UDI testen.cmd» im lokalen Browserfenster öffnen. Der Starter verbindet die bestehende Oberfläche mit dem isolierten Testdienst. Der DE/EN-Lauf bei 320/390px prüfte Testanmeldung, Suche, offenen Preis, Speichern, Zeitüberschreitung, Abbruch, Fehler, leeres Ergebnis und Wiederöffnen. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Anleitung](docs/UDI-TESTEN.md) · [Suchzustände](docs/evidence/2026-11-28-search-states.md) · [Diktatprüfung](docs/evidence/2026-11-28-ios-dictation.md).
+
 
 ## Abschlusscheck P0–P3 · 27.11.2026
 

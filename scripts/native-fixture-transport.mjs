@@ -15,36 +15,57 @@ const routes=new Map([
   [accountEndpoint,['GET']],
 ]);
 
-export function fixtureFetch(bridge) {
-  const http=bridge?.Plugins?.CapacitorHttp;
-  if(typeof http?.request!=='function')return null;
+function constrainedFetch(request) {
   return async(address,{method,headers,body,signal})=>{
     signal?.throwIfAborted();
     const virtual=new URL(address);
     if(!routes.get(virtual.href)?.includes(method))throw new Error('Invalid fixture route');
-    const fixedUrl=loopback+virtual.pathname;
     const safeHeaders=Object.fromEntries(Object.entries(headers)
       .filter(([name])=>['apikey','accept','content-type','authorization'].includes(name.toLowerCase())));
-    const response=await http.request({url:fixedUrl,method,headers:safeHeaders,
-      ...(body===undefined?{}:{data:JSON.parse(body)}),
-      responseType:'json',connectTimeout:2000,readTimeout:3000,disableRedirects:true});
+    const response=await request(virtual.pathname,{method,headers:safeHeaders,body,signal});
     signal?.throwIfAborted();
-    if(response.url!==fixedUrl || !Number.isInteger(response.status) || response.status<200||response.status>599
-      || (response.status>=300&&response.status<400))throw new Error('Invalid fixture response');
-    if(virtual.pathname==='/api/v1/search'&&response.status<300&&response.data?.dataMode!=='test') {
+    if(response.redirected || (response.status>=300&&response.status<400))throw new Error('Invalid fixture response');
+    if(virtual.pathname==='/api/v1/search'&&response.ok&&(await response.clone().json())?.dataMode!=='test') {
       throw new Error('Unmarked fixture data');
     }
+    return response;
+  };
+}
+
+export function fixtureFetch(bridge) {
+  const http=bridge?.Plugins?.CapacitorHttp;
+  if(typeof http?.request!=='function')return null;
+  return constrainedFetch(async(path,{method,headers,body})=>{
+    const url=loopback+path;
+    const response=await http.request({url,method,headers,
+      ...(body===undefined?{}:{data:JSON.parse(body)}),
+      responseType:'json',connectTimeout:2000,readTimeout:3000,disableRedirects:true});
+    if(response.url!==url || !Number.isInteger(response.status) || response.status<200 || response.status>599
+      || (response.status>=300&&response.status<400))throw new Error('Invalid fixture response');
     const content=JSON.stringify(response.data);
     if(typeof content!=='string'||new TextEncoder().encode(content).length>65536)throw new Error('Invalid fixture data');
     const responseHeaders=new Headers(response.headers);
     responseHeaders.delete('Content-Length');
     return new Response(content,{status:response.status,headers:responseHeaders});
-  };
+  });
 }
 
-export async function fixturePilotOptions(bridge,now=Date.now) {
-  const fetchImpl=fixtureFetch(bridge);
-  const prefs=bridge?.Plugins?.Preferences;
+export function fixturePilotOptions(bridge,now=Date.now) {
+  return restoreFixtureSession(fixtureFetch(bridge),bridge?.Plugins?.Preferences,now);
+}
+
+export function browserFixtureOptions() {
+  const fetchImpl=constrainedFetch((path,init)=>fetch(path,{
+    ...init,credentials:'omit',redirect:'error',cache:'no-store',
+  }));
+  return restoreFixtureSession(fetchImpl,{
+    get:({key})=>({value:localStorage.getItem(key)}),
+    set:({key,value})=>localStorage.setItem(key,value),
+    remove:({key})=>localStorage.removeItem(key),
+  },Date.now);
+}
+
+async function restoreFixtureSession(fetchImpl,prefs,now) {
   if(!fetchImpl||!['get','set','remove'].every(method=>typeof prefs?.[method]==='function'))return null;
   let writes=Promise.resolve();
   function saveSession(value) {
