@@ -129,6 +129,7 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     get('search-query').form.reset();
     get('shared-notice').hidden=true;
     get('results').replaceChildren();
+    get('search-outcome').hidden=true;
     get('web-results').replaceChildren();
     get('comparison').replaceChildren();
     get('detail').replaceChildren();
@@ -459,10 +460,9 @@ function renderWebResults(result, query) {
     return;
   }
   const intro = element('div', null, 'section-heading');
-  intro.append(element('h2', m(result.testData?'Testantwort':'Aktuell geprüft')), element('span',m(result.items.length===1?'{count} Angebot':'{count} Angebote',{count:result.items.length}),'unit'));
-  if (result.sourceMode === 'catalog') intro.append(element('p', m('Prüfung der bekannten Katalogquellen'), 'muted'));
+  intro.append(element('p', m(result.testData?'Testantwort':'Aktuell geprüft'), 'offer-receipt'), element('span',m(result.items.length===1?'{count} Angebot':'{count} Angebote',{count:result.items.length}),'unit'));
+  if (result.sourceMode === 'catalog' && !result.testData) intro.append(element('p', m('Prüfung der bekannten Katalogquellen'), 'muted'));
   const previousCard = get('results').querySelector('.surface');
-  const moveFocus = previousCard?.contains(document.activeElement);
   previousCard?.setAttribute('hidden', '');
   const cards = result.items.map(item => {
     const box = element('article', null, 'surface offer');
@@ -496,7 +496,7 @@ function renderWebResults(result, query) {
     box.append(heading, layout, meta);
     if (item.budgetStatus === 'unknown-total') box.append(element('p', m('Ob der Endpreis in dein Budget passt, ist noch offen.'), 'muted'));
     const details = element('details');
-    details.append(element('summary', m('Prüfung und offene Angaben')));
+    details.append(element('summary', m('Preisdetails und Quelle')));
     details.append(facts([
       [m('Herstellernummer'), check.mpn ?? m('Unbestätigt')],
       [m('Zustand laut Quelle'), conditionText(check.condition,m('Unbestätigt'))],
@@ -523,12 +523,7 @@ function renderWebResults(result, query) {
     return box;
   });
   target.replaceChildren(intro, ...cards);
-  if(result.testData)target.prepend(element('p',m('TESTDATEN – keine aktuellen Kaufangebote. Es wurde kein Anbieter geprüft.'),'surface shared-notice'));
-  if (moveFocus && !get('suche').hidden) {
-    const title = intro.querySelector('h2');
-    title.tabIndex = -1;
-    title.focus();
-  }
+  if(result.testData)intro.append(element('p',m('TESTDATEN – keine aktuellen Kaufangebote. Es wurde kein Anbieter geprüft.'),'fixture-price-note'));
   const expiry = Math.min(...result.items.map(item => Date.parse(item.expiresAt)));
   resultsExpiry = setTimeout(() => renderWebResults({ kind: 'expired' }, query), Math.max(1, expiry - Date.now()));
 }
@@ -564,6 +559,7 @@ async function submit(query, scope) {
     get('max-price').removeAttribute('aria-invalid');
   } catch (error) {
     clearTimeout(resultsExpiry);
+    get('search-outcome').hidden=false;
     get('results').replaceChildren(message(m('Bitte prüfe deine Kaufkriterien'), uiError(error)));
     get('web-results').replaceChildren();
     navigate('suche');
@@ -587,9 +583,9 @@ async function submit(query, scope) {
   get('suche').classList.add('has-search');
   get('search-home').hidden = true;
   activeCriteria = criteria;
-  get('results').replaceChildren(...(products.length ? products.map(productCard) : [
-    message(m('Dein Suchwunsch'), query),
-  ]));
+  const context = message(m('Dein Suchwunsch'), query);
+  context.classList.add('request-context');
+  get('results').replaceChildren(...(products.length && !fixtureMode ? products.map(productCard) : [context]));
   const criteriaLabel = describeCriteria(criteria);
   if (criteriaLabel) get('results').append(element('p', criteriaLabel, 'muted'));
   get('results').append(saveSearchButton(input));
@@ -609,11 +605,11 @@ async function submit(query, scope) {
   loading.append(status, cancel);
   get('web-results').replaceChildren(loading);
   navigate('suche');
-  const resultTitle = get('results').querySelector('h2');
-  resultTitle.tabIndex = -1;
-  resultTitle.focus({preventScroll:true});
-  // Explicit submission moves to its outcome; async updates never steal focus.
-  resultTitle.scrollIntoView({block:'start',behavior:'instant'});
+  const outcome = get('search-outcome');
+  outcome.hidden=false;
+  get('search-outcome-title').focus({preventScroll:true});
+  // This anchor survives loading and the final reply, so focus remains stable.
+  outcome.scrollIntoView({block:'start',behavior:'instant'});
   const deadline = AbortSignal.timeout(20_000);
   try {
     const result = await discoverOffers(input, {
@@ -889,6 +885,7 @@ function navigate(route) {
   renderRoute(true);
 }
 
+get('outcome-edit').addEventListener('click',()=>get('search-query').focus());
 for (const form of document.querySelectorAll('[data-search]')) {
   form.addEventListener('submit', event => {
     event.preventDefault();
@@ -933,7 +930,9 @@ function importSharedSearch() {
     if(!input)return;
     if(voice?.isRecording())throw new Error('Beende zuerst deine Aufnahme. Dein Text bleibt erhalten; öffne den geteilten Link danach erneut.');
     activeSearch?.abort();clearTimeout(resultsExpiry);
-    get('results').replaceChildren();get('web-results').replaceChildren();
+    get('results').replaceChildren();
+    get('web-results').replaceChildren();
+    get('search-outcome').hidden=true;
     get('suche').classList.remove('has-search');get('search-home').hidden=false;
     get('search-query').value=input.query;get('max-price').value=input.maxPrice;get('condition').value=input.condition;
     composer.elements.completeCostsOnly.checked=input.completeCostsOnly;

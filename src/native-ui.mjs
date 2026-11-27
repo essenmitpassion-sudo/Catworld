@@ -44,7 +44,7 @@ export function configureNativeUI(document) {
     languageGroup.append(button);
   }
   setText(get('suche').querySelector('h1'),m('Was brauchst du?'));
-  setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. Ein Produkt oder ein Ziel reicht.'));
+  setText(get('suche').querySelector('.search-intro p'),m('Beschreibe deinen Wunsch. UDI zeigt dir belegte Angebote und offene Kosten.'));
   const input=get('search-query');
   input.form.querySelector('.primary-search').addEventListener('pointerdown',event=>{
     // Keep the editing viewport steady until the search click is delivered.

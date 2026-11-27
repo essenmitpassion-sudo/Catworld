@@ -233,3 +233,82 @@ html[data-native-ui] .voice-panel { color:var(--ink); border-color:var(--line); 
   }
   html:not([data-native-ui]) .app-content { overflow: visible; }
 }
+
+/* One workspace for the request and a compact receipt for checked results. */
+:root {
+  --ink:#172b25; --muted:#4f655c; --line:#c9d6cb; --paper:#fcfdf7;
+  --blue:#214c3c; --soft:#e8f0e5; --accent:#daef9c;
+  --search-forest:#15372d; --search-mist:#d7e5d8;
+  color:var(--ink); background:#eef3e9;
+}
+html[data-native-ui] { --paper:#fcfdf7; --ink:#172b25; --muted:#4f655c; background:#eef3e9; }
+.brand-mark { background:var(--search-forest); transform:none; }
+html[data-native-ui] .brand-mark { background:var(--accent); color:var(--search-forest); }
+nav a[aria-current] { color:var(--ink); background:var(--accent); }
+#native-fixture-notice {
+  margin:.25rem 0 .7rem; padding:.45rem .62rem;
+  border:1px solid var(--line); border-inline-start:3px solid var(--blue);
+  border-radius:.5rem; color:var(--ink); background:var(--paper);
+  font-size:.72rem; line-height:1.45;
+}
+.search-desk {
+  margin-block:.75rem 0; overflow:hidden; background:var(--paper);
+  border:1px solid var(--line); border-radius:1.2rem;
+}
+html[data-native-ui] .search-desk { margin-top:.3rem; }
+.search-intro, html[data-native-ui] .search-intro {
+  padding:clamp(.85rem,3vw,1.5rem) clamp(.9rem,3vw,1.55rem);
+  border-inline-start:.26rem solid var(--accent);
+  background:var(--search-forest); color:#fbfcf4;
+}
+.search-intro h1, html[data-native-ui] .search-intro h1 {
+  font-weight:800; font-size:clamp(1.8rem,5vw,2.65rem); line-height:1.08;
+}
+.search-intro > p, html[data-native-ui] .search-intro > p {
+  margin-top:.5rem; color:var(--search-mist); font-size:.84rem; line-height:1.45;
+}
+.has-search .search-intro, html[data-native-ui] .has-search .search-intro { padding-block:.7rem; }
+.has-search .search-intro h1, html[data-native-ui] .has-search .search-intro h1 { font-size:1.35rem; }
+.search-desk .composer, html[data-native-ui] .search-desk .composer {
+  margin:.8rem clamp(.7rem,3vw,1.2rem) .2rem; overflow:visible; background:transparent; border:0;
+}
+html[data-native-ui] .search-desk .composer-input { padding:.72rem .82rem; border-radius:.72rem; color:var(--ink); }
+html[data-native-ui] .search-desk #search-query { min-height:3.5rem; line-height:1.45; font-size:1rem; }
+html[data-native-ui] .search-desk .composer-submit { padding-top:.55rem; }
+.search-desk .primary-search, html[data-native-ui] .search-desk .primary-search {
+  border-radius:.67rem; background:var(--blue); border-color:var(--blue); min-height:3rem;
+}
+.search-desk .primary-search:hover, html[data-native-ui] .search-desk .primary-search:hover { background:#15372d; }
+.search-desk #search-home { padding:0 clamp(.7rem,3vw,1.2rem) .55rem; }
+.search-desk .suggestions, html[data-native-ui] .search-desk .suggestions {
+  margin-top:0; padding-top:.36rem; border-top:1px solid var(--line);
+}
+html[data-native-ui] .search-desk #native-runtime-status { margin:.6rem .1rem .14rem; }
+.search-desk #shared-notice { margin:.5rem .85rem; }
+.search-outcome { margin-block:.8rem 1rem; }
+.outcome-bar {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0 .7rem;
+  border-bottom:2px solid var(--blue);
+}
+.outcome-bar h2 { font-size:clamp(1.2rem,5vw,1.6rem); }
+.outcome-bar .text-button { color:var(--blue); }
+.search-outcome #web-results { margin-top:.55rem; }
+.search-outcome #results:empty, .search-outcome #web-results:empty { display:none; }
+.search-outcome .section-heading { gap:.2rem .45rem; margin-bottom:0; }
+.search-outcome .section-heading > .offer-receipt { flex-basis:auto; font-weight:800; color:var(--ink); }
+.fixture-price-note {
+  padding:.35rem .58rem; border-inline-start:3px solid #98692b;
+  background:#fff3d9; color:#61461f; line-height:1.4;
+}
+.search-outcome .offer { border-top:3px solid var(--blue); padding:.83rem 1rem 1rem; }
+.search-outcome .offer-layout { margin-block:.72rem; gap:.48rem .95rem; }
+.search-outcome .offer-price { color:var(--search-forest); font-size:clamp(2rem,9vw,2.65rem); }
+.search-outcome .offer h3 { font-size:1rem; }
+.search-outcome .cost-open { color:#674617; }
+.search-outcome .offer-heading .eyebrow { color:var(--blue); }
+.search-outcome .offer .badge.confirmed { background:var(--soft); color:var(--blue); border-color:#a3b9a2; }
+.search-outcome .offer .actions .button { min-height:44px; }
+.search-outcome .surface + .surface { margin-top:.65rem; }
+#pilot-sign-in { border-top:4px solid var(--blue); }
+html[data-native-ui] #saved > .surface { padding-inline:.65rem; border-inline-start:2px solid var(--line); }
+.search-outcome .request-context { display:none; }

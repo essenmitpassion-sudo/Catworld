@@ -2,7 +2,7 @@
 
 ## Eigenständiger Suchweg · 28.11.2026
 
-Der [Originalauftrag](docs/requirements/2026-11-28-search-design.md) folgt dem persönlichen Teststart. Die [Vorher-Prüfung und drei Designrichtungen](docs/evidence/2026-11-28-search-design-baseline.md) begründen den Sucharbeitsplatz mit Preisbeleg. Zuerst den Weg vom Start bis zum lesbaren ersten Angebot umsetzen. Danach dieselbe Bedienlogik für Leerzustand, Fehler, gespeicherte Suchen und kleine Ansichten prüfen. Freigabe anhand echter Vorschau, DE/EN-Läufen und separat ausgewiesener nativer Prüfungen.
+Der [Originalauftrag](docs/requirements/2026-11-28-search-design.md) folgt dem persönlichen Teststart. Die [Vorher-Prüfung und drei Designrichtungen](docs/evidence/2026-11-28-search-design-baseline.md) begründen den Sucharbeitsplatz mit Preisbeleg. Der [Vorher-Nachher-Nachweis](docs/evidence/2026-11-28-search-design.md) belegt den sichtbaren ersten Preis, den überarbeiteten Einstieg und den Rückweg zum Suchwunsch. DE/EN, Fehler, gespeicherte Suchen und kleine Ansichten wurden in der laufenden Vorschau geprüft. Physische Geräte stehen für Diktat, Bildschirmtastatur und Screenreader aus.
 
 ## Persönlich testbare App · 28.11.2026
 
