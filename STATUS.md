@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Abschlusscheck P0–P3 · 27.11.2026
+
+Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) belegt Preiszustände, Modellvergleich, Kontoschutz, Spracheingabe, Kosten und beide nativen Profile. Der iOS-Simulator bestand den Testdienst-Ablauf. Der Android-Emulator bestand Start und Testanmeldung, stoppte im ersten Lauf beim Testpreis. Der korrigierte Code ist lokal geprüft und läuft separat in Native-CI.
+
 ## Isolierter nativer Testdienst · 27.11.2026
 
 Der lokale Dienst und ein separat vorbereiteter Testbuild decken Anmeldung, Sitzungswiederherstellung, Suche, Preisstatus, Free/Plus-Kontingente und Dienstfehler mit eindeutig gekennzeichneten Testdaten ab. Der normale Build verwendet weiterhin seine bisherige Netzwerk- und Sitzungsgrenze. 198 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Der Build- und Transportnachweis steht in der [Dienstbeschreibung](docs/SERVICE.md#isolierter-nativer-testdienst). Android-Emulator und iOS-Simulator haben eigene CI-Prüfpfade. Der kontogeschützte Live-Dienst bleibt eine getrennte Freigabe.

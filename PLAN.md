@@ -1,5 +1,9 @@
 # Universal Deal Intelligence
 
+## Abschlusscheck P0–P3 · 27.11.2026
+
+Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) führt aktuelle Code-, Automations- und Plattformnachweise sowie die konkreten Freigaben für den Live-Betrieb. Die vier Preiszustände, der reproduzierbare Modellvergleich und der isolierte native Testdienst wurden getrennt geprüft und in Git gesichert.
+
 ## One-Touch-Suchintelligenz · 27.11.2026
 
 Der erste P0-Schritt schliesst die Lücke zwischen konkretem Kaufwunsch in DE/EN und bereits prüfbarer Produktvariante. [Ausgangsbasis, Zielwerte und gemessene Resultate](docs/evidence/2026-11-27-one-touch-search.md).

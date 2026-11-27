@@ -1,0 +1,58 @@
+{
+  "testedCommit": "c741c5c833d5268785997e7751e584e8e08b7bfe",
+  "run": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46024002766",
+  "data": "synthetic",
+  "physicalDevices": false,
+  "jobs": [
+    {
+      "platform": "iOS Simulator",
+      "profile": "fixture",
+      "job": 140591826523,
+      "conclusion": "success",
+      "anonymisedLog": [
+        "2026-11-27T15:34:08.8905440Z iOS fixture: app installed on the disposable simulator",
+        "2026-11-27T15:39:22.9001540Z iOS fixture: launched installed app (EN)",
+        "2026-11-27T15:39:22.9021520Z iOS fixture: protected login, rejected code and explicit search gate passed",
+        "2026-11-27T15:39:22.9124350Z iOS fixture: protected search and incomplete CHF 99.00 price passed; account search saved",
+        "2026-11-27T15:39:22.9210170Z iOS fixture: confirmed CHF 104.00 total and disabled seller link passed",
+        "2026-11-27T15:39:22.9358670Z iOS fixture: service error displayed, old offers cleared, draft retained and Plus usage stayed at 2 of 3",
+        "2026-11-27T15:39:22.9484780Z iOS fixture: sign-in, Plus usage and protected saved search restored after terminate/relaunch",
+        "2026-11-27T15:39:22.9593720Z iOS runner result: {\"status\":0,\"signal\":null}",
+        "2026-11-27T15:39:29.8314560Z Runner loopback fixture requests: {\"otp\":2,\"verify\":1,\"partial\":1,\"confirmed\":1,\"unavailable\":1,\"list\":1,\"save\":1}"
+      ]
+    },
+    {
+      "platform": "iOS Simulator",
+      "profile": "unconnected",
+      "job": 140591827101,
+      "conclusion": "success",
+      "anonymisedLog": [
+        "2026-11-27T15:39:51.8519350Z iOS: microphone explanation opened and closed before requesting permission",
+        "2026-11-27T15:39:52.0227470Z ** TEST SUCCEEDED **",
+        "2026-11-27T15:39:52.0228190Z iOS runner result: {\"status\":0,\"signal\":null}"
+      ]
+    },
+    {
+      "platform": "Android emulator",
+      "profile": "unconnected",
+      "job": 140591827072,
+      "conclusion": "success",
+      "anonymisedLog": [
+        "2026-11-27T15:26:13.1752612Z Android: microphone explanation can open and close before requesting permission.",
+        "2026-11-27T15:26:32.0761283Z Android: saved searches and CH context survived force-stop/relaunch; German selection preserved."
+      ]
+    },
+    {
+      "platform": "Android emulator",
+      "profile": "fixture",
+      "job": 140591827115,
+      "conclusion": "failure",
+      "anonymisedLog": [
+        "2026-11-27T15:25:58.5448118Z Android fixture: APK installed on the disposable emulator",
+        "2026-11-27T15:26:10.1831440Z Android fixture: launched installed app (DE)",
+        "2026-11-27T15:26:20.9251253Z Android fixture: protected login, rejected code and explicit search gate passed",
+        "2026-11-27T15:26:31.6193523Z Error: Native Android UI condition failed: document.querySelector(\"#web-results\")?.textContent.trim()?.includes(\"TESTDATEN\")"
+      ]
+    }
+  ]
+}
