@@ -23,6 +23,18 @@ Der erste P0-Schritt schliesst die Lücke zwischen konkretem Kaufwunsch in DE/EN
 | P7 Wettbewerb | Vorher-Nachher-Messungen für UDI und Stichprobe gegen einen Preisvergleich. | Vergleichbarer Benchmark über Aufgaben und Dienste mit tatsächlich nutzbaren oder besseren Resultaten. |
 | P8 Verifikation und Sicherung | Reale Gegenproben, automatisierte Tests, Git-Checkpoints und zurückgelesene Remote-Referenzen. | Fortlaufend pro Änderung. |
 
+## Universal Multi-AI Collaboration · 27.11.2026
+
+Der [Originalauftrag](docs/requirements/2026-11-27-multi-ai-collaboration.md) erweitert die One-Touch-Suche. Android und iOS nutzen denselben Suchvertrag. Eine Eingabe und ein Suchknopf führen zu einem Ergebnis mit nachvollziehbaren Belegen. Die abnehmbaren Schritte folgen dem erwarteten Nutzergewinn und ihren Abhängigkeiten.
+
+| Reihenfolge | Nachweis und Abnahme |
+|---|---|
+| P0 · Katalog und Einzelmodell | Bekannte Varianten direkt an zulässigen Quellen prüfen. Für unbekannte Wünsche muss ein einziges freigegebenes Modell den ganzen Ablauf von der Recherche bis zur nachgelagerten Quellenprüfung ermöglichen. Lokaler Vertrag geprüft. Bezahlte Live-Basislinie und native Abnahme offen. |
+| P1 · Ausfallsicherheit und Anbieterfreigabe | Der lokale Gateway-Adapter unterstützt ein optionales Ersatzmodell mit eigener Reservierung und gemeinsamer Frist. Vor dem Live-Pilot Primär- und Ersatzroute samt Suchtool, Modellfähigkeiten, tatsächlichen Kosten, Stoppsignalen und Datenschutz bestätigen. API-Zugang, Abo-Guthaben und Nutzerkonten pro Anbieter anhand der [Machbarkeitsprüfung](docs/evidence/2026-11-27-multi-ai-routing.md#offiziell-dokumentierte-zugänge) einzeln abnehmen. |
+| P2 · Modellwahl und gezielte Zusammenarbeit | Für Recherche, kreative Alternativen und Gegenprüfung das günstigste freigegebene Modell einsetzen, dessen Eignung für die Aufgabe anhand von Beispielen belegt ist. Ein optionales zweites Modell erhält bei ungeklärter Schlüsselaussage oder komplexem Ziel nur die benötigten Behauptungen und zulässigen Quellen. UDI prüft widersprüchliche Fakten an der Quelle, hält unbelegte Angaben offen und liefert ein gemeinsames Ergebnis. Bei gesperrter Option, fehlendem zweiten Anbieter oder ohne Budget bleibt der Ein-Modell-Weg vollständig. |
+| P2 · Qualitätsnachweis vor Aktivierung | Mindestens zwölf vorab festgelegte deutsch- und englischsprachige Fälle paarweise mit Einzelmodell und Zusammenarbeit prüfen. Varianten, alternative Beschaffungswege, Quelle ohne Endpreis, widersprüchliche Angaben, kein glaubwürdiges Ergebnis und Ausfall abdecken. Vorher erwartete Fakten und Kostenobergrenze festhalten. Pilotziel sind mindestens zwei zusätzlich gelöste Fälle oder verhinderte Fehlentscheidungen bei null harten Verletzungen von Variante, Quelle, Bestand und Gesamtkosten. Aufrufe, Latenz, tatsächliche Kosten pro brauchbarem Ergebnis und Gewinn je Fall protokollieren. |
+| P3 · Weitere Zugänge und Plattformabnahme | Lokale Laufzeit zuerst mit festem, privatem Betreiber-Endpunkt und ohne Cloud-Ausleitung prüfen. Nutzerzugänge nur über offiziell unterstützte Verfahren mit sichtbaren Datenempfängern, relevanten Berechtigungen und prüfbarem Widerruf. Installierte Apps können über dokumentierte Betriebssystemfreigaben bewusst geöffnet werden. Auf Android und iOS den echten geschützten Ablauf in DE/EN mit Einzelmodell, erlaubtem Ausweichpfad, Abbruch, erschöpftem Budget und optionaler Gegenprüfung separat abnehmen. |
+
 ## Konto und Spracheingabe · Vertiefung vom 25.11.2026
 
 [Originalauftrag mit P0–P6](docs/requirements/2026-11-25-account-and-dictation.md). Kontoregeln, Abo und persönliche Speicherung werden im folgenden Kontoplan geführt. Hier kommen die Sprachabnahmen hinzu.

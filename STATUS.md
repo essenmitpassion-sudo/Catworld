@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Multi-KI-Suche · 27.11.2026
+
+Der [Abnahmeplan](PLAN.md#universal-multi-ai-collaboration--27112026) staffelt Einzelmodell, Ausfallsicherheit, messbare Zusammenarbeit und weitere Zugänge. Im lokalen Entwicklungsdienst ist ein zweites Modell für ausgewählte vorübergehende Gateway-Fehler konfigurierbar. Tests mit dem echten SDK und simulierten Gateway-Antworten belegen Aufrufzahl, getrennte Budgetreservierung und Abbruch. 191 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Anbieterzugang im geschützten Pilot, gemessener Mehrwert der Zusammenarbeit und native Live-Abnahme bleiben offen. [Machbarkeit und Nachweis](docs/evidence/2026-11-27-multi-ai-routing.md).
+
 ## Endpreisfilter · 27.11.2026
 
 Für die Samsung 990 PRO 2 TB wurden im geschützten lokalen Pilot zwei passende Angebote mit offenem Endpreis nachgewiesen. Beim engeren Budget von CHF 200 war keines der beiden sonst passend. Mit Neuwarefilter blieb ein passender Teilbeleg. Die deutsche und englische Oberfläche führt bei fehlender Preisbestätigung zu den bestehenden Suchkriterien zurück. Verbindliche Gesamtkosten und native Live-Abnahme bleiben offen. 186 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Nachweis](docs/evidence/2026-11-27-endprice-filter.md).

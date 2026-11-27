@@ -31,6 +31,8 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
     if (request.method !== 'POST' || request.headers['sec-fetch-site'] !== 'same-origin'
       || request.headers.host !== host || request.headers.origin !== 'http://' + host
       || request.headers['content-type'] !== 'application/json') return reply(403, { kind: 'forbidden' });
+    const disconnect = new AbortController();
+    response.once('close', () => disconnect.abort());
     let body = '';
     request.setEncoding('utf8');
     for await (const chunk of request) {
@@ -56,7 +58,7 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
         try {
           if (known.length) return known;
           sourceMode = 'web';
-          return await webSearch(query);
+          return await webSearch(query, { signal: disconnect.signal });
         } finally {
           running--;
         }
@@ -94,12 +96,12 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
   let webSearch=null;
-  const {AI_GATEWAY_API_KEY,UDI_SEARCH_MODEL,UDI_BUDGET_DB,UDI_BUDGET_MONTH_USD_MICROS,UDI_BUDGET_REQUEST_USD_MICROS}=process.env;
+  const {AI_GATEWAY_API_KEY,UDI_SEARCH_MODEL,UDI_SEARCH_FALLBACK_MODEL,UDI_BUDGET_DB,UDI_BUDGET_MONTH_USD_MICROS,UDI_BUDGET_REQUEST_USD_MICROS}=process.env;
   if (AI_GATEWAY_API_KEY && UDI_SEARCH_MODEL && UDI_BUDGET_DB) {
     try {
       const budget=openProviderBudget({databasePath:UDI_BUDGET_DB,
         monthlyMicros:Number(UDI_BUDGET_MONTH_USD_MICROS),requestMicros:Number(UDI_BUDGET_REQUEST_USD_MICROS)});
-      webSearch=gatewaySearch({apiKey:AI_GATEWAY_API_KEY,model:UDI_SEARCH_MODEL,budget});
+      webSearch=gatewaySearch({apiKey:AI_GATEWAY_API_KEY,model:UDI_SEARCH_MODEL,fallbackModel:UDI_SEARCH_FALLBACK_MODEL,budget});
       if(!webSearch)budget.close();
     } catch {
       console.warn('Bezahlte Suche deaktiviert. Das Betreiberbudget konnte nicht geöffnet werden.');
