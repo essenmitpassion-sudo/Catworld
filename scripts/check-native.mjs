@@ -12,16 +12,22 @@ assert.deepEqual(JSON.parse(await readFile(new URL('../android/app/src/main/asse
 assert.deepEqual(JSON.parse(await readFile(new URL('../ios/App/App/capacitor.config.json',import.meta.url),'utf8')).packageClassList,['PreferencesPlugin']);
 const destinations=['android/app/src/main/assets/public/','ios/App/App/public/'];
 const files=appFiles.map(([file])=>file).filter(file=>file!=='observations.json');
+const profile=nativePilotProfile(process.env);
+const transport='native-fixture-transport.mjs';
+if(profile.fixture)files.push(transport);
 for(const file of files) {
   const original=await readFile(new URL('../native-dist/'+file,import.meta.url));
   for(const destination of destinations)assert.equal(createHash('sha256').update(await readFile(new URL('../'+destination+file,import.meta.url))).digest('hex'),createHash('sha256').update(original).digest('hex'),destination+file);
 }
-const profile=nativePilotProfile(process.env);
 for(const destination of ['native-dist/',...destinations]) {
   const index=await readFile(new URL('../'+destination+'index.html',import.meta.url),'utf8');
   assert(index.includes('name="udi-runtime" content="native"'));assert(index.includes('connect-src '+profile.connectSrc+';'));
   if(profile.meta)assert(index.includes(profile.meta));
   else assert(!index.includes('name="udi-native-pilot"'));
+  assert.equal(index.includes('name="udi-native-fixture"'),Boolean(profile.fixture));
+  const signIn=await readFile(new URL('../'+destination+'pilot-sign-in.mjs',import.meta.url),'utf8');
+  assert.equal(signIn.includes(`from './${transport}'`),Boolean(profile.fixture));
+  if(!profile.fixture)await assert.rejects(lstat(new URL('../'+destination+transport,import.meta.url)),{code:'ENOENT'});
   assert(index.includes('data-native-ui=""'));
   await assert.rejects(lstat(new URL('../'+destination+'observations.json',import.meta.url)),{code:'ENOENT'});
 }
@@ -31,6 +37,14 @@ assert(manifest.includes('android:allowBackup="false"'));assert(manifest.include
 assert(manifest.includes('android.permission.RECORD_AUDIO')&&manifest.includes('android.speech.RecognitionService'));
 const speechInfo=await readFile(new URL('../ios/App/App/Info.plist',import.meta.url),'utf8');
 assert(speechInfo.includes('NSMicrophoneUsageDescription')&&speechInfo.includes('NSSpeechRecognitionUsageDescription'));
+assert(!speechInfo.includes('NSAppTransportSecurity'));
+const fixturePlist=new URL('../ios/App/App/Info.fixture.plist',import.meta.url);
+if(profile.fixture) {
+  const fixtureInfo=await readFile(fixturePlist,'utf8');
+  assert(fixtureInfo.includes('NSAllowsLocalNetworking')&&!fixtureInfo.includes('NSAllowsArbitraryLoads'));
+  const fixtureAndroid=await readFile(new URL('../android/app/src/nativeFixture/res/xml/udi_fixture_network_security.xml',import.meta.url),'utf8');
+  assert(fixtureAndroid.includes('cleartextTrafficPermitted="false"')&&fixtureAndroid.includes('includeSubdomains="false">localhost<'));
+} else await assert.rejects(lstat(fixturePlist),{code:'ENOENT'});
 for(const lang of ['de','en']) {
   const purpose=await readFile(new URL('../ios/App/App/'+lang+'.lproj/InfoPlist.strings',import.meta.url),'utf8');
   assert(purpose.includes('NSMicrophoneUsageDescription')&&purpose.includes('NSSpeechRecognitionUsageDescription'));
@@ -44,4 +58,5 @@ assert(privacy.includes('NSPrivacyAccessedAPICategoryUserDefaults')&&privacy.inc
 assert((await readFile(new URL('../ios/App/App.xcodeproj/project.pbxproj',import.meta.url),'utf8')).includes('PrivacyInfo.xcprivacy in Resources'));
 const icon=await readFile(new URL('../ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png',import.meta.url));
 assert.equal(icon.readUInt32BE(16),1024);assert.equal(icon.readUInt32BE(20),1024);assert.equal(icon[25],2,'iOS icon is RGB without alpha channel');
-console.log(JSON.stringify({filesPerPlatform:files.length,identicalBundledUi:true,networkDisabled:!profile.meta,observationSnapshotsExcluded:true,nativeCompilationVerified:false,deviceParityVerified:false}));
+console.log(JSON.stringify({filesPerPlatform:files.length,identicalBundledUi:true,networkDisabled:!profile.meta,
+  fixtureOnly:Boolean(profile.fixture),observationSnapshotsExcluded:true,nativeCompilationVerified:false,deviceParityVerified:false}));

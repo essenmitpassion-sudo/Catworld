@@ -1,4 +1,4 @@
-// Native startup proof only: no live offers, purchases or microphone claims.
+// Native startup and isolated fixture proof: no live offers, purchases or microphone claims.
 // Only synthetic disposable-runner screens are emitted as bounded PNG records
 // in existing CI logs. No artifact-storage service or app release is enabled.
 import { spawnSync, spawn } from 'node:child_process';
@@ -8,12 +8,35 @@ import { setTimeout as delay } from 'node:timers/promises';
 import assert from 'node:assert/strict';
 import {withAndroidPage} from './native-cdp.mjs';
 import {androidFlow} from './native-flow-android.mjs';
+import {androidFixtureFlow} from './native-flow-fixture-android.mjs';
 import {writeScreen,resultScreenshotName} from './native-screens.mjs';
 
 const platform = process.argv[2];
+const profile = process.argv[3] ?? 'unconnected';
+assert(profile === 'unconnected' || profile === 'fixture', 'Choose unconnected or fixture.');
+const fixture = profile === 'fixture';
 const temp = process.env.RUNNER_TEMP;
 assert(temp, 'Run native startup checks on the disposable CI runner.');
 const appId = 'stream.soundweave.udi';
+const fixturePort = 4175;
+const flow = fixture ? androidFixtureFlow : androidFlow;
+
+async function checkFixtureService(finished) {
+  const response=await fetch('http://127.0.0.1:'+fixturePort+'/healthz',{signal:AbortSignal.timeout(3000),redirect:'error'});
+  assert(response.ok,'Isolated fixture service must respond on runner loopback');
+  const {test,counts}=await response.json();
+  assert.equal(test,true,'Unexpected service on runner loopback');
+  const expected={otp:2,verify:1,partial:1,confirmed:1,unavailable:1,list:1,save:1};
+  const observed={};
+  for(const [route,minimum] of Object.entries(expected)) {
+    assert(Number.isSafeInteger(counts?.[route]),'Missing fixture counter: '+route);
+    if(finished)assert(counts[route]>=minimum,'Missing native fixture coverage: '+route);
+    else assert.equal(counts[route],0,'Each platform requires its own unused fixture service');
+    observed[route]=counts[route];
+  }
+  if(finished)console.log('Runner loopback fixture requests: '+JSON.stringify(observed));
+}
+
 async function recordScreen(label,path) {
   await writeScreen(label,readFileSync(path));
 }
@@ -74,6 +97,8 @@ async function androidSurface(port) {
   } finally { socket.close(); }
 }
 
+if (fixture) await checkFixtureService(false);
+
 if (platform === 'android') {
   const sdk = process.env.ANDROID_HOME;
   assert(sdk, 'Android SDK missing.');
@@ -98,7 +123,9 @@ if (platform === 'android') {
     }
     assert(booted, 'Android emulator did not finish booting within the startup limit.');
     run(adb, ['-e', 'shell', 'input', 'keyevent', '82']);
+    if(fixture)run(adb,['-e','reverse','tcp:'+fixturePort,'tcp:'+fixturePort]);
     run(adb, ['-e', 'install', '-r', resolve('android/app/build/outputs/apk/debug/app-debug.apk')]);
+    if(fixture)console.log('Android fixture: APK installed on the disposable emulator');
     console.log(run(adb, ['-e', 'shell', 'am', 'start', '-W', '-n', `${appId}/.MainActivity`]));
     await delay(8000);
     const pid = run(adb, ['-e', 'shell', 'pidof', appId]).trim();
@@ -109,27 +136,30 @@ if (platform === 'android') {
     const port = run(adb, ['-e', 'forward', 'tcp:0', `localabstract:webview_devtools_remote_${pid}`]).trim();
     assert(/^\d+$/.test(port), 'Invalid adb loopback port.');
     try {
-      await androidSurface(port);
+      if(!fixture)await androidSurface(port);
       await withAndroidPage(port,async page=>{
-        await page.evaluate("document.querySelector('main').scrollTop=0");
-        assert(await page.evaluate("(()=>{const r=document.querySelector('.primary-search').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return r.top>=0&&r.bottom<=nav.top})()"),'Initial native search action must fit above navigation');
-        const png=spawnSync(adb,['-e','exec-out','screencap','-p'],{timeout:15000,maxBuffer:2*1024*1024});
-        assert(!png.error&&png.status===0,'Android screenshot failed');
-        const shot=join(temp,'udi-android-start.png');writeFileSync(shot,png.stdout);await recordScreen('android-start',shot);
-        await androidFlow(page,false);
+        if(!fixture) {
+          await page.evaluate("document.querySelector('main').scrollTop=0");
+          assert(await page.evaluate("(()=>{const r=document.querySelector('.primary-search').getBoundingClientRect(),nav=document.querySelector('nav').getBoundingClientRect();return r.top>=0&&r.bottom<=nav.top})()"),'Initial native search action must fit above navigation');
+          const png=spawnSync(adb,['-e','exec-out','screencap','-p'],{timeout:15000,maxBuffer:2*1024*1024});
+          assert(!png.error&&png.status===0,'Android screenshot failed');
+          const shot=join(temp,'udi-android-start.png');writeFileSync(shot,png.stdout);await recordScreen('android-start',shot);
+        }
+        await flow(page,false);
       });
     }
     catch (error) {
-      console.log(run(adb, ['-e', 'logcat', '-d', '-s', 'Capacitor/Console', 'chromium', 'AndroidRuntime']).slice(-12000));
+      if(!fixture)console.log(run(adb, ['-e', 'logcat', '-d', '-s', 'Capacitor/Console', 'chromium', 'AndroidRuntime']).slice(-12000));
       throw error;
     } finally { spawnSync(adb, ['-e', 'forward', '--remove', `tcp:${port}`], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' }); }
     run(adb,['-e','shell','am','force-stop',appId]);
     run(adb,['-e','shell','am','start','-W','-n',`${appId}/.MainActivity`]);await delay(3000);
     const restartedPid=run(adb,['-e','shell','pidof',appId]).trim();assert(/^\d+$/.test(restartedPid));
     const restartedPort=run(adb,['-e','forward','tcp:0',`localabstract:webview_devtools_remote_${restartedPid}`]).trim();
-    try {await withAndroidPage(restartedPort,page=>androidFlow(page,true));}
+    try {await withAndroidPage(restartedPort,page=>flow(page,true));}
     finally {spawnSync(adb,['-e','forward','--remove',`tcp:${restartedPort}`],{timeout:10000,killSignal:'SIGKILL',stdio:'ignore'});}
   } finally {
+    if(fixture)spawnSync(adb,['-e','reverse','--remove','tcp:'+fixturePort],{timeout:10000,killSignal:'SIGKILL',stdio:'ignore'});
     spawnSync(adb, ['-e', 'emu', 'kill'], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' });
     emulator.kill();
   }
@@ -156,36 +186,54 @@ if (platform === 'android') {
     const boot=run('xcrun', ['simctl', 'bootstatus', device.udid, '-b'], 480000);
     writeFileSync(join(temp,'udi-ios-boot.log'),boot);
     await new Promise((done,fail)=>process.stdout.write('iOS boot status tail:\n'+boot.slice(-4000)+'\n',error=>error?fail(error):done()));
-    // The real App scheme owns its UI-test target and target application.
-    // Xcode installs and launches both; no separate installer or generated project.
+    const derivedData=join(temp,'udi-ios');
+    if(fixture) {
+      run('xcrun',['simctl','install',device.udid,join(derivedData,'Build','Products','Debug-iphonesimulator','App.app')]);
+      assert(run('xcrun',['simctl','get_app_container',device.udid,appId]).trim(),'Fixture app must be installed');
+      console.log('iOS fixture: app installed on the disposable simulator');
+    }
+    // The App scheme launches its UI-test target against the installed app.
+    const testMethod=fixture?'testProtectedFixtureSearchAndRestoration':'testUnconnectedSearchAndPersistenceInBothLanguages';
+    const settings=fixture?['UDI_INFOPLIST_FILE=App/Info.fixture.plist']:[];
     const log=join(temp,'udi-native-flow.log'),fd=openSync(log,'w');let result;
     try {result=spawnSync('xcodebuild',['test','-project',resolve('ios/App/App.xcodeproj'),'-scheme','App','-destination',`platform=iOS Simulator,id=${device.udid}`,
-      '-derivedDataPath',join(temp,'udi-ios'),'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO'],
+      '-derivedDataPath',derivedData,'-resultBundlePath',join(temp,'udi-flow.xcresult'),'-parallel-testing-enabled','NO','CODE_SIGNING_ALLOWED=NO',
+      '-only-testing:UDIFlowTests/UDIFlowTests/'+testMethod,...settings],
       {stdio:['ignore',fd,fd],timeout:480000,killSignal:'SIGKILL'});}finally{closeSync(fd);}
     const flowLog=readFileSync(log,'utf8');
-    console.log('iOS flow milestones:\n'+flowLog.split(/\r?\n/).filter(line=>/\biOS(?::| (?:English:|Deutsch:))/.test(line)).join('\n'));
-    console.log(flowLog.slice(-18000));
-    console.log('iOS runner result: '+JSON.stringify({status:result.status,signal:result.signal,error:result.error?.code}));
-    let captured=false;
-    try {
-      // Capture while XCTest still owns the foreground app. Only the explicitly
-      // named UDI attachment is selected, not an arbitrary exported diagnostic.
-      const directory=join(temp,'udi-flow-attachments');
-      run('xcrun',['xcresulttool','export','attachments','--path',join(temp,'udi-flow.xcresult'),'--output-path',directory],30000);
-      const manifest=JSON.parse(readFileSync(join(directory,'manifest.json'),'utf8'));
-      const screenshot=resultScreenshotName(manifest);
-      await recordScreen('ios-flow',join(directory,screenshot));captured=true;
-      console.log('iOS image source: explicitly marked XCTest app attachment.');
-    } catch(error) {console.log('iOS XCTest image unavailable: '+String(error?.message??error).slice(-1500));}
-    if(!captured) {
-      try {
-        const screenshot=join(temp,'udi-ios-flow.png');
-        run('xcrun',['simctl','io',device.udid,'screenshot',screenshot],15000);
-        await recordScreen('ios-flow',screenshot);captured=true;
-      } catch(error) {console.log('iOS post-test screenshot unavailable; no visual claim. '+String(error?.message??error).slice(-1500));}
+    const milestones=fixture?/^iOS fixture:/:/\biOS(?::| (?:English:|Deutsch:))/;
+    console.log('iOS flow milestones:\n'+flowLog.split(/\r?\n/).filter(line=>milestones.test(line)).slice(-15).map(line=>line.slice(0,400)).join('\n'));
+    if(!fixture)console.log(flowLog.slice(-18000));
+    else if(result.error||result.status!==0) {
+      const errors=flowLog.split(/\r?\n/).filter(line=>/error:|failed:|TEST FAILED/.test(line));
+      console.log(errors.slice(-15).map(line=>line.replaceAll('plus@udi.test','[fixture account]').replace(/\b\d{6}\b/g,'[fixture code]').slice(0,500)).join('\n'));
     }
-    assert(!result.error&&result.status===0,'iOS native flow test failed; see Xcode log above.');
-    assert(captured,'iOS flow passed but screenshot could not be captured; visual acceptance remains open.');
+    console.log('iOS runner result: '+JSON.stringify({status:result.status,signal:result.signal,error:result.error?.code}));
+    if(fixture) {
+      assert(!result.error&&result.status===0&&flowLog.includes('iOS fixture: sign-in, Plus usage and protected saved search restored'),
+        'iOS fixture acceptance failed or was not executed; see bounded diagnostics above.');
+    } else {
+      let captured=false;
+      try {
+        // Capture while XCTest still owns the foreground app. Only the explicitly
+        // named UDI attachment is selected, not an arbitrary exported diagnostic.
+        const directory=join(temp,'udi-flow-attachments');
+        run('xcrun',['xcresulttool','export','attachments','--path',join(temp,'udi-flow.xcresult'),'--output-path',directory],30000);
+        const manifest=JSON.parse(readFileSync(join(directory,'manifest.json'),'utf8'));
+        const screenshot=resultScreenshotName(manifest);
+        await recordScreen('ios-flow',join(directory,screenshot));captured=true;
+        console.log('iOS image source: explicitly marked XCTest app attachment.');
+      } catch(error) {console.log('iOS XCTest image unavailable: '+String(error?.message??error).slice(-1500));}
+      if(!captured) {
+        try {
+          const screenshot=join(temp,'udi-ios-flow.png');
+          run('xcrun',['simctl','io',device.udid,'screenshot',screenshot],15000);
+          await recordScreen('ios-flow',screenshot);captured=true;
+        } catch(error) {console.log('iOS post-test screenshot unavailable; no visual claim. '+String(error?.message??error).slice(-1500));}
+      }
+      assert(!result.error&&result.status===0,'iOS native flow test failed; see Xcode log above.');
+      assert(captured,'iOS flow passed but screenshot could not be captured; visual acceptance remains open.');
+    }
   } finally {
     spawnSync('xcrun', ['simctl', 'shutdown', device.udid], { timeout: 30000, killSignal: 'SIGKILL', stdio: 'ignore' });
     spawnSync('xcrun',['simctl','delete',createdId],{timeout:30000,killSignal:'SIGKILL',stdio:'ignore'});
@@ -193,4 +241,7 @@ if (platform === 'android') {
 } else {
   throw new Error('Choose android or ios.');
 }
-console.log(`Native ${platform} startup passed. Full device/search/voice acceptance remains separate.`);
+if(fixture) {
+  await checkFixtureService(true);
+  console.log(`Native ${platform} fixture flow passed with synthetic accounts, searches and prices.`);
+} else console.log(`Native ${platform} startup passed. Full device/search/voice acceptance remains separate.`);

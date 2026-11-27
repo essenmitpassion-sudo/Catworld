@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Isolierter nativer Testdienst · 27.11.2026
+
+Der lokale Dienst und ein separat vorbereiteter Testbuild decken Anmeldung, Sitzungswiederherstellung, Suche, Preisstatus, Free/Plus-Kontingente und Dienstfehler mit eindeutig gekennzeichneten Testdaten ab. Der normale Build verwendet weiterhin seine bisherige Netzwerk- und Sitzungsgrenze. 198 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Der Build- und Transportnachweis steht in der [Dienstbeschreibung](docs/SERVICE.md#isolierter-nativer-testdienst). Android-Emulator und iOS-Simulator haben eigene CI-Prüfpfade. Der kontogeschützte Live-Dienst bleibt eine getrennte Freigabe.
+
 ## Simulierter Vergleich der Modellwege · 27.11.2026
 
 Der reproduzierbare DE/EN-Vergleich verarbeitet zwölf Fälle über den bestehenden Suchkern und Clientvertrag. In den elf Qualitätsfällen lag die Einzelmodellvariante bei 11/11 erwarteten sicheren Entscheidungen. Die simulierte Gegenprüfung erreichte ebenfalls 11/11 mit zwei zusätzlichen Aufrufen und ohne zusätzlichen gelösten Fall. Der separate Ausfalltest bestätigte den begrenzten Ersatzversuch und die Stopps bei Budgetmangel und Abbruch. Zweiter tatsächlich unabhängiger Anbieter, Live-Kosten und echter Qualitätsgewinn bleiben offen. [Vergleichsprotokoll](docs/evidence/2026-11-27-multi-ai-replay.md).

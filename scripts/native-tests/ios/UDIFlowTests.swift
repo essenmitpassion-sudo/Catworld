@@ -1,6 +1,139 @@
 import XCTest
 
 final class UDIFlowTests: XCTestCase {
+    func testProtectedFixtureSearchAndRestoration() {
+        continueAfterFailure = false
+        let app = XCUIApplication(bundleIdentifier: "stream.soundweave.udi")
+        app.launch()
+        let web = app.webViews.firstMatch
+        XCTAssertTrue(web.waitForExistence(timeout: 15), "Installed app must launch its WebView")
+        let settings = web.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ OR label BEGINSWITH %@", "Language and market:", "Sprache und Markt:")).firstMatch
+        XCTAssertTrue(settings.waitForExistence(timeout: 15))
+        settings.tap()
+        let english = web.switches["English"].firstMatch
+        XCTAssertTrue(english.waitForExistence(timeout: 5))
+        english.tap()
+        XCTAssertTrue(web.buttons["Language and market: English"].firstMatch.waitForExistence(timeout: 15))
+        XCTAssertTrue(web.staticTexts["Test environment · Simulated accounts and prices only"].firstMatch.waitForExistence(timeout: 10))
+        print("iOS fixture: launched installed app (EN)")
+
+        let main = web.otherElements["main"].firstMatch
+        let field = web.textViews.firstMatch
+        let submit = web.buttons["Find offers"].firstMatch
+        let wish = "Samsung 990 PRO 2 TB"
+        let offerMarker = web.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "TEST DATA")).firstMatch
+        let sellerLinkDisabled = web.staticTexts["Test data: seller link disabled."].firstMatch
+        let signOut = web.buttons["Sign out"].firstMatch
+
+        func tapVisible(_ control: XCUIElement, in surface: XCUIElement) {
+            XCTAssertTrue(control.waitForExistence(timeout: 10))
+            for _ in 0..<4 {
+                var visible = surface.frame
+                let keyboard = app.keyboards.firstMatch
+                if keyboard.exists {
+                    visible.size.height = max(0, min(visible.maxY, keyboard.frame.minY) - visible.minY)
+                }
+                if control.isHittable && visible.insetBy(dx: 0, dy: 6).contains(control.frame) {
+                    control.tap()
+                    return
+                }
+                if control.frame.minY < visible.minY {
+                    surface.swipeDown(velocity: .slow)
+                } else {
+                    surface.swipeUp(velocity: .slow)
+                }
+            }
+            XCTFail("Control must clear the keyboard and navigation before tapping")
+        }
+
+        func search(_ replacement: String, replacing previous: String? = nil) {
+            tapVisible(field, in: main)
+            if let previous {
+                field.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+                field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: previous.count))
+            }
+            field.typeText(replacement)
+            XCTAssertEqual(field.value as? String, replacement)
+            tapVisible(submit, in: main)
+        }
+
+        func checkOffer(_ badge: String, amount: String) {
+            XCTAssertTrue(offerMarker.waitForExistence(timeout: 15), "Synthetic result must be explicitly labelled")
+            XCTAssertTrue(web.staticTexts[badge].firstMatch.waitForExistence(timeout: 8))
+            let price = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "CHF", amount)).firstMatch
+            XCTAssertTrue(price.waitForExistence(timeout: 5))
+            XCTAssertTrue(sellerLinkDisabled.waitForExistence(timeout: 5))
+            XCTAssertFalse(web.links["Open offer page"].exists)
+            XCTAssertFalse(web.buttons["Deal Passport"].exists)
+        }
+
+        func checkUsage(_ used: Int) {
+            let usage = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "Test plan Plus · \(used) of 3 searches")).firstMatch
+            XCTAssertTrue(usage.waitForExistence(timeout: 10))
+        }
+
+        XCTAssertTrue(web.buttons["Sign in"].firstMatch.waitForExistence(timeout: 10))
+        search(wish)
+        let email = web.textFields["Email address"].firstMatch
+        XCTAssertTrue(email.waitForExistence(timeout: 10), "Protected search must show sign-in")
+        email.tap()
+        email.typeText("plus@udi.test")
+        tapVisible(web.buttons["Request code"].firstMatch, in: web)
+        let code = web.textFields["Six-digit code"].firstMatch
+        XCTAssertTrue(code.waitForExistence(timeout: 10))
+        code.tap()
+        code.typeText("999999")
+        tapVisible(web.buttons["Confirm code"].firstMatch, in: web)
+        let rejected = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "incorrect or has expired")).firstMatch
+        XCTAssertTrue(rejected.waitForExistence(timeout: 10), "Incorrect fixture code must be rejected")
+        // The provider may invalidate a challenge after a failed verification.
+        tapVisible(web.buttons["Request a new code"].firstMatch, in: web)
+        let cleared = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard code.exists else { return false }
+            let value = code.value as? String
+            return value == nil || value == "" || value == code.placeholderValue
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [cleared], timeout: 10), .completed)
+        code.tap()
+        code.typeText("123456")
+        tapVisible(web.buttons["Confirm code"].firstMatch, in: web)
+        XCTAssertTrue(signOut.waitForExistence(timeout: 15))
+        checkUsage(0)
+        XCTAssertEqual(field.value as? String, wish, "Sign-in must preserve the draft")
+        XCTAssertFalse(offerMarker.exists, "Sign-in must not submit the draft")
+        print("iOS fixture: protected login, rejected code and explicit search gate passed")
+
+        tapVisible(submit, in: main)
+        checkOffer("Incomplete / estimate", amount: "99.00")
+        tapVisible(web.buttons["Save search"].firstMatch, in: main)
+        XCTAssertTrue(web.buttons["Search saved"].firstMatch.waitForExistence(timeout: 8))
+        print("iOS fixture: protected search and incomplete CHF 99.00 price passed; account search saved")
+
+        let confirmed = "\(wish) confirmed"
+        search(confirmed, replacing: wish)
+        checkOffer("Confirmed total", amount: "104.00")
+        print("iOS fixture: confirmed CHF 104.00 total and disabled seller link passed")
+
+        let failing = "UDI fixture unavailable"
+        search(failing, replacing: confirmed)
+        XCTAssertTrue(web.staticTexts["Web search is temporarily unavailable."].firstMatch.waitForExistence(timeout: 15))
+        XCTAssertTrue(web.staticTexts["Not verifiable"].firstMatch.waitForExistence(timeout: 5))
+        checkUsage(2)
+        XCTAssertFalse(offerMarker.exists, "A failed search must clear the preceding result")
+        XCTAssertEqual(field.value as? String, failing)
+        print("iOS fixture: service error displayed, old offers cleared, draft retained and Plus usage stayed at 2 of 3")
+
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(signOut.waitForExistence(timeout: 15), "Fixture session must restore after process termination")
+        checkUsage(2)
+        let saved = web.links["Saved"].firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 10))
+        saved.tap()
+        XCTAssertTrue(web.staticTexts[wish].firstMatch.waitForExistence(timeout: 10), "Account search must load from the protected service after relaunch")
+        print("iOS fixture: sign-in, Plus usage and protected saved search restored after terminate/relaunch")
+    }
+
     func testUnconnectedSearchAndPersistenceInBothLanguages() throws {
         continueAfterFailure = false
         let app = XCUIApplication(bundleIdentifier: "stream.soundweave.udi")

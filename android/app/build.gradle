@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+def nativeFixtureBuild = providers.gradleProperty("udiNativeFixture").orNull == "1"
+def nativeFixtureAssets = file("src/main/assets/public/native-fixture-transport.mjs").isFile()
+if (nativeFixtureBuild != nativeFixtureAssets) {
+    throw new GradleException("Match fixture assets and -PudiNativeFixture=1, or prepare standard native assets.")
+}
+
 android {
     namespace = "stream.soundweave.udi"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -20,6 +26,20 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+if (nativeFixtureBuild) {
+    android.sourceSets.debug {
+        manifest.srcFile 'src/nativeFixture/AndroidManifest.xml'
+        res.srcDir 'src/nativeFixture/res'
+    }
+    androidComponents {
+        beforeVariants(selector().all()) { variant ->
+            if (variant.buildType != "debug") {
+                variant.enable = false
+            }
         }
     }
 }

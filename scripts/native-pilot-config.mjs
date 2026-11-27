@@ -1,6 +1,10 @@
 import {validatePilotConfig} from '../src/pilot-session.mjs';
 
 export function nativePilotProfile(env) {
+  if(env.UDI_NATIVE_FIXTURE==='1') {
+    if(env.UDI_NATIVE_PILOT==='1')throw new Error('Choose either the native fixture or the protected native pilot');
+    return {connectSrc:"'none'",meta:'<meta name="udi-native-fixture" content="test">\n<meta name="udi-native-pilot" content="fixture">',fixture:true};
+  }
   if(env.UDI_NATIVE_PILOT!=='1')return {connectSrc:"'none'",meta:''};
   const {authOrigin,publishableKey,approvedOrigin}=validatePilotConfig({
     authOrigin:env.UDI_AUTH_ORIGIN,

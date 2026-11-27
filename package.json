@@ -16,6 +16,7 @@
     "native:prepare": "node scripts/build-native.mjs",
     "native:check": "node scripts/check-native.mjs",
     "native:doctor": "node scripts/native-doctor.mjs",
+    "native:fixture:service": "node scripts/native-fixture-service.mjs",
     "live": "node scripts/browser.mjs --live",
     "icons": "node scripts/generate-icons.mjs",
     "pilot:package": "node scripts/package-pilot.mjs",

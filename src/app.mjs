@@ -45,7 +45,30 @@ let sharer;
 mountIcons();
 initializeLanguage();
 const platform=runtimePlatform();
-const pilotSession=configuredPilotSession(document,platform);
+if (['android','ios'].includes(platform) && document.querySelector('meta[name="udi-native-fixture"]')) {
+  const notice = element('p', m('Testumgebung · Nur simulierte Konten und Preise'), 'surface shared-notice');
+  notice.id = 'native-fixture-notice';
+  const account = element('span');
+  account.id = 'native-fixture-account';
+  notice.append(account);
+  get('main').querySelector('.shell').prepend(notice);
+}
+const pilotSession=await configuredPilotSession(document,platform);
+let fixtureAccountRead=0;
+async function refreshFixtureAccount(signedIn) {
+  const label = get('native-fixture-account');
+  if (!label || !pilotSession?.getFixtureAccount) return;
+  const read = ++fixtureAccountRead;
+  if (!signedIn) { setText(label, ''); return; }
+  try {
+    const account = await pilotSession.getFixtureAccount();
+    if (read !== fixtureAccountRead || !account) return;
+    setText(label, m(' · Testabo {plan} · {used} von {limit} Suchen',
+      {plan:account.plan==='plus'?'Plus':'Free',used:account.used,limit:account.limit}));
+  } catch {
+    if (read === fixtureAccountRead) setText(label, m(' · Testkontingent nicht verfügbar'));
+  }
+}
 const pilotConfigured=['android','ios'].includes(platform)&&Boolean(document.querySelector('meta[name="udi-native-pilot"]'));
 const pilotSystemMessage='Aktualisiere dein Betriebssystem, um dich im Pilot anzumelden. Du kannst deinen Wunsch weiterhin eingeben.';
 document.documentElement.toggleAttribute('data-native-ui',platform!=='web');
@@ -81,6 +104,7 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     } finally {clearTimeout(timer);}
   },
   onSessionChange(signedIn) {
+    void refreshFixtureAccount(signedIn);
     const status=get('native-runtime-status');
     const field=get('search-query');
     status.hidden=signedIn;

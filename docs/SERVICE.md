@@ -2,6 +2,23 @@
 
 Stand: Client implementiert, kein erreichbarer geschützter Dienst konfiguriert. Android und iOS benutzen `createDealClient` aus derselben Codebasis. Die App enthält weder Endpunkt noch Token, Schlüssel oder Testangebote. Der lokale Node-Prüfserver und dessen Host-/Origin-Schutz bleiben unverändert; er ist kein bereitgestellter nativer Dienst.
 
+## Lokaler nativer Testdienst
+
+`npm run native:fixture:service` startet den separat vorbereiteten Testdienst auf `127.0.0.1:4175`. `GET /healthz` liefert `test:true` und Zähler für feste Prüfschritte. Der Prozess verwendet synthetische Konten und Daten im Arbeitsspeicher. Ein Neustart verwirft Anmeldungen, gespeicherte Testwünsche und Kontingente. Weder E-Mail-Anbieter noch Händler, Zahlungsdienst oder KI-Anbieter werden kontaktiert.
+
+Setze `UDI_NATIVE_FIXTURE=1` für `npm run native:prepare` und `npm run native:check`. Android verlangt `-PudiNativeFixture=1` beim Debug-Build und `adb reverse tcp:4175 tcp:4175` beim Start des Emulators. iOS verlangt die Debug-Konfiguration des Simulators und `UDI_INFOPLIST_FILE=App/Info.fixture.plist` beim Xcode-Build. Der App-Build prüft die Kombination aus Testdateien, Konfiguration und Plattform. Die UI zeigt eine durchgängige Testkennzeichnung.
+
+| Prüffall | Eingabe und erwartete Antwort |
+|---|---|
+| Anmeldung | `free@udi.test` oder `plus@udi.test`, gefolgt von `123456`. Ein falscher Code kann erneut eingegeben werden. |
+| Free und Plus | Der Dienst meldet den jeweiligen synthetischen Plan und die Nutzung. Free erhält eine Suche, Plus drei. Der nächste gültige Suchlauf meldet das ausgeschöpfte Kontingent. |
+| Offene Pflichtkosten | `Samsung 990 PRO 2 TB` zeigt CHF 99.00 mit offenem Versand und offenem Total. |
+| Bestätigter Gesamtbetrag | `Samsung 990 PRO 2 TB confirmed` zeigt CHF 104.00 mit synthetischer Bestätigung für CH 8000. |
+| Dienstfehler | `UDI fixture unavailable` liefert HTTP 503 ohne Kontingentverbrauch. |
+| Wiederherstellung | App beenden und erneut öffnen. Ein gültiges Testtoken wird aus einem eigenen Preferences-Schlüssel geladen und vom Testdienst erneut geprüft. Gespeicherte Wünsche bleiben dem Testkonto zugeordnet. Abmelden entfernt die lokale Testsitzung. |
+
+Der geschützte Pilot bleibt an seine geprüften HTTPS-Ziele und Arbeitsspeichersitzungen gebunden. Der Standardbuild entfernt beim Vorbereiten die Testdatei und das generierte Simulator-Plist. Der Testtransport kommt nur im ausdrücklich gewählten Build vor. Die WebView-CSP bleibt geschlossen. Der Testtransport verwendet fest zugeordnete Loopback-Routen, verweigert Umleitungen und nimmt bei Sucherfolg nur `dataMode:'test'` an. Android erlaubt unverschlüsselten Verkehr in diesem Debug-Profil nur für `localhost`. Der iOS-Simulator nutzt dafür ein eigenes Plist mit lokaler Netzwerkfreigabe. Testangebote öffnen keine Anbieterlinks und erzeugen keine Passport-Belege. Der Test dient dem nativen Ablauf mit kontrollierten Daten. Der Nachweis eines geschützten Live-Dienstes und die Abnahme auf physischen Geräten stehen aus.
+
 ## Kontogeschützter lokaler Pilot · 25.11.2026
 
 `npm run pilot:service` startet den gemeinsamen Such- und Einstellungsdienst auf `127.0.0.1:4174`. Der Dienst verlangt folgende Betreiberkonfiguration:

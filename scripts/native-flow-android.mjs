@@ -1,13 +1,11 @@
 import assert from 'node:assert/strict';
 import {setTimeout as delay} from 'node:timers/promises';
 const wishes=['Samsung 990 PRO 2 TB','Samsung 990 PRO 2 TB bis CHF 500'];
-export async function androidFlow({send,evaluate},afterRestart) {
-  // Only synthetic CI wishes enter this bounded diagnostic trace.
-  await evaluate("window.udiQATrace=[];for(const type of ['input','change','click','submit'])document.addEventListener(type,e=>{window.udiQATrace.push({type,target:e.target.id||e.target.className,query:document.querySelector('#search-query').value});window.udiQATrace=window.udiQATrace.slice(-20)},true)");
+export function androidControls({send,evaluate},diagnose) {
   const wait=async expression=>{
     const until=Date.now()+10000;do {if(await evaluate(expression))return;await delay(100);}while(Date.now()<until);
-    const state=await evaluate("JSON.stringify({query:document.querySelector('#search-query').value,saved:localStorage.getItem('udi.searches.v2'),headings:Array.from(document.querySelectorAll('#saved .surface h2')).map(n=>n.textContent),notice:document.querySelector('#notice').textContent,trace:window.udiQATrace})");
-    throw new Error('Native Android UI condition failed: '+expression+'; QA state: '+state);
+    const state=diagnose?'; QA state: '+await diagnose():'';
+    throw new Error('Native Android UI condition failed: '+expression+state);
   };
   const tap=async selector=>{
     await evaluate(`document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({block:'center',behavior:'instant'})`);
@@ -30,6 +28,14 @@ export async function androidFlow({send,evaluate},afterRestart) {
     await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
     await wait('window.udiQATap!==null');assert.equal(await evaluate('window.udiQATap'),true,'Native click must reach '+selector);
   };
+  return {tap,wait};
+}
+
+export async function androidFlow(page,afterRestart) {
+  const {send,evaluate}=page;
+  // Only synthetic CI wishes enter this bounded diagnostic trace.
+  await evaluate("window.udiQATrace=[];for(const type of ['input','change','click','submit'])document.addEventListener(type,e=>{window.udiQATrace.push({type,target:e.target.id||e.target.className,query:document.querySelector('#search-query').value});window.udiQATrace=window.udiQATrace.slice(-20)},true)");
+  const {tap,wait}=androidControls(page,()=>evaluate("JSON.stringify({query:document.querySelector('#search-query').value,saved:localStorage.getItem('udi.searches.v2'),headings:Array.from(document.querySelectorAll('#saved .surface h2')).map(n=>n.textContent),notice:document.querySelector('#notice').textContent,trace:window.udiQATrace})"));
   if(afterRestart) {
     assert.equal(await evaluate("localStorage.getItem('udi.language.v1')"),'de','native language persists');
     await tap('nav a[href="#watchlist"]');

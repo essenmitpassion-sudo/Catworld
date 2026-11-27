@@ -47,13 +47,14 @@ export function validatePilotConfig({authOrigin,publishableKey,approvedOrigin}={
   return {authOrigin,publishableKey,approvedOrigin};
 }
 
-export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now=Date.now,fetchImpl=globalThis.fetch}={}) {
+export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now=Date.now,fetchImpl=globalThis.fetch,fixture}={}) {
   validatePilotConfig({authOrigin,publishableKey,approvedOrigin});
+  if(fixture && fetchImpl===globalThis.fetch)throw new Error('Fixture requires a separate transport');
 
   let lifetime=new AbortController();
-  let pendingEmail=null,active=false,session=null;
+  let pendingEmail=null,active=false,session=fixture?.restoredSession??null;
   const client=createDealClient({endpoint:new URL('/api/v1/search',approvedOrigin).href,approvedOrigin,fetchImpl,now,
-    getAccessToken:async()=>session?.token??null});
+    getAccessToken:async()=>session?.token??null,allowTestData:Boolean(fixture)});
 
   async function exchange(path,body,{signal}={}) {
     const owner=lifetime;
@@ -89,8 +90,17 @@ export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now
       if(combined.aborted)return interrupted();
       if(answer.kind==='code-requested')pendingEmail=body.email;
       if(answer.kind==='confirmed') {
+        const confirmation={token:answer.token,endsAt:now()+answer.expires*1000};
+        if(fixture?.saveSession) {
+          try {await fixture.saveSession(confirmation);}
+          catch {return result('unavailable');}
+          if(combined.aborted) {
+            if(owner===lifetime)void fixture.saveSession(null).catch(()=>{});
+            return interrupted();
+          }
+        }
         pendingEmail=null;
-        session={token:answer.token,endsAt:now()+answer.expires*1000};
+        session=confirmation;
         return result('signed-in');
       }
       return answer;
@@ -104,6 +114,7 @@ export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now
     lifetime.abort();
     lifetime=new AbortController();
     session=null;
+    void fixture?.saveSession?.(null).catch(()=>{});
     pendingEmail=null;
     active=false;
   }
@@ -134,6 +145,12 @@ export function createPilotSession({authOrigin,publishableKey,approvedOrigin,now
   }
   return Object.freeze({
     isSignedIn:()=>Boolean(session && now()<session.endsAt),
+    ...(fixture?.readAccount?{async getFixtureAccount() {
+      if(!session || now()>=session.endsAt)return null;
+      const owner=lifetime;
+      const account=await fixture.readAccount(session.token,owner.signal);
+      return owner===lifetime?account:null;
+    }}:{}),
     listSearches:options=>savedSearches('GET',null,options),
     saveSearch:(input,options)=>savedSearches('PUT',input,options),
     removeSearch:(input,options)=>savedSearches('DELETE',input,options),
