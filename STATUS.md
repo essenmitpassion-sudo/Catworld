@@ -2,7 +2,7 @@
 
 ## Abschlusscheck P0–P3 · 27.11.2026
 
-Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) belegt Preiszustände, Modellvergleich, Kontoschutz, Spracheingabe, Kosten und beide nativen Profile. Der iOS-Simulator bestand den Testdienst-Ablauf. Der korrigierte Stand bestand den Testdienst-Ablauf auch auf dem Android-Emulator. Die iOS-Wiederholungsprüfung desselben Code-Stands läuft.
+Die [Abnahmematrix](docs/evidence/2026-11-27-abschlusscheck.md) belegt Preiszustände, Modellvergleich, Kontoschutz, Spracheingabe, Kosten und beide nativen Profile. Android-Emulator und iOS-Simulator bestanden den isolierten Testdienst-Ablauf auf fb32932. Der separate iOS-Standardlauf erreichte die Aktion «Diktat starten» nach dem Tippen auf die Mikrofontaste nicht. Die echten Live-Gates und physische Geräte bleiben offen.
 
 ## Isolierter nativer Testdienst · 27.11.2026
 

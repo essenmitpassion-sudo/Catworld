@@ -1,6 +1,7 @@
 {
   "testedCommit": "fb329327ea3ca15fc66bbe638e7f4428f2c70684",
   "run": "https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46076078970",
+  "workflowConclusion": "failure",
   "data": "synthetic",
   "physicalDevices": false,
   "jobs": [
@@ -31,6 +32,34 @@
         "2026-11-27T22:22:39.3700941Z BUILD SUCCESSFUL in 1m 6s",
         "2026-11-27T22:24:19.8295268Z Android: microphone explanation can open and close before requesting permission.",
         "2026-11-27T22:24:38.7648542Z Android: saved searches and CH context survived force-stop/relaunch; German selection preserved."
+      ]
+    },
+    {
+      "platform": "iOS simulator",
+      "profile": "fixture",
+      "job": 140763997475,
+      "conclusion": "success",
+      "anonymisedLog": [
+        "2026-11-27T22:29:10.2849570Z iOS fixture: app installed on the disposable simulator",
+        "2026-11-27T22:32:36.2387380Z iOS fixture: launched installed app (EN)",
+        "2026-11-27T22:32:36.2499470Z iOS fixture: protected login, rejected code and explicit search gate passed",
+        "2026-11-27T22:32:36.2551600Z iOS fixture: protected search and incomplete CHF 99.00 price passed; account search saved",
+        "2026-11-27T22:32:36.2564700Z iOS fixture: confirmed CHF 104.00 total and disabled seller link passed",
+        "2026-11-27T22:32:36.2645160Z iOS fixture: service error displayed, old offers cleared, draft retained and Plus usage stayed at 2 of 3",
+        "2026-11-27T22:32:36.2649820Z iOS fixture: sign-in, Plus usage and protected saved search restored after terminate/relaunch",
+        "2026-11-27T22:32:36.2654470Z iOS runner result: {\"status\":0,\"signal\":null}",
+        "2026-11-27T22:32:43.3778040Z Runner loopback fixture requests: {\"otp\":2,\"verify\":1,\"partial\":1,\"confirmed\":1,\"unavailable\":1,\"list\":1,\"save\":1}"
+      ]
+    },
+    {
+      "platform": "iOS simulator",
+      "profile": "unconnected",
+      "job": 140763997299,
+      "conclusion": "failure",
+      "anonymisedLog": [
+        "2026-11-27T22:32:28.0050190Z scripts/native-tests/ios/UDIFlowTests.swift:171: error: -[UDIFlowTests.UDIFlowTests testUnconnectedSearchAndPersistenceInBothLanguages] : XCTAssertTrue failed - Explain dictation before requesting permission",
+        "2026-11-27T22:32:28.0818350Z ** TEST FAILED **",
+        "2026-11-27T22:32:28.0822000Z iOS runner result: {\"status\":65,\"signal\":null}"
       ]
     }
   ]
