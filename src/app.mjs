@@ -459,18 +459,27 @@ function renderWebResults(result, query) {
     }
     return;
   }
+  const priced = result.items.map(item => ({ item, status:priceStatus(item.check) }));
+  const count = priced.length;
+  const confirmed = priced.filter(({status}) => status === 'confirmed').length;
+  const checked = priced.filter(({status}) => status === 'checked').length;
+  let verdict = m(count === 1 ? 'Endpreis noch offen' : 'Endpreise noch offen');
+  if (confirmed === count) verdict = m(count === 1 ? 'Endpreis bestätigt' : 'Endpreise bestätigt');
+  else if (confirmed > 0) verdict = m('Endpreis für {confirmed} von {count} bestätigt', {confirmed,count});
+  else if (checked === count) verdict = m(count === 1 ? 'Endpreis laut Quelle' : 'Endpreise laut Quellen');
+  else if (checked > 0) verdict = m('Endpreise teilweise offen');
   const intro = element('div', null, 'section-heading');
-  intro.append(element('p', m(result.testData?'Testantwort':'Aktuell geprüft'), 'offer-receipt'), element('span',m(result.items.length===1?'{count} Angebot':'{count} Angebote',{count:result.items.length}),'unit'));
+  intro.append(element('p', verdict, 'offer-receipt'),
+    element('span',m(count===1?'{count} Angebot':'{count} Angebote',{count}),'unit'));
   if (result.sourceMode === 'catalog' && !result.testData) intro.append(element('p', m('Prüfung der bekannten Katalogquellen'), 'muted'));
   const previousCard = get('results').querySelector('.surface');
   previousCard?.setAttribute('hidden', '');
-  const cards = result.items.map(item => {
+  const cards = priced.map(({item,status}) => {
     const box = element('article', null, 'surface offer');
     const heading = element('div', null, 'offer-heading');
     const source = element('p', item.source, 'eyebrow');
     source.prepend(icon('shop'));
     const check = item.check;
-    const status = priceStatus(check);
     heading.append(source, element('span', priceLabels[status], 'badge ' + status));
     const product = catalog.find(product => product.mpn === check.mpn && product.sources.some(source => source.url === item.url));
     const layout = element('div', null, 'offer-layout');

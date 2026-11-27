@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Einfache KI-Suche
+
+Die Antwort auf die Preisfrage steht oberhalb der Angebote. Die lokale DE/EN-Vorschau belegt offene und bestätigte Testpreise samt Lieferziel. Der direkte, tatsächlich geprüfte CH-Katalogweg zur Samsung 990 PRO 2 TB braucht keinen Modellaufruf. MIXEL lieferte einen Teilbeleg. Endpreis und späterer Wiederholungsabruf blieben offen. Der simulierte Modellvergleich und die CHF-3.00/3.90/4.00-Sensitivität sind reproduziert. [Suchbeleg, Anbieter und Kosten](docs/evidence/2026-11-28-simple-ai-search.md).
+
 ## Sucharbeitsplatz und Preisbeleg
 
 Eingabe, Hauptaktion und Beispiel sind im Einstieg zusammengefasst. Nach der Suche ist der erste Artikelpreis im 320-Pixel-Vorschaufenster vollständig sichtbar. Anbieter, Preisstatus, offene Kosten und Prüfzeit liegen im Preisbeleg. Der bearbeitbare Wunsch ist vom Ergebnis aus direkt erreichbar. Zwei praktische Browserläufe in DE/EN sowie 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Vorher-Nachher-Nachweis](docs/evidence/2026-11-28-search-design.md).

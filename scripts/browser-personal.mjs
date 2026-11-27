@@ -53,6 +53,7 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);
       await pointerClick('.primary-search');
       await results(scenario.checked);
+      assert(await has('#web-results .offer-receipt',language==='de'?'Endpreis noch offen':'Final price still unknown'));
       assert(await evaluate("(()=>{const price=document.querySelector('#web-results .offer-price').getBoundingClientRect(),main=document.querySelector('main').getBoundingClientRect();return price.top>=main.top && price.bottom<=main.bottom})()"),'first price is visible in the initial result viewport');
       assert(await evaluate("document.querySelector('#web-results .offer-price').textContent.includes('99.00')"));
       assert.equal(await evaluate("document.querySelectorAll('#web-results a, #results a[href*=vergleich]').length"),0);
@@ -89,6 +90,7 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await capture('error');
       await search(wish+' confirmed');
       await until(()=>has('#web-results .offer-price','104.00'),'confirmed fixture amount');
+      assert(await has('#web-results .offer-receipt',language==='de'?'Endpreis bestätigt':'Final price confirmed'));
       assert(await has('#web-results .offer-cost .price-caption','8000'));
       assert(await has('#web-results .fixture-price-note',language==='de'?'TESTDATEN':'TEST DATA'));
       assert.equal(await evaluate("document.querySelectorAll('#web-results a').length"),0);

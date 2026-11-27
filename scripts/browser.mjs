@@ -613,7 +613,10 @@ try {
     if(process.env.UDI_SCREENSHOT_DIR){await evaluate("document.querySelector('main').scrollTo(0,0)");const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'english-start-'+width+'.png'),Buffer.from(shot.data,'base64'));}
     await pointerClick('#suche button[type=submit]');
     await until(()=>evaluate("Boolean(document.querySelector('#web-results article a[href=\"#passport\"]'))"),'English current offer').catch(async error=>{console.error(await evaluate("document.querySelector('#web-results').textContent"));console.error(await evaluate("document.querySelector('#results').textContent"));throw error;});
-    assert(await evaluate("document.querySelector('#web-results').textContent.includes('Recently checked') && document.querySelector('#web-results').textContent.includes('total costs still unknown')"));
+    const partialVerdict = await evaluate(
+      "document.querySelectorAll('#web-results article').length===1 ? 'Final price still unknown' : 'Final prices still unknown'");
+    assert.equal(await evaluate("document.querySelector('#web-results .offer-receipt').textContent"), partialVerdict);
+    assert(await evaluate("document.querySelector('#web-results').textContent.includes('total costs still unknown')"));
     assert(await evaluate("document.querySelector('#web-results article h3').textContent.includes('Samsung 990 PRO')"),'product identity remains unchanged');
     assert(await evaluate("!document.querySelector('#web-results .value-proof')"),'English partial costs never imply savings');
     const direct=await evaluate("document.querySelector('#web-results a[target=_blank]').href");
@@ -631,7 +634,7 @@ try {
     assert.equal(await evaluate("localStorage.getItem('udi.searches.v2')"),savedBefore,'switching language preserves saved requests byte for byte');
     await evaluate("document.querySelector('#ui-language').value='en';document.querySelector('#ui-language').dispatchEvent(new Event('change',{bubbles:true}))");
     await send('Page.reload');await until(()=>evaluate("document.documentElement.lang==='en' && document.querySelector('#saved')?.textContent.includes('Samsung 990 PRO 2 TB up to CHF 600')"),'English preference and saved search survive restart');
-    await click('#saved .button');await until(()=>evaluate("document.querySelector('#web-results').textContent.includes('Recently checked')"),'English saved search reruns');
+    await click('#saved .button');await until(async ()=>(await evaluate("document.querySelector('#web-results .offer-receipt')?.textContent"))===partialVerdict,'English saved search reruns');
     assert.equal(await evaluate("document.querySelector('#condition').value"),'any');
     assert(await evaluate(`(()=>{const original=Date.now;Date.now=()=>original()+300001;try{document.querySelector('#web-results a').click();return document.querySelector('#web-results').textContent.includes('expired')&&!document.querySelector('#web-results a')}finally{Date.now=original}})()`),'English expired offers are removed');
     await evaluate("document.querySelector('#search-query').value='SSD for my PC';document.querySelector('#max-price').value='';document.querySelector('#condition').value='';document.querySelector('#search-query').dispatchEvent(new Event('input',{bubbles:true}))");
