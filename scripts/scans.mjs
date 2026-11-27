@@ -54,6 +54,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
   if (discovery.kind !== 'results') return discovery;
   const context=searchContext(discovery);
   const checks = [];
+  const invalidations = [];
   const items = [];
   let excluded = 0;
   let interrupted = false;
@@ -83,9 +84,20 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
     checks.push(record);
     const sourceCheck = matching && current && check.marketId===context.marketId
       && check.sourceId===source.id && check.url===candidate.url;
+    const canonicalOffer = knownProduct?.sources.some(entry => entry.url === candidate.url);
     if (sourceCheck) {
       if (sourceFailed(check)) interrupted = true;
-      else if (check.status === 'partial' || check.availability === 'inactive' || negativeEvidence.has(check.reason)) evidence = true;
+      else {
+        const contradicted = check.availability === 'inactive' || negativeEvidence.has(check.reason);
+        if (check.status === 'partial' || contradicted) evidence = true;
+        // A mismatch against the user's requested part is not a mismatch against the canonical listing.
+        const matchesCatalogRequest = candidate.mpn === knownProduct?.mpn;
+        if (contradicted && (check.availability === 'inactive' || matchesCatalogRequest)
+          && [200, 404, 410].includes(check.httpStatus)
+          && canonicalOffer) {
+          invalidations.push({ url: candidate.url, checkedAt: check.checkedAt });
+        }
+      }
     }
     if (sourceCheck && check.status==='partial' && check.productMatch!==false
       && (!candidate.mpn || check.mpn===candidate.mpn) && (!knownProduct || check.mpn===knownProduct.mpn)
@@ -96,6 +108,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
       const criteria = discovery.criteria ?? {};
       if (!acceptsOffer(check, criteria)) {
         excluded++;
+        if (canonicalOffer) invalidations.push({ url: candidate.url, checkedAt: check.checkedAt, olderOnly: true });
         continue;
       }
       items.push({ ...candidate, status: 'partial', check: { ...check, ...summary },
@@ -112,6 +125,6 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
   // Source downtime with no usable evidence is an interrupted search.
   if (interrupted && !evidence && !items.length) return { kind: 'unavailable' };
   return { kind: 'results',...context,items, unconfirmed: discovery.items.length - items.length - excluded,
-    excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url),
+    excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url), invalidations,
     completedAt: new Date(now()).toISOString() };
 }

@@ -3,7 +3,7 @@ import {searchContext} from './markets.mjs';
 import {criteriaFor,acceptsOffer} from './criteria.mjs';
 import {costs,isAmount} from './costs.mjs';
 import {sourceFor} from './sources.mjs';
-import {catalog,partNumbers} from './deals.mjs';
+import {catalog,maxObservationAge,partNumbers} from './deals.mjs';
 /** @typedef {import('./deal-types.d.ts').SearchInput} SearchInput */
 /** @typedef {import('./deal-types.d.ts').DealReply} DealReply */
 /** @typedef {import('./deal-types.d.ts').Offer} Offer */
@@ -47,6 +47,7 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
   if(now-Date.parse(completedAt)>=300000)return {kind:'expired'};
   if(data.sourceMode!==undefined&&!['catalog','web'].includes(/** @type {string} */(data.sourceMode)))throw new Error('Invalid source mode');
   /** @type {Offer[]} */const items=[];const seen=new Set();let stale=0,excluded=0;
+  const receivedOfferUrls = new Set();
   for(const rawItem of data.items) {
     const item=record(rawItem),check=record(item.check),url=new URL(text(item.url,1000)),source=sourceFor(url);
     if(!source||url.hash||item.sourceId!==source.id||item.marketId!==context.marketId||item.status!=='partial'||item.type!==('marketplace' in source?'listing':'shop'))throw new Error('Invalid offer source');
@@ -71,12 +72,34 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
       total:summary.total,minimum:/** @type {number} */(summary.minimum),missing:summary.missing,
       ...(check.mpn===undefined?{}:{mpn:text(check.mpn,100)})};
     const title=text(item.title),key=url.href;
+    receivedOfferUrls.add(url.href);
     if(expires<=now||now-checked>=300000){stale++;continue;}
     if(!acceptsOffer(observation,criteria)){excluded++;continue;}
     if(seen.has(key))continue;seen.add(key);
     items.push({title,url:key,source:source.name,sourceId:source.id,marketId:'CH',type:'marketplace' in source?'listing':'shop',status:'partial',check:observation,expiresAt,
       ...(observation.mpn?{mpn:observation.mpn}:{}),budgetStatus:criteria.maxTotal===null?'none':summary.total===null?'unknown-total':'within'});
   }
-  if(stale&&!items.length)return {kind:'expired'};
-  return {kind:'results',...base,items,completedAt,unconfirmed:stale+/** @type {number} */(data.unconfirmed??0),excluded:excluded+/** @type {number} */(data.excluded??0),...(data.sourceMode?{sourceMode:/** @type {'catalog'|'web'} */(data.sourceMode)}:{})};
+  /** @type {import('./deal-types.d.ts').Results['invalidations']} */
+  let invalidations;
+  if (data.invalidations !== undefined) {
+    if (!Array.isArray(data.invalidations) || data.invalidations.length + data.items.length > 3) throw new Error('Invalid source updates');
+    invalidations = [];
+    const affected = new Set();
+    for (const rawCheck of data.invalidations) {
+      const check = record(rawCheck);
+      const url = text(check.url, 1000);
+      const checkedAt = stamp(check.checkedAt);
+      const checked = Date.parse(checkedAt), completed = Date.parse(completedAt);
+      if ((check.olderOnly !== undefined && check.olderOnly !== true)
+        || affected.has(url) || receivedOfferUrls.has(url) || checked > completed || completed - checked >= maxObservationAge
+        || !catalog.some(product => product.sources.some(source => source.url === url && source.marketId === context.marketId))) {
+        throw new Error('Invalid source update');
+      }
+      affected.add(url);
+      if (now - checked < maxObservationAge) invalidations.push({ url, checkedAt, ...(check.olderOnly ? { olderOnly: true } : {}) });
+    }
+  }
+  if(stale&&!items.length&&!invalidations?.length)return {kind:'expired'};
+  return {kind:'results',...base,items,completedAt,unconfirmed:stale+/** @type {number} */(data.unconfirmed??0),excluded:excluded+/** @type {number} */(data.excluded??0),
+    ...(invalidations===undefined?{}:{invalidations}),...(data.sourceMode?{sourceMode:/** @type {'catalog'|'web'} */(data.sourceMode)}:{})};
 }

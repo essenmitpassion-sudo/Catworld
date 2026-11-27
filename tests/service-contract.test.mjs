@@ -128,3 +128,82 @@ test('fehlende Lieferbelege bleiben unbekannt; fremde oder mehrdeutige Ziele wer
     assert.throws(()=>serializeScanReply(result,{requestId,input},now));
   }
 });
+
+test('ein frischer negativer Beleg entwertet im geschützten Client den früheren Passport',async()=>{
+  const request={requestId,input};
+  const first=fixture();
+  first.items[0].check.seller=source.seller;
+  const active=parseDealReply(serializeScanReply(first,request,now),input,now,false,requestId);
+  const previous=applyChecks([],catalog,active);
+  assert.equal(compare(product,previous,now).offers.find(offer=>offer.url===source.url).observation.price,10000);
+  const later=now+1000;
+  const found=await discover(input,async()=>[{title:'Samsung 990 PRO 2 TB',url:source.url}]);
+  const checked=await scan(found,{now:()=>later,verify:item=>inspectPage(item,{status:410},later)});
+  const wire=serializeScanReply(checked,request,later);
+  const reply=parseDealReply(wire,input,later,false,requestId);
+  const current=applyChecks(previous,catalog,reply);
+  const updated=compare(product,current,later).offers.find(offer=>offer.url===source.url);
+  assert.equal(updated.observation,null);
+  assert.deepEqual(reply.invalidations,[{url:source.url,checkedAt:new Date(later).toISOString()}]);
+  assert.deepEqual(applyChecks(current,catalog,active),current,'a late active response must not revive the offer');
+  assert.deepEqual(applyChecks(previous,catalog,{...reply,invalidations:[{url:source.url,checkedAt:new Date(now-1).toISOString()}]}),
+    previous,'older negative evidence must not remove fresher active facts');
+});
+
+test('der Antwortvertrag akzeptiert nur frische, exakte Kataloglinks für negative Belege',()=>{
+  const valid={url:source.url,checkedAt:new Date(now).toISOString()};
+  for(const invalidations of [
+    'not a list', [valid,valid], [{...valid,url:'https://evil.test/'}], [{...valid,url:source.url+'?other=1'}],
+    [{...valid,checkedAt:new Date(now+1).toISOString()}], [{...valid,checkedAt:new Date(now-300000).toISOString()}],
+  ]) {
+    assert.throws(()=>serializeScanReply({...fixture(),items:[],invalidations},{requestId,input},now));
+  }
+  assert.throws(()=>serializeScanReply({...fixture(),invalidations:[valid]},{requestId,input},now));
+  const restricted={...input,maxPrice:'1'};
+  assert.throws(()=>serializeScanReply({...fixture(),criteria:criteriaFor(restricted),invalidations:[valid]},
+    {requestId,input:restricted},now),'an offer filtered by budget still conflicts with a simultaneous withdrawal');
+});
+
+test('eine vorübergehende Quellensperre entwertet keinen aktiven Beleg',async()=>{
+  const found=await discover(input,async()=>[{title:'Samsung 990 PRO 2 TB',url:source.url}]);
+  const paused=await scan({...found,items:[...found.items,{url:product.sources[0].url}]},{now:()=>now,
+    verify:async item=>inspectPage(item,item.url===source.url?{reason:'source-cooldown'}:{status:410},now)});
+  assert.deepEqual(paused.invalidations,[{url:product.sources[0].url,checkedAt:new Date(now).toISOString()}]);
+});
+
+test('eine fremde gesuchte Variante entwertet kein korrektes Angebot unter der bekannten URL',async()=>{
+  const wrongMpn='MZ-V9P2T0CW';
+  const found=await discover({...input,query:wrongMpn},async()=>[{title:wrongMpn,url:source.url}]);
+  const checked=await scan(found,{now:()=>now,verify:item=>inspectPage(item,{
+    status:200,html:'<script type="application/ld+json">'+JSON.stringify({
+      '@type':'Product',url:item.url,mpn:product.mpn,offers:{'@type':'Offer',url:item.url,priceCurrency:'CHF',price:'100.00',
+        availability:'https://schema.org/InStock'},
+    })+'</script>',
+  },now)});
+  assert.deepEqual(checked.items,[]);
+  assert.deepEqual(checked.invalidations,[]);
+});
+
+test('ein neuer Preis über Budget verdrängt den alten Preis, während derselbe Beleg wiederverwendbar bleibt',async()=>{
+  const request={requestId,input};
+  const initial=fixture();
+  initial.items[0].check.seller=source.seller;
+  const first=parseDealReply(serializeScanReply(initial,request,now),input,now,false,requestId);
+  const previous=applyChecks([],catalog,first);
+  const restricted={...input,maxPrice:'150'};
+  const next=now+1000,checkedAt=new Date(next).toISOString();
+  const found=await discover(restricted,async()=>[{title:'Samsung 990 PRO 2 TB',url:source.url}]);
+  const check={...initial.items[0].check,checkedAt,price:20000};
+  const result=await scan(found,{now:()=>next,verify:async()=>check});
+  const reply=parseDealReply(serializeScanReply(result,{requestId,input:restricted},next),restricted,next,false,requestId);
+  assert.equal(reply.excluded,1);
+  assert.deepEqual(reply.items,[]);
+  const retired=applyChecks(previous,catalog,reply);
+  assert.equal(compare(product,retired,next).offers.find(offer=>offer.url===source.url).observation,null);
+
+  const widened=await scan({...found,criteria:criteriaFor(input)},{now:()=>next,verify:async()=>check});
+  const accepted=parseDealReply(serializeScanReply(widened,request,next),input,next,false,requestId);
+  const current=applyChecks(retired,catalog,accepted);
+  assert.equal(compare(product,current,next).offers.find(offer=>offer.url===source.url).observation.price,20000);
+  assert.deepEqual(applyChecks(current,catalog,reply),current,'filtering a known price never deletes the equal-time quote');
+});
