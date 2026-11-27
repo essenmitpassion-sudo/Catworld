@@ -179,3 +179,22 @@ test('ein nicht identifizierter Webtreffer wird nicht als reine Kostenlücke gez
   assert.deepEqual(accepted.items,[]);
   assert.equal(accepted.missingCompleteCosts??0,0);
 });
+
+test('eine falsche Modellkapazität scheitert auch mit gültigem Schweizer Händlerlink', async () => {
+  const url='https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011';
+  let sourceCalls=0;
+  const search=createOfferSearch({now:()=>now,
+    webSearch:async()=>[{title:'Samsung 990 PRO 1 TB ohne Kühlkörper',url}],
+    verify:async item=>{sourceCalls++;return fixture(item);},
+  });
+  for (const query of ['Samsung 990 PRO 1 TB','I need a Samsung 990 PRO with 1000 GB.']) {
+    const result=await search({...input,query},context());
+    assert.equal(result.sourceMode,'web');
+    assert.deepEqual(result.items,[]);
+  }
+  assert.equal(sourceCalls,0);
+  const flexible=await search({...input,query:'Samsung 990 PRO mit 1 TB oder 2 TB'},context());
+  assert.equal(sourceCalls,1);
+  assert.equal(flexible.items[0].mpn,'MZ-V9P2T0BW');
+  assert.match(flexible.items[0].title,/2 TB/);
+});

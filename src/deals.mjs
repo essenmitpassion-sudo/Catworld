@@ -51,7 +51,7 @@ export function partNumbers(value) {
 
 function tokens(value) {
   return value.toLowerCase().normalize('NFC')
-    .replace(/\b2000\s*gb\b/g, '2tb')
+    .replace(/\b([1-9]\d*)000\s*gb\b/g, '$1tb')
     .replace(/(\d+)\s*tb\b/g, '$1tb')
     .replace(/\bm\.2\b/g, 'm2').match(/[\p{L}\d]+/gu) ?? [];
 }
@@ -77,6 +77,16 @@ export function search(query) {
     return named || (product.lookupGroups?.every(group =>
       group.some(phrase => queryWords.includes(' ' + phrase + ' '))) ?? false);
   });
+}
+
+export function conflictsWithCatalogCapacity(query, product) {
+  const words = tokens(withoutBudget(query));
+  const model = tokens(product.model).join(' ');
+  if (!(' ' + words.join(' ') + ' ').includes(' ' + model + ' ')) return false;
+  const isCapacity = word => /^[1-9]\d*tb$/.test(word);
+  const capacity = tokens(product.variant).find(isCapacity);
+  const requested = words.filter(isCapacity);
+  return Boolean(capacity && requested.length && !requested.includes(capacity));
 }
 
 export function directLink(url, product) {

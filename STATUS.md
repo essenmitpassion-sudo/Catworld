@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Qualitätsvergleich für Multi-KI · 27.11.2026
+
+Zwölf Abnahmefälle mit erwarteten Ergebnissen sind festgelegt. Der erste Test mit simulierten Modellergebnissen deckte einen falschen 1-TB-Treffer für den Händlerlink der 2-TB-Variante auf. UDI schliesst bei bekannten Angeboten ausdrücklich unpassende Kapazitäten vor dem Händlerabruf aus und verwendet die Katalogbezeichnung. Die flexible Auswahl zwischen 1 TB und 2 TB akzeptiert weiterhin den korrekt bezeichneten 2-TB-Teilbeleg. 192 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Der Live-Qualitätsvergleich ist offen. [Vergleichssatz und Regression](docs/evidence/2026-11-27-multi-ai-quality-baseline.md).
+
 ## Multi-KI-Suche · 27.11.2026
 
 Der [Abnahmeplan](PLAN.md#universal-multi-ai-collaboration--27112026) staffelt Einzelmodell, Ausfallsicherheit, messbare Zusammenarbeit und weitere Zugänge. Im lokalen Entwicklungsdienst ist ein zweites Modell für ausgewählte vorübergehende Gateway-Fehler konfigurierbar. Tests mit dem echten SDK und simulierten Gateway-Antworten belegen Aufrufzahl, getrennte Budgetreservierung und Abbruch. 191 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Anbieterzugang im geschützten Pilot, gemessener Mehrwert der Zusammenarbeit und native Live-Abnahme bleiben offen. [Machbarkeit und Nachweis](docs/evidence/2026-11-27-multi-ai-routing.md).

@@ -1,5 +1,5 @@
 import { criteriaFor } from '../src/criteria.mjs';
-import { catalog, partNumbers } from '../src/deals.mjs';
+import { catalog, conflictsWithCatalogCapacity, partNumbers } from '../src/deals.mjs';
 import {searchContext} from '../src/markets.mjs';
 import { sources as webSources } from './sources.mjs';
 
@@ -55,9 +55,11 @@ export async function discover(input, webSearch, {excludedSources=[]}={}) {
       if (!evidence.includes(requestedPart)) continue;
     }
     const knownProduct = catalog.find(product => product.sources.some(source => source.url === url.href));
+    if (knownProduct && conflictsWithCatalogCapacity(query, knownProduct)) continue;
     const expectedPart = requestedPart ?? knownProduct?.mpn;
     items.set(id, {
-      title, url: url.href, source: source.name,sourceId:source.id,marketId:source.marketId,
+      title: knownProduct ? knownProduct.name + ' · ' + knownProduct.variant : title,
+      url: url.href, source: source.name,sourceId:source.id,marketId:source.marketId,
       type: source.marketplace ? 'listing' : 'shop', status: 'unconfirmed',
       ...(expectedPart ? { mpn: expectedPart } : {}),
     });
