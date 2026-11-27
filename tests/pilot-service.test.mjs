@@ -9,6 +9,7 @@ import {createPilotSession} from '../src/pilot-session.mjs';
 import {discoverOffers} from '../src/runtime.mjs';
 import {normalizeSearch,SavedSearchLimitError} from '../src/saved-searches.mjs';
 import {createAccountSearches} from '../scripts/account-searches.mjs';
+import {inspectPage} from '../scripts/verification.mjs';
 
 const authOrigin='https://abcdefghijklmnopqrst.supabase.co';
 const publishableKey='sb_publishable_synthetic-test-key';
@@ -19,12 +20,12 @@ const request={schemaVersion:1,query:'Samsung 990 PRO 2 TB',marketId:'CH',delive
 const user=id=>({id,role:'authenticated',is_anonymous:false,email_confirmed_at:'2026-11-25T10:00:00Z'});
 const token=id=>'fixture.'+id+'.signature';
 
-async function fixture(t,fetchUser) {
+async function fixture(t,fetchUser,verify=async()=>({status:'unconfirmed'})) {
   const dataDirectory=await mkdtemp(join(tmpdir(),'udi-pilot-'));
   let verificationCalls=0;
-  const service=createPilotService({...auth,dataDirectory,fetchUser,verify:async()=>{
+  const service=createPilotService({...auth,dataDirectory,fetchUser,verify:async item=>{
     verificationCalls++;
-    return {status:'unconfirmed'};
+    return verify(item);
   }});
   t.after(async()=>{
     await service.close();
@@ -182,4 +183,49 @@ test('Pilot verlangt einen festen Auth-Anbieter, einen öffentlichen Projektschl
     {allowedAccounts:[]},
     {allowedAccounts:['placeholder']},
   ]) assert.throws(()=>createPilotService({...auth,...change,dataDirectory:tmpdir()}),/Invalid pilot authentication/);
+});
+
+test('ausgefallene oder unbelegte Quellen verbrauchen keine Suche; belegte leere Ergebnisse zählen',async t=>{
+  const productPage=(item,mpn,priceValidUntil)=>({
+    status:200,html:'<script type="application/ld+json">'+JSON.stringify({
+      '@type':'Product',url:item.url,mpn,offers:{'@type':'Offer',url:item.url,priceCurrency:'CHF',price:'100.00',
+        availability:'https://schema.org/InStock',priceValidUntil},
+    })+'</script>',
+  });
+  let merchantPage;
+  let peerPage={reason:'url-rejected'};
+  const app=await fixture(t,async()=>Response.json(user(alpha)),async item=>inspectPage(item,
+    item.sourceId==='dq-solutions.ch' ? merchantPage(item) : peerPage));
+  const failures=[
+    ()=>({reason:'fetch-failed'}),
+    ()=>({reason:'source-cooldown'}),
+    ()=>({status:429}),
+    ()=>({status:200,html:'<title>Just a moment...</title>'}),
+    item=>productPage(item,undefined),
+    item=>productPage(item,item.mpn,'2026-02-30'),
+  ];
+  for(const [index,page] of failures.entries()) {
+    merchantPage=page;
+    const response=await app.search(alpha,index);
+    assert.equal(response.status,502,'Quellenprüfung '+index);
+    assert.deepEqual(await response.json(),{kind:'unavailable'});
+  }
+
+  peerPage={status:503};
+  const completed=[
+    ()=>({status:404}),
+    item=>productPage(item,'MZ-V9P2T0CW'),
+    item=>productPage(item,item.mpn,'2020-01-01'),
+  ];
+  for(const [index,page] of completed.entries()) {
+    merchantPage=page;
+    const response=await app.search(alpha,failures.length+index);
+    assert.equal(response.status,200,'belegte Recherche '+index);
+    const result=await response.json();
+    assert.equal(result.kind,'results');
+    assert.deepEqual(result.items,[]);
+  }
+  const limited=await app.search(alpha,failures.length+completed.length);
+  assert.equal(limited.status,429);
+  assert.equal(limited.headers.get('x-udi-limit'),'monthly');
 });

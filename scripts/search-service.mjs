@@ -119,6 +119,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
         const result=await search(requestData.input,{subject,requestId:requestData.requestId,signal:controller.signal});
         if(controller.signal.aborted)throw fault(504);
         if(result?.kind==='outside-catalog')throw fault(422);
+        if(result?.kind==='unavailable')throw fault(502);
         let reply;try{reply=serializeScanReply(result,requestData);}catch{throw fault(502);}
         if(Buffer.byteLength(JSON.stringify(reply))>65536)throw fault(502);
         if(reservation) {

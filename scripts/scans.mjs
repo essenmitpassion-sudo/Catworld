@@ -8,6 +8,15 @@ import {activeMarket,searchContext} from '../src/markets.mjs';
 import {sourceFor} from './sources.mjs';
 
 const journals = new Map();
+const interruptedChecks = new Set([
+  'fetch-failed', 'source-cooldown', 'address-rejected', 'redirect', 'unsupported-response', 'missing-evidence',
+]);
+const negativeEvidence = new Set(['variant-mismatch', 'expired-price']);
+
+function sourceFailed({ httpStatus, reason }) {
+  return interruptedChecks.has(reason) || httpStatus === 403 || httpStatus === 429
+    || (httpStatus >= 500 && httpStatus < 600);
+}
 
 async function saveScan(path, record, signal) {
   const previous = journals.get(path) ?? Promise.resolve();
@@ -47,6 +56,8 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
   const checks = [];
   const items = [];
   let excluded = 0;
+  let interrupted = false;
+  let evidence = false;
   // Bound detail-page requests independently of the number of search results.
   const candidates = discovery.items.slice(0, 3);
   for (const candidate of candidates) {
@@ -59,7 +70,7 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
       const known=new URL(entry.url);let target;try{target=new URL(candidate.url);}catch{return false;}
       return known.hostname.replace(/^www\./,'')===target.hostname.replace(/^www\./,'')&&known.pathname===target.pathname;
     }));
-    try { if(matching)check = await verify?.(candidate); } catch { /* Each source can fail independently. */ }
+    try { if(matching)check = await verify?.(candidate); } catch { interrupted = true; }
     signal?.throwIfAborted();
     const checkedAt = typeof check?.checkedAt === 'string' ? Date.parse(check.checkedAt) : NaN;
     const currentTime = now();
@@ -70,10 +81,15 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
       status: 'unconfirmed', availability: 'unknown', reason: 'not-checked',
     };
     checks.push(record);
-    if (matching && current && check.status==='partial' && check.productMatch!==false
+    const sourceCheck = matching && current && check.marketId===context.marketId
+      && check.sourceId===source.id && check.url===candidate.url;
+    if (sourceCheck) {
+      if (sourceFailed(check)) interrupted = true;
+      else if (check.status === 'partial' || check.availability === 'inactive' || negativeEvidence.has(check.reason)) evidence = true;
+    }
+    if (sourceCheck && check.status==='partial' && check.productMatch!==false
       && (!candidate.mpn || check.mpn===candidate.mpn) && (!knownProduct || check.mpn===knownProduct.mpn)
-      && check.marketId===context.marketId && check.sourceId===source.id
-      && check.url === candidate.url && check.httpStatus === 200 && check.currency === activeMarket.currency
+      && check.httpStatus === 200 && check.currency === activeMarket.currency
       && check.availability === 'active' && Number.isSafeInteger(check.price) && check.price > 0
       && check.price <= 100_000_000) {
       const summary = costs(check);
@@ -93,6 +109,8 @@ export async function scan(discovery, { verify, journalPath, now = Date.now, sig
     id: randomUUID(), completedAt: new Date(now()).toISOString(), checks,
   }, signal);
   signal?.throwIfAborted();
+  // Source downtime with no usable evidence is an interrupted search.
+  if (interrupted && !evidence && !items.length) return { kind: 'unavailable' };
   return { kind: 'results',...context,items, unconfirmed: discovery.items.length - items.length - excluded,
     excluded, criteria: discovery.criteria, attemptedUrls: candidates.map(candidate => candidate.url),
     completedAt: new Date(now()).toISOString() };

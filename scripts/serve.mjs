@@ -61,6 +61,7 @@ export function server({ webSearch = null, verify = null, journalPath } = {}) {
         }
       });
       const checked = await scan(result, { verify, journalPath });
+      if (checked.kind === 'unavailable') return reply(502, checked);
       reply(200, { ...checked, sourceMode });
     } catch (error) {
       if (error instanceof InvalidSearch || error instanceof SyntaxError) return reply(400, { kind: 'invalid' });

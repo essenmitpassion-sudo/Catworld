@@ -19,7 +19,7 @@ const fresh = {
 test('nur frisch bestätigte und bepreiste Angebote erscheinen im Suchergebnis', async () => {
   for (const check of [null, { ...fresh, availability: 'inactive' }, { ...fresh, availability: 'unknown' },
     { ...fresh, price: null }, { ...fresh, checkedAt: '2026-11-18T11:54:59Z' },
-    { ...fresh, checkedAt: '2026-11-19T12:00:00Z' }, { ...fresh, httpStatus: 403 },
+    { ...fresh, checkedAt: '2026-11-19T12:00:00Z' },
     { ...fresh, url: 'https://evil.test/' }, { ...fresh, currency: 'EUR' }]) {
     const result = await scan(found, { verify: async () => check, now: () => now });
     assert.equal(result.items.length, 0);
@@ -126,4 +126,15 @@ test('Abbruch während der Speicherwarteschlange verändert kein Journal und blo
     await scan(found,{verify:async()=>({...fresh,availability:'inactive'}),journalPath,now:()=>now});
     assert.equal(JSON.parse(await readFile(journalPath,'utf8')).length,2);
   } finally {await rm(folder,{recursive:true,force:true});}
+});
+
+test('blockierte oder abgebrochene Quellen ohne andere Belege ergeben einen Verfügbarkeitsfehler', async () => {
+  const blocked = await scan(found, {
+    verify: async () => ({ ...fresh, status: 'unconfirmed', httpStatus: 403 }), now: () => now,
+  });
+  const failed = await scan(found, {
+    verify: async () => { throw new Error('Quelle ausgefallen'); }, now: () => now,
+  });
+  assert.deepEqual(blocked, { kind: 'unavailable' });
+  assert.deepEqual(failed, { kind: 'unavailable' });
 });

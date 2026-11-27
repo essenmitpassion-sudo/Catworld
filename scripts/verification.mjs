@@ -74,14 +74,20 @@ export function inspectPage(item, page, now = Date.now()) {
   });
   if (matches.length !== 1) return check;
   const { product, offer } = matches[0];
+  const observedMpn = plain(product.mpn);
+  if (item.mpn && !observedMpn) return check;
   if (item.mpn && product.mpn !== item.mpn) return { ...check, reason: 'variant-mismatch' };
   const availability = schemaName(offer.availability);
   if (['SoldOut', 'OutOfStock', 'Discontinued'].includes(availability)) {
     return { ...check, availability: 'inactive', reason: 'not-available' };
   }
   const validUntil = offer.priceValidUntil;
-  if (validUntil && (!/^\d{4}-\d{2}-\d{2}$/.test(validUntil)
-    || Date.parse(validUntil + 'T23:59:59Z') < now)) return { ...check, reason: 'expired-price' };
+  if (validUntil) {
+    const expiration = typeof validUntil === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(validUntil)
+      ? Date.parse(validUntil + 'T23:59:59Z') : NaN;
+    if (!Number.isFinite(expiration) || new Date(expiration).toISOString().slice(0, 10) !== validUntil) return check;
+    if (expiration < now) return { ...check, reason: 'expired-price' };
+  }
   const starts = offer.availabilityStarts;
   const ends = offer.availabilityEnds;
   if ((starts && (!Number.isFinite(Date.parse(starts)) || Date.parse(starts) > now))
@@ -94,7 +100,7 @@ export function inspectPage(item, page, now = Date.now()) {
     price: francs(offer.price, offer.priceCurrency),
     currency: offer.priceCurrency === 'CHF' ? 'CHF' : null,
     seller: plain(typeof offer.seller === 'string' ? offer.seller : offer.seller?.name ?? sellerName),
-    mpn: plain(product.mpn),
+    mpn: observedMpn,
     condition: new Map([['UsedCondition', 'Gebraucht'], ['NewCondition', 'Neu'],
       ['RefurbishedCondition', 'Generalüberholt'], ['DamagedCondition', 'Beschädigt']])
       .get(schemaName(offer.itemCondition ?? product.itemCondition)) ?? null,
