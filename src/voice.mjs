@@ -138,5 +138,6 @@ export function setupVoice(root, onInput) {
   });
   window.addEventListener('pagehide', () => { recordingVersion++; if (session) finish(session); clearAudio(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && session) finish(session, m('Aufnahme beendet: Die Seite wurde verlassen. Prüfe deinen Text.')); });
+  button.hidden = false;
   return { isRecording: () => !!session, stop: () => stop(m('Aufnahme beendet. Prüfe zuerst den Text und die Aufnahme und starte dann die Suche.')) };
 }

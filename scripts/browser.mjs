@@ -648,10 +648,15 @@ try {
     await closeTestServer();app=server(appOptions);app.listen(0,'127.0.0.1');await once(app,'listening');
     origin='http://127.0.0.1:'+app.address().port;
     const legacySearches=JSON.stringify([{query:'Samsung 990 PRO 2 TB',scope:null,maxPrice:'',condition:'any',completeCostsOnly:false}]);
-    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)},Plugins:{Preferences:{get:async({key})=>({value:localStorage.getItem('udi.qa.pref:'+key)}),set:async({key,value})=>{localStorage.setItem('udi.qa.pref:'+key,value)}}}};try{localStorage.setItem('udi.language.v1','en');if(localStorage.getItem('udi.searches.v1')===null)localStorage.setItem('udi.searches.v1',${JSON.stringify(legacySearches)})}catch{}`});
+    const adapter=await send('Page.addScriptToEvaluateOnNewDocument',{source:`window.Capacitor={getPlatform:()=>${JSON.stringify(platform)},Plugins:{Preferences:{get:async({key})=>{if(Capacitor.getPlatform()==='ios'&&sessionStorage.getItem('udi.qa.native-start-ready')!=='1')await new Promise(resolve=>{window.qaReleasePrefs=resolve});return {value:localStorage.getItem('udi.qa.pref:'+key)}},set:async({key,value})=>{localStorage.setItem('udi.qa.pref:'+key,value)}}}};try{localStorage.setItem('udi.language.v1','en');if(localStorage.getItem('udi.searches.v1')===null)localStorage.setItem('udi.searches.v1',${JSON.stringify(legacySearches)})}catch{}`});
     const savedRows=platform==='unsupported'?"JSON.parse(localStorage.getItem('udi.searches.v2'))":"JSON.parse(JSON.parse(localStorage.getItem('udi.qa.pref:udi.searches.native.v1')).values['udi.searches.v2'])";
     await send('Emulation.setDeviceMetricsOverride',{width:nativeSmall?320:390,height:nativeSmall?640:780,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
+    if(platform==='ios') {
+      await until(()=>evaluate("typeof window.qaReleasePrefs==='function' && !!document.querySelector('[data-mic]')"),'native startup waits for Preferences');
+      assert(await evaluate("document.querySelector('[data-mic]').hidden"),'microphone is hidden until its native action is installed');
+      await evaluate("sessionStorage.setItem('udi.qa.native-start-ready','1');window.qaReleasePrefs()");
+    }
     await until(()=>evaluate(`document.documentElement.dataset.platform===${JSON.stringify(platform)}`),'native boundary simulation initialized');
     assert(await evaluate("document.querySelector('.brand').textContent.includes('udi.') && document.title.includes('udi.')"),'the working identity is consistent across header and document');
     assert(await evaluate("document.querySelector('[data-brand-wordmark]').textContent==='udi.' && document.querySelector('[data-brand-descriptor]').textContent==='Find what you need.'"),'working mark has a visible functional line, without changing technical identity');

@@ -133,6 +133,7 @@ export function setupNativeVoice(root,onInput,plugin) {
 
   window.addEventListener('pagehide',()=>{if(current)cancel();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && current)cancel();});
+  button.hidden = false;
   return {
     isRecording:()=>Boolean(current),
     stop() {
