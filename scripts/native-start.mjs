@@ -20,21 +20,47 @@ assert(temp, 'Run native startup checks on the disposable CI runner.');
 const appId = 'stream.soundweave.udi';
 const fixturePort = 4175;
 const flow = fixture ? androidFixtureFlow : androidFlow;
+const fixtureCoverage={otp:2,verify:1,partial:1,confirmed:1,unavailable:1,list:1,save:1};
 
-async function checkFixtureService(finished) {
+async function readFixtureCounters() {
   const response=await fetch('http://127.0.0.1:'+fixturePort+'/healthz',{signal:AbortSignal.timeout(3000),redirect:'error'});
   assert(response.ok,'Isolated fixture service must respond on runner loopback');
   const {test,counts}=await response.json();
   assert.equal(test,true,'Unexpected service on runner loopback');
-  const expected={otp:2,verify:1,partial:1,confirmed:1,unavailable:1,list:1,save:1};
   const observed={};
-  for(const [route,minimum] of Object.entries(expected)) {
-    assert(Number.isSafeInteger(counts?.[route]),'Missing fixture counter: '+route);
-    if(finished)assert(counts[route]>=minimum,'Missing native fixture coverage: '+route);
-    else assert.equal(counts[route],0,'Each platform requires its own unused fixture service');
+  for(const route of Object.keys(fixtureCoverage)) {
+    assert(Number.isSafeInteger(counts?.[route])&&counts[route]>=0,'Invalid fixture counter: '+route);
     observed[route]=counts[route];
   }
+  return observed;
+}
+async function checkFixtureService(finished) {
+  const observed=await readFixtureCounters();
+  for(const [route,minimum] of Object.entries(fixtureCoverage)) {
+    if(finished)assert(observed[route]>=minimum,'Missing native fixture coverage: '+route);
+    else assert.equal(observed[route],0,'Each platform requires its own unused fixture service');
+  }
   if(finished)console.log('Runner loopback fixture requests: '+JSON.stringify(observed));
+}
+async function reportFixtureCounters() {
+  try {
+    console.log('Runner loopback fixture requests at failure: '+JSON.stringify(await readFixtureCounters()));
+  } catch {
+    console.log('Runner loopback fixture counters unavailable at failure');
+  }
+}
+function reportAndroidClock(adb) {
+  try {
+    const before=Date.now();
+    const value=run(adb,['-e','shell','date','+%s%N'],4000).trim();
+    const after=Date.now();
+    if(/^\d{19}$/.test(value)) {
+      const guest=Math.floor(Number(value.slice(0,13)));
+      console.log('Android fixture wall clock minus runner, milliseconds: '+JSON.stringify({lower:guest-after,upper:guest-before+1}));
+      return;
+    }
+  } catch {/* Failed samples are excluded from evidence. */}
+  console.log('Android fixture wall clock offset unavailable');
 }
 
 async function recordScreen(label,path) {
@@ -123,7 +149,10 @@ if (platform === 'android') {
     }
     assert(booted, 'Android emulator did not finish booting within the startup limit.');
     run(adb, ['-e', 'shell', 'input', 'keyevent', '82']);
-    if(fixture)run(adb,['-e','reverse','tcp:'+fixturePort,'tcp:'+fixturePort]);
+    if(fixture) {
+      reportAndroidClock(adb);
+      run(adb,['-e','reverse','tcp:'+fixturePort,'tcp:'+fixturePort]);
+    }
     run(adb, ['-e', 'install', '-r', resolve('android/app/build/outputs/apk/debug/app-debug.apk')]);
     if(fixture)console.log('Android fixture: APK installed on the disposable emulator');
     console.log(run(adb, ['-e', 'shell', 'am', 'start', '-W', '-n', `${appId}/.MainActivity`]));
@@ -158,6 +187,12 @@ if (platform === 'android') {
     const restartedPort=run(adb,['-e','forward','tcp:0',`localabstract:webview_devtools_remote_${restartedPid}`]).trim();
     try {await withAndroidPage(restartedPort,page=>flow(page,true));}
     finally {spawnSync(adb,['-e','forward','--remove',`tcp:${restartedPort}`],{timeout:10000,killSignal:'SIGKILL',stdio:'ignore'});}
+  } catch(error) {
+    if(fixture) {
+      reportAndroidClock(adb);
+      await reportFixtureCounters();
+    }
+    throw error;
   } finally {
     if(fixture)spawnSync(adb,['-e','reverse','--remove','tcp:'+fixturePort],{timeout:10000,killSignal:'SIGKILL',stdio:'ignore'});
     spawnSync(adb, ['-e', 'emu', 'kill'], { timeout: 10000, killSignal: 'SIGKILL', stdio: 'ignore' });
@@ -210,6 +245,7 @@ if (platform === 'android') {
     }
     console.log('iOS runner result: '+JSON.stringify({status:result.status,signal:result.signal,error:result.error?.code}));
     if(fixture) {
+      if(result.error||result.status!==0)await reportFixtureCounters();
       assert(!result.error&&result.status===0&&flowLog.includes('iOS fixture: sign-in, Plus usage and protected saved search restored'),
         'iOS fixture acceptance failed or was not executed; see bounded diagnostics above.');
     } else {

@@ -127,8 +127,10 @@ export function createNativeFixtureService() {
     if(![product,confirmed].includes(query))return send(response,200,{...envelope,kind:'clarification'});
     const isConfirmed=query===confirmed;
     counts[isConfirmed?'confirmed':'partial']++;
+    // The runner and the emulator can disagree about the current time.
+    const checkedAt=at-15000;
     return send(response,200,{...envelope,kind:'results',sourceMode:'catalog',
-      completedAt:new Date(at).toISOString(),items:[offer(isConfirmed,at)]});
+      completedAt:new Date(checkedAt).toISOString(),items:[offer(isConfirmed,checkedAt)]});
   }
 
   const server=createServer({requestTimeout:3000,headersTimeout:2000,maxHeaderSize:8192},(request,response)=>{

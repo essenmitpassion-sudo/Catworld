@@ -16,7 +16,23 @@ const value=target=>node(target)+'?.value';
 
 export async function androidFixtureFlow(page,afterRestart) {
   const {send,evaluate}=page;
-  const {tap,wait}=androidControls(page);
+  const {tap,wait}=androidControls(page,()=>evaluate(`(()=>{
+    const result=document.querySelector('#web-results');
+    const has=message=>result?.textContent.includes(message)??false;
+    return JSON.stringify({
+      fixtureLabel:has('TESTDATEN'),
+      cards:result?.querySelectorAll('article').length??0,
+      loading:has('Wir suchen und prüfen die Angebote'),
+      rejectedResponse:has('Die Antwort konnte nicht sicher geprüft werden'),
+      unavailable:has('Die Websuche ist vorübergehend nicht erreichbar'),
+      transportFailure:has('Die Verbindung zum Angebotsdienst ist fehlgeschlagen'),
+      expiredSession:has('Deine Anmeldung am Angebotsdienst ist abgelaufen'),
+      invalidWish:has('Gib einen Kaufwunsch als Text ohne Webadresse ein'),
+      clarification:has('Darf ein Gebrauchtangebot dabei sein'),
+      signedIn:document.querySelector('#pilot-account')?.textContent.trim()==='Abmelden',
+      plusUsedOne:document.querySelector('main')?.textContent.includes('Testabo Plus · 1 von 3 Suchen')??false
+    });
+  })()`));
   async function type(target,input) {
     await tap(target);
     await send('Input.insertText',{text:input});

@@ -31,11 +31,11 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
     const response=await fetch(base+new URL(url).pathname,{method,headers,body:JSON.stringify(data),redirect:'error'});
     return {url,status:response.status,headers:Object.fromEntries(response.headers),data:await response.json()};
   }};
-  const create=async store=>{
+  const create=async (store,now=Date.now)=>{
     const options=await fixturePilotOptions({Plugins:{CapacitorHttp:http,Preferences:{
       get:async()=>({value:store.value}),set:async({value})=>{store.value=value;},
       remove:async()=>{store.value=null;},
-    }}});
+    }}},now);
     return createPilotSession(options);
   };
   const signIn=async (session,account)=>{
@@ -43,7 +43,8 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
     assert.equal((await session.verifyCode('654321')).kind,'code-rejected');
     assert.equal((await session.verifyCode('123456')).kind,'signed-in');
   };
-  const free=await create({value:null});
+  const deviceTime=()=>Date.now()-5000;
+  const free=await create({value:null},deviceTime);
   const guest=await fetch(base+'/api/v1/saved-searches');
   assert.equal(guest.status,401);
   assert.equal((await free.requestCode('person@example.com')).kind,'request-rejected');
@@ -51,7 +52,11 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
   assert.deepEqual(await free.getFixtureAccount(),{test:true,plan:'free',used:0,limit:1});
   assert.equal((await free.search(input(unavailable))).kind,'unavailable');
   const open=await free.search(input(partial));
+  assert.equal(open.kind,'results','A device clock 5 seconds behind the fixture should still accept the offer');
   assert.equal(open.testData,true);
+  assert.equal(open.completedAt,open.items[0].check.checkedAt);
+  assert(Date.parse(open.completedAt)<=deviceTime());
+  assert.equal(Date.parse(open.items[0].expiresAt)-Date.parse(open.completedAt),300000);
   assert.equal(open.items[0].check.total,null);
   assert.equal(open.items[0].check.minimum,9900);
   assert.deepEqual(await free.getFixtureAccount(),{test:true,plan:'free',used:1,limit:1});

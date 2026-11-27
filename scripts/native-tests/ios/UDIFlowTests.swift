@@ -58,7 +58,21 @@ final class UDIFlowTests: XCTestCase {
         }
 
         func checkOffer(_ badge: String, amount: String) {
-            XCTAssertTrue(offerMarker.waitForExistence(timeout: 15), "Synthetic result must be explicitly labelled")
+            func resultState() -> String {
+                let states = [
+                    ("loading", "Searching and checking offers"),
+                    ("rejectedResponse", "The response could not be checked safely"),
+                    ("unavailable", "Web search is temporarily unavailable"),
+                    ("transportFailure", "The connection to the offer service failed"),
+                    ("expiredSession", "Your sign-in to the offer service has expired"),
+                    ("invalidWish", "Describe what you want to buy as text without a web address")
+                ]
+                return states.map { flag, phrase in
+                    let label = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", phrase)).firstMatch
+                    return "\(flag)=\(label.exists)"
+                }.joined(separator: ", ")
+            }
+            XCTAssertTrue(offerMarker.waitForExistence(timeout: 15), "Synthetic result must be explicitly labelled. \(resultState())")
             XCTAssertTrue(web.staticTexts[badge].firstMatch.waitForExistence(timeout: 8))
             let price = web.staticTexts.matching(NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "CHF", amount)).firstMatch
             XCTAssertTrue(price.waitForExistence(timeout: 5))
