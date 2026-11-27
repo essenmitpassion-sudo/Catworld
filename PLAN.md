@@ -9,6 +9,20 @@ Der erste P0-Schritt schliesst die Lücke zwischen konkretem Kaufwunsch in DE/EN
 - [ ] Die nächste Engstelle ist die enge Quellen- und Katalogabdeckung. Die bestehende Rückfrage bei einem Zielwunsch praktisch mit alternativen Beschaffungswegen weiterführen, sobald eine zulässige Quelle eine passende Variante belegen kann. Anbieterzugang, Endpreis, native Live-Abnahme und Vergleich mit externen Suchwegen separat nachweisen. Erst daraus einen Wettbewerbsvorteil ableiten.
 
 
+### Abnahme gegen das One-Touch-Briefing
+
+| Auftrag | Nachgewiesener Stand | Ausstehende Abnahme |
+|---|---|---|
+| P0 Pilot verbessern | Reale Händler-Gegenproben zu Varianten, Quellenfehlern, Suchmerkmalen und Budget. | Durchgängig kaufbereites Ergebnis mit belegtem Endpreis. |
+| P1 Absicht und Grenzen | DE/EN-Sätze, explizite Merkmale, genaue Hersteller-ID und engere Budgetgrenze. | Ziele, Präferenzen und Kompatibilität über weitere Kategorien auflösen. |
+| P2 Mehr Möglichkeiten | Drei konkret belegte Varianten im Schweizer Pilot, ein praktisch verifizierter Händler. | Unabhängige Quellen, alternative Lösungswege und Kombinationen. |
+| P3 Recherche steuern | Begrenzte Quellenchecks, Frische, Abbruch und Unterscheidung von Quellenausfall und negativem Beleg. | Strategiewechsel und nachvollziehbare Abdeckung bei schwierigen Aufträgen. |
+| P4 Ergebnisse belegen | Typisierte Quellen- und Variantenprüfung, Bestand, Artikelpreis und offene Kosten. | Vollständige belegte Kosten und Lieferbedingungen. |
+| P5 One-Touch | Reale DE/EN-Browsersuche vom Suchknopf bis zur Händlerseite, Erhalt des Entwurfs bei fehlender Quelle. | Echter geschützter Live-Ablauf auf Android und iOS. |
+| P6 Lernen | Grundlage für gespeicherte Wünsche und erneut geprüfte Aktualisierungen. | Nachweis, dass frühere Suchläufe die nächste Suche messbar verbessern. |
+| P7 Wettbewerb | Vorher-Nachher-Messungen für UDI und Stichprobe gegen einen Preisvergleich. | Vergleichbarer Benchmark über Aufgaben und Dienste mit tatsächlich nutzbaren oder besseren Resultaten. |
+| P8 Verifikation und Sicherung | Reale Gegenproben, automatisierte Tests, Git-Checkpoints und zurückgelesene Remote-Referenzen. | Fortlaufend pro Änderung. |
+
 ## Konto und Spracheingabe · Vertiefung vom 25.11.2026
 
 [Originalauftrag mit P0–P6](docs/requirements/2026-11-25-account-and-dictation.md). Kontoregeln, Abo und persönliche Speicherung werden im folgenden Kontoplan geführt. Hier kommen die Sprachabnahmen hinzu.

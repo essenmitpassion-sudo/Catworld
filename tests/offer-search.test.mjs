@@ -95,3 +95,14 @@ test('regionale Modellnummer bleibt vom Quellenabruf bis zum geschützten Client
   assert.equal(accepted.items[0].mpn,'MU-PE1T0S/EU');
   assert.equal(accepted.items[0].check.total,null);
 });
+
+test('eine engere Grenze im Suchtext schliesst das geprüfte Angebot trotz höherem Formularbudget aus',async()=>{
+  const ctx=context();
+  const wanted={...input,query:'Samsung 990 PRO 2 TB under CHF 100',maxPrice:'500'};
+  const search=createOfferSearch({now:()=>now,verify:async item=>fixture(item)});
+  const raw=await search(wanted,ctx);
+  const accepted=parseDealReply(serializeScanReply(raw,{input:wanted,requestId:ctx.requestId},now),wanted,now,false,ctx.requestId);
+  assert.equal(accepted.criteria.maxTotal,9999);
+  assert.deepEqual(accepted.items,[]);
+  assert.equal(accepted.excluded,3);
+});

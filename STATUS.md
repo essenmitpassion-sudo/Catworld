@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Budgetgrenzen · 27.11.2026
+
+Suchtext und Formular setzen zusammen das engere Gesamtbudget durch. Beim realen Händlerabruf für CHF 439 verschwanden zwei zuvor fälschlich angezeigte Angebote. Zwei Kontrollfälle blieben als Teilbelege mit offenen Gesamtkosten sichtbar. 174 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Vorher-Nachher-Beleg](docs/evidence/2026-11-27-budget-bounds.md).
+
 ## Suche nach Merkmalen · 27.11.2026
 
 Die Pilotabdeckung wächst von einer auf drei konkrete Varianten. UDI findet die externe 1-TB-SSD mit USB-C ohne Modellnamen in DE/EN und prüft regionale Herstellernummern vollständig. Vier bisher leere passende Anfragen lieferten frische Teilbelege. Gegenproben für falsche Kapazität, falschen Anschluss oder zu wenig Angaben verursachten keinen Händlerabruf. 172 Tests und beide Live-Browserabläufe bestanden. Händler-Endpreise und ein breiterer Quellenzugang bleiben offen. [Vergleich](docs/evidence/2026-11-27-catalog-intent.md).

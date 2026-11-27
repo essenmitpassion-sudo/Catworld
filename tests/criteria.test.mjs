@@ -37,3 +37,11 @@ test('Gesamtkosten zählen nur nachweislich bekannte Bestandteile und rechnen in
   assert.equal(costs({ ...complete, fees: -1 }).total, null);
   assert.equal(costs({ ...complete, price: 0 }).minimum, null);
 });
+
+test('Suchtext und Formular begrenzen gemeinsam das Gesamtbudget', () => {
+  assert.equal(criteriaFor({query:'SSD bis CHF 200',maxPrice:'500'}).maxTotal,20000);
+  assert.equal(criteriaFor({query:'SSD under CHF 439',maxPrice:'500'}).maxTotal,43899);
+  assert.equal(criteriaFor({query:'SSD bis CHF 500',maxPrice:'450'}).maxTotal,45000);
+  assert.equal(criteriaFor({query:'SSD',maxPrice:'500'}).maxTotal,50000);
+  assert.throws(()=>criteriaFor({query:'SSD unter CHF 0.01',maxPrice:'500'}),/mindestens CHF 0.01/);
+});

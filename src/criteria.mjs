@@ -55,8 +55,11 @@ export function criteriaFor(input) {
   if (input.completeCostsOnly != null && typeof input.completeCostsOnly !== 'boolean') {
     throw new Error('Die Kostenoption muss eingeschaltet oder ausgeschaltet sein.');
   }
-  const explicit = input.maxPrice != null && input.maxPrice !== '';
-  const maxTotal = explicit ? amount(input.maxPrice) : budgetFrom(query);
+  let maxTotal = budgetFrom(query);
+  if (input.maxPrice != null && input.maxPrice !== '') {
+    const formBudget = amount(input.maxPrice);
+    maxTotal = Math.min(maxTotal ?? formBudget, formBudget);
+  }
   if (maxTotal !== null && maxTotal <= 0) throw new Error('Das Gesamtbudget muss mindestens CHF 0.01 betragen.');
   return { maxTotal, condition, completeCostsOnly: input.completeCostsOnly ?? false };
 }
