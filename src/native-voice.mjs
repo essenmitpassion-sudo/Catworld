@@ -33,7 +33,8 @@ export function setupNativeVoice(root,onInput,plugin) {
     clearTimeout(current?.timer);
     current=null;
     button.disabled=false;
-    button.setAttribute('aria-pressed','false');
+    button.removeAttribute('data-recording');
+    button.setAttribute('aria-expanded','false');
     setText(label,m('Einsprechen'));
     options.hidden=true;
     cancelButton.hidden=true;
@@ -41,6 +42,7 @@ export function setupNativeVoice(root,onInput,plugin) {
   }
   const askNative=(method,id)=>Promise.resolve().then(()=>plugin[method]({id})).then(()=>true,()=>false);
   function closeOptions() {
+    button.setAttribute('aria-expanded','false');
     options.hidden=true;
     cancelButton.hidden=true;
     panel.hidden=true;
@@ -70,8 +72,8 @@ export function setupNativeVoice(root,onInput,plugin) {
     reset('Diktat ergänzt. Prüfe und bearbeite den Text vor der Suche.');
   }
 
-  button.setAttribute('aria-controls',panel.id);
-  button.setAttribute('aria-pressed','false');
+  button.setAttribute('aria-controls',options.id);
+  button.setAttribute('aria-expanded','false');
   const subscription=Promise.resolve().then(()=>plugin.addListener('speechState',event=>{
     if(!current || event?.id!==current.id)return;
     if(event.status==='listening' && !current.finishing) {
@@ -102,6 +104,7 @@ export function setupNativeVoice(root,onInput,plugin) {
     }
     if(!selectedLocale)locale.value=getLanguage()==='de'?'de-DE':'en-GB';
     options.hidden=false;
+    button.setAttribute('aria-expanded','true');
     cancelButton.hidden=false;
     tell('UDI braucht das Mikrofon, um deinen Wunsch auf diesem Gerät als Text zu erfassen.');
     start.scrollIntoView({block:'nearest'});
@@ -121,7 +124,8 @@ export function setupNativeVoice(root,onInput,plugin) {
     current=run;
     const language=locale.value;
     options.hidden=true;
-    button.setAttribute('aria-pressed','true');
+    button.setAttribute('aria-expanded','false');
+    button.setAttribute('data-recording','');
     setText(label,m('Abbrechen'));
     tell('Lokales Diktat und Mikrofon werden vorbereitet …');
     const listening=await subscription;

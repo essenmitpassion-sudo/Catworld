@@ -941,9 +941,13 @@ try {
     await type('Samsung');
     await pointerClick('[data-mic]');
     assert.equal(await evaluate('window.qaSpeechCalls.length'),0,'opening the explanation does not start recognition');
+    assert(await evaluate("document.querySelector('[data-mic]').getAttribute('aria-expanded') === 'true' && !document.querySelector('[data-mic]').hasAttribute('aria-pressed')"),'microphone opens as a disclosure instead of a switch');
+    const voiceControl=await evaluate("document.getElementById(document.querySelector('[data-mic]').getAttribute('aria-controls'))?.hasAttribute('data-native-voice-options')");
+    assert.equal(voiceControl,true,'accessibility state refers to the options being disclosed');
     assert(await evaluate("!document.querySelector('[data-native-voice-options]').hidden && !document.querySelector('[data-native-voice-start]').disabled"));
     await pointerClick('[data-native-voice-cancel]');
     assert(await evaluate("document.querySelector('[data-voice]').hidden"),'closing the explanation leaves no extra row under the typed draft');
+    assert.equal(await evaluate("document.querySelector('[data-mic]').getAttribute('aria-expanded')"),'false');
     await pointerClick('[data-mic]');
     await evaluate("document.querySelector('#dictation-language').value='en-GB';document.querySelector('#dictation-language').dispatchEvent(new Event('change',{bubbles:true}))");
     await pointerClick('[data-native-voice-start]');

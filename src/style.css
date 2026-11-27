@@ -216,7 +216,7 @@ html[data-native-ui] .brand-mark { background:var(--paper); color:var(--blue); }
 #pilot-sign-in [role="status"]:empty { display:none; }
 
 html[data-native-ui] .voice-button { min-height:44px; color:var(--blue); background:var(--soft); border-color:var(--line); }
-html[data-native-ui] .voice-button[aria-pressed=true] { color:#762b28; background:#f9e9e6; }
+html[data-native-ui] .voice-button[data-recording] { color:#762b28; background:#f9e9e6; }
 html[data-native-ui] .voice-panel { color:var(--ink); border-color:var(--line); background:var(--paper); }
 [data-native-voice-options] { display:flex; flex-wrap:wrap; align-items:end; gap:.5rem; }
 [data-native-voice-options] label { width:100%; }
