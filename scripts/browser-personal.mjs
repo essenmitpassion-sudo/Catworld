@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {createTryUdi} from './try-udi.mjs';
+import {androidControls} from './native-flow-android.mjs';
 
 const wish='Samsung 990 PRO 2 TB';
 const scenarios=[
@@ -73,15 +74,16 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await pointerClick('#results button.text-button');
       await until(()=>has('#results button.text-button',scenario.saved),'confirmed test save');
 
-      async function search(text) {
+      async function search(text,{touch=false}={}) {
         await evaluate('(()=>{const field=document.querySelector("#search-query");field.value='+JSON.stringify(text)+';field.dispatchEvent(new Event("input",{bubbles:true}));})()');
-        await pointerClick('.primary-search');
+        if(touch) await androidControls({send,evaluate}).tap('.primary-search',{touch:true});
+        else await pointerClick('.primary-search');
       }
       await search('UDI fixture timeout');
       await until(()=>evaluate("Boolean(document.querySelector('[data-cancel-search]'))"),'cancel available while loading');
       await pointerClick('[data-cancel-search]');
       await results(scenario.cancelled);
-      await search('UDI fixture timeout');
+      await search('UDI fixture timeout',{touch:true});
       await results(scenario.timedOut);
       await search('UDI fixture invalid');
       await results(scenario.invalid);

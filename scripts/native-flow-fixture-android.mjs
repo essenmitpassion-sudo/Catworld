@@ -42,7 +42,7 @@ export async function androidFixtureFlow(page,afterRestart) {
     await evaluate(node(query)+'.select()');
     await send('Input.insertText',{text:input});
     assert.equal(await evaluate(value(query)),input,'Installed Android composer must retain the typed wish');
-    await tap(submit);
+    await tap(submit,{touch:true});
   }
   async function expectOffer(badge,amount) {
     await wait(text(results)+'?.includes("TESTDATEN")');

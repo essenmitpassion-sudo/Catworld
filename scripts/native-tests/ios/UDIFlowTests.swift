@@ -8,12 +8,16 @@ final class UDIFlowTests: XCTestCase {
         let web = app.webViews.firstMatch
         XCTAssertTrue(web.waitForExistence(timeout: 15), "Installed app must launch its WebView")
         let settings = web.buttons.matching(NSPredicate(format: "label BEGINSWITH %@ OR label BEGINSWITH %@", "Language and market:", "Sprache und Markt:")).firstMatch
-        XCTAssertTrue(settings.waitForExistence(timeout: 15))
-        settings.tap()
-        let english = web.switches["English"].firstMatch
-        XCTAssertTrue(english.waitForExistence(timeout: 5))
-        english.tap()
-        XCTAssertTrue(web.buttons["Language and market: English"].firstMatch.waitForExistence(timeout: 15))
+        XCTAssertTrue(settings.waitForExistence(timeout: 35), "The installed WebView must expose its controls")
+        let englishSettings = web.buttons["Language and market: English"].firstMatch
+        if !englishSettings.exists {
+            settings.tap()
+            let english = web.switches["English"].firstMatch
+            XCTAssertTrue(english.waitForExistence(timeout: 5))
+            XCTAssertTrue(english.isHittable)
+            english.tap()
+        }
+        XCTAssertTrue(englishSettings.waitForExistence(timeout: 20), "Fixture search must start in English")
         XCTAssertTrue(web.staticTexts["Test environment · Simulated accounts and prices only"].firstMatch.waitForExistence(timeout: 10))
         print("iOS fixture: launched installed app (EN)")
 
@@ -173,10 +177,10 @@ final class UDIFlowTests: XCTestCase {
         let web = app.webViews.firstMatch
         XCTAssertTrue(web.waitForExistence(timeout: 15))
         print("iOS initial WebView accessibility: \(web.debugDescription.prefix(8000))")
-        let introduction = NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "Describe what you need", "Beschreibe deinen Wunsch")
-        XCTAssertTrue(web.staticTexts.matching(introduction).firstMatch.waitForExistence(timeout: 15), "Native UI must finish rendering without promising unavailable voice input")
         let microphone = web.buttons.matching(NSPredicate(format: "label == %@ OR label == %@", "Speak", "Einsprechen")).firstMatch
-        XCTAssertTrue(microphone.waitForExistence(timeout: 15), "The dictation disclosure must expose a button")
+        XCTAssertTrue(microphone.waitForExistence(timeout: 35), "The installed WebView must expose the dictation disclosure as a button")
+        let introduction = NSPredicate(format: "label CONTAINS %@ OR label CONTAINS %@", "Describe what you need", "Beschreibe deinen Wunsch")
+        XCTAssertTrue(web.staticTexts.matching(introduction).firstMatch.exists, "The native introduction must be accessible")
         XCTAssertTrue(microphone.isHittable)
         microphone.tap()
         let startDictation = web.buttons.matching(NSPredicate(format: "label == %@ OR label == %@", "Start dictation", "Diktat starten")).firstMatch

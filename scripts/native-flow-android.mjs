@@ -7,7 +7,7 @@ export function androidControls({send,evaluate},diagnose) {
     const state=diagnose?'; QA state: '+await diagnose():'';
     throw new Error('Native Android UI condition failed: '+expression+state);
   };
-  const tap=async selector=>{
+  const tap=async (selector,{touch=false}={})=>{
     await evaluate(`document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({block:'center',behavior:'instant'})`);
     // The real IME resizes/pans the WebView after focus. A point sampled during
     // that transition can hit the textarea even though the button was visible.
@@ -23,10 +23,17 @@ export function androidControls({send,evaluate},diagnose) {
     assert(Date.now()-stableSince>=500,'Native layout did not settle: '+selector);
     assert(point,'Missing native UI action: '+selector);
     assert(await evaluate(`(()=>{const n=document.querySelector(${JSON.stringify(selector)}),hit=document.elementFromPoint(${point.x},${point.y});return n===hit||n?.contains(hit);})()`),'Native UI action obscured');
-    await evaluate(`window.udiQATap=null;document.addEventListener('click',e=>{const n=document.querySelector(${JSON.stringify(selector)});window.udiQATap=n===e.target||n?.contains(e.target);},{capture:true,once:true})`);
-    await send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
-    await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
-    await wait('window.udiQATap!==null');assert.equal(await evaluate('window.udiQATap'),true,'Native click must reach '+selector);
+    await evaluate(`window.udiQATap=null;document.addEventListener('click',e=>{const n=document.querySelector(${JSON.stringify(selector)});window.udiQATap={hit:n===e.target||n?.contains(e.target),target:e.target.id||e.target.tagName,point:[e.clientX,e.clientY]};},{capture:true,once:true})`);
+    if(touch) {
+      await send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[point]});
+      await send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    } else {
+      await send('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...point});
+      await send('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',clickCount:1,...point});
+    }
+    await wait('window.udiQATap!==null');
+    const actual=await evaluate('window.udiQATap');
+    assert.equal(actual.hit,true,'Native click must reach '+selector+' · '+JSON.stringify(actual));
   };
   return {tap,wait};
 }
