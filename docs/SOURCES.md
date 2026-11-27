@@ -1,5 +1,9 @@
 # Quellenrealität · UDI-Pilot
 
+## MIXEL Shop · begrenzte zweite Quelle · 27.11.2026
+
+Die fest eingetragene öffentliche [MIXEL-Produktseite](https://shop.mixel.ch/product/samsung-ssd-990-pro-m-2-2280-nvme-2000-gb-1425209) belegt die konkrete 990 PRO 2 TB. MPN in der Produktansicht und GTIN im Angebot müssen übereinstimmen. Der Händler erlaubt den Abruf öffentlicher Produktseiten in [robots.txt](https://shop.mixel.ch/robots.txt). Preis, aktiver Status und Direktlink wurden gemeinsam mit DQ Solutions erneut geprüft. Der konkrete Versandpreis, der Zustand und der vollständige Endpreis bleiben offen. Das Quellenprofil schaltet weder den Checkout noch die MIXEL-API frei. [Nachweis](evidence/2026-11-27-mixel-second-source.md).
+
 ## Erneute Einzelprüfung · 24.11.2026
 
 Erneut um14:43:04 Uhr Schweiz am Stand70fece9 geprüft: [Quellenbeleg](evidence/2026-11-24-source-dq-70fece9.json). Englischer tatsächlicher Chromium-Ablauf öffnet wieder den passenden Passport und die konkrete DQ-Seite mit MZ-V9P2T0BW; Artikelpreis unverändert CHF439.– gegenüber der Morgenprobe. Versand/Endpreis/Lieferziel weiterhin unbekannt. Keine native Live-Suche oder automatische Preisverlauf-/Meldungsfunktion daraus ableiten; fünfminütige Frischegrenze gilt auch hier, historisch speichern statt als dauerhaft aktuell ausliefern.

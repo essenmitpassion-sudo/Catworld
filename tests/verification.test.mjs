@@ -100,3 +100,38 @@ test('Produktzustand und Verkäuferreferenz werden aus derselben DQ-Produktseite
   assert.equal(check.condition, 'Neu');
   assert.equal(check.mpn, 'MZ-V9P2T0BW');
 });
+
+test('MIXEL bestätigt genau das katalogisierte Angebot aus GTIN und Herstellerangabe', () => {
+  const url='https://shop.mixel.ch/product/samsung-ssd-990-pro-m-2-2280-nvme-2000-gb-1425209';
+  const input={url,mpn:'MZ-V9P2T0BW',sourceId:'shop.mixel.ch',marketId:'CH'};
+  const structured={...product,url,gtin13:'8806094215038',offers:{...product.offers,url,
+    itemCondition:undefined,seller:{name:'MIXEL Shop'},
+    shippingDetails:{shippingRate:{value:'0.00',currency:'CHF'},shippingDestination:{addressCountry:'CH'}},
+  }};
+  const specs='<noscript><main><dl><div><dt>Hersteller-Artikel-Nr.</dt><dd>MZ-V9P2T0BW</dd></div></dl></main></noscript>';
+  const check=inspectPage(input,{status:200,html:html(structured)+specs},now);
+  assert.equal(check.mpn,input.mpn);
+  assert.equal(check.seller,'MIXEL Shop');
+  assert.equal(check.availability,'active');
+  assert.equal(check.price,60000);
+  assert.equal(check.condition,null);
+  assert.equal(check.total,null);
+  assert.equal(check.shipping,undefined);
+  assert.equal(inspectPage(input,{status:200,html:html(structured)},now).status,'unconfirmed');
+  assert.equal(inspectPage(input,{status:200,html:html({...structured,gtin13:'8806094215039'})+specs},now).status,'unconfirmed');
+  assert.equal(inspectPage(input,{status:200,html:html(structured)+specs+specs},now).status,'unconfirmed');
+  assert.equal(inspectPage(input,{status:200,html:html({...structured,offers:{...structured.offers,seller:undefined}})+specs},now).status,'unconfirmed');
+  const otherSpecs=specs.replace('MZ-V9P2T0BW','MZ-V9P2T0CW');
+  assert.equal(inspectPage(input,{status:200,html:html({...structured,gtin13:'8806094594653'})+otherSpecs},now).reason,'variant-mismatch');
+});
+
+test('MIXEL-Prüfer erlaubt nur die einzelne öffentliche Katalogseite', async () => {
+  const verify=pageVerifier(['shop.mixel.ch']);
+  assert(verify);
+  for(const url of ['https://shop.mixel.ch/checkout','https://shop.mixel.ch/api/product',
+    'https://shop.mixel.ch/product/anderes-angebot-9999',
+    'https://www.shop.mixel.ch/product/samsung-ssd-990-pro-m-2-2280-nvme-2000-gb-1425209',
+    'https://shop.mixel.ch/product/samsung-ssd-990-pro-m-2-2280-nvme-2000-gb-1425209?x=1']) {
+    assert.equal((await verify({url})).reason,'url-rejected');
+  }
+});

@@ -3,6 +3,7 @@ import { request } from 'node:https';
 import { load } from 'cheerio';
 import ipaddr from 'ipaddr.js';
 import { sourceFor, sources } from './sources.mjs';
+import { catalog } from '../src/deals.mjs';
 
 export function publicAddresses(addresses) {
   return addresses.length > 0 && addresses.every(({ address }) => {
@@ -47,7 +48,10 @@ export function inspectPage(item, page, now = Date.now()) {
   if (page.status !== 200 || typeof page.html !== 'string') {
     return { ...check, reason: page.reason ?? 'http-error' };
   }
-  const $ = load(page.html);
+  const mixel = source.id === 'shop.mixel.ch';
+  const $ = load(page.html, { scriptingEnabled: !mixel });
+  const label = mixel ? $('noscript main dl dt').filter((_, node) => $(node).text().trim() === 'Hersteller-Artikel-Nr.') : null;
+  const mixelMpn = label?.length === 1 ? plain(label.next('dd').text()) : null;
   $('style, nav, footer, noscript').remove();
   const visible = $.root().clone();
   visible.find('script').remove();
@@ -74,9 +78,20 @@ export function inspectPage(item, page, now = Date.now()) {
   });
   if (matches.length !== 1) return check;
   const { product, offer } = matches[0];
-  const observedMpn = plain(product.mpn);
+  if (mixel) {
+    const known = catalog.find(entry => entry.sources.some(link => link.url === item.url));
+    // This source publishes the exact MPN in its no-script product specs and the GTIN on the same offer.
+    if (!known?.gtin13 || !mixelMpn || !/^\d{13}$/.test(product.gtin13 ?? '')
+      || (product.mpn != null && product.mpn !== mixelMpn) || plain(offer.seller?.name) !== source.name) return check;
+    const matchesGtin = product.gtin13 === known.gtin13;
+    const matchesMpn = mixelMpn === known.mpn;
+    if (!matchesGtin && !matchesMpn) return { ...check, reason: 'variant-mismatch' };
+    if (!matchesGtin || !matchesMpn) return check;
+  }
+  const productMpn = mixel ? mixelMpn : product.mpn;
+  const observedMpn = plain(productMpn);
   if (item.mpn && !observedMpn) return check;
-  if (item.mpn && product.mpn !== item.mpn) return { ...check, reason: 'variant-mismatch' };
+  if (item.mpn && productMpn !== item.mpn) return { ...check, reason: 'variant-mismatch' };
   const availability = schemaName(offer.availability);
   if (['SoldOut', 'OutOfStock', 'Discontinued'].includes(availability)) {
     return { ...check, availability: 'inactive', reason: 'not-available' };
@@ -116,9 +131,9 @@ export function pageVerifier(domains = []) {
   const nextRequest = new Map();
   return async item => {
     const url = new URL(item.url);
-    const domain = url.hostname.replace(/^www\./, '');
     const source = sourceFor(url);
-    if (!allowed.has(domain) || url.hostname !== 'www.' + domain || url.protocol !== 'https:'
+    const domain = source?.domain;
+    if (!allowed.has(domain) || url.hostname !== source?.hostname || url.protocol !== 'https:'
       || url.port || url.username || url.password || url.search || url.hash || !source?.verifiable
       || (Object.hasOwn(item,'marketId')&&item.marketId!==source.marketId) || (Object.hasOwn(item,'sourceId')&&item.sourceId!==source.id)) {
       return inspectPage(item, { reason: 'url-rejected' });

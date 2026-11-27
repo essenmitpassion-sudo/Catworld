@@ -4,6 +4,8 @@ import {criteriaFor,acceptsOffer} from './criteria.mjs';
 import {costs,isAmount} from './costs.mjs';
 import {sourceFor} from './sources.mjs';
 import {catalog,maxObservationAge,partNumbers} from './deals.mjs';
+
+export const additionalSourcesAccept = 'application/vnd.udi.deals.v1+json; profile=additional-sources';
 /** @typedef {import('./deal-types.d.ts').SearchInput} SearchInput */
 /** @typedef {import('./deal-types.d.ts').DealReply} DealReply */
 /** @typedef {import('./deal-types.d.ts').Offer} Offer */
@@ -60,7 +62,7 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
     if((requestedMpn&&check.mpn!==requestedMpn)||(knownProduct&&check.mpn!==knownProduct.mpn))throw new Error('Variant does not match request or known URL');
     if(!isAmount(check.price)||check.price===0)throw new Error('Invalid price');
     for(const field of ['shipping','taxes','imports','fees'])if(check[field]!==null&&!isAmount(check[field]))throw new Error('Invalid costs');
-    if(!['Neu','Gebraucht','Generalüberholt','Beschädigt'].includes(/** @type {string} */(check.condition)))throw new Error('Invalid condition');
+    if(!(check.condition===null&&source.id==='shop.mixel.ch')&&!['Neu','Gebraucht','Generalüberholt','Beschädigt'].includes(/** @type {string} */(check.condition)))throw new Error('Invalid condition');
     const checkedAt=stamp(check.checkedAt),expiresAt=stamp(item.expiresAt),checked=Date.parse(checkedAt),expires=Date.parse(expiresAt);
     if(checked>now||expires<=checked||expires>checked+300000)throw new Error('Invalid freshness');
     const summary=costs(check);

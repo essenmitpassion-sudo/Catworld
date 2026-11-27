@@ -7,7 +7,7 @@ export class InvalidSearch extends Error {
   name = 'InvalidSearch';
 }
 
-export async function discover(input, webSearch) {
+export async function discover(input, webSearch, {excludedSources=[]}={}) {
   const query = typeof input?.query === 'string' ? input.query.trim() : '';
   const requestedScope = input?.scope;
   if (!query || query.length > 300 || /https?:\/\/|www\./i.test(query)
@@ -25,7 +25,8 @@ export async function discover(input, webSearch) {
     return { kind: 'clarification', criteria,...context };
   }
   const scope = newOnly ? 'component' : requestedScope ?? (secondhand || criteria.condition === 'used' ? 'secondhand' : 'component');
-  const sources = webSources.filter(source => source.marketId===context.marketId && (scope === 'both' || Boolean(source.marketplace) === (scope === 'secondhand')));
+  const sources = webSources.filter(source => source.marketId===context.marketId && !excludedSources.includes(source.id)
+    && (scope === 'both' || Boolean(source.marketplace) === (scope === 'secondhand')));
   const rows = await webSearch({ query, scope, domains: sources.map(source => source.domain), criteria,...context });
   const items = new Map();
   const [requestedPart] = partNumbers(query);
@@ -34,10 +35,10 @@ export async function discover(input, webSearch) {
     let url;
     try { url = new URL(row.url); } catch { continue; }
     if (url.protocol !== 'https:' || url.username || url.password || url.port) continue;
-    const source = sources.find(entry => url.hostname === 'www.' + entry.domain || url.hostname === entry.domain);
+    const source = sources.find(entry => url.hostname === entry.hostname || url.hostname === entry.domain);
     const match = source?.path.exec(url.pathname);
     if (!match) continue;
-    url.hostname = 'www.' + source.domain;
+    url.hostname = source.hostname;
     url.hash = '';
     const sellerParams = source.domain === 'digitec.ch'
       ? [...url.searchParams].filter(([key, value]) => ['supplier', 'shid'].includes(key) && /^\d{1,15}$/.test(value))

@@ -15,7 +15,7 @@ Der erste P0-Schritt schliesst die Lücke zwischen konkretem Kaufwunsch in DE/EN
 |---|---|---|
 | P0 Pilot verbessern | Reale Händler-Gegenproben zu Varianten, Quellenfehlern, Suchmerkmalen und Budget. | Durchgängig kaufbereites Ergebnis mit belegtem Endpreis. |
 | P1 Absicht und Grenzen | DE/EN-Sätze, explizite Merkmale, genaue Hersteller-ID und engere Budgetgrenze. | Ziele, Präferenzen und Kompatibilität über weitere Kategorien auflösen. |
-| P2 Mehr Möglichkeiten | Drei konkret belegte Varianten im Schweizer Pilot, ein praktisch verifizierter Händler. | Unabhängige Quellen, alternative Lösungswege und Kombinationen. |
+| P2 Mehr Möglichkeiten | Drei konkret belegte Varianten im Schweizer Pilot. Für die 990 PRO zeigen zwei praktisch geprüfte Schweizer Händler frische Teilbelege. | Weitere unabhängige Quellen mit vollständigen Kosten, alternative Lösungswege und Kombinationen. |
 | P3 Recherche steuern | Begrenzte Quellenchecks, Frische, Abbruch und Unterscheidung von Quellenausfall und negativem Beleg. | Strategiewechsel und nachvollziehbare Abdeckung bei schwierigen Aufträgen. |
 | P4 Ergebnisse belegen | Typisierte Quellen- und Variantenprüfung, Bestand, Artikelpreis, offene Kosten und sofortige Entwertung bei einem neueren Händlerbeleg. | Vollständige belegte Kosten und Lieferbedingungen. |
 | P5 One-Touch | Reale DE/EN-Browsersuche vom Suchknopf bis zur Händlerseite, Erhalt des Entwurfs bei fehlender Quelle. | Echter geschützter Live-Ablauf auf Android und iOS. |

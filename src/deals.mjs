@@ -8,6 +8,7 @@ export const catalog = [{
   model: '990 PRO',
   variant: '2 TB · ohne Kühlkörper',
   mpn: 'MZ-V9P2T0BW',
+  gtin13: '8806094215038',
   compatibility: 'Für einen M.2-2280-Steckplatz mit NVMe-Unterstützung. PCIe 4.0 für die volle Schnittstellengeschwindigkeit.',
   manufacturer: 'https://www.samsung.com/ch/support/model/MZ-V9P2T0BW/',
   terms: 'samsung 990 pro 2tb nvme m2 2280 ssd',
@@ -16,6 +17,7 @@ export const catalog = [{
     { seller: 'Digitec', marketId:'CH',sourceId:'digitec.ch',url: 'https://www.digitec.ch/de/s1/product/samsung-990-pro-2000-gb-m2-2280-ssd-22097721' },
     { seller: 'Conrad', marketId:'CH',sourceId:'conrad.ch',url: 'https://www.conrad.ch/de/p/samsung-990-pro-2-tb-interne-m-2-pcie-nvme-ssd-2280-pcie-nvme-40-x4-retail-mz-v9p2t0bw-2705384.html' },
     { seller: 'DQ Solutions', marketId:'CH',sourceId:'dq-solutions.ch',url: 'https://www.dq-solutions.ch/de/samsung-2-tb-ssd-990-pro-nvme-m-2-ssd-m-2-hs2011' },
+    { seller: 'MIXEL Shop', marketId:'CH',sourceId:'shop.mixel.ch',url: 'https://shop.mixel.ch/product/samsung-ssd-990-pro-m-2-2280-nvme-2000-gb-1425209' },
   ],
 }, {
   name: 'Samsung 990 EVO Plus',

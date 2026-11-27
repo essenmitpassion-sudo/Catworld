@@ -5,6 +5,7 @@ import { discover, InvalidSearch } from './discovery.mjs';
 import { gatewaySearch } from './gateway.mjs';
 import { openProviderBudget } from './provider-budget.mjs';
 import { pageVerifier } from './verification.mjs';
+import { pilotSourceDomains } from './sources.mjs';
 import { scan } from './scans.mjs';
 import { catalogSearch } from './catalog-search.mjs';
 import { appFiles } from './public-files.mjs';
@@ -104,7 +105,7 @@ if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) 
       console.warn('Bezahlte Suche deaktiviert. Das Betreiberbudget konnte nicht geöffnet werden.');
     }
   }
-  const verify = pageVerifier((process.env.UDI_VERIFY_DOMAINS ?? 'dq-solutions.ch').split(',').map(value => value.trim()));
+  const verify = pageVerifier((process.env.UDI_VERIFY_DOMAINS ?? pilotSourceDomains.join(',')).split(',').map(value => value.trim()));
   server({ webSearch, verify, journalPath: fileURLToPath(new URL('../.udi/checks.json', import.meta.url)) })
     .listen(4173, '127.0.0.1', () => console.log('UDI: http://127.0.0.1:4173'));
 }

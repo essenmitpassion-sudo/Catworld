@@ -8,6 +8,7 @@ import { once } from 'node:events';
 import { setTimeout as pause } from 'node:timers/promises';
 import { server } from './serve.mjs';
 import { inspectPage, pageVerifier } from './verification.mjs';
+import { pilotSourceDomains } from './sources.mjs';
 import { catalog } from '../src/deals.mjs';
 import { androidFlow } from './native-flow-android.mjs';
 
@@ -36,7 +37,12 @@ async function until(read, label) {
 const live = process.argv.includes('--live');
 const liveEnglish=live&&process.argv.includes('--english');
 const liveByAttribute=live&&process.argv.includes('--attribute');
+const liveSecondSource=live&&process.argv.includes('--second-source');
+assert(!(liveByAttribute&&liveSecondSource),'Select one live scenario');
 const liveMpn=liveByAttribute?'MU-PE1T0S/EU':'MZ-V9P2T0BW';
+const liveSourceId=liveSecondSource?'shop.mixel.ch':'dq-solutions.ch';
+const liveSource=catalog.find(product=>product.mpn===liveMpn).sources.find(source=>source.sourceId===liveSourceId);
+const liveOfferSelector='#web-results article a[href='+JSON.stringify(liveSource.url)+']';
 const liveQueries=liveByAttribute
   ? ['Ich suche eine externe SSD 1 TB USB-C bis CHF 350.','I need a 1 TB portable SSD USB-C up to CHF 350.']
   : ['Ich suche eine Samsung 990 PRO 2 TB ohne Kühlkörper bis CHF 500.','I am looking for a Samsung 990 PRO 2 TB without a heatsink, up to CHF 500.'];
@@ -58,7 +64,7 @@ async function captureBoundary(platform,language,send) {
 }
 const profile = await mkdtemp(join(tmpdir(), 'udi-browser-'));
 const appOptions = live ? {
-  verify: pageVerifier(['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
+  verify: pageVerifier(liveSecondSource?pilotSourceDomains:['dq-solutions.ch']), journalPath: join(profile, 'checks.json'),
 } : { webSearch: async ({ query, scope }) => {
   if (scope === 'both' || scope === 'secondhand') return [
     { title: 'Gebrauchter PC · Browser-Testdaten', url: 'https://www.ricardo.ch/de/a/test-pc-1234567890/' },
@@ -300,22 +306,31 @@ try {
       await evaluate("document.querySelector('#search-query').focus()");
       await type(liveQueries[liveEnglish?1:0]);
       await pointerClick('.primary-search');
-      await until(() => evaluate("document.querySelector('#web-results article a')?.href.startsWith('https://www.dq-solutions.ch/')"), 'live DQ offer');
+      await until(() => evaluate('Boolean(document.querySelector('+JSON.stringify(liveOfferSelector)+'))'), 'live merchant offer');
+      if(liveSecondSource) {
+        assert.equal(await evaluate("document.querySelectorAll('#web-results article').length"),2);
+        assert(await evaluate("!document.querySelector('#web-results .offer .value-proof')"));
+      }
       assert(await evaluate(`document.querySelector('#web-results .cost-open')?.textContent.includes(${JSON.stringify(liveEnglish?'Shipping':'Versand')})`), 'live offer names unknown costs');
       assert(await evaluate("!document.querySelector('#web-results .value-proof')"), 'partial live offer has no savings claim');
       await noOverflow();
       const receipt = JSON.parse(await readFile(join(profile, 'checks.json'), 'utf8')).at(-1);
-      const check = receipt.checks.find(check => check.seller === 'DQ Solutions');
+      const check = receipt.checks.find(check => check.sourceId === liveSourceId);
       assert.equal(check.httpStatus, 200);
       assert.equal(receipt.marketId,'CH');assert.equal(receipt.deliveryCountry,'CH');assert.equal(receipt.currency,'CHF');
-      assert.equal(check.marketId,'CH');assert.equal(check.sourceId,'dq-solutions.ch');assert.equal(check.deliveryDestination,null,'requested CH delivery is not a delivery proof');
+      assert.equal(check.marketId,'CH');assert.equal(check.sourceId,liveSourceId);assert.equal(check.deliveryDestination,null,'requested CH delivery is not a delivery proof');
       assert.equal(check.mpn, liveMpn);
       if(liveByAttribute)assert.equal(await evaluate("document.querySelector('#web-results article h3').textContent"),
         liveEnglish?'Samsung T7 Shield · 1 TB · Black':'Samsung T7 Shield · 1 TB · Schwarz');
       assert.equal(check.availability, 'active');
       assert(check.price > 0);
       assert.equal(check.total, null);
-      const offerUrl = await evaluate("document.querySelector('#web-results article a').href");
+      assert.equal(check.seller,liveSource.seller);
+      if(liveSecondSource) {
+        assert.equal(check.condition,null);
+        assert.equal(check.shipping,undefined);
+      }
+      const offerUrl = liveSource.url;
       if (process.env.UDI_SCREENSHOT_DIR) {
         await evaluate("document.querySelector('#web-results').scrollIntoView()");
         const shot = await send('Page.captureScreenshot', { format: 'png' });
@@ -323,7 +338,8 @@ try {
       }
       // Respect the source's crawl delay before following the link in the browser.
       await pause(10_100);
-      await click('#web-results article a[href="#passport"]');
+      await evaluate('document.querySelector('+JSON.stringify(liveOfferSelector)+').closest("article").querySelector('
+        +JSON.stringify('a[href="#passport"]')+').click()');
       assert(await visible('passport'));
       assert((await evaluate("document.querySelector('#detail').textContent")).includes(liveMpn));
       assert.equal(await evaluate("document.querySelector('#detail a[target=_blank]').href"), offerUrl);
@@ -332,7 +348,7 @@ try {
       const merchant = await until(async () => {
         const list = await (await fetch('http://127.0.0.1:' + port + '/json/list')).json();
         lastPages = list.map(page => ({ url: page.url, title: page.title }));
-        return list.find(page => page.url === offerUrl && page.title.includes(liveMpn));
+        return list.find(page => page.url === offerUrl && page.title.includes(liveSecondSource?'990 PRO':liveMpn));
       }, 'correct live merchant page').catch(error => {
         console.error(JSON.stringify({ observedBrowserPages: lastPages }));
         throw error;

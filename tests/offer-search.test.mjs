@@ -10,10 +10,16 @@ import {createDealClient} from '../src/deal-client.mjs';
 
 const now=Date.parse('2026-11-24T13:00:00Z'),input={query:'Samsung 990 PRO 2 TB',marketId:'CH',deliveryCountry:'CH',currency:'CHF'};
 const context=()=>({subject:'unit-user',requestId:'b'.repeat(32),signal:new AbortController().signal});
-const fixture=(item,checkedAt=now)=>inspectPage(item,{status:200,html:'<script type="application/ld+json">'+JSON.stringify({
-  '@type':'Product',url:item.url,mpn:item.mpn,offers:{'@type':'Offer',url:item.url,priceCurrency:'CHF',price:'100.00',
-    itemCondition:'https://schema.org/NewCondition',availability:'https://schema.org/InStock',seller:{name:'UNIT TEST ONLY'}},
-})+'</script>'},checkedAt);
+const fixture=(item,checkedAt=now)=>{
+  const mixel=item.sourceId==='shop.mixel.ch';
+  const specs=mixel?'<noscript><main><dl><div><dt>Hersteller-Artikel-Nr.</dt><dd>MZ-V9P2T0BW</dd></div></dl></main></noscript>':'';
+  const html='<script type="application/ld+json">'+JSON.stringify({
+    '@type':'Product',url:item.url,mpn:item.mpn,gtin13:mixel?'8806094215038':undefined,
+    offers:{'@type':'Offer',url:item.url,priceCurrency:'CHF',price:'100.00',itemCondition:'https://schema.org/NewCondition',
+      availability:'https://schema.org/InStock',seller:{name:mixel?'MIXEL Shop':'UNIT TEST ONLY'}},
+  })+'</script>'+specs;
+  return inspectPage(item,{status:200,html:'<html><body>'+html+'</body></html>'},checkedAt);
+};
 
 test('Dienstadapter verlangt Prüfzugang und expliziten authentifizierten Auftragskontext',async()=>{
   assert.throws(()=>createOfferSearch());assert.throws(()=>createOfferSearch({verify:()=>{},webSearch:'enabled'}));
@@ -65,7 +71,7 @@ test('gemeinsamer Client durchläuft echten lokalen HTTP-Dienst und bestehenden 
     fetchImpl:(_approved,options)=>fetch('http://127.0.0.1:'+server.address().port+'/api/v1/search',{...options,headers:{...options.headers,Origin:'capacitor://localhost'}})});
   const result=await client.search(input);
   assert.equal(result.kind,'results');assert.equal(result.items.length,1);assert.equal(result.items[0].check.seller,'UNIT TEST ONLY');
-  assert.equal(result.items[0].check.total,null);assert.equal(result.unconfirmed,2);
+  assert.equal(result.items[0].check.total,null);assert.equal(result.unconfirmed,3);
   assert(!JSON.stringify(result).includes('unit-user')&&!JSON.stringify(result).includes('unit-test-token'));
 });
 
@@ -105,4 +111,41 @@ test('eine engere Grenze im Suchtext schliesst das geprüfte Angebot trotz höhe
   assert.equal(accepted.criteria.maxTotal,9999);
   assert.deepEqual(accepted.items,[]);
   assert.equal(accepted.excluded,3);
+});
+
+test('beide freigegebenen Händler erhalten einen der drei verfügbaren Prüfplätze', async () => {
+  const checked=[];
+  const search=createOfferSearch({now:()=>now,verify:async item=>{
+    checked.push(item.sourceId);
+    if (!['dq-solutions.ch','shop.mixel.ch'].includes(item.sourceId)) return;
+    const check=fixture(item);
+    return item.sourceId==='shop.mixel.ch'?{...check,condition:null}:check;
+  }});
+  const ctx=context(),raw=await search(input,ctx);
+  const accepted=parseDealReply(serializeScanReply(raw,{input,requestId:ctx.requestId},now),input,now,false,ctx.requestId);
+  assert.equal(checked.length,3);
+  assert.deepEqual(accepted.items.map(item=>item.sourceId),['dq-solutions.ch','shop.mixel.ch']);
+  assert.equal(accepted.items[1].check.condition,null);
+  assert.equal(accepted.items[1].check.total,null);
+  const constrained=await search({...input,condition:'new'},ctx);
+  assert.deepEqual(constrained.items.map(item=>item.sourceId),['dq-solutions.ch']);
+  assert.equal(constrained.excluded,1);
+});
+
+test('alter Accept-Header behält den bisherigen geschützten Suchablauf', async t => {
+  const checked=[];
+  const search=createOfferSearch({verify:async item=>{
+    checked.push(item.sourceId);
+    return fixture(item,Date.now());
+  }});
+  const server=createSearchService({mode:'pilot',authenticate:async()=> 'unit-user',search});
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  t.after(()=>new Promise(resolve=>{server.close(resolve);server.closeAllConnections();}));
+  const response=await fetch('http://127.0.0.1:'+server.address().port+'/api/v1/search',{
+    method:'POST',headers:{Authorization:'Bearer unit-test-token',Accept:'application/vnd.udi.deals.v1+json','Content-Type':'application/json'},
+    body:JSON.stringify({...input,schemaVersion:1,requestId:'a'.repeat(32)}),
+  });
+  assert.equal(response.status,200);
+  assert(!checked.includes('shop.mixel.ch'));
+  assert(!(await response.json()).items.some(item=>item.sourceId==='shop.mixel.ch'));
 });

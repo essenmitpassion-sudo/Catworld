@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Zweite Schweizer Händlerquelle · 27.11.2026
+
+MIXEL Shop und DQ Solutions wurden für dieselbe Samsung 990 PRO 2 TB ohne Kühlkörper im geschützten lokalen Pilot geprüft. Beide meldeten aktiven Bestand und einen CHF-Artikelpreis. Bei MIXEL bleiben der Produktzustand und der verbindliche Lieferpreis offen. Die App zeigt beide als Teilbelege. Vollständige Endpreise und native Live-Abnahme bleiben offen. [Quellen- und Prüfnachweis](docs/evidence/2026-11-27-mixel-second-source.md).
+
 ## Aktualität im Deal Passport · 27.11.2026
 
 Ein bestätigter negativer Händlerbeleg entfernt den vorherigen Bestand und Preis aus dem Passport. Ein frischer über Budget liegender Preis kann ebenfalls keinen älteren günstigeren Preis stehen lassen. Verspätete Antworten wurden als Gegenprobe geprüft. Der normale positive Ablauf wurde erneut am realen Händler bestätigt. 179 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Nachweis](docs/evidence/2026-11-27-offer-freshness.md).

@@ -1,5 +1,5 @@
 // @ts-check
-import {prepareSearch,parseDealReply} from './deal-contract.mjs';
+import {prepareSearch,parseDealReply,additionalSourcesAccept} from './deal-contract.mjs';
 /** @typedef {import('./deal-types.d.ts').DealReply} DealReply */
 /** @typedef {import('./deal-types.d.ts').ClientOptions} ClientOptions */
 /** @param {ClientOptions} [options] @returns {import('./deal-types.d.ts').DealClient} */
@@ -31,7 +31,7 @@ export function createDealClient({endpoint=null,approvedOrigin=null,getAccessTok
       if(!token)return {kind:'authentication-required'};
       if(typeof token!=='string'||token.length>4096||!/^[-A-Za-z0-9._~+/]+=*$/.test(token))return {kind:'authentication-required'};
       let response;
-      try {response=await fetchImpl(/** @type {string} */(endpoint),{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/vnd.udi.deals.v1+json',Authorization:'Bearer '+token},
+      try {response=await fetchImpl(/** @type {string} */(endpoint),{method:'POST',headers:{'Content-Type':'application/json',Accept:additionalSourcesAccept,Authorization:'Bearer '+token},
         body:JSON.stringify({...request,schemaVersion:1,requestId}),credentials:'omit',redirect:'error',cache:'no-store',referrerPolicy:'no-referrer',signal:controller.signal});}
       catch{return {kind:isOnline()?'network-error':'offline'};}
       /** @param {import('./deal-types.d.ts').FailureKind} kind @returns {DealReply} */

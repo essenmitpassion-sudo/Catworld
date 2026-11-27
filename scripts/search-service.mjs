@@ -5,6 +5,7 @@ import {performance} from 'node:perf_hooks';
 import {readServiceRequest,serializeScanReply} from './service-contract.mjs';
 import {readSavedSearch} from './account-searches.mjs';
 import {SavedSearchLimitError} from '../src/saved-searches.mjs';
+import {additionalSourcesAccept} from '../src/deal-contract.mjs';
 
 const origins=new Set(['https://localhost','capacitor://localhost']);
 const fault=status=>Object.assign(new Error('Request rejected'),{status});
@@ -33,7 +34,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
     const send=(status,payload,limit)=>{
       if(response.destroyed||response.writableEnded)return;
       const headers={'Content-Type':savedRoute?'application/json':'application/vnd.udi.deals.v1+json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff',
-        'Referrer-Policy':'no-referrer','Connection':'close',Vary:'Origin',...(origins.has(origin)?{'Access-Control-Allow-Origin':origin}:{})};
+        'Referrer-Policy':'no-referrer','Connection':'close',Vary:savedRoute?'Origin':'Origin, Accept',...(origins.has(origin)?{'Access-Control-Allow-Origin':origin}:{})};
       if(status===429) {
         headers['Retry-After']=String(limit?.retryAfter??60);
         if(limit?.kind==='quota-exceeded') {
@@ -102,12 +103,14 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
         }
         let requestData;try{requestData=readServiceRequest(await readBody(request,controller.signal));}catch(error){throw fault(error.status===413?413:controller.signal.aborted?504:400);}
         if(controller.signal.aborted)throw fault(504);
+        const additionalSources=request.headers.accept===additionalSourcesAccept;
         if(metered) {
           let entitlement,reserved;
           try {
             entitlement=await resolveEntitlement(subject,{signal:controller.signal});
             if(controller.signal.aborted)throw fault(504);
-            reserved=quota.reserve({subject,requestId:requestData.requestId,input:requestData.input,entitlement});
+            const fingerprintInput=additionalSources?{...requestData.input,responseProfile:'additional-sources'}:requestData.input;
+            reserved=quota.reserve({subject,requestId:requestData.requestId,input:fingerprintInput,entitlement});
           } catch {throw fault(controller.signal.aborted?504:503);}
           if(reserved.kind==='replay')return reserved.reply;
           if(reserved.kind==='quota-exceeded')throw Object.assign(fault(429),{limit:reserved});
@@ -116,7 +119,7 @@ export function createSearchService({authenticate,search,timeoutMs=8000,mode='pr
           if(reserved.kind!=='reserved')throw fault(503);
           reservation=reserved;
         }
-        const result=await search(requestData.input,{subject,requestId:requestData.requestId,signal:controller.signal});
+        const result=await search(requestData.input,{subject,requestId:requestData.requestId,signal:controller.signal,additionalSources});
         if(controller.signal.aborted)throw fault(504);
         if(result?.kind==='outside-catalog')throw fault(422);
         if(result?.kind==='unavailable')throw fault(502);

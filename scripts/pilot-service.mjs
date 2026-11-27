@@ -6,6 +6,7 @@ import {createDailyUpdateHandler,createDailyUpdates} from './daily-updates.mjs';
 import {createOfferSearch} from './offer-search.mjs';
 import {createSearchService} from './search-service.mjs';
 import {pageVerifier} from './verification.mjs';
+import {pilotSourceDomains} from './sources.mjs';
 
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const authError=()=>new Error('Pilot authentication service unavailable');
@@ -62,7 +63,7 @@ function createAuthenticator({authOrigin,publishableKey,allowedAccounts,fetchUse
 }
 
 export function createPilotService({authOrigin,publishableKey,allowedAccounts,dataDirectory,fetchUser=fetch,
-  verify=pageVerifier(['dq-solutions.ch'])}={}) {
+  verify=pageVerifier(pilotSourceDomains)}={}) {
   const authenticate=createAuthenticator({authOrigin,publishableKey,allowedAccounts,fetchUser});
   if(typeof dataDirectory!=='string' || !isAbsolute(dataDirectory))throw new Error('Pilot needs an absolute data directory');
   const search=createOfferSearch({verify});
