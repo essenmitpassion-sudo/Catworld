@@ -437,7 +437,7 @@ try {
       await click('#web-results button:nth-child(2)');
       await until(() => evaluate("document.querySelector('#web-results a')?.textContent === 'Inserat öffnen'"), 'marketplace result');
       assert.equal(await evaluate("document.querySelector('#web-results a').href"), 'https://www.ricardo.ch/de/a/test-pc-1234567890/');
-      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Teilweise geprüft')"));
+      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Unvollständig / Schätzung')"));
       assert(await evaluate("!document.querySelector('#web-results').textContent.includes('Verkaufter PC')"));
       assert(await evaluate("document.querySelector('#web-results').textContent.includes('Gesamtkosten noch offen')"));
       assert(await evaluate("document.querySelector('#web-results .cost-open').textContent.includes('Pflichtgebühren')"));
@@ -615,7 +615,7 @@ try {
     const direct=await evaluate("document.querySelector('#web-results a[target=_blank]').href");
     if(process.env.UDI_SCREENSHOT_DIR){await evaluate("document.querySelector('#web-results').scrollIntoView()");const shot=await send('Page.captureScreenshot',{format:'png'});await writeFile(join(process.env.UDI_SCREENSHOT_DIR,'english-offers-'+width+'.png'),Buffer.from(shot.data,'base64'));}
     await click('#web-results a[href="#passport"]');assert(await visible('passport'));
-    assert(await evaluate("document.querySelector('#detail').textContent.includes('Partially checked') && document.querySelector('#detail').textContent.includes('Total cost') && document.querySelector('#detail').textContent.includes('Unknown')"));
+    assert(await evaluate("document.querySelector('#detail').textContent.includes('Incomplete / estimate') && document.querySelector('#detail').textContent.includes('Total cost') && document.querySelector('#detail').textContent.includes('Unknown')"));
     assert.equal(await evaluate("document.querySelector('#detail a[target=_blank]').href"),direct);
     await click('nav a[href="#vergleich"]');assert(await evaluate("document.querySelector('#comparison').textContent.includes('Buying decision open')"));await noOverflow();
     await click('nav a[href="#suche"]');await click('#results button');

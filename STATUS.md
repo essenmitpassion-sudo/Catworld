@@ -1,5 +1,9 @@
 # Status · 27.11.2026
 
+## Preiszustände und Quellen · 27.11.2026
+
+Die Suche und der Deal Passport zeigen vier getrennte Preiszustände. Der Antwortvertrag prüft vollständige Kosten, angerechneten Rabatt, Betrag und Lieferziel. Die erneute Live-Prüfung fand bei DQ Solutions CHF 439.00 und bei MIXEL CHF 450.90 mit verfügbarem Bestand. Beide Endpreise bleiben unvollständig. Der bestätigte Zustand wurde im synthetischen Vertragstest ausgeführt. [Quellen- und Prüfnachweis](docs/evidence/2026-11-27-price-states.md).
+
 ## Qualitätsvergleich für Multi-KI · 27.11.2026
 
 Zwölf Abnahmefälle mit erwarteten Ergebnissen sind festgelegt. Der erste Test mit simulierten Modellergebnissen deckte einen falschen 1-TB-Treffer für den Händlerlink der 2-TB-Variante auf. UDI schliesst bei bekannten Angeboten ausdrücklich unpassende Kapazitäten vor dem Händlerabruf aus und verwendet die Katalogbezeichnung. Die flexible Auswahl zwischen 1 TB und 2 TB akzeptiert weiterhin den korrekt bezeichneten 2-TB-Teilbeleg. 192 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Der Live-Qualitätsvergleich ist offen. [Vergleichssatz und Regression](docs/evidence/2026-11-27-multi-ai-quality-baseline.md).

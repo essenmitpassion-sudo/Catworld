@@ -1,7 +1,7 @@
 // @ts-check
 import {searchContext} from './markets.mjs';
 import {criteriaFor,acceptsOffer} from './criteria.mjs';
-import {costs,isAmount} from './costs.mjs';
+import {costs,isAmount,matchesPriceConfirmation,validDiscount} from './costs.mjs';
 import {sourceFor} from './sources.mjs';
 import {catalog,maxObservationAge,partNumbers} from './deals.mjs';
 
@@ -69,12 +69,18 @@ export function parseDealReply(raw,input,now,allowTestData,requestId) {
     if(!(check.condition===null&&source.id==='shop.mixel.ch')&&!['Neu','Gebraucht','Generalüberholt','Beschädigt'].includes(/** @type {string} */(check.condition)))throw new Error('Invalid condition');
     const checkedAt=stamp(check.checkedAt),expiresAt=stamp(item.expiresAt),checked=Date.parse(checkedAt),expires=Date.parse(expiresAt);
     if(checked>now||expires<=checked||expires>checked+300000)throw new Error('Invalid freshness');
+    const destination=deliveryDestination(check.deliveryDestination);
+    if(!validDiscount(check.discount,check.price))throw new Error('Invalid discount');
     const summary=costs(check);
+    const confirmation=check.priceConfirmation;
+    if(confirmation!=null&&!matchesPriceConfirmation(confirmation,summary.total,destination))throw new Error('Invalid price confirmation');
     if(check.total!==undefined&&check.total!==summary.total)throw new Error('False total');
     /** @type {Observation} */const observation={url:url.href,marketId:'CH',sourceId:source.id,status:'http-200',productMatch:true,availability:'active',checkedAt,currency:'CHF',
       seller:text(check.seller),condition:/** @type {Observation['condition']} */(check.condition),price:/** @type {number} */(check.price),
       shipping:/** @type {number|null} */(check.shipping),taxes:/** @type {number|null} */(check.taxes),imports:/** @type {number|null} */(check.imports),fees:/** @type {number|null} */(check.fees),
-      delivery:check.delivery==null?null:text(check.delivery,500),deliveryDestination:deliveryDestination(check.deliveryDestination),
+      delivery:check.delivery==null?null:text(check.delivery,500),deliveryDestination:destination,
+      ...(check.discount==null?{}:{discount:/** @type {number} */(check.discount)}),
+      ...(confirmation==null?{}:{priceConfirmation:/** @type {import('./deal-types.d.ts').PriceConfirmation} */({...record(confirmation)})}),
       total:summary.total,minimum:/** @type {number} */(summary.minimum),missing:summary.missing,
       ...(check.mpn===undefined?{}:{mpn:text(check.mpn,100)})};
     const title=text(item.title),key=url.href;

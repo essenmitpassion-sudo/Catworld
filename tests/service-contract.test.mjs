@@ -216,3 +216,40 @@ test('Endpreis-Metadaten gelten nur im Kostenfilter und für ausgefilterte Angeb
   }
   assert.throws(()=>serializeScanReply({...fixture(),items:[],excluded:1,missingCompleteCosts:1},{requestId,input},now));
 });
+
+test('Preisstatus leitet sich aus frischen Quellenfakten und einem passenden Beleg ab',async()=>{
+  const {priceStatus}=await import('../src/costs.mjs');
+  const request={requestId,input};
+  const fromScan=result=>parseDealReply(serializeScanReply(result,request,now),input,now,false,requestId).items[0].check;
+  const open=fromScan(fixture()),checked=fromScan(completeFixture());
+  assert.equal(priceStatus(open,now),'incomplete');
+  assert.equal(priceStatus(checked,now),'checked');
+  assert.equal(priceStatus(checked,now+300000),'unverifiable');
+  assert.equal(priceStatus(null,now),'unverifiable');
+
+  const quoted=completeFixture(),check=quoted.items[0].check;
+  check.discount=500;
+  check.total-=500;
+  check.priceConfirmation={kind:'merchant-quote',total:check.total,country:'CH',postalCode:'8000'};
+  const confirmed=fromScan(quoted);
+  assert.equal(priceStatus(confirmed,now),'confirmed');
+  assert.equal(confirmed.total,9500);
+  assert.equal(confirmed.discount,500);
+  assert.deepEqual(confirmed.priceConfirmation,check.priceConfirmation);
+  assert.equal(priceStatus({...confirmed,checkedAt:new Date(now+1).toISOString()},now),'unverifiable');
+  assert.equal(priceStatus({...confirmed,stock:'out-of-stock'},now),'checked');
+
+  for(const change of [
+    {priceConfirmation:{...check.priceConfirmation,postalCode:'3000'}},
+    {priceConfirmation:{...check.priceConfirmation,total:9501}},
+    {priceConfirmation:{...check.priceConfirmation,kind:'search-snippet'}},
+    {priceConfirmation:{...check.priceConfirmation,checkoutUrl:'https://example.test/'}},
+    {deliveryDestination:null},
+    {shipping:null,total:null},
+    {discount:10001},
+    {discount:-1},
+  ]) {
+    const bad=structuredClone(quoted);Object.assign(bad.items[0].check,change);
+    assert.throws(()=>fromScan(bad));
+  }
+});

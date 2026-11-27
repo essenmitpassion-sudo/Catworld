@@ -1,7 +1,7 @@
-import { costs } from './costs.mjs';
+import { costs, maxObservationAge } from './costs.mjs';
 import { acceptsOffer, withoutBudget } from './criteria.mjs';
 import {activeMarket} from './markets.mjs';
-export { costFields, isAmount } from './costs.mjs';
+export { costFields, isAmount, maxObservationAge } from './costs.mjs';
 
 export const catalog = [{
   name: 'Samsung 990 PRO',
@@ -93,7 +93,6 @@ export function directLink(url, product) {
   return product.sources.find(source => source.url === url)?.url ?? null;
 }
 
-export const maxObservationAge = 5 * 60 * 1000;
 const timestamp = value => typeof value === 'string'
   && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z$/.test(value)
   ? Date.parse(value) : NaN;

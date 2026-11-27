@@ -9,7 +9,7 @@ import { applyChecks } from './observations.mjs';
 import { icon, mountIcons } from './ui.mjs';
 import { intentFor, addCapacity } from './intent.mjs';
 import { setupVoice } from './voice.mjs';
-import { costs } from './costs.mjs';
+import { costs, priceStatus } from './costs.mjs';
 import { setupInstall } from './install.mjs';
 import { setupSharing, readSharedSearch } from './share.mjs';
 import {runtimePlatform,discoverOffers,loadObservations} from './runtime.mjs';
@@ -20,7 +20,12 @@ const get = id => document.getElementById(id);
 const storageKey = 'udi.watchlist.v1';
 const money = formatMoney;
 const conditionText = (value,fallback) => ['Neu','Gebraucht','Generalüberholt','Beschädigt'].includes(value) ? m(value) : value || fallback;
-const labels = { verified: m('Verifiziert'), partial: m('Teilweise geprüft'), unconfirmed: m('Unbestätigt') };
+const priceLabels = {
+  confirmed: m('Verbindlich bestätigt'),
+  checked: m('Preis geprüft'),
+  incomplete: m('Unvollständig / Schätzung'),
+  unverifiable: m('Nicht verifizierbar'),
+};
 const routes = ['radar', 'suche', 'vergleich', 'passport', 'watchlist', 'hilfe'];
 let activeProduct = null;
 let activeSeller = null;
@@ -414,7 +419,12 @@ function renderWebResults(result, query) {
         : m('Keine passenden aktuellen Angebote gefunden. Ändere deinen Suchwunsch oder versuche es später erneut.'),
       expired: m('Die Angebotsprüfung ist abgelaufen. Suche erneut für den aktuellen Stand.'),
     };
-    target.replaceChildren(element('p', messages[result.kind] ?? messages.unavailable, 'surface muted'));
+    if (['expired', 'unavailable', 'invalid-response', 'network-error', 'timeout', 'offline'].includes(result.kind) ||
+      (result.kind === 'results' && !result.excluded && result.unconfirmed)) {
+      target.replaceChildren(message(priceLabels.unverifiable, messages[result.kind]));
+    } else {
+      target.replaceChildren(element('p', messages[result.kind] ?? messages.unavailable, 'surface muted'));
+    }
     return;
   }
   const intro = element('div', null, 'section-heading');
@@ -428,8 +438,9 @@ function renderWebResults(result, query) {
     const heading = element('div', null, 'offer-heading');
     const source = element('p', item.source, 'eyebrow');
     source.prepend(icon('shop'));
-    heading.append(source, element('span', m('Teilweise geprüft'), 'badge'));
     const check = item.check;
+    const status = priceStatus(check);
+    heading.append(source, element('span', priceLabels[status], 'badge ' + status));
     const product = catalog.find(product => product.mpn === check.mpn && product.sources.some(source => source.url === item.url));
     const layout = element('div', null, 'offer-layout');
     const identity = element('div');
@@ -439,7 +450,10 @@ function renderWebResults(result, query) {
     if (check.mpn) identity.append(element('p', check.mpn, 'price-caption'));
     const amount = element('div', null, 'offer-cost');
     amount.append(element('p',m('{value}',()=>({value:money(check.total??check.price)})), 'offer-price'),
-      element('p', check.total === null ? m('Artikelpreis · Gesamtkosten noch offen') : m('Gesamtkosten inklusive bekannter Pflichtkosten'), 'price-caption'));
+      element('p', status === 'confirmed'
+        ? m('Bestätigter Endpreis für {postalCode} (CH)', {postalCode:check.priceConfirmation.postalCode})
+        : check.total === null ? m('Artikelpreis · Gesamtkosten noch offen')
+        : m('Gesamtkosten laut Quelle'), 'price-caption'));
     const costNote = openCosts(check);
     if (costNote) amount.append(costNote);
     const costSummary = costs(check);
@@ -457,6 +471,8 @@ function renderWebResults(result, query) {
       [m('Zustand laut Quelle'), conditionText(check.condition,m('Unbestätigt'))],
       [m('Verkäufer laut Quelle'), check.seller ?? m('Unbestätigt')],
       ...costFields.map(([key, label]) => [label, isAmount(check[key]) ? money(check[key]) : m('Unbekannt')]),
+      [m('Angerechneter Rabatt'), isAmount(check.discount) ? money(check.discount) : m('Nicht belegt')],
+      [m('Lieferziel des Preises'), checkedDelivery(check)],
       [m('Funktionszustand'), m('Nicht unabhängig getestet')],
     ]));
     const action = result.testData?element('p',m('Testdaten: Anbieterlink deaktiviert.'),'muted')
@@ -586,6 +602,12 @@ function recommendationText(recommendation, comparisonStatus) {
   return m('{seller} hat im belegten Vergleich für denselben Zustand und Lieferort die tiefsten Gesamtkosten ({amount}).',()=>({seller:recommendation.seller,amount:money(recommendation.total)}));
 }
 
+function checkedDelivery(observation) {
+  const destination = observation?.deliveryDestination;
+  return destination?.country === 'CH' && /^[1-9]\d{3}$/.test(destination.postalCode)
+    ? destination.postalCode + ' (CH)' : m('Nicht belegt');
+}
+
 function factsFor(offer) {
   const observation = offer.observation;
   const available = observation?.stock === 'in-stock' ? m('Verfügbar')
@@ -594,9 +616,7 @@ function factsFor(offer) {
     [m('Artikelpreis'), isAmount(observation?.price) && observation.price > 0 ? money(observation.price) : m('Unbekannt')],
     [m('Gesamtkosten'), offer.total === null ? m('Unbekannt') : money(offer.total)],
     [m('Zustand laut Quelle'), conditionText(observation?.condition,m('Nicht belegt'))],
-    [m('Lieferziel des Preises'), observation?.deliveryDestination?.country === 'CH'
-      && /^[1-9]\d{3}$/.test(observation.deliveryDestination.postalCode)
-      ? observation.deliveryDestination.postalCode + ' (CH)' : m('Nicht belegt')],
+    [m('Lieferziel des Preises'), checkedDelivery(observation)],
     [m('Verfügbarkeit'), available],
     [m('Prüfzeitpunkt'), observation ? m('{checkedAt} (CH)',()=>({checkedAt:formatDate(observation.checkedAt)})) : m('Keine aktuelle Prüfung')],
   ];
@@ -614,7 +634,7 @@ function renderComparison() {
   const columns = element('div', null, 'columns');
   for (const offer of offers) {
     const box = element('article', null, 'surface');
-    box.append(element('h3', offer.seller), element('span', labels[offer.state], 'badge ' + offer.state),
+    box.append(element('h3', offer.seller), element('span', priceLabels[priceStatus(offer.observation)], 'badge ' + offer.state),
       facts(factsFor(offer)));
     if (offer.excluded) box.append(element('p', m('Erfüllt deine Kaufkriterien nicht.'), 'muted'));
     else box.append(productAction(m('Deal Passport · {seller}',{seller:offer.seller}), 'passport', activeProduct, offer.seller));
@@ -658,8 +678,10 @@ function renderPassport() {
     return [label, isAmount(amount) && (key !== 'price' || amount > 0) ? money(amount) : m('Unbekannt')];
   });
   const delivery = typeof observation?.delivery === 'string' && observation.delivery.trim();
-  box.append(element('span', labels[offer.state], 'badge ' + offer.state),
-    facts([...factsFor(offer), ...expenses, [m('Lieferbedingungen'), delivery || m('Unbestätigt')],
+  box.append(element('span', priceLabels[priceStatus(offer.observation)], 'badge ' + offer.state),
+    facts([...factsFor(offer), ...expenses,
+      [m('Angerechneter Rabatt'), isAmount(observation?.discount) ? money(observation.discount) : m('Nicht belegt')],
+      [m('Lieferbedingungen'), delivery || m('Unbestätigt')],
       [m('Quelle'), new URL(offer.url).hostname]]), element('p', risk[offer.state], 'muted'));
   const costNote = openCosts(observation);
   if (costNote) box.append(costNote);

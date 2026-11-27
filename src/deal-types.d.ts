@@ -1,9 +1,10 @@
 export type SearchInput = {query:string; marketId?:'CH'; deliveryCountry?:'CH'; currency?:'CHF'; scope?:'component'|'secondhand'|'both'|null; maxPrice?:string; condition?:'any'|'new'|'used'; completeCostsOnly?:boolean};
 export type SearchContext = {marketId:'CH'; deliveryCountry:'CH'; currency:'CHF'};
 export type Criteria = {maxTotal:number|null; condition:'any'|'new'|'used'; completeCostsOnly:boolean};
+export type PriceConfirmation = {kind:'checkout'|'merchant-quote';total:number;country:'CH';postalCode:string};
 export type Observation = {url:string; marketId:'CH'; sourceId:string; status:'http-200'; productMatch:true; availability:'active'; checkedAt:string; currency:'CHF';
   mpn?:string; seller:string; condition:'Neu'|'Gebraucht'|'Generalüberholt'|'Beschädigt'|null; price:number; shipping:number|null; taxes:number|null; imports:number|null; fees:number|null;
-  delivery:string|null; deliveryDestination:{country:'CH';postalCode:string}|null; total:number|null; minimum:number; missing:string[]};
+  discount?:number|null; priceConfirmation?:PriceConfirmation; delivery:string|null; deliveryDestination:{country:'CH';postalCode:string}|null; total:number|null; minimum:number; missing:string[]};
 export type Offer = {title:string; url:string; source:string; sourceId:string; marketId:'CH'; type:'shop'|'listing'; status:'partial'; mpn?:string; expiresAt:string; check:Observation; budgetStatus:'none'|'unknown-total'|'within'};
 export type FailureKind = 'native-unavailable'|'configuration-error'|'authentication-required'|'authentication-expired'|'access-denied'|'invalid'|'invalid-response'|'timeout'|'offline'|'network-error'|'unavailable'|'outside-catalog'|'busy'|'quota-exhausted'|'cancelled'|'expired';
 export type Failure = {kind:FailureKind};
