@@ -448,7 +448,7 @@ function renderWebResults(result, query) {
       'native-unavailable':m('Die Angebotssuche ist in dieser App-Version noch nicht verbunden. Gespeicherte Suchen bleiben verfügbar.'),
       'configuration-error':m('Der Angebotsdienst ist noch nicht richtig verbunden. Gespeicherte Suchen bleiben verfügbar.'),
       'authentication-required':m('Für diese Suche fehlt eine gültige Anmeldung am Angebotsdienst.'),
-      'authentication-expired':m('Deine Anmeldung am Angebotsdienst ist abgelaufen. Verbinde die App erneut.'),
+      'authentication-expired':m('Deine Anmeldung am Angebotsdienst ist abgelaufen. Dein Suchwunsch bleibt erhalten.'),
       'access-denied':m('Deine Anmeldung hat keinen Zugriff auf diesen Angebotsdienst.'),
       'invalid-response':m('Die Antwort konnte nicht sicher geprüft werden. Es werden keine Angebote angezeigt.'),
       timeout:m('Die Suche dauert zu lange. Versuche es erneut.'),
@@ -465,6 +465,16 @@ function renderWebResults(result, query) {
         : m('Keine passenden aktuellen Angebote gefunden. Ändere deinen Suchwunsch oder versuche es später erneut.'),
       expired: m('Die Angebotsprüfung ist abgelaufen. Suche erneut für den aktuellen Stand.'),
     };
+    if (pilotSignIn && ['authentication-required','authentication-expired'].includes(result.kind)) {
+      const note=element('div',null,'surface');
+      const login=element('button',m('Erneut anmelden'),'button');
+      login.type='button';
+      login.addEventListener('click',()=>void pilotSignIn.open(login));
+      note.append(element('p',messages[result.kind]),login);
+      get('results').replaceChildren();
+      target.replaceChildren(note);
+      return;
+    }
     if (['expired', 'unavailable', 'invalid-response', 'network-error', 'timeout', 'offline'].includes(result.kind) ||
       (result.kind === 'results' && !result.excluded && result.unconfirmed)) {
       target.replaceChildren(message(priceLabels.unverifiable, messages[result.kind]));

@@ -59,6 +59,34 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await pointerClick('[data-pilot-code] [type=submit]');
       await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open"),'test session ready');
       assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);
+
+      // A second valid fixture login replaces the session held by the browser.
+      const authRequest=(route,body)=>fetch(origin+'/auth/v1/'+route,{method:'POST',
+        headers:{'Content-Type':'application/json',apikey:'sb_publishable_udi_native_fixture'},body:JSON.stringify(body)});
+      const email='plus@udi.test';
+      assert.equal((await authRequest('otp',{email,create_user:false})).status,200);
+      assert.equal((await authRequest('verify',{email,token:'123456',type:'email'})).status,200);
+      await pointerClick('.primary-search');
+      await results(language==='de'?'abgelaufen':'expired');
+      assert(await has('#web-results button',language==='de'?'Erneut anmelden':'Sign in again'),
+        'expired sign-in has a direct recovery action in the search result');
+      assert.equal(await evaluate("document.querySelectorAll('#results button, #web-results article').length"),0);
+      assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);
+      await pointerClick('#web-results button');
+      await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'recovery opens sign-in');
+      await pointerClick('#pilot-sign-in [data-pilot-close]');
+      assert(await evaluate("document.activeElement===document.querySelector('#web-results button')"),'cancel returns focus to the recovery action');
+      await pointerClick('#web-results button');
+      await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'recovery can be reopened');
+      await type(email);
+      await pointerClick('[data-pilot-email] [type=submit]');
+      await until(()=>evaluate("!document.querySelector('[data-pilot-code]').hidden"),'recovery code ready');
+      await type('123456');
+      await pointerClick('[data-pilot-code] [type=submit]');
+      await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open"),'recovered test session');
+      assert.equal((await fetch(origin+'/healthz').then(r=>r.json())).counts.partial,0,
+        'recovering sign-in leaves the draft ready for an explicit search');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);
       await pointerClick('.primary-search');
       await results(scenario.checked);
       assert(await has('#web-results .offer-receipt',language==='de'?'Endpreis noch offen':'Final price still unknown'));

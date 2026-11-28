@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Suche nach abgelaufener Anmeldung fortsetzen
+
+Die Suchansicht bietet direkt «Erneut anmelden» an und erhält den Wunsch. Während der Wiederanmeldung läuft keine neue Suche. Der tatsächliche HTTP-401-Ablauf bestand mit dem isolierten Testdienst auf DE/EN. [Nachweis](docs/evidence/2026-11-28-recover-expired-sign-in.md).
+
 ## Portabler Windows-Test
 
 Der Windows-x64-Tester lässt sich mit eingebautem Node.js als ZIP erstellen. Der entpackte Starter erreichte den lokalen Dienst ohne Node.js im Systempfad. DE/EN-Suchabläufe liefen mit den entpackten Dateien und derselben Laufzeit. [Nachweis](docs/evidence/2026-11-28-portable-windows-test.md).
