@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Nächster Start · 29.11.2026
+
+Der Nutzer meldet, dass die bereitgestellte Windows-Testversion beim persönlichen Versuch nicht funktioniert. Die konkrete Fehlermeldung und Ursache sind offen. Priorität hat der Start über genau die ausgelieferte Datei «UDI testen.cmd» per Doppelklick. Startdatei, Node-Prozess und automatisches Browseröffnen getrennt prüfen. Abnahme bis zur sichtbaren Testanmeldung und zur ersten Suche. Die bisherige Prüfung des lokalen Dienstes und der Browseroberfläche hat diesen persönlichen Startfehler nicht erfasst.
+
 ## Einfache KI-Suche
 
 Die Antwort auf die Preisfrage steht oberhalb der Angebote. Die lokale DE/EN-Vorschau belegt offene und bestätigte Testpreise samt Lieferziel. Der direkte, tatsächlich geprüfte CH-Katalogweg zur Samsung 990 PRO 2 TB braucht keinen Modellaufruf. MIXEL lieferte einen Teilbeleg. Endpreis und späterer Wiederholungsabruf blieben offen. Der simulierte Modellvergleich und die CHF-3.00/3.90/4.00-Sensitivität sind reproduziert. [Suchbeleg, Anbieter und Kosten](docs/evidence/2026-11-28-simple-ai-search.md).
@@ -10,7 +14,7 @@ Eingabe, Hauptaktion und Beispiel sind im Einstieg zusammengefasst. Nach der Suc
 
 ## Persönlicher Teststart
 
-UDI lässt sich auf Windows über «UDI testen.cmd» im lokalen Browserfenster öffnen. Der Starter verbindet die bestehende Oberfläche mit dem isolierten Testdienst. Der DE/EN-Lauf bei 320/390px prüfte Testanmeldung, Suche, offenen Preis, Speichern, Zeitüberschreitung, Abbruch, Fehler, leeres Ergebnis und Wiederöffnen. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Anleitung](docs/UDI-TESTEN.md) · [Suchzustände](docs/evidence/2026-11-28-search-states.md) · [Diktatprüfung](docs/evidence/2026-11-28-ios-dictation.md).
+Die lokale Windows-Testansicht ist vorbereitet. Der persönliche Start über «UDI testen.cmd» ist gemäss Nutzermeldung offen. Der Starter verbindet die bestehende Oberfläche mit dem isolierten Testdienst. Der DE/EN-Lauf bei 320/390px prüfte Testanmeldung, Suche, offenen Preis, Speichern, Zeitüberschreitung, Abbruch, Fehler, leeres Ergebnis und Wiederöffnen. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Anleitung](docs/UDI-TESTEN.md) · [Suchzustände](docs/evidence/2026-11-28-search-states.md) · [Diktatprüfung](docs/evidence/2026-11-28-ios-dictation.md).
 
 
 ## Abschlusscheck P0–P3 · 27.11.2026
