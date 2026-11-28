@@ -10,7 +10,7 @@ Der Anmeldedialog hält den Eingabefokus bis zum Klick stabil. Die Gegenprobe si
 
 ## Native Suchdiagnose und Android-Gerätetest
 
-Der isolierte Dienst protokolliert jetzt Timeout und widersprüchliche Suchantwort einzeln. Die native Prüfung verlangt beide Anfragen. Android- und iOS-Assets sind je Profil geprüft. Der USB-Testweg ist vorbereitet. Für eine lokal installierbare APK fehlt hier die Android-Toolchain. [Nachweis](docs/evidence/2026-11-28-native-search-diagnostics.md).
+Der isolierte Dienst protokolliert jetzt Timeout und widersprüchliche Suchantwort einzeln. Die native Prüfung verlangt beide Anfragen. Der Android-Emulator bestätigte beide auf 6bb5ea6 und bestand bis zur Sitzungswiederherstellung. Android- und iOS-Assets sind je Profil geprüft. Der USB-Testweg ist vorbereitet. Für eine lokal installierbare APK fehlt hier die Android-Toolchain. [Nachweis](docs/evidence/2026-11-28-native-search-diagnostics.md).
 
 ## Offene persönliche Abnahmen
 
