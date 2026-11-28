@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Eine Anfrage bei wiederholtem Suchklick
+
+Ein zweiter Tipp auf dieselbe noch laufende Suche startet keinen neuen Abruf. Die DE/EN-Gegenprobe misst zwei Anfragen vorher und eine danach. Abbrechen und bewusst erneut suchen bleiben möglich. Die isolierten Android- und iOS-Testprofile auf 6bb5ea6 bestanden beide bis zur Sitzungswiederherstellung. [Doppeltipp](docs/evidence/2026-11-28-repeat-search.md) · [Native Belege](docs/evidence/2026-11-28-native-search-diagnostics.md).
+
 ## Ergebnis gehört zum aktuellen Suchwunsch
 
 Eine Änderung an Wunsch oder Kriterien entfernt den alten Preis, Link und die alte Speicheraktion. Die App kennzeichnet den neuen Entwurf und wartet auf den ausdrücklichen Suchklick. DE/EN-Gegenproben über Textänderung, Budget und verspätete Antwort bestanden. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. [Befunde und Abnahme](docs/evidence/2026-11-28-blind-spots.md).

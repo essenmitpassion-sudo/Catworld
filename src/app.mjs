@@ -152,10 +152,14 @@ function draftInput(query = get('search-query').value.trim()) {
     completeCostsOnly: form.elements.completeCostsOnly.checked };
 }
 
+function matchesOutcome(input) {
+  return outcomeDraft && Object.keys(input).every(key=>input[key]===outcomeDraft[key]);
+}
+
 function refreshIntent({invalidate=true}={}) {
   if(invalidate)sharer?.invalidate();
   const input = draftInput();
-  if(outcomeDraft && Object.keys(input).some(key=>input[key]!==outcomeDraft[key])) {
+  if(outcomeDraft && !matchesOutcome(input)) {
     outcomeDraft=undefined;
     activeSearch?.abort();
     activeSearch=null;
@@ -556,6 +560,8 @@ function cancelSearch() {
 
 async function submit(query, scope) {
   if (voice?.isRecording()) { voice.stop(); return; }
+  const input = {...draftInput(query), scope};
+  if (activeSearch && matchesOutcome(input)) return;
   cancelSearch();
   get('search-query').value = query;
   refreshIntent();
@@ -565,15 +571,13 @@ async function submit(query, scope) {
     return;
   }
   const form = get('search-query').form;
-  const draft = draftInput(query);
-  const input = {...draft, scope};
   let criteria;
   try {
     criteria = criteriaFor(input);
     get('max-price').removeAttribute('aria-invalid');
   } catch (error) {
     clearTimeout(resultsExpiry);
-    outcomeDraft=draft;
+    outcomeDraft=input;
     get('search-outcome').hidden=false;
     get('results').replaceChildren(message(m('Bitte prüfe deine Kaufkriterien'), uiError(error)));
     get('web-results').replaceChildren();
@@ -598,7 +602,7 @@ async function submit(query, scope) {
   get('suche').classList.add('has-search');
   get('search-home').hidden = true;
   activeCriteria = criteria;
-  outcomeDraft=draft;
+  outcomeDraft=input;
   const context = message(m('Dein Suchwunsch'), query);
   context.classList.add('request-context');
   get('results').replaceChildren(...(products.length && !fixtureMode ? products.map(productCard) : [context]));

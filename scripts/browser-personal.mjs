@@ -90,12 +90,18 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
         if(touch) await androidControls({send,evaluate}).tap('.primary-search',{touch:true});
         else await pointerClick('.primary-search');
       }
+      const beforeCancel=await requests();
       await search('UDI fixture timeout');
       await until(()=>evaluate("Boolean(document.querySelector('[data-cancel-search]'))"),'cancel available while loading');
+      await until(async()=>(await requests()).timeout>beforeCancel.timeout,'cancelled request reached server');
       await pointerClick('[data-cancel-search]');
       await results(scenario.cancelled);
+      const beforeRepeat=await requests();
       await search('UDI fixture timeout',{touch:true});
+      await until(async()=>(await requests()).timeout>beforeRepeat.timeout,'first timeout request reached server');
+      await pointerClick('.primary-search');
       await results(scenario.timedOut);
+      assert.equal((await requests()).timeout,beforeRepeat.timeout+1,'a repeated tap during the same search must not send a second request');
       const beforePendingEdit=await requests();
       await search('UDI fixture timeout');
       await until(async()=> (await requests()).timeout>beforePendingEdit.timeout,'request reached test service');
