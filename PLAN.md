@@ -1,5 +1,9 @@
 # Universal Deal Intelligence
 
+## Blinde Flecken im Suchablauf · 28.11.2026
+
+[Originalauftrag](docs/requirements/2026-11-28-blind-spots.md) und [Befunde](docs/evidence/2026-11-28-blind-spots.md) führen erste Nutzung, Pilot und späteren Ausbau. Vorrang hatte die Zuordnung von Wunsch und Ergebnis. Änderungen an Wunsch oder Kriterien entwerten die alte Ergebnisansicht sofort. Ein neuer Dienstabruf bleibt eine bewusste Aktion. Der isolierte Gerätetest folgt auf die geprüfte gemeinsame Oberfläche.
+
 ## Einfache KI-Suche · 28.11.2026
 
 [Originalauftrag P0–P7](docs/requirements/2026-11-28-simple-ai-search.md). Erster belastbarer Ablauf ist eine frei formulierte Anfrage zu einer Schweizer SSD mit konkreter Variante und Budget. Der bestehende Katalogweg prüft zulässige Händlerquellen direkt. Der Suchwunsch braucht dafür weder einen Modellwähler noch Zugangsdaten eines KI-Anbieters. Aktuelle Produkt- und Preisbelege entscheiden, was die App anzeigen darf. Der [erste Ablauf und die Kostenprüfung](docs/evidence/2026-11-28-simple-ai-search.md) sind belegt.

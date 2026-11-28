@@ -34,6 +34,7 @@ let sourceState = 'loading';
 let watched = new Set();
 let storageError = false;
 let activeSearch;
+let outcomeDraft;
 let resultsExpiry;
 let observationExpiry;
 let savedLoad;
@@ -129,6 +130,7 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     get('search-query').form.reset();
     get('shared-notice').hidden=true;
     get('results').replaceChildren();
+    outcomeDraft=undefined;
     get('search-outcome').hidden=true;
     get('web-results').replaceChildren();
     get('comparison').replaceChildren();
@@ -153,6 +155,14 @@ function draftInput(query = get('search-query').value.trim()) {
 function refreshIntent({invalidate=true}={}) {
   if(invalidate)sharer?.invalidate();
   const input = draftInput();
+  if(outcomeDraft && Object.keys(input).some(key=>input[key]!==outcomeDraft[key])) {
+    outcomeDraft=undefined;
+    activeSearch?.abort();
+    activeSearch=null;
+    clearTimeout(resultsExpiry);
+    get('results').replaceChildren();
+    get('web-results').replaceChildren(element('p',m('Suchwunsch geändert. Starte die Suche erneut.'),'surface muted'));
+  }
   const target = get('intent-summary');
   const panel = get('intent-compass');
   panel.hidden = true;
@@ -555,19 +565,15 @@ async function submit(query, scope) {
     return;
   }
   const form = get('search-query').form;
-  const input = {
-    ...searchContext(),
-    query, scope,
-    maxPrice: form.elements.maxPrice.value.trim(),
-    condition: form.elements.condition.value || undefined,
-    completeCostsOnly: form.elements.completeCostsOnly.checked,
-  };
+  const draft = draftInput(query);
+  const input = {...draft, scope};
   let criteria;
   try {
     criteria = criteriaFor(input);
     get('max-price').removeAttribute('aria-invalid');
   } catch (error) {
     clearTimeout(resultsExpiry);
+    outcomeDraft=draft;
     get('search-outcome').hidden=false;
     get('results').replaceChildren(message(m('Bitte prüfe deine Kaufkriterien'), uiError(error)));
     get('web-results').replaceChildren();
@@ -592,6 +598,7 @@ async function submit(query, scope) {
   get('suche').classList.add('has-search');
   get('search-home').hidden = true;
   activeCriteria = criteria;
+  outcomeDraft=draft;
   const context = message(m('Dein Suchwunsch'), query);
   context.classList.add('request-context');
   get('results').replaceChildren(...(products.length && !fixtureMode ? products.map(productCard) : [context]));
@@ -941,6 +948,7 @@ function importSharedSearch() {
     activeSearch?.abort();clearTimeout(resultsExpiry);
     get('results').replaceChildren();
     get('web-results').replaceChildren();
+    outcomeDraft=undefined;
     get('search-outcome').hidden=true;
     get('suche').classList.remove('has-search');get('search-home').hidden=false;
     get('search-query').value=input.query;get('max-price').value=input.maxPrice;get('condition').value=input.condition;

@@ -76,8 +76,17 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await pointerClick('#results button.text-button');
       await until(()=>has('#results button.text-button',scenario.saved),'confirmed test save');
 
+      const editWish=text=>evaluate('(()=>{const field=document.querySelector("#search-query");field.value='+JSON.stringify(text)+';field.dispatchEvent(new Event("input",{bubbles:true}));})()');
+      const requests=()=>fetch(origin+'/healthz').then(response=>response.json()).then(({counts})=>counts);
+      const changed=language==='de'?'Starte die Suche erneut':'Search again';
+      const beforeEdit=await requests();
+      await editWish(wish+' confirmed');
+      assert.equal(await evaluate("document.querySelectorAll('#web-results article, #results button').length"),0,'an edited wish must not retain an offer or save action for the previous search');
+      await results(changed);
+      assert.deepEqual(await requests(),beforeEdit,'editing a wish must not contact the search service');
+
       async function search(text,{touch=false}={}) {
-        await evaluate('(()=>{const field=document.querySelector("#search-query");field.value='+JSON.stringify(text)+';field.dispatchEvent(new Event("input",{bubbles:true}));})()');
+        await editWish(text);
         if(touch) await androidControls({send,evaluate}).tap('.primary-search',{touch:true});
         else await pointerClick('.primary-search');
       }
@@ -87,6 +96,14 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await results(scenario.cancelled);
       await search('UDI fixture timeout',{touch:true});
       await results(scenario.timedOut);
+      const beforePendingEdit=await requests();
+      await search('UDI fixture timeout');
+      await until(async()=> (await requests()).timeout>beforePendingEdit.timeout,'request reached test service');
+      await editWish('UDI fixture invalid');
+      await results(changed);
+      await new Promise(resolve=>setTimeout(resolve,1600));
+      await results(changed);
+      assert.equal(await evaluate("document.querySelectorAll('#web-results article, #results button, [data-cancel-search]').length"),0);
       await search('UDI fixture invalid');
       await results(scenario.invalid);
       await search('UDI fixture unavailable');
@@ -98,6 +115,11 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       assert(await has('#web-results .offer-cost .price-caption','8000'));
       assert(await has('#web-results .fixture-price-note',language==='de'?'TESTDATEN':'TEST DATA'));
       assert.equal(await evaluate("document.querySelectorAll('#web-results a').length"),0);
+      const beforeBudgetEdit=await requests();
+      await evaluate("(()=>{const budget=document.querySelector('#max-price');budget.value='80';budget.dispatchEvent(new Event('input',{bubbles:true}));})()");
+      await results(changed);
+      assert.equal(await evaluate("document.querySelectorAll('#web-results article, #results button').length"),0,'a changed budget must hide the old confirmed amount and save action');
+      assert.deepEqual(await requests(),beforeBudgetEdit,'editing a criterion must not contact the search service');
       await search('Réparation mystérieuse 🛰️');
       await results(scenario.noOffer);
       assert.equal(await evaluate("document.querySelectorAll('#web-results article').length"),0);

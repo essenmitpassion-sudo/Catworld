@@ -236,6 +236,7 @@ const extra = {
   "Endpreise teilweise offen":"Some final prices are still unknown",
   "Suchergebnis":"Search result",
   "Wunsch ändern":"Edit request",
+  "Suchwunsch geändert. Starte die Suche erneut.":"Request changed. Search again.",
   "Preisdetails und Quelle":"Price details and source",
   "Beschreibe deinen Wunsch. UDI zeigt dir belegte Angebote und offene Kosten.":"Describe what you need. UDI shows checked offers and costs that are still unknown.",
   "Verbindlich bestätigt":"Confirmed total",
