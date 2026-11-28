@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Physischer Android-Test und nachvollziehbare Live-Abfrage
+
+Die ursprüngliche Test-APK auf 35c088f startete per USB auf Android 17. Das Nutzerfeedback meldete eine abgelehnte Codeanfrage, zu viel Einführungstext, ein früh endendes Diktat und ungenaue RAM-Auswahl. Die signierte Test-APK auf 34f16ba setzt Anmeldung vor die Suche, bietet einen direkten Testkonto-Start und übernimmt Diktatabschnitte und 128 GB. Die aktualisierte APK ist gebaut; das physische Gerät war bei der Folgeprüfung per ADB getrennt. Getrennte DE/EN-Läufe prüften den lokalen Testdienst. Zwei frische Schweizer Händlerbelege für die Samsung 990 PRO 2 TB liefern Artikelpreise, der Gesamtbetrag bleibt offen. [Nachweis und Fortsetzung](docs/evidence/2026-11-28-android-usb-feedback.md).
+
 ## Suche nach abgelaufener Anmeldung fortsetzen
 
 Die Suchansicht bietet direkt «Erneut anmelden» an und erhält den Wunsch. Während der Wiederanmeldung läuft keine neue Suche. Der tatsächliche HTTP-401-Ablauf bestand mit dem isolierten Testdienst auf DE/EN. [Nachweis](docs/evidence/2026-11-28-recover-expired-sign-in.md).
@@ -22,11 +26,11 @@ Der Anmeldedialog hält den Eingabefokus bis zum Klick stabil. Die Gegenprobe si
 
 ## Native Suchdiagnose und Android-Gerätetest
 
-Der isolierte Dienst protokolliert jetzt Timeout und widersprüchliche Suchantwort einzeln. Die native Prüfung verlangt beide Anfragen. Der Android-Emulator bestätigte beide auf 6bb5ea6 und bestand bis zur Sitzungswiederherstellung. Android- und iOS-Assets sind je Profil geprüft. Der USB-Testweg ist vorbereitet. Für eine lokal installierbare APK fehlt hier die Android-Toolchain. [Nachweis](docs/evidence/2026-11-28-native-search-diagnostics.md).
+Der isolierte Dienst protokolliert jetzt Timeout und widersprüchliche Suchantwort einzeln. Die native Prüfung verlangt beide Anfragen. Der Android-Emulator bestätigte beide auf 6bb5ea6 und bestand bis zur Sitzungswiederherstellung. Android- und iOS-Assets sind je Profil geprüft. Das war der Stand vor Einrichtung der Android-Toolchain. Der neuere USB-Nachweis steht oben. [Nachweis](docs/evidence/2026-11-28-native-search-diagnostics.md).
 
 ## Offene persönliche Abnahmen
 
-Für die persönliche Android-Abnahme zuerst eine installierbare Debug-APK des Testprofils vorbereiten. Sicherstellen, dass das physische Gerät den isolierten Testdienst erreicht. Dann Start, Codebestätigung bei offener Tastatur, erste Suche und Sitzungswiederherstellung auf Android prüfen. Das Standardprofil eignet sich für den Start ohne Dienst. iOS braucht einen eigenen Build.
+Die neue Test-APK ist signiert und lokal verfügbar. Beim nächsten USB-Anschluss das Update installieren, den Ein-Tipp-Einstieg durchspielen und längeres Diktieren mit Pausen auf echter Hardware prüfen. iOS braucht seinen eigenen Simulator- und Gerätelauf.
 
 Der Nutzer meldet ausserdem, dass die bereitgestellte Windows-Testversion nicht funktioniert. Ursache und Fehlermeldung sind offen. Den Doppelklick auf die tatsächlich ausgelieferte Datei «UDI testen.cmd», den Node-Prozess und die Browseröffnung separat prüfen. Die bisherige Loopback- und Chromium-Prüfung hat diesen Fehler nicht erfasst.
 

@@ -1,5 +1,13 @@
 # Universal Deal Intelligence
 
+## Rückmeldungen vom physischen Android-Test · 28.11.2026
+
+1. Anmeldung vor die geschützte Suche setzen. Der persönliche USB-Test startet per Tipp auf «Test starten». Der Code-Ablauf bleibt für die Abnahme erreichbar. Der geschützte Live-Pilot nutzt weiterhin ein freigeschaltetes Konto.
+2. Den Einstieg knapp halten. Beim Diktat erkannte Abschnitte erhalten und direktes Weiterdiktieren anbieten. 128 GB und ausdrücklich genannte Moduleingaben im RAM-Wunsch übernehmen.
+3. Die aktualisierte APK auf dem physischen Gerät über USB installieren. Ohne Einladungsdialog ins Testkonto gelangen, suchen, ein längeres Diktat mit Pausen prüfen und die App neu öffnen. iOS-Simulatorlauf separat bestätigen. Erst nach Freigabe des getrennten UDI-Dienstes denselben Ablauf mit echten Konten und autorisierten Live-Daten abnehmen.
+
+[Gerätebefund, Werkzeugstand und echte Händlerabfragen](docs/evidence/2026-11-28-android-usb-feedback.md).
+
 ## Blinde Flecken im Suchablauf · 28.11.2026
 
 [Originalauftrag](docs/requirements/2026-11-28-blind-spots.md) und [Befunde](docs/evidence/2026-11-28-blind-spots.md) führen erste Nutzung, Pilot und späteren Ausbau. Vorrang hatte die Zuordnung von Wunsch und Ergebnis. Änderungen an Wunsch oder Kriterien entwerten die alte Ergebnisansicht sofort. Ein neuer Dienstabruf bleibt eine bewusste Aktion. Der isolierte Gerätetest folgt auf die geprüfte gemeinsame Oberfläche.
@@ -21,7 +29,7 @@ Der [Originalauftrag](docs/requirements/2026-11-28-search-design.md) folgt dem p
 
 ## Persönlich testbare App · 28.11.2026
 
-[Originalauftrag P0–P4](docs/requirements/2026-11-28-testable-app.md). Ausgangspunkt ist der saubere Stand 5f8ae9d auf development/udi. 198 Tests wurden im Checkout erneut ausgeführt. Letzter nativer Prüflauf auf fb32932 mit installiertem Testprofil auf Android-Emulator und iOS-Simulator. Der iOS-Standardlauf stoppte nach dem Tipp auf «Speak». Auf dem Windows-Host fehlen adb und Xcode. Physische Geräte wurden nicht geprüft.
+[Originalauftrag P0–P4](docs/requirements/2026-11-28-testable-app.md). Ausgangspunkt ist der saubere Stand 5f8ae9d auf development/udi. 198 Tests wurden im Checkout erneut ausgeführt. Letzter nativer Prüflauf auf fb32932 mit installiertem Testprofil auf Android-Emulator und iOS-Simulator. Der damalige iOS-Standardlauf stoppte nach dem Tipp auf «Speak». Der aktuelle Android-Build und der erste physische Start sind im [USB-Nachweis](docs/evidence/2026-11-28-android-usb-feedback.md) dokumentiert. Xcode ist auf dem Windows-Host nicht verfügbar.
 
 | Schritt | Umsetzung und Abnahme |
 |---|---|
