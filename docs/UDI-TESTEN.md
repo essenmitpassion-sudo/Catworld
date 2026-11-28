@@ -28,4 +28,14 @@ Auf 28c48ca erreichte der Android-Testdienst Anmeldung mit Code, offenen Versand
 
 Auf cec80a5 stoppten die iOS-Testdienstaktionen bei der Sprachauswahl, vor dem ersten Dienstaufruf. Der iOS-Test wartet beim Start begrenzt auf die tatsächliche Bedienaktion und öffnet die Sprachauswahl nur bei nötigem Wechsel. Die unabhängige Prüfung beider Sprachen bleibt im Standardprofil erhalten. XCTest-Nachweise nach der Anpassung und die Geräteprüfung stehen aus. [iOS-Testdienstlauf](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46082564799/job/140785976704).
 
+## Aktueller Abnahmestand
+
+| Plattform | Praktischer Nachweis | Offene Stelle |
+|---|---|---|
+| Android-Emulator | Standardprofil auf 65103db gebaut, installiert und getestet. Mikrofonerklärung, Textsuche, lokale Speicherung und Sprachwahl nach Neustart belegt. | Das Testprofil startete. Ein Tipp zur Codebestätigung landete beim Test auf dem Formular, bevor eine Verifikationsanfrage ausgelöst wurde. |
+| iOS-Simulator | Standardprofil des Designs auf 28c48ca öffnete die Mikrofonerklärung. Textsuche und Speichern wurden in beiden Sprachen erreicht. | Xcode lief beim Neustart in ein Start-Timeout. Das Testprofil desselben Standes stoppte vor der Anmeldung bei der Sprachauswahl. Die neueren iOS-Läufe sind bei der Übergabe noch aktiv. |
+| Windows-Vorschau | Lokaler Startdienst, DE/EN-Ablauf, Login, Preiszustände und Fehler geprüft. Standard-CI auf 65103db grün. | Physische Android-/iOS-Geräte wurden nicht geprüft. |
+
+Der nächste gezielte Schritt ist die Android-Codebestätigung bei eingeblendeter Tastatur. Der Prüflog auf 65103db meldet das Formular als Klickziel und null Verifikationsaufrufe. Die Gegenprobe muss einen vollständigen Tipp auf den sichtbaren Knopf bei stabilem Eingabefokus nachweisen. [Aktuelle native Läufe](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46084789235) · [iOS-Designlauf](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46083728626/job/140789624845) · [Standard-CI](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46084789339).
+
 Auf einem iPhone führt «Einsprechen» zur Erklärung und zur Wahl der Erkennungssprache. Tippe bewusst auf «Diktat starten», erlaube gegebenenfalls Mikrofon und Spracherkennung und kontrolliere den bearbeitbaren Text. Falls die lokale Erkennung fehlt oder ein Zugriff abgelehnt ist, gib den Wunsch per Tastatur ein. Beende ein laufendes Diktat vor der Suche. Die App-Prüfung auf physischen Geräten steht aus.
