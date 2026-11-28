@@ -4,7 +4,7 @@
 
 1. Anmeldung vor die geschützte Suche setzen. Der persönliche USB-Test startet per Tipp auf «Test starten». Der Code-Ablauf bleibt für die Abnahme erreichbar. Der geschützte Live-Pilot nutzt weiterhin ein freigeschaltetes Konto.
 2. Den Einstieg knapp halten. Beim Diktat erkannte Abschnitte erhalten und direktes Weiterdiktieren anbieten. 128 GB und ausdrücklich genannte Moduleingaben im RAM-Wunsch übernehmen.
-3. Die aktualisierte APK auf dem physischen Gerät über USB installieren. Ohne Einladungsdialog ins Testkonto gelangen, suchen, ein längeres Diktat mit Pausen prüfen und die App neu öffnen. iOS-Simulatorlauf separat bestätigen. Erst nach Freigabe des getrennten UDI-Dienstes denselben Ablauf mit echten Konten und autorisierten Live-Daten abnehmen.
+3. Android-Update und Ein-Tipp-Anmeldung sind am physischen Gerät bestätigt. Beide nativen Profile sind für Android-Emulator und iOS-Simulator belegt. Auf dem Handy folgen eine Suche und ein längeres Diktat mit Pausen. Erst nach Freigabe des getrennten UDI-Dienstes denselben Ablauf mit echten Konten und autorisierten Live-Daten abnehmen.
 
 [Gerätebefund, Werkzeugstand und echte Händlerabfragen](docs/evidence/2026-11-28-android-usb-feedback.md).
 

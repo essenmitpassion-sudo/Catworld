@@ -27,7 +27,7 @@ Der optionale Windows-Quellstart im Projekt verwendet vorhandenes Node.js ab Ver
 3. In einem eigenen Terminal npm run native:fixture:service starten. Das Gerät per USB verbinden, Debugging für diesen Rechner bestätigen und das gewünschte Gerät mit adb devices -l auswählen. Die APK mit adb -s SERIENNUMMER install PFAD_ZUR_APK installieren. Danach adb -s SERIENNUMMER reverse --no-rebind tcp:4175 tcp:4175 setzen. Der Testdienst bleibt auf dem Rechner an 127.0.0.1 gebunden.
 4. UDI auf dem Gerät öffnen und «Test starten» tippen. Danach «Samsung 990 PRO 2 TB» wählen und «Angebote suchen» tippen. Über «Code-Anmeldung prüfen» ist auch die manuelle Abnahme mit plus@udi.test und 123456 möglich. Beide Preiszustände, Fehler, Speichern und Sitzungswiederherstellung prüfen. Zum Schluss die selbst eingerichtete Rückleitung mit adb -s SERIENNUMMER reverse --remove tcp:4175 entfernen und den Testdienst beenden.
 
-Die ursprüngliche USB-Test-APK wurde auf einem physischen Android-17-Gerät installiert und gestartet. Das signierte Update wurde auf demselben Windows-Rechner mit isoliertem JDK 21 und Android SDK 36 gebaut. Für die APK dieses Updates steht der Start auf dem Gerät noch aus. [Geräte- und Buildnachweis](evidence/2026-11-28-android-usb-feedback.md). [Android-Tools](https://developer.android.com/tools) · [ADB-Befehle](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/master/docs/user/adb.1.md).
+Die ursprüngliche USB-Test-APK wurde auf einem physischen Android-17-Gerät installiert und gestartet. Das signierte Update wurde auf demselben Windows-Rechner mit isoliertem JDK 21 und Android SDK 36 gebaut. Das Update ist auf dem physischen Android-17-Gerät installiert. Der Ein-Tipp-Einstieg erreicht den lokalen Testdienst per USB. [Geräte- und Buildnachweis](evidence/2026-11-28-android-usb-feedback.md). [Android-Tools](https://developer.android.com/tools) · [ADB-Befehle](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/master/docs/user/adb.1.md).
 
 ## Native Prüfung
 
@@ -43,7 +43,7 @@ Auf cec80a5 stoppten die iOS-Testdienstaktionen bei der Sprachauswahl, vor dem e
 
 | Plattform | Praktischer Nachweis | Offene Stelle |
 |---|---|---|
-| Android-Emulator | Standard- und Testprofil auf 8493cc2 bestanden. Im Testprofil sind Anmeldung mit Code, beide Preiszustände, Zeitüberschreitung, widersprüchliche Antwort, Dienstfehler, Speichern und Wiederherstellung nach Prozessende belegt. | Physischer Start der ersten APK belegt. Anmeldung, Suche und Diktat im Update stehen auf dem Gerät aus. |
+| Android-Emulator | Standard- und Testprofil auf 8493cc2 bestanden. Im Testprofil sind Anmeldung mit Code, beide Preiszustände, Zeitüberschreitung, widersprüchliche Antwort, Dienstfehler, Speichern und Wiederherstellung nach Prozessende belegt. | Start und Ein-Tipp-Anmeldung im Update am physischen Gerät belegt. Suche und längeres Diktat im persönlichen Gerätetest offen. |
 | iOS-Simulator | Das Testprofil auf 6bb5ea6 bestand Anmeldung, beide Preiszustände, Fehlerfälle, Speichern und Sitzungswiederherstellung. Das Standardprofil auf 8493cc2 bestand Diktatdialog, Textsuche DE/EN, Speichern und Neustart. | Physisches iOS-Gerät steht aus. |
 | Windows-Vorschau | Die ausgelieferte CMD-Datei startete beim kontrollierten Aufruf den markierten lokalen Dienst. Die App antwortete mit HTTP 200. Der DE/EN-Ablauf bis zur Suche wurde separat in Chromium geprüft. | Persönlicher Doppelklick und automatisches Öffnen im Standardbrowser offen. |
 

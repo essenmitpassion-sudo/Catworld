@@ -2,7 +2,7 @@
 
 ## Physischer Android-Test und nachvollziehbare Live-Abfrage
 
-Die ursprüngliche Test-APK auf 35c088f startete per USB auf Android 17. Das Nutzerfeedback meldete eine abgelehnte Codeanfrage, zu viel Einführungstext, ein früh endendes Diktat und ungenaue RAM-Auswahl. Die signierte Test-APK auf 34f16ba setzt Anmeldung vor die Suche, bietet einen direkten Testkonto-Start und übernimmt Diktatabschnitte und 128 GB. Die aktualisierte APK ist gebaut; das physische Gerät war bei der Folgeprüfung per ADB getrennt. Getrennte DE/EN-Läufe prüften den lokalen Testdienst. Zwei frische Schweizer Händlerbelege für die Samsung 990 PRO 2 TB liefern Artikelpreise, der Gesamtbetrag bleibt offen. [Nachweis und Fortsetzung](docs/evidence/2026-11-28-android-usb-feedback.md).
+Die ursprüngliche Test-APK auf 35c088f startete per USB auf Android 17. Das Nutzerfeedback meldete eine abgelehnte Codeanfrage, zu viel Einführungstext, ein früh endendes Diktat und ungenaue RAM-Auswahl. Die signierte Test-APK auf 34f16ba setzt Anmeldung vor die Suche, bietet einen direkten Testkonto-Start und übernimmt Diktatabschnitte und 128 GB. Das Update ist auf dem physischen Android-17-Gerät installiert. Der installierte Stand, die USB-Verbindung zum Testdienst und die Ein-Tipp-Anmeldung wurden am Gerät verifiziert. Android-Emulator und iOS-Simulator bestanden je beide Profile auf 34f16ba. Getrennte DE/EN-Läufe prüften den lokalen Testdienst. Zwei frische Schweizer Händlerbelege für die Samsung 990 PRO 2 TB liefern Artikelpreise, der Gesamtbetrag bleibt offen. [Nachweis und Fortsetzung](docs/evidence/2026-11-28-android-usb-feedback.md).
 
 ## Suche nach abgelaufener Anmeldung fortsetzen
 
@@ -30,7 +30,7 @@ Der isolierte Dienst protokolliert jetzt Timeout und widersprüchliche Suchantwo
 
 ## Offene persönliche Abnahmen
 
-Die neue Test-APK ist signiert und lokal verfügbar. Beim nächsten USB-Anschluss das Update installieren, den Ein-Tipp-Einstieg durchspielen und längeres Diktieren mit Pausen auf echter Hardware prüfen. iOS braucht seinen eigenen Simulator- und Gerätelauf.
+Auf dem installierten Android-Update eine Beispielsuchanfrage und längeres Diktieren mit Pausen persönlich prüfen. Die erneute iOS-Simulatorprüfung ist belegt. Die Abnahme am physischen iPhone steht aus.
 
 Der Nutzer meldet ausserdem, dass die bereitgestellte Windows-Testversion nicht funktioniert. Ursache und Fehlermeldung sind offen. Den Doppelklick auf die tatsächlich ausgelieferte Datei «UDI testen.cmd», den Node-Prozess und die Browseröffnung separat prüfen. Die bisherige Loopback- und Chromium-Prüfung hat diesen Fehler nicht erfasst.
 
