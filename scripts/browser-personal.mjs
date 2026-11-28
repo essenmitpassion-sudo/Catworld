@@ -49,6 +49,8 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await pointerClick('[data-pilot-email] [type=submit]');
       await until(()=>evaluate("!document.querySelector('[data-pilot-code]').hidden"),'test code ready');
       await type('123456');
+      // Reproduce the mobile viewport shift that can follow a focused field's blur.
+      await evaluate("document.querySelector('#pilot-code').addEventListener('blur',()=>{document.querySelector('#pilot-sign-in').style.translate='0 70px';},{once:true})");
       await pointerClick('[data-pilot-code] [type=submit]');
       await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open"),'test session ready');
       assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);

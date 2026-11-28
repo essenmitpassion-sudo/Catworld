@@ -38,7 +38,14 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
   const resend=dialog.querySelector('[data-pilot-resend]');
   const status=dialog.querySelector('[role="status"]');
   const introduction=dialog.querySelector('[data-pilot-intro]');
-  const controls=[email,code,resend,emailForm.querySelector('[type="submit"]'),codeForm.querySelector('[type="submit"]')];
+  const actions=[resend,emailForm.querySelector('[type="submit"]'),codeForm.querySelector('[type="submit"]')];
+  const controls=[email,code,...actions];
+  for(const action of actions) {
+    action.addEventListener('pointerdown',event=>{
+      // Keep the keyboard viewport steady until the complete tap delivers the click.
+      if(event.button===0 && [email,code].includes(dialog.ownerDocument.activeElement)) event.preventDefault();
+    });
+  }
   let operation,opening=false;
   let returnFocus;
 

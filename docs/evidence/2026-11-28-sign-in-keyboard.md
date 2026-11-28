@@ -1,0 +1,7 @@
+# Codebestätigung bei offener Tastatur · 28.11.2026
+
+Ausgangsstand 545c4e7. Der Android-Emulatorlauf von 65103db meldete beim Druck auf «Code bestätigen» das Formular als Klickziel. Der isolierte Dienst zählte zwei Codeanfragen und keinen Verifikationsaufruf. Der letzte iOS-Standardlauf desselben Commits bestand. Das iOS-Testprofil erreichte Anmeldung, offene und bestätigte Testpreise und Speichern. Es stoppte beim anschliessenden Timeout-Szenario. [Android-Testprofil](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46084789235/job/140793154755) · [iOS-Testprofil](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46084789235/job/140793155062).
+
+Die Gegenprobe im echten Loopback-Browserablauf bewegt den Dialog, wenn das fokussierte Codefeld vor dem Ende des Mausklicks den Fokus verliert. Vor der Änderung blieb der Dialog offen. Der Anmeldedialog hält jetzt beim Zeigerkontakt den Eingabefokus bis zur Klickauslösung. Senden und erneutes Anfordern verwenden weiterhin dieselben Formularaktionen. Tastaturbedienung bleibt über die Formulare verfügbar. Eine erfolgreiche Anmeldung erhält den Entwurf bis zum ausdrücklich ausgelösten Suchlauf.
+
+Der neue Ablauf bestand in Chromium in DE bei 320px und EN bei 390px. 199 Projekttests, Typprüfung, Build und vollständiger Chromium-Smoke bestanden. Diese Gegenprobe simuliert die Verschiebung der mobilen Tastatur. Eine neue native Prüfung und der Lauf auf einem physischen Android-Gerät sind getrennte Abnahmen.

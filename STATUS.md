@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Fortsetzung · Codebestätigung
+
+Der Anmeldedialog hält den Eingabefokus bis zum Klick stabil. Die Gegenprobe simuliert den Tastaturwechsel und prüft Anmeldung, erhaltenen Suchwunsch und ausdrücklich ausgelöste Suche auf DE/EN. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Die neuen nativen Ergebnisse sind separat zu prüfen. [Nachweis](docs/evidence/2026-11-28-sign-in-keyboard.md).
+
 ## Nächster Start · 29.11.2026
 
 Für die persönliche Android-Abnahme zuerst eine installierbare Debug-APK des Testprofils vorbereiten. Sicherstellen, dass das physische Gerät den isolierten Testdienst erreicht. Dann Start, Codebestätigung bei offener Tastatur, erste Suche und Sitzungswiederherstellung auf Android prüfen. Das Standardprofil eignet sich für den Start ohne Dienst. iOS braucht einen eigenen Build.
