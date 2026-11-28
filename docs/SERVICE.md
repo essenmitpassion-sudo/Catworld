@@ -6,7 +6,7 @@ Stand: Client implementiert, kein erreichbarer geschützter Dienst konfiguriert.
 
 `npm run native:fixture:service` startet den separat vorbereiteten Testdienst auf `127.0.0.1:4175`. `GET /healthz` liefert `test:true` und Zähler für feste Prüfschritte. Der Prozess verwendet synthetische Konten und Daten im Arbeitsspeicher. Ein Neustart verwirft Anmeldungen, gespeicherte Testwünsche und Kontingente. Weder E-Mail-Anbieter noch Händler, Zahlungsdienst oder KI-Anbieter werden kontaktiert.
 
-Setze `UDI_NATIVE_FIXTURE=1` für `npm run native:prepare` und `npm run native:check`. Android verlangt `-PudiNativeFixture=1` beim Debug-Build und `adb reverse tcp:4175 tcp:4175` beim Start des Emulators. iOS verlangt die Debug-Konfiguration des Simulators und `UDI_INFOPLIST_FILE=App/Info.fixture.plist` beim Xcode-Build. Der App-Build prüft die Kombination aus Testdateien, Konfiguration und Plattform. Die UI zeigt eine durchgängige Testkennzeichnung.
+Setze `UDI_NATIVE_FIXTURE=1` für `npm run native:prepare` und `npm run native:check`. Android verlangt `-PudiNativeFixture=1` beim Debug-Build und eine ADB-Rückleitung für Gerät oder Emulator. Das fest verdrahtete Ziel ist localhost:4175. Die genaue Abnahme steht in der [Android-Testanleitung](UDI-TESTEN.md#android-test-apk-per-usb). iOS verlangt die Debug-Konfiguration des Simulators und `UDI_INFOPLIST_FILE=App/Info.fixture.plist` beim Xcode-Build. Der App-Build prüft die Kombination aus Testdateien, Konfiguration und Plattform. Die UI zeigt eine durchgängige Testkennzeichnung.
 
 | Prüffall | Eingabe und erwartete Antwort |
 |---|---|

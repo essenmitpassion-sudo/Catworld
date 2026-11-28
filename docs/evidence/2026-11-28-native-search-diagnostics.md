@@ -1,0 +1,7 @@
+# Native Suchdiagnose und Android-Testpaket · 28.11.2026
+
+Ausgangsstand 8493cc2. Im älteren iOS-Testlauf auf 65103db wurden Anmeldung, beide Testpreise und Speichern erreicht. Danach meldete XCTest den erwarteten Timeout-Zustand nicht. Das bisherige Dienstprotokoll konnte nicht zeigen, ob die Timeout- oder die widersprüchliche Anfrage den Dienst erreichte. [iOS-Testlauf](https://github.com/essenmitpassion-sudo/Catworld/actions/runs/46084789235/job/140793155062).
+
+Der isolierte Dienst zählt jetzt beide Fehlerfälle beim Eingang. Die native Abnahme verlangt mindestens eine Anfrage je Fall. Die Zähler belegen den Eingang der Suchanfragen. Die App-Assertions prüfen weiterhin die sichtbaren Fehlermeldungen und deren Folgen. Die HTTP-Gegenprobe mit dem Fixture-Transport scheiterte zunächst am fehlenden Zähler und bestand nach der Ergänzung. Der Fehlerpfad liess das Kontingent frei. Alle 199 Tests bestanden.
+
+Die Asset-Prüfung ergab auf beiden Plattformen identische Dateien je Profil. 35 Dateien mit Testtransport und 34 Dateien beim Standardprofil mit gesperrtem Netzwerk. Der lokale Rechner meldete Java 17, kein ADB und kein Xcode. Der [Android-Geräteweg mit Debug-APK und USB-Rückleitung](../UDI-TESTEN.md#android-test-apk-per-usb) ist dokumentiert. Die lokale APK-Erstellung und der Gerätetest stehen separat aus.

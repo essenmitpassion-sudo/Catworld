@@ -20,7 +20,7 @@ assert(temp, 'Run native startup checks on the disposable CI runner.');
 const appId = 'stream.soundweave.udi';
 const fixturePort = 4175;
 const flow = fixture ? androidFixtureFlow : androidFlow;
-const fixtureCoverage={otp:2,verify:1,partial:1,confirmed:1,unavailable:1,list:1,save:1};
+const fixtureCoverage={otp:2,verify:1,partial:1,confirmed:1,timeout:1,invalid:1,unavailable:1,list:1,save:1};
 
 async function readFixtureCounters() {
   const response=await fetch('http://127.0.0.1:'+fixturePort+'/healthz',{signal:AbortSignal.timeout(3000),redirect:'error'});

@@ -18,6 +18,15 @@
 
 Das Testkonto verfügt pro Start über drei abgeschlossene Suchen. Die vorgesehenen Fehler verbrauchen keine. Wenn du von vorne beginnen willst, schliesse das Startfenster und öffne die Startdatei wieder. Der Dienst läuft nur auf diesem Rechner und löscht Testkonten und gespeicherte Testwünsche beim Beenden des Prozesses. Die Preise sind simuliert. Verwende die angezeigten Testzugänge.
 
+## Android-Test-APK per USB
+
+1. Auf einem Rechner mit JDK 21, Android-SDK 36 und ADB im Projektverzeichnis UDI_NATIVE_FIXTURE auf 1 setzen. Danach npm run native:prepare und npm run native:check ausführen.
+2. Im Ordner android mit .\gradlew.bat :app:assembleDebug -PudiNativeFixture=1 bauen. Der Ausgabepfad ist android/app/build/outputs/apk/debug/app-debug.apk. Für den Gerätetest ein Android-Gerät ohne bestehende UDI-Installation verwenden, weil das Testprofil dieselbe Paket-ID hat.
+3. In einem eigenen Terminal npm run native:fixture:service starten. Das Gerät per USB verbinden, Debugging für diesen Rechner bestätigen und das gewünschte Gerät mit adb devices -l auswählen. Die APK mit adb -s SERIENNUMMER install PFAD_ZUR_APK installieren. Danach adb -s SERIENNUMMER reverse --no-rebind tcp:4175 tcp:4175 setzen. Der Testdienst bleibt auf dem Rechner an 127.0.0.1 gebunden.
+4. UDI auf dem Gerät öffnen. Die Testkennzeichnung kontrollieren, mit plus@udi.test und 123456 anmelden und die Suche bewusst starten. Geöffnete Tastatur, beide Preiszustände, Zeitüberschreitung, Speichern und Sitzungswiederherstellung prüfen. Zum Schluss die selbst eingerichtete Rückleitung mit adb -s SERIENNUMMER reverse --remove tcp:4175 entfernen und den Testdienst beenden.
+
+Auf dem aktuellen Windows-Rechner wurden die Android- und iOS-Assets beider Profile vorbereitet und geprüft. Der lokale Build und die Installation der APK bleiben offen. Die Prüfung fand Java 17 und keine Android-SDK-/ADB-Toolchain. Die CI baut die Debug-APK für den isolierten Emulatorlauf. [Android-Tools](https://developer.android.com/tools) · [ADB-Befehle](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/master/docs/user/adb.1.md).
+
 ## Native Prüfung
 
 Die gleiche App-Oberfläche und der gleiche lokale Testdienst werden in getrennten Android-Emulator- und iOS-Simulatorläufen geprüft. Der Windows-Start ist die persönliche Browser-Testansicht. Für einen nativen Start benötigt Android einen Emulator oder ein Gerät mit der vorbereiteten Debug-App. Die iOS-Simulator-App braucht einen Mac mit Xcode. Der technische [Aufbau des isolierten nativen Profils](SERVICE.md#lokaler-nativer-testdienst) steht im Dienstprotokoll.

@@ -55,7 +55,7 @@ function send(response,status,body,headers={}) {
 // Disposable fixture process. Only these synthetic identities can create state.
 export function createNativeFixtureService({servePage}={}) {
   const accounts=new Map([['free@udi.test',account('free',1)],['plus@udi.test',account('plus',3)]]);
-  const counts={otp:0,verify:0,partial:0,confirmed:0,unavailable:0,quota:0,list:0,save:0,remove:0};
+  const counts={otp:0,verify:0,partial:0,confirmed:0,timeout:0,invalid:0,unavailable:0,quota:0,list:0,save:0,remove:0};
   const saves=createAccountSearches(':memory:');
   const reject=(response,status)=>send(response,status,{test:true});
 
@@ -130,6 +130,7 @@ export function createNativeFixtureService({servePage}={}) {
     const envelope={schemaVersion:1,requestId,dataMode:'test',marketId,deliveryCountry,currency,criteria:criteriaFor(input)};
     // Synthetic failure cases leave the allowance available for the next test.
     if(query==='udi fixture timeout') {
+      counts.timeout++;
       await delay(1500);
       return reject(response,504);
     }
@@ -137,6 +138,7 @@ export function createNativeFixtureService({servePage}={}) {
     const checkedAt=at-15000;
     const completedAt=new Date(checkedAt).toISOString();
     if(query==='udi fixture invalid') {
+      counts.invalid++;
       const broken=offer(false,checkedAt);
       broken.check.total=100;
       return send(response,200,{...envelope,kind:'results',completedAt,items:[broken]});

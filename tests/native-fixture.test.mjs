@@ -100,7 +100,11 @@ test('der isolierte HTTP-Dienst prüft Authentifizierung, Kontingente, Preise un
   assert.equal((await create(preferences)).isSignedIn(),false);
 
   const health=await fetch(base+'/healthz').then(reply=>reply.json());
-  assert.deepEqual(health,{test:true,counts:{otp:2,verify:2,partial:2,confirmed:1,unavailable:1,quota:3,list:3,save:1,remove:1}});
+  assert.equal(health.test,true);
+  const {timeout,invalid,...counts}=health.counts;
+  assert(timeout>=1,'native diagnostics count timeout requests that reach the service');
+  assert.equal(invalid,1,'native diagnostics count contradictory result requests');
+  assert.deepEqual(counts,{otp:2,verify:2,partial:2,confirmed:1,unavailable:1,quota:3,list:3,save:1,remove:1});
 });
 
 test('der Fixture-Transport verwirft fremde Ziele, Weiterleitungen und als live markierte Antworten',async()=>{
