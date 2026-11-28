@@ -2,7 +2,9 @@
 
 ## Nächster Start · 29.11.2026
 
-Der Nutzer meldet, dass die bereitgestellte Windows-Testversion beim persönlichen Versuch nicht funktioniert. Die konkrete Fehlermeldung und Ursache sind offen. Priorität hat der Start über genau die ausgelieferte Datei «UDI testen.cmd» per Doppelklick. Startdatei, Node-Prozess und automatisches Browseröffnen getrennt prüfen. Abnahme bis zur sichtbaren Testanmeldung und zur ersten Suche. Die bisherige Prüfung des lokalen Dienstes und der Browseroberfläche hat diesen persönlichen Startfehler nicht erfasst.
+Für die persönliche Android-Abnahme zuerst eine installierbare Debug-APK des Testprofils vorbereiten. Sicherstellen, dass das physische Gerät den isolierten Testdienst erreicht. Dann Start, Codebestätigung bei offener Tastatur, erste Suche und Sitzungswiederherstellung auf Android prüfen. Das Standardprofil eignet sich für den Start ohne Dienst. iOS braucht einen eigenen Build.
+
+Der Nutzer meldet ausserdem, dass die bereitgestellte Windows-Testversion nicht funktioniert. Ursache und Fehlermeldung sind offen. Den Doppelklick auf die tatsächlich ausgelieferte Datei «UDI testen.cmd», den Node-Prozess und die Browseröffnung separat prüfen. Die bisherige Loopback- und Chromium-Prüfung hat diesen Fehler nicht erfasst.
 
 ## Einfache KI-Suche
 
