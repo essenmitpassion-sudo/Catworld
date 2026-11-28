@@ -423,6 +423,8 @@ try {
       await type('Samsung 990 PRO 1 TB');
       await key('Enter');
       await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Keine passenden aktuellen Angebote')"), 'empty web search');
+      const searchRequests=()=>evaluate("performance.getEntriesByType('resource').filter(entry=>new URL(entry.name).pathname==='/api/discovery').length");
+      const scansBeforeDictation=await searchRequests();
       assert(await evaluate("window.SpeechRecognition?.toString().includes('udiSpeechError')"), 'dictation test adapter installed');
       assert(await evaluate("!document.querySelector('#suche [data-mic]').hidden"), 'dictation control visible');
       await evaluate("document.querySelector('#search-query').value = ''; document.querySelector('#search-query').dispatchEvent(new Event('input', {bubbles:true}))");
@@ -432,7 +434,9 @@ try {
       assert(await evaluate("document.querySelector('#intent-compass').hidden"),'dictated request is editable in one place');
       assert(await evaluate("document.querySelector('#intent-question').hidden"), 'no unnecessary capacity question for a vague need');
       assert(await visible('suche'));
-      assert.equal(await evaluate("document.querySelector('#results h2').textContent"), 'Dein Suchwunsch');
+      assert(await evaluate("document.querySelector('#web-results').textContent.includes('Suchwunsch geändert. Starte die Suche erneut.')"));
+      assert.equal(await evaluate("document.querySelectorAll('#results button, #web-results article').length"),0,'dictation retires the previous result');
+      assert.equal(await searchRequests(),scansBeforeDictation,'dictation edits the draft without starting a search');
       await key('Enter');
       await until(() => evaluate("document.querySelector('#web-results').textContent.includes('Darf ein Gebrauchtangebot')"), 'clarification').catch(async error => {
         console.error(await evaluate("JSON.stringify({query:document.querySelector('#search-query').value,focus:document.activeElement.outerHTML,results:document.querySelector('#web-results').textContent,voice:document.querySelector('[data-voice-status]').textContent,intent:document.querySelector('#intent-compass').textContent})"));
