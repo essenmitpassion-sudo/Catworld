@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {createTryUdi} from './try-udi.mjs';
 import {androidControls} from './native-flow-android.mjs';
 
@@ -15,9 +16,13 @@ const scenarios=[
 ];
 
 export async function checkPersonalTest({send,evaluate,until,pointerClick,type,noOverflow}) {
+  const packageDirectory=process.env.UDI_PERSONAL_PACKAGE;
+  const createApp=packageDirectory
+    ? (await import(pathToFileURL(join(packageDirectory,'scripts','try-udi.mjs')).href)).createTryUdi
+    : createTryUdi;
   for(const scenario of scenarios) {
     const {language,width,height}=scenario;
-    const app=createTryUdi();
+    const app=createApp();
     try {
       const {port}=await app.listen(0);
       const origin='http://127.0.0.1:'+port;

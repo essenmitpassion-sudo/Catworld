@@ -2,7 +2,7 @@
 
 ## Auf diesem Windows-Rechner
 
-1. Doppelklick auf **UDI testen.cmd**. Im Browser öffnet sich die lokale UDI-Testansicht. Lass das Startfenster geöffnet.
+1. Das Windows-x64-ZIP vollständig entpacken und im entpackten Ordner **UDI testen.cmd** öffnen. Die Laufzeit ist im Paket. Lass das Startfenster geöffnet. Falls der Standardbrowser sich nicht öffnet, kopiere die angezeigte Adresse in den Browser.
 2. Tippe bei «Suche» den Beispielwunsch **Samsung 990 PRO 2 TB** ein oder wähle das Beispiel. Drücke auf «Angebote suchen».
 3. Melde dich im Test mit **plus@udi.test** und dem Code **123456** an. Der bisherige Suchwunsch bleibt stehen. Drücke erneut auf «Angebote suchen».
 4. Du siehst **CHF 99.00** als Test-Artikelpreis mit offenem Versand. Öffne die Preisdetails. Speichere den Wunsch, gehe zu «Gespeichert» und lade die App im Browser neu. Der gespeicherte Testwunsch erscheint wieder, solange das Startfenster läuft.
@@ -17,6 +17,8 @@
 | Ein ungewöhnlicher Wunsch, z. B. Reparatur für eine alte Uhr | Keine passenden Testtreffer |
 
 Das Testkonto verfügt pro Start über drei abgeschlossene Suchen. Die vorgesehenen Fehler verbrauchen keine. Wenn du von vorne beginnen willst, schliesse das Startfenster und öffne die Startdatei wieder. Der Dienst läuft nur auf diesem Rechner und löscht Testkonten und gespeicherte Testwünsche beim Beenden des Prozesses. Die Preise sind simuliert. Verwende die angezeigten Testzugänge.
+
+Der optionale Windows-Quellstart im Projekt verwendet vorhandenes Node.js ab Version 24. Zum Bauen eines portablen ZIP das offizielle Windows-x64-Node-24-Archiv samt SHA-256 prüfen und entpacken. Danach node scripts/package-personal-test.mjs mit dem Pfad zum entpackten Node-Verzeichnis und dem gewünschten ZIP-Pfad aufrufen. Der Paketinhalt umfasst nur die freigegebenen App-Dateien, den isolierten Dienst und die Node-Laufzeit samt Lizenzhinweisen. [Node.js-Archiv](https://nodejs.org/en/download/archive/v24.22.3).
 
 ## Android-Test-APK per USB
 

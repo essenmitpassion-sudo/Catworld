@@ -1,5 +1,9 @@
 # Status · 28.11.2026
 
+## Portabler Windows-Test
+
+Der Windows-x64-Tester lässt sich mit eingebautem Node.js als ZIP erstellen. Der entpackte Starter erreichte den lokalen Dienst ohne Node.js im Systempfad. DE/EN-Suchabläufe liefen mit den entpackten Dateien und derselben Laufzeit. [Nachweis](docs/evidence/2026-11-28-portable-windows-test.md).
+
 ## Eine Anfrage bei wiederholtem Suchklick
 
 Ein zweiter Tipp auf dieselbe noch laufende Suche startet keinen neuen Abruf. Die DE/EN-Gegenprobe misst zwei Anfragen vorher und eine danach. Abbrechen und bewusst erneut suchen bleiben möglich. Die isolierten Android- und iOS-Testprofile auf 6bb5ea6 bestanden beide bis zur Sitzungswiederherstellung. [Doppeltipp](docs/evidence/2026-11-28-repeat-search.md) · [Native Belege](docs/evidence/2026-11-28-native-search-diagnostics.md).

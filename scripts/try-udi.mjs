@@ -38,9 +38,10 @@ if(process.argv[1] && pathToFileURL(process.argv[1]).href===import.meta.url) {
     const url='http://127.0.0.1:'+address.port;
     console.log('UDI testen: '+url);
     console.log('Testdaten. Das Startfenster beim Test geöffnet lassen.');
+    console.log('Falls kein Browser öffnet, kopiere die Adresse oben in deinen Browser.');
     if(process.argv.includes('--open')&&process.platform==='win32') {
       const browser=spawn('rundll32.exe',['url.dll,FileProtocolHandler',url],{stdio:'ignore',windowsHide:true});
-      browser.on('error',()=>console.log('Öffne die angezeigte Adresse im Browser.'));
+      browser.once('error',()=>console.log('Der Browser konnte nicht automatisch geöffnet werden.'));
     }
   } catch {
     await app.close();
