@@ -37,7 +37,7 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
         const png=await send('Page.captureScreenshot',{format:'png'});
         await writeFile(join(output,language+'-'+name+'.png'),Buffer.from(png.data,'base64'));
       };
-      await until(()=>evaluate("document.documentElement.dataset.platform==='web' && !document.querySelector('#pilot-account').hidden"),'local fixture ready');
+      await until(()=>evaluate("document.documentElement.dataset.platform==='web' && document.querySelector('#pilot-entry:not([hidden])')"),'local fixture ready');
       assert(await evaluate("!document.querySelector('#native-fixture-notice').hidden && document.querySelector('.composer-tools').hidden"));
       if(language==='en') {
         await pointerClick('.native-settings summary');
@@ -45,11 +45,16 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       }
       await noOverflow();
       await capture('start');
-      await pointerClick('.primary-search');
-      assert.equal(await evaluate("document.querySelector('#pilot-sign-in').open"),false,'empty search never signs in or requests offers');
-      await pointerClick('.suggestions [data-example]');
-      await pointerClick('.primary-search');
-      await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'local sign-in opens');
+      assert(await evaluate("!document.querySelector('#search-query').getClientRects().length"),'sign-in appears before the search field');
+      assert.equal((await fetch(origin+'/healthz').then(r=>r.json())).counts.otp,0,'no account request until a tap');
+      await pointerClick('#pilot-enter');
+      await until(()=>evaluate("document.querySelector('#search-query').getClientRects().length && !document.querySelector('#pilot-sign-in').open"),'test sign-in in a single tap');
+      const postEntry=(await fetch(origin+'/healthz').then(r=>r.json())).counts;
+      assert.equal(postEntry.verify,1,'the single tap uses the real fixture verification route');
+      assert.equal(postEntry.partial,0,'sign-in alone never requests offers');
+      await pointerClick('#pilot-account');
+      await pointerClick('#pilot-manual');
+      await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'manual test sign-in opens');
       await type('plus@udi.test');
       await pointerClick('[data-pilot-email] [type=submit]');
       await until(()=>evaluate("!document.querySelector('[data-pilot-code]').hidden"),'test code ready');
@@ -58,7 +63,8 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       await evaluate("document.querySelector('#pilot-code').addEventListener('blur',()=>{document.querySelector('#pilot-sign-in').style.translate='0 70px';},{once:true})");
       await pointerClick('[data-pilot-code] [type=submit]');
       await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open"),'test session ready');
-      assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);
+      assert.equal(await evaluate("document.querySelector('#search-query').value"),'');
+      await pointerClick('.suggestions [data-example]');
 
       // A second valid fixture login replaces the session held by the browser.
       const authRequest=(route,body)=>fetch(origin+'/auth/v1/'+route,{method:'POST',
@@ -73,17 +79,7 @@ export async function checkPersonalTest({send,evaluate,until,pointerClick,type,n
       assert.equal(await evaluate("document.querySelectorAll('#results button, #web-results article').length"),0);
       assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);
       await pointerClick('#web-results button');
-      await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'recovery opens sign-in');
-      await pointerClick('#pilot-sign-in [data-pilot-close]');
-      assert(await evaluate("document.activeElement===document.querySelector('#web-results button')"),'cancel returns focus to the recovery action');
-      await pointerClick('#web-results button');
-      await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'recovery can be reopened');
-      await type(email);
-      await pointerClick('[data-pilot-email] [type=submit]');
-      await until(()=>evaluate("!document.querySelector('[data-pilot-code]').hidden"),'recovery code ready');
-      await type('123456');
-      await pointerClick('[data-pilot-code] [type=submit]');
-      await until(()=>evaluate("!document.querySelector('#pilot-sign-in').open"),'recovered test session');
+      await until(()=>has('#pilot-account',language==='de'?'Abmelden':'Sign out'),'recovered test session');
       assert.equal((await fetch(origin+'/healthz').then(r=>r.json())).counts.partial,0,
         'recovering sign-in leaves the draft ready for an explicit search');
       assert.equal(await evaluate("document.querySelector('#search-query').value"),wish);

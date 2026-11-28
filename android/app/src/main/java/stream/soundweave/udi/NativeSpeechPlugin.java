@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class NativeSpeechPlugin extends Plugin {
     private final Handler main = new Handler(Looper.getMainLooper());
     private final Runnable timeout = () -> finish("timeout", null);
+    private final StringBuilder segments = new StringBuilder();
     private SpeechRecognizer recognizer;
     private PluginCall active;
     private Intent intent;
@@ -95,7 +96,12 @@ public class NativeSpeechPlugin extends Plugin {
 
     private void listen() {
         try {
-            recognizer.startListening(intent);
+            // Local engines may fall back to a single result. Keep both callback paths.
+            Intent request = new Intent(intent)
+                .putExtra(RecognizerIntent.EXTRA_SEGMENTED_SESSION,
+                    RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS)
+                .putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 4000L);
+            recognizer.startListening(request);
             started = true;
         } catch (RuntimeException error) {
             finish("error", null);
@@ -154,17 +160,22 @@ public class NativeSpeechPlugin extends Plugin {
                 event.put("status", "listening");
                 notifyListeners("speechState", event);
             }
-            @Override public void onEndOfSpeech() {
-                if (active != call) return;
-                JSObject event = new JSObject();
-                event.put("id", call.getString("id"));
-                event.put("status", "finishing");
-                notifyListeners("speechState", event);
-            }
+            @Override public void onEndOfSpeech() {}
             @Override public void onResults(Bundle results) {
                 if (active != call) return;
-                ArrayList<String> words = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                String text = words == null || words.isEmpty() ? null : words.get(0);
+                String text = segments.length() > 0 ? segments.toString() : bestText(results);
+                finish(text == null ? "empty" : "transcript", text);
+            }
+            @Override public void onSegmentResults(Bundle results) {
+                if (active != call) return;
+                String text = bestText(results);
+                if (text == null) return;
+                if (segments.length() > 0) segments.append(' ');
+                segments.append(text);
+            }
+            @Override public void onEndOfSegmentedSession() {
+                if (active != call) return;
+                String text = segments.length() > 0 ? segments.toString() : null;
                 finish(text == null ? "empty" : "transcript", text);
             }
             @Override public void onError(int error) {
@@ -188,9 +199,21 @@ public class NativeSpeechPlugin extends Plugin {
         };
     }
 
+    private String bestText(Bundle results) {
+        ArrayList<String> candidates = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (candidates == null || candidates.isEmpty() || candidates.get(0) == null) return null;
+        String text = candidates.get(0).trim();
+        return text.isEmpty() ? null : text;
+    }
+
     private void finish(String status, String text) {
         PluginCall call = active;
         active = null;
+        if (segments.length() > 0 && ("timeout".equals(status) || "error".equals(status) || "empty".equals(status))) {
+            status = "partial-transcript";
+            text = segments.toString();
+        }
+        segments.setLength(0);
         started = false;
         intent = null;
         main.removeCallbacks(timeout);

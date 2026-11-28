@@ -54,7 +54,7 @@ export async function androidFixtureFlow(page,afterRestart) {
   }
   const expectUsage=used=>wait(text('main')+'?.includes('+JSON.stringify('Testabo Plus · '+used+' von 3 Suchen')+')');
 
-  await wait("Capacitor.getPlatform()==='android' && document.readyState==='complete' && "+visible(account));
+  await wait("Capacitor.getPlatform()==='android' && document.readyState==='complete' && ("+visible(account)+" || "+visible('#pilot-entry')+")");
   if(afterRestart) {
     await wait(text(account)+'==="Abmelden"');
     await expectUsage(2);
@@ -68,11 +68,12 @@ export async function androidFixtureFlow(page,afterRestart) {
     await tap('.native-settings summary');
     await tap('[data-language-value="de"]');
   }
-  await wait(text(account)+'==="Anmelden"');
+  await wait(visible('#pilot-entry'));
+  assert.equal(await evaluate(visible(query)),false,'Login is the first action');
   await wait(text('#native-fixture-notice')+'?.includes("Testumgebung · Nur simulierte Konten und Preise")');
   console.log('Android fixture: launched installed app (DE)');
 
-  await search(wish);
+  await tap('#pilot-manual',{touch:true});
   await wait(node(dialog)+'?.open && document.activeElement.id==="pilot-email"');
   await type('#pilot-email','plus@udi.test');
   await tap('[data-pilot-email] [type=submit]');
@@ -86,11 +87,11 @@ export async function androidFixtureFlow(page,afterRestart) {
   await tap('[data-pilot-code] [type=submit]');
   await wait('!'+node(dialog)+'?.open && '+text(account)+'==="Abmelden"');
   await expectUsage(0);
-  assert.equal(await evaluate(value(query)),wish,'Sign-in must preserve the submitted draft');
+  assert.equal(await evaluate(value(query)),'','The composer starts after sign-in');
   assert(!(await evaluate(node(results)+'?.querySelector("article")!==null')),'Sign-in alone must never submit the search');
   console.log('Android fixture: protected login, rejected code and explicit search gate passed');
 
-  await tap(submit);
+  await search(wish);
   await expectOffer('Unvollständig / Schätzung','99.00');
   await tap('#results button.text-button');
   await wait(text('#results button.text-button')+'==="Suche gespeichert"');

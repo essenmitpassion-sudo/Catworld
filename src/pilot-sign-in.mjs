@@ -30,7 +30,7 @@ export function configuredPilotSession(document,platform) {
   return createPilotSession(profile.dataset);
 }
 
-export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOut,onSessionChange,beforeOpen}) {
+export function bindPilotSignIn({dialog,openButton,searchButton,session,testAccess,onSignOut,onSessionChange,beforeOpen}) {
   const emailForm=dialog.querySelector('[data-pilot-email]');
   const codeForm=dialog.querySelector('[data-pilot-code]');
   const email=emailForm.elements.email;
@@ -54,7 +54,7 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
     setText(openButton,m(signedIn?'Abmelden':'Anmelden'));
     onSessionChange(signedIn);
   }
-  async function open(anchor=openButton) {
+  async function open(anchor=openButton,{manual=false}={}) {
     if(dialog.open||opening)return;
     opening=true;
     let ready;
@@ -62,14 +62,19 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
     finally {opening=false;}
     if(!ready)return;
     returnFocus=anchor;
-    emailForm.hidden=false;
+    const quick=testAccess && !manual;
+    emailForm.hidden=quick;
     codeForm.hidden=true;
-    introduction.hidden=false;
+    introduction.hidden=quick;
+    if(testAccess) {
+      setText(introduction,m('Testzugang: plus@udi.test · Code 123456.'));
+    }
     email.value='';
     code.value='';
     setText(status,'');
     dialog.showModal();
-    email.focus();
+    if(quick)void run('test');
+    else email.focus();
   }
   function close(anchor=returnFocus) {
     const current=operation;
@@ -89,10 +94,16 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
     const address=email.value;
     const token=code.value;
     for(const control of controls)control.disabled=true;
-    setText(status,m(action==='verify'?'Code wird geprüft …':'Code wird angefordert …'));
+    setText(status,m(action==='test'?'Testkonto wird geöffnet …':action==='verify'?'Code wird geprüft …':'Code wird angefordert …'));
     let answer;
     try {
-      answer=action==='verify'?await session.verifyCode(token,{signal:request.signal}):await session.requestCode(address,{signal:request.signal});
+      const options={signal:request.signal};
+      if(action==='test') {
+        answer=await session.requestCode('plus@udi.test',options);
+        if(answer.kind==='code-requested')answer=await session.verifyCode('123456',options);
+      } else {
+        answer=action==='verify'?await session.verifyCode(token,options):await session.requestCode(address,options);
+      }
     } catch {
       answer={kind:'unavailable'};
     }
@@ -100,18 +111,18 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
     operation=null;
     for(const control of controls)control.disabled=false;
     if(answer.kind==='signed-in') {
-      close(searchButton);
       updateButton();
+      close(searchButton);
     } else if(answer.kind==='code-requested') {
       emailForm.hidden=true;
       codeForm.hidden=false;
       introduction.hidden=true;
       code.value='';
       code.focus();
-      setText(status,m('Wenn deine E-Mail-Adresse für den Test freigeschaltet ist, erhältst du einen Code.'));
+      setText(status,m(testAccess?'Testcode: 123456.':'Wenn deine E-Mail-Adresse für den Test freigeschaltet ist, erhältst du einen Code.'));
     } else {
-      setText(status,m(messages[answer.kind]??messages.unavailable));
-      (codeForm.hidden?email:code).focus();
+      setText(status,m(action==='test'?'Testdienst nicht erreichbar. Schliessen und erneut versuchen.':messages[answer.kind]??messages.unavailable));
+      if(action!=='test')(codeForm.hidden?email:code).focus();
     }
   }
   openButton.hidden=false;
@@ -119,8 +130,8 @@ export function bindPilotSignIn({dialog,openButton,searchButton,session,onSignOu
   openButton.addEventListener('click',()=>{
     if(!session.isSignedIn())return open();
     session.signOut();
-    updateButton();
     onSignOut();
+    updateButton();
   });
   dialog.querySelector('[data-pilot-close]').addEventListener('click',()=>close());
   dialog.addEventListener('cancel',event=>{event.preventDefault();close();});

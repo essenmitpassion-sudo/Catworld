@@ -309,6 +309,9 @@ html[data-native-ui] .search-desk #native-runtime-status { margin:.6rem .1rem .1
 .search-outcome .offer .badge.confirmed { background:var(--soft); color:var(--blue); border-color:#a3b9a2; }
 .search-outcome .offer .actions .button { min-height:44px; }
 .search-outcome .surface + .surface { margin-top:.65rem; }
+#pilot-entry { max-width:28rem; margin-block:.5rem 1rem; }
+#pilot-entry h1 { font-size:1.5rem; }
+#pilot-entry button { min-height:44px; }
 #pilot-sign-in { border-top:4px solid var(--blue); }
 html[data-native-ui] #saved > .surface { padding-inline:.65rem; border-inline-start:2px solid var(--line); }
 .search-outcome .request-context { display:none; }

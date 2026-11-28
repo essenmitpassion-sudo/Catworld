@@ -90,8 +90,9 @@ final class UDIFlowTests: XCTestCase {
             XCTAssertTrue(usage.waitForExistence(timeout: 10))
         }
 
-        XCTAssertTrue(web.buttons["Sign in"].firstMatch.waitForExistence(timeout: 10))
-        search(wish)
+        XCTAssertTrue(web.buttons["Start test"].firstMatch.waitForExistence(timeout: 10))
+        XCTAssertFalse(field.exists, "Login is the first action")
+        tapVisible(web.buttons["Test code sign-in"].firstMatch, in: web)
         let email = web.textFields["Email address"].firstMatch
         XCTAssertTrue(email.waitForExistence(timeout: 10), "Protected search must show sign-in")
         email.tap()
@@ -117,11 +118,11 @@ final class UDIFlowTests: XCTestCase {
         tapVisible(web.buttons["Confirm code"].firstMatch, in: web)
         XCTAssertTrue(signOut.waitForExistence(timeout: 15))
         checkUsage(0)
-        XCTAssertEqual(field.value as? String, wish, "Sign-in must preserve the draft")
+        XCTAssertTrue(field.waitForExistence(timeout: 10), "The composer appears after sign-in")
         XCTAssertFalse(offerMarker.exists, "Sign-in must not submit the draft")
         print("iOS fixture: protected login, rejected code and explicit search gate passed")
 
-        tapVisible(submit, in: main)
+        search(wish)
         checkOffer("Incomplete / estimate", amount: "99.00")
         tapVisible(web.buttons["Save search"].firstMatch, in: main)
         XCTAssertTrue(web.buttons["Search saved"].firstMatch.waitForExistence(timeout: 8))

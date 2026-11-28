@@ -57,11 +57,8 @@ if (fixtureMode) {
   notice.append(account);
   get('main').querySelector('.shell').prepend(notice);
 }
-if (localTestMode) {
-  get('pilot-sign-in').querySelector('[data-pilot-intro]').after(element('p',
-    m('Testzugang: plus@udi.test · Code 123456.'), 'muted'));
-}
 const pilotSession=await configuredPilotSession(document,platform);
+const testAccess=fixtureMode && Boolean(pilotSession?.getFixtureAccount);
 let fixtureAccountRead=0;
 async function refreshFixtureAccount(signedIn) {
   const label = get('native-fixture-account');
@@ -93,13 +90,27 @@ if(!pilotConfigured) {
 }
 if(compactLayout) {
   configureNativeUI(document);
+  if(fixtureMode) {
+    get('suche').querySelector('.search-intro p').hidden=true;
+    document.querySelector('label[for="search-query"]').classList.add('sr-only');
+  }
   if(pilotConfigured&&!pilotSession)setText(get('native-runtime-status'),m(pilotSystemMessage));
+}
+let composerPrepared=false;
+function showPilotEntry(signedIn) {
+  const search=get('suche');
+  const show=!signedIn && !composerPrepared;
+  get('pilot-entry').hidden=!show;
+  search.querySelector('.search-desk').hidden=show;
+  get('pilot-account').hidden=show;
+  search.setAttribute('aria-labelledby',show?'pilot-entry-title':'search-title');
 }
 const pilotSignIn=pilotSession && bindPilotSignIn({
   dialog:get('pilot-sign-in'),
   openButton:get('pilot-account'),
   searchButton:get('suche').querySelector('.primary-search'),
   session:pilotSession,
+  testAccess,
   async beforeOpen() {
     let timer;
     try {
@@ -112,6 +123,8 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     } finally {clearTimeout(timer);}
   },
   onSessionChange(signedIn) {
+    if(signedIn)composerPrepared=true;
+    showPilotEntry(signedIn);
     void refreshFixtureAccount(signedIn);
     const status=get('native-runtime-status');
     const field=get('search-query');
@@ -140,9 +153,28 @@ const pilotSignIn=pilotSession && bindPilotSignIn({
     get('suche').classList.remove('has-search');
     get('search-home').hidden=false;
     refreshIntent();
+    composerPrepared=false;
+    showPilotEntry(false);
     navigate('suche');
+    get('pilot-enter').focus();
   },
 });
+if(pilotSignIn) {
+  const entry=get('pilot-enter');
+  if(testAccess) {
+    setText(get('pilot-entry-title'),m('UDI ausprobieren'));
+    setText(entry,m('Test starten'));
+    get('pilot-manual').hidden=false;
+    get('pilot-prepare').hidden=true;
+    get('pilot-manual').addEventListener('click',event=>void pilotSignIn.open(event.currentTarget,{manual:true}));
+  }
+  entry.addEventListener('click',()=>void pilotSignIn.open(entry));
+  get('pilot-prepare').addEventListener('click',()=>{
+    composerPrepared=true;
+    showPilotEntry(false);
+    get('search-query').focus();
+  });
+}
 bindDailyUpdate(get('daily-update'));
 if (!localTestMode) setupInstall();
 
@@ -825,7 +857,7 @@ async function renderAccountWatchlist() {
     const note=message(m('Deine gespeicherten Suchen'),m('Melde dich an, um deine gespeicherten Suchen zu sehen.'));
     const signIn=element('button',m('Anmelden'),'button');
     signIn.type='button';
-    signIn.addEventListener('click',()=>{navigate('suche');pilotSignIn.open();});
+    signIn.addEventListener('click',()=>{navigate('suche');pilotSignIn.open(composerPrepared?get('pilot-account'):get('pilot-enter'));});
     note.append(signIn);
     target.replaceChildren(note);
     return;

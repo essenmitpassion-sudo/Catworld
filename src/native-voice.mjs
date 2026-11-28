@@ -24,12 +24,13 @@ export function setupNativeVoice(root,onInput,plugin) {
   const locale=options.querySelector('select');
   const start=options.querySelector('[data-native-voice-start]');
   const cancelButton=panel.querySelector('[data-native-voice-cancel]');
+  const resume=panel.querySelector('[data-native-voice-resume]');
   const input=root.elements.query;
   let current,cancellation;
   let selectedLocale=false;
   const tell=key=>{panel.hidden=false;setText(status,m(key));};
 
-  function reset(key) {
+  function reset(key,canResume=false) {
     clearTimeout(current?.timer);
     current=null;
     button.disabled=false;
@@ -38,6 +39,7 @@ export function setupNativeVoice(root,onInput,plugin) {
     setText(label,m('Einsprechen'));
     options.hidden=true;
     cancelButton.hidden=true;
+    resume.hidden=!canResume;
     tell(key);
   }
   const askNative=(method,id)=>Promise.resolve().then(()=>plugin[method]({id})).then(()=>true,()=>false);
@@ -59,7 +61,8 @@ export function setupNativeVoice(root,onInput,plugin) {
   function finish(currentRun,result) {
     if(result?.status&&cancellation?.id===currentRun.id)cancellation=null;
     if(current!==currentRun)return;
-    if(result?.status!=='transcript') {
+    const partial=result?.status==='partial-transcript';
+    if(!partial && result?.status!=='transcript') {
       reset(failureMessage[result?.status]??failureMessage.error);
       return;
     }
@@ -69,7 +72,7 @@ export function setupNativeVoice(root,onInput,plugin) {
     if(combined.length>input.maxLength)return reset('Dein Text und das Diktat sind zusammen zu lang. Dein bisheriger Text bleibt erhalten.');
     input.value=combined;
     onInput();
-    reset('Diktat ergänzt. Prüfe und bearbeite den Text vor der Suche.');
+    reset(partial?'Diktat unterbrochen. Erkannter Text übernommen.':'Diktat ergänzt.',true);
   }
 
   button.setAttribute('aria-controls',options.id);
@@ -104,6 +107,7 @@ export function setupNativeVoice(root,onInput,plugin) {
     }
     if(!selectedLocale)locale.value=getLanguage()==='de'?'de-DE':'en-GB';
     options.hidden=false;
+    resume.hidden=true;
     button.setAttribute('aria-expanded','true');
     cancelButton.hidden=false;
     tell('UDI braucht das Mikrofon, um deinen Wunsch auf diesem Gerät als Text zu erfassen.');
@@ -115,7 +119,7 @@ export function setupNativeVoice(root,onInput,plugin) {
     else closeOptions();
     button.focus();
   });
-  start.addEventListener('click',async()=>{
+  async function beginDictation() {
     if(current||cancellation)return;
     const id=Array.from(globalThis.crypto.getRandomValues(new Uint8Array(16)),byte=>byte.toString(16).padStart(2,'0')).join('');
     const run={id,listening:false,finishing:false,timer:setTimeout(()=>{
@@ -124,6 +128,8 @@ export function setupNativeVoice(root,onInput,plugin) {
     current=run;
     const language=locale.value;
     options.hidden=true;
+    resume.hidden=true;
+    cancelButton.hidden=false;
     button.setAttribute('aria-expanded','false');
     button.setAttribute('data-recording','');
     setText(label,m('Abbrechen'));
@@ -133,7 +139,9 @@ export function setupNativeVoice(root,onInput,plugin) {
     if(!listening)return finish(run,{status:'error'});
     try {finish(run,await plugin.recognize({id,locale:language}));}
     catch {finish(run);}
-  });
+  }
+  start.addEventListener('click',beginDictation);
+  resume.addEventListener('click',beginDictation);
 
   window.addEventListener('pagehide',()=>{if(current)cancel();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden && current)cancel();});

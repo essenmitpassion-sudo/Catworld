@@ -844,8 +844,13 @@ try {
     })()`});
     await send('Emulation.setDeviceMetricsOverride',{width:320,height:600,deviceScaleFactor:1,mobile:true});
     await send('Page.navigate',{url:origin+'/#suche'});
-    await until(()=>evaluate("!document.querySelector('#pilot-account').hidden && !document.querySelector('#suche').hidden"),'configured pilot entry');
+    await until(()=>evaluate("!document.querySelector('#pilot-entry').hidden && !document.querySelector('#suche').hidden"),'configured pilot entry');
     assert.equal(await evaluate('window.qaPilotCalls.length'),0);
+    assert(await evaluate("!document.querySelector('#search-query').getClientRects().length && document.querySelector('#pilot-manual').hidden"),'protected pilot offers sign-in before the composer and has no fixture access');
+    await pointerClick('#pilot-enter');
+    await until(()=>evaluate("document.querySelector('#pilot-sign-in').open"),'first action opens sign-in');
+    await pointerClick('[data-pilot-close]');
+    await pointerClick('#pilot-prepare');
     await pointerClick('#search-query');
     await type('Kingston NV3 2 TB');
     assert.equal(await evaluate("document.querySelector('#search-query').value"),'Kingston NV3 2 TB');
@@ -980,18 +985,23 @@ try {
     assert(await evaluate("!document.querySelector('#web-results').textContent && !document.querySelector('#results').textContent"),'dictation never submits a search');
     assert(await evaluate("document.querySelector('[data-audio-preview]').hidden"),'native UI never exposes an audio recording');
 
-    await pointerClick('[data-mic]');
-    await pointerClick('[data-native-voice-start]');
-    await until(()=>evaluate("window.qaSpeechCalls.length===2"),'second local dictation started');
+    assert(await evaluate("!document.querySelector('[data-native-voice-resume]')?.hidden && document.querySelector('[data-native-voice-resume]')?.getClientRects().length"),'continue is available after recognition ends');
+    await pointerClick('[data-native-voice-resume]');
+    await until(()=>evaluate("window.qaSpeechCalls.length===2"),'continue starts without reopening language choices');
+    await evaluate("window.qaSpeechReply('partial-transcript','bis CHF 500')");
+    await until(()=>evaluate("document.querySelector('#search-query').value==='Samsung 2 TB SSD bis CHF 500'"),'interrupted recognition preserves final segments');
+    assert.equal(await evaluate("window.qaSpeechCalls[1].locale"),'en-GB');
+    await pointerClick('[data-native-voice-resume]');
+    await until(()=>evaluate("window.qaSpeechCalls.length===3"),'third local dictation started');
     await pointerClick('[data-native-voice-cancel]');
     await evaluate("window.qaSpeechReply('transcript','must not appear')");
-    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 2 TB SSD');
+    assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 2 TB SSD bis CHF 500');
     for(const [status,de,en] of [['denied','Systemeinstellungen','system settings'],['unsupported','nicht verfügbar','unavailable'],['empty','Kein Text erkannt','No text was recognised']]) {
       await evaluate(`window.qaSpeechStatus=${JSON.stringify(status)}`);
       await pointerClick('[data-mic]');
       await pointerClick('[data-native-voice-start]');
       await until(()=>evaluate(`document.querySelector('[data-voice-status]').textContent.includes(${JSON.stringify(language==='de'?de:en)})`),'local dictation '+status);
-      assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 2 TB SSD');
+      assert.equal(await evaluate("document.querySelector('#search-query').value"),'Samsung 2 TB SSD bis CHF 500');
     }
     await pointerClick('#search-query');
     await type(' korrigiert');
