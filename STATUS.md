@@ -2,7 +2,7 @@
 
 ## Fortsetzung · Codebestätigung
 
-Der Anmeldedialog hält den Eingabefokus bis zum Klick stabil. Die Gegenprobe simuliert den Tastaturwechsel und prüft Anmeldung, erhaltenen Suchwunsch und ausdrücklich ausgelöste Suche auf DE/EN. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Die neuen nativen Ergebnisse sind separat zu prüfen. [Nachweis](docs/evidence/2026-11-28-sign-in-keyboard.md).
+Der Anmeldedialog hält den Eingabefokus bis zum Klick stabil. Die Gegenprobe simuliert den Tastaturwechsel und prüft Anmeldung, erhaltenen Suchwunsch und ausdrücklich ausgelöste Suche auf DE/EN. 199 Tests, Typprüfung, Build und Chromium-Smoke bestanden. Android-Standard und -Testprofil auf 8493cc2 bestanden bis zur Sitzungswiederherstellung. Der kontrollierte Aufruf der ausgelieferten Windows-Datei lieferte die Testansicht. Der persönliche Doppelklick bleibt offen. [Anmeldenachweis](docs/evidence/2026-11-28-sign-in-keyboard.md) · [Teststatus](docs/UDI-TESTEN.md#aktueller-abnahmestand).
 
 ## Native Suchdiagnose und Android-Gerätetest
 
